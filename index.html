@@ -188,7 +188,7 @@
       const imageIdMatch = imageIdRegexp.exec(trip.Imagen);
       const fileId = imageIdMatch[1];
       if (imageIdMatch && imageIdMatch[1])
-        trip.image_url = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+        trip.image_url = `https://drive.google.com/thumbnail?id=${fileId}&sz=w768`;
 
       //   if (!trustedEmails.includes(trip.email)) {
       //   continue;
