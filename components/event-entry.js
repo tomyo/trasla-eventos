@@ -10,6 +10,26 @@ function formatDateString(dateString) {
     .replace(/^(.*\/.*\/)\d\d(\d\d)/, "$1$2");
 }
 
+function formatPhoneNumber(phoneNumber) {
+  if (!phoneNumber) return "";
+
+  return phoneNumber?.startsWith("+") ? phoneNumber : `+54${phoneNumber}`;
+}
+
+function isValidUrl(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch {
+    try {
+      new URL(`http://${string}`);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}
+
 customElements.define(
   "event-entry",
   class extends HTMLElement {
@@ -47,11 +67,43 @@ customElements.define(
 
         <p>${event["Descripción"]}</p>
 
-        <a part="button" href="tel:+54666999666">
-          Contactar
-        </a>
+        ${this.renderButtons()}
       </details>
     `;
+    }
+
+    renderButtons() {
+      let htmlString = "";
+      const event = this.data;
+      if (event["Teléfono de contacto"]) {
+        htmlString += /*html*/ `
+          <a part="button" target="_blank" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
+            event["Teléfono de contacto"]
+          )}">
+            <img src="/assets/icons/whatsapp.png" style="width: 100%;
+  height: 100%;
+  object-fit: contain;"/>
+          </a>
+        `;
+      }
+
+      if (event["Ubicación"]) {
+        let href = event["Ubicación"];
+        if (!isValidUrl(href))
+          href = `https://www.google.com/maps/search/?api=1&query=${encodeURI(
+            event["Ubicación"]
+          )}`;
+
+        htmlString += /*html*/ `
+          <a part="button" target="_blank" href=${href}>
+            <img src="/assets/icons/google-maps.png" style="width: 100%;
+  height: 100%;
+  object-fit: contain;"/>
+          </a>
+        `;
+      }
+
+      return htmlString;
     }
 
     addStyles() {
