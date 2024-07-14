@@ -77,7 +77,7 @@ customElements.define(
       const event = this.data;
       if (event["Teléfono de contacto"]) {
         let helloMsg =
-          "Hola!\nTe escribo desde eventos.trasla.com.ar con la siguiente consulta:\n\n";
+          "Hola! 😃\nTe escribo desde eventos.trasla.com.ar con la siguiente consulta:\n\n";
         htmlString += /*html*/ `
           <a part="button" target="_blank" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
             event["Teléfono de contacto"]
