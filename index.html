@@ -87,7 +87,6 @@
         >➕</a
       >
       <h2 style="font-weight: 400; margin-bottom: 0.4rem">EVENTOS EN TRASLA</h2>
-      <hr style="width: 75%; border-bottom: none; color: currentColor" />
       <theme-toggle>
         <img src="/assets/images/theme-toggle.png" width="15px" height="15px" />
       </theme-toggle>
@@ -123,7 +122,19 @@
       header {
         text-align: center;
         padding: 2rem; /* margin adds scroll */
-        padding-top: 3rem;
+        padding-top: 3.3rem;
+
+        h2 {
+          line-height: 1.5;
+          text-decoration: underline;
+          text-underline-offset: 0.55rem;
+          text-decoration-style: wavy;
+        }
+      }
+
+      main {
+        max-width: 37ch;
+        margin: auto;
       }
 
       #events {
