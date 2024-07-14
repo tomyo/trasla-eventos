@@ -81,15 +81,30 @@
   </head>
   <body>
     <header>
+      <theme-toggle>
+        <img src="/assets/images/theme-toggle.png" width="25px" height="25px" />
+      </theme-toggle>
+      <h2 style="font-weight: 400; margin-bottom: 0.4rem">EVENTOS EN TRASLA</h2>
       <a
         id="addEvent"
         href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-        >➕</a
       >
-      <theme-toggle>
-        <img src="/assets/images/theme-toggle.png" width="15px" height="15px" />
-      </theme-toggle>
-      <h2 style="font-weight: 400; margin-bottom: 0.4rem">EVENTOS EN TRASLA</h2>
+        <svg
+          width="25px"
+          height="25px"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="12" cy="12" r="10" stroke-width="1.5" />
+          <path
+            d="M15 12h-3m0 0H9m3 0V9m0 3v3"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </a>
     </header>
     <main>
       <section id="events">
@@ -98,20 +113,6 @@
     </main>
 
     <style>
-      theme-toggle,
-      #addEvent {
-        position: absolute;
-        cursor: pointer;
-        top: max(1.5rem, 5vmin);
-        right: max(1.5rem, 7vmin);
-      }
-
-      #addEvent {
-        left: max(1.5rem, 7vmin);
-        width: min-content;
-        text-decoration: none;
-      }
-
       :root[data-theme="🌑"] {
         #logo,
         theme-toggle {
@@ -123,6 +124,21 @@
         text-align: center;
         padding: 2rem; /* margin adds scroll */
         padding-top: 3.3rem;
+
+        theme-toggle {
+          position: absolute;
+          cursor: pointer;
+          top: max(1.5rem, 5vmin);
+          left: max(1.5rem, 7vmin);
+        }
+        #addEvent {
+          position: absolute;
+          top: max(1.5rem, 5vmin);
+          right: max(1.5rem, 7vmin);
+          width: min-content;
+          text-decoration: none;
+          color: currentColor;
+        }
 
         h2 {
           line-height: 1.5;
