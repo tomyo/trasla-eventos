@@ -183,7 +183,7 @@
 
     for (const trip of fetchedEvents) {
       console.info("event:", trip);
-      const imageIdRegexp = /id=(.*)/gm;
+      const imageIdRegexp = /id=([\d\w-]*)/gm;
       const imageIdMatch = imageIdRegexp.exec(trip.Imagen);
       const fileId = imageIdMatch[1];
       if (imageIdMatch && imageIdMatch[1])
