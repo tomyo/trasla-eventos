@@ -81,6 +81,11 @@
   </head>
   <body>
     <header>
+      <a
+        id="addEvent"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+        >➕</a
+      >
       <h2 style="font-weight: 400; margin-bottom: 0.4rem">EVENTOS EN TRASLA</h2>
       <hr style="width: 75%; border-bottom: none; color: currentColor" />
       <theme-toggle>
@@ -94,11 +99,18 @@
     </main>
 
     <style>
-      theme-toggle {
+      theme-toggle,
+      #addEvent {
         position: absolute;
         cursor: pointer;
         top: max(1.5rem, 5vmin);
         right: max(1.5rem, 7vmin);
+      }
+
+      #addEvent {
+        left: max(1.5rem, 7vmin);
+        width: min-content;
+        text-decoration: none;
       }
 
       :root[data-theme="🌑"] {
@@ -171,10 +183,10 @@
       //   continue;
       // }
 
-      if (new Date(trip.date_from) < now) {
-        console.info("Omitting old entry:", trip);
-        continue;
-      }
+      // if (new Date(trip["Fecha desde"]) < now) {
+      //   console.info("Omitting old entry:", trip);
+      //   continue;
+      // }
 
       const tripElement = document.createElement("event-entry");
       tripElement.data = trip;
