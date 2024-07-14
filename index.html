@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es-AR" id="root">
+  <head>
+    <meta name="theme-color" content="#3c769f" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Eventos en Traslasierra, Córdoba, Argentina"
+    />
+    <script type="module" src="/components/event-entry.js"></script>
+    <script type="module" src="/components/theme-toggle.js"></script>
+    <!-- <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛩</text></svg>"
+    /> -->
+    <title>Eventos en Trasla</title>
+
+    <style>
+      /* Reset */
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        min-height: 100%;
+        font-size: 100%;
+        line-height: 1.25;
+        scroll-behavior: smooth;
+      }
+
+      /* Global styles */
+
+      /* <theme> */
+      [data-theme="🌑"] {
+        --color-scheme: dark;
+        color-scheme: dark;
+      }
+
+      [data-theme="☀️"] {
+        --color-scheme: light;
+        color-scheme: light;
+      }
+
+      :root {
+        --brand-color: #182026;
+        --color: #222222;
+        --background-color: color-mix(in srgb, var(--brand-color) 15%, white);
+        color-scheme: var(--color-scheme, dark light);
+
+        &[data-theme="🌑"] {
+          color-scheme: dark;
+
+          --color: #f5f5f5;
+          --background-color: var(--brand-color);
+        }
+      }
+      /* </theme> */
+
+      @font-face {
+        font-family: "Objective";
+        src: url("/assets/fonts/Objective-Regular.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      body {
+        font-family: Objective, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+          "Helvetica Neue", sans-serif;
+        background-color: var(--background-color);
+        color: var(--color);
+
+        transition: all ease-in-out 0.2s;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h2 style="font-weight: 400; margin-bottom: 0.4rem">EVENTOS EN TRASLA</h2>
+      <hr style="width: 75%; border-bottom: none; color: currentColor" />
+      <theme-toggle>
+        <img src="/assets/images/theme-toggle.png" width="15px" height="15px" />
+      </theme-toggle>
+    </header>
+    <main>
+      <section id="events">
+        <p style="text-align: center">...</p>
+      </section>
+    </main>
+
+    <style>
+      theme-toggle {
+        position: absolute;
+        cursor: pointer;
+        top: max(1.5rem, 5vmin);
+        right: max(1.5rem, 7vmin);
+      }
+
+      :root[data-theme="🌑"] {
+        #logo,
+        theme-toggle {
+          filter: invert(1);
+        }
+      }
+
+      header {
+        text-align: center;
+        padding: 2rem; /* margin adds scroll */
+        padding-top: 3rem;
+      }
+
+      #events {
+        display: flex;
+        flex-flow: column nowrap;
+        max-width: 90ch;
+        margin-inline: auto;
+
+        event-entry:hover,
+        event-entry[open] {
+          background-color: color-mix(in srgb, currentcolor 7%, transparent);
+          transition-duration: 0.2s;
+        }
+
+        event-entry {
+          box-shadow: color-mix(in srgb, currentcolor, transparent) 0px 0px
+            0.3rem;
+
+          &::part(button) {
+            display: inline-block;
+            background-color: transparent;
+            color: currentColor;
+            border: solid 1px currentColor;
+            border-radius: 2px;
+            text-align: center;
+            text-decoration: none;
+            margin: 1rem 2px;
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            transition-duration: 0.2s;
+          }
+          &::part(button):hover {
+            background-color: color-mix(in srgb, currentColor 10%, transparent);
+          }
+        }
+      }
+    </style>
+  </body>
+
+  <script type="module">
+    import { getSheetData } from "/get-gsheet-data.js";
+    const eventsElement = document.getElementById("events");
+    const fetchedEvents = await getSheetData();
+    const now = new Date();
+
+    eventsElement.innerHTML = ""; /* Clear loading message */
+
+    for (const trip of fetchedEvents) {
+      console.info("event:", trip);
+      const imageIdRegexp = /id=(.*)/gm;
+      const imageIdMatch = imageIdRegexp.exec(trip.Imagen);
+      const fileId = imageIdMatch[1];
+      if (imageIdMatch && imageIdMatch[1])
+        trip.image_url = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+
+      //   if (!trustedEmails.includes(trip.email)) {
+      //   continue;
+      // }
+
+      if (new Date(trip.date_from) < now) {
+        console.info("Omitting old entry:", trip);
+        continue;
+      }
+
+      const tripElement = document.createElement("event-entry");
+      tripElement.data = trip;
+      eventsElement.appendChild(tripElement);
+    }
+  </script>
+</html>
