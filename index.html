@@ -195,7 +195,6 @@
     import { getSheetData } from "/get-gsheet-data.js";
     const eventsElement = document.getElementById("events");
     const fetchedEvents = await getSheetData();
-    const now = new Date();
 
     eventsElement.innerHTML = ""; /* Clear loading message */
 
@@ -211,14 +210,32 @@
       //   continue;
       // }
 
-      // if (new Date(trip["Fecha desde"]) < now) {
-      //   console.info("Omitting old entry:", trip);
-      //   continue;
-      // }
+      if (isOlderThanNow(trip["Comienzo"])) {
+        console.info("Omitting old entry:", trip);
+        continue;
+      }
 
       const tripElement = document.createElement("event-entry");
       tripElement.data = trip;
       eventsElement.appendChild(tripElement);
+    }
+
+    function isOlderThanNow(dateString) {
+      if (!dateString) return true;
+      // Parse the input date string
+      const [datePart, timePart] = dateString.split(" ");
+      const [day, month, year] = datePart.split("/");
+      const [hours, minutes, seconds] = timePart.split(":");
+
+      // Create a Date object from the parsed components
+      // Note: months are 0-indexed in JavaScript Date
+      const inputDate = new Date(year, month - 1, day, hours, minutes, seconds);
+
+      // Get the current date and time
+      const now = new Date();
+
+      // Compare the dates
+      return inputDate < now;
     }
   </script>
 </html>
