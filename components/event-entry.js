@@ -12,7 +12,7 @@ function formatDateString(dateString) {
 
 function formatPhoneNumber(phoneNumber) {
   if (!phoneNumber) return "";
-
+  phoneNumber = phoneNumber.replace(/[^\d+]/g, "");
   return phoneNumber?.startsWith("+") ? phoneNumber : `+54${phoneNumber}`;
 }
 
