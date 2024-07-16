@@ -65,7 +65,7 @@ customElements.define(
           </div>
         </summary>
 
-        <p slot="description">${event["Descripción"]}</p>
+        <p slot="description" part="description">${event["Descripción"]}</p>
 
         ${this.renderButtons()}
       </details>
@@ -121,6 +121,10 @@ customElements.define(
           min-width: min-content;
           text-align: center; /* Center CTA button */
         }
+
+        a {
+          color: inherit;
+        }
   
         @media (640px < width) {
           --visible-elements: 1;
@@ -131,10 +135,6 @@ customElements.define(
             --grid-template: 1fr / repeat(var(--visible-elements), 1fr);
             --row-gap: 2rem;
           }
-        }
-  
-        [slot="description"] {
-          word-break: break-word;
         }
   
         summary {
