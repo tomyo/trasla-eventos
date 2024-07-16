@@ -92,7 +92,7 @@
           height="25px"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
+          stroke="var(--color, currentColor)"
           xmlns="http://www.w3.org/2000/svg"
         >
           <circle cx="12" cy="12" r="10" stroke-width="1.5" />
@@ -135,7 +135,7 @@
           right: max(1.5rem, 7vmin);
           width: min-content;
           text-decoration: none;
-          color: currentColor;
+          color: var(--color, currentColor);
         }
 
         h2 {
@@ -158,18 +158,26 @@
 
         event-entry:hover,
         event-entry[open] {
-          background-color: color-mix(in srgb, currentcolor 7%, transparent);
+          background-color: color-mix(
+            in srgb,
+            var(--color, currentcolor) 7%,
+            transparent
+          );
           transition-duration: 0.2s;
         }
 
         event-entry {
-          box-shadow: color-mix(in srgb, currentcolor, transparent) 0px 0px
-            0.3rem;
+          box-shadow: color-mix(
+              in srgb,
+              var(--color, currentcolor),
+              transparent
+            )
+            0px 0px 0.3rem;
 
           &::part(button) {
             display: inline-block;
             background-color: transparent;
-            color: currentColor;
+            color: var(--color, currentColor);
             border-radius: 2px;
             text-align: center;
             text-decoration: none;
@@ -181,7 +189,11 @@
             height: 3rem;
           }
           &::part(button):hover {
-            background-color: color-mix(in srgb, currentColor 10%, transparent);
+            background-color: color-mix(
+              in srgb,
+              var(--color, currentColor) 10%,
+              transparent
+            );
           }
         }
       }
