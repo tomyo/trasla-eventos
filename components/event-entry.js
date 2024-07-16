@@ -65,7 +65,7 @@ customElements.define(
             </div>
           </summary>
 
-          <p slot="description" part="description">${event["Descripción"]}</p>
+          <p slot="description" part="description">${event["Descripción"]} </p>
 
           ${this.renderButtons()}
         </details>
