@@ -6,8 +6,8 @@ let styles = null;
 function formatDateString(dateString) {
   if (!dateString) return "";
   return dateString
-    .replace(/:00$/, "h")
-    .replace(/^(.*\/.*\/)\d\d(\d\d)/, "$1$2");
+    .replace(/:00$/, "h") // Remove seconds
+    .replace(/^(.*\/.*\/)\d\d(\d\d)/, "$1$2 -"); // Remove century
 }
 
 function formatPhoneNumber(phoneNumber) {
