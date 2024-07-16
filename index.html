@@ -188,6 +188,17 @@
           }
         }
       }
+
+      /* css support warning */
+      @supports not selector(&) {
+        main::after {
+          content: "🚨 CSS anidado no soportado por el navegador.";
+          display: block;
+          color: red;
+          font-size: 1.5rem;
+          text-align: center;
+        }
+      }
     </style>
   </body>
 
