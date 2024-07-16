@@ -218,26 +218,17 @@
 
     eventsElement.innerHTML = ""; /* Clear loading message */
 
-    for (const trip of fetchedEvents) {
-      console.info("event:", trip);
-      const imageIdRegexp = /id=([\d\w-]*)/gm;
-      const imageIdMatch = imageIdRegexp.exec(trip.Imagen);
-      const fileId = imageIdMatch[1];
-      if (imageIdMatch && imageIdMatch[1])
-        trip.image_url = `https://drive.google.com/thumbnail?id=${fileId}&sz=w768`;
-
-      //   if (!trustedEmails.includes(trip.email)) {
-      //   continue;
-      // }
-
-      if (isOlderThanNow(trip["Comienzo"])) {
-        console.info("Omitting old entry:", trip);
+    for (let event of fetchedEvents) {
+      if (isOlderThanNow(event["Comienzo"])) {
+        console.info("Omitting old event:", event);
         continue;
       }
 
-      const tripElement = document.createElement("event-entry");
-      tripElement.data = trip;
-      eventsElement.appendChild(tripElement);
+      console.info("Event to display received:", event);
+
+      const eventElement = document.createElement("event-entry");
+      eventElement.data = enhanceEvent(event);
+      eventsElement.appendChild(eventElement);
     }
 
     function isOlderThanNow(dateString) {
@@ -256,6 +247,34 @@
 
       // Compare the dates
       return inputDate < now;
+    }
+
+    function enhanceEvent(event) {
+      // Provide a image_url
+      const imageIdRegexp = /id=([\d\w-]*)/gm;
+      const imageIdMatch = imageIdRegexp.exec(event["Imagen"]);
+      const fileId = imageIdMatch ? imageIdMatch[1] : null;
+      if (fileId)
+        event.image_url = `https://drive.google.com/thumbnail?id=${fileId}&sz=w768`;
+
+      // Replace URLs in the content with anchor tags without query parameters
+      if (event["Descripción"]) {
+        const urlRegex =
+          /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+
+        event["Descripción"] = event["Descripción"].replace(
+          urlRegex,
+          (match) => {
+            // Create a URL object to easily manipulate the URL
+            let url = new URL(match);
+            // Remove the query parameters
+            url.search = "";
+            // Return the modified URL in an anchor tag
+            return `<a href="${match}" target="_blank">${url.href}</a>`;
+          }
+        );
+      }
+      return event;
     }
   </script>
 </html>
