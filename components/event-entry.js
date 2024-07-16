@@ -53,7 +53,7 @@ customElements.define(
       this.innerHTML = /*html*/ `
         <details> 
           <summary>
-            <img class="event-image" src="${
+            <img class="event-image" height="400px" src="${
               event.imageUrl
             }" loading="lazy" alt="Evento en ${
         event["Localidad"]
