@@ -315,7 +315,7 @@
 
     for (let event of fetchedEvents) {
       if (isOlderThanNow(event["Comienzo"])) {
-        console.info("Omitting old event:", event);
+        console.info("Omitting old event:", event["Comienzo"]);
         continue;
       }
 
@@ -373,5 +373,18 @@
       }
       return event;
     }
+
+    document.querySelectorAll("summary").forEach((summary) => {
+      summary.addEventListener("click", (event) => {
+        setTimeout(
+          () =>
+            summary.nextElementSibling.scrollIntoView({
+              block: "nearest",
+              behavior: "smooth",
+            }),
+          100
+        );
+      });
+    });
   </script>
 </html>
