@@ -65,7 +65,7 @@ customElements.define(
           </div>
         </summary>
 
-        <p>${event["Descripción"]}</p>
+        <p slot="description">${event["Descripción"]}</p>
 
         ${this.renderButtons()}
       </details>
@@ -120,24 +120,27 @@ customElements.define(
           border-radius: 0.5rem;
           min-width: min-content;
           text-align: center; /* Center CTA button */
+        }
+  
+        @media (640px < width) {
+          --visible-elements: 1;
+          --padding: 1rem;
+  
+          summary {
+            /* Show a row instead of a column of elements */
+            --grid-template: 1fr / repeat(var(--visible-elements), 1fr);
+            --row-gap: 2rem;
           }
-
-          @media (640px < width) {
-            --visible-elements: 1;
-            --padding: 1rem;
-
-            summary {
-              /* Show a row instead of a column of elements */
-              --grid-template: 1fr / repeat(var(--visible-elements), 1fr);
-              --row-gap: 2rem;
-            }
-          }
-        
-
+        }
+  
+        [slot="description"] {
+          word-break: break-word;
+        }
+  
         summary {
           --row-gap: 1rem;
           --grid-template: repeat(var(--visible-elements), 1fr) / 1fr;
-
+  
           display: grid;
           grid-template: var(--grid-template);
           align-items: center;
@@ -146,14 +149,13 @@ customElements.define(
           margin-block: 1rem;
           align-items: start;
           position: relative;
-
-          .location, .datetime{
+  
+          .location,
+          .datetime {
             display: flex;
-            gap: .5rem;
+            gap: 0.5rem;
           }
-
-        
-
+  
           > * {
             --display: flex;
             --flow: column;
@@ -162,43 +164,41 @@ customElements.define(
             align-items: center;
             justify-content: space-between;
             gap: 0.5rem;
-
+  
             @media (640px < width) {
               & {
                 --flow: column;
               }
             }
-            
-            
-
+  
             svg {
               color: color-mix(in srgb, currentColor 60%, transparent);
             }
-            
+  
             input[type="date"] {
               -webkit-appearance: none; /* Remove arrow in chrome mobile */
               background: transparent;
               width: min-content;
               border: none;
               padding: 0;
-              
+  
               font-family: inherit;
               font-size: inherit;
               color: inherit;
-
+  
               &:disabled {
                 /* Allow click on parent to toggle details open/close */
-                pointer-events:none;
+                pointer-events: none;
               }
             }
-            
+  
             p {
               --margin: 0 2px; /* match input date */
               text-align: center;
               margin: var(--margin);
             }
           }
-
+  
           &::-webkit-details-marker {
             display: none;
           }
