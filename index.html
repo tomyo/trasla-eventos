@@ -217,6 +217,7 @@
 
             .event-image {
               width: 100%;
+              height: auto;
               min-height: 15rem;
               object-fit: contain;
             }
@@ -358,7 +359,7 @@
       const fileId = imageIdMatch && imageIdMatch[1];
       if (fileId) {
         event.id = fileId;
-        event.imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w768`;
+        event.imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w512`;
       }
 
       // Replace URLs in the content with anchor tags without query parameters
