@@ -83,7 +83,7 @@ customElements.define(
         let helloMsg =
           "Hola! 😃\nTe escribo desde eventos.trasla.com.ar por una consulta:\n\n";
         htmlString += /*html*/ `
-          <a part="button" target="_blank" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
+          <a part="button" target="_blank" title="Contactarse por este evento" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
             event["Teléfono de contacto"]
           )}&text=${encodeURI(helloMsg)}">
             <img src="/assets/icons/whatsapp-w256.png" height="100%" alt="WhatsApp" loading="lazy"/>
@@ -99,7 +99,7 @@ customElements.define(
           )}`;
 
         htmlString += /*html*/ `
-          <a part="button" target="_blank" href=${href}>
+          <a part="button" target="_blank" href=${href} title="Ir a la ubicación del evento">
             <img src="/assets/icons/google-maps-w256.png" height="100%" alt="Google Maps" loading="lazy"/>
           </a>
         `;
