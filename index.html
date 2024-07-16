@@ -74,6 +74,10 @@
 
         transition: all ease-in-out 0.2s;
       }
+
+      a {
+        color: inherit;
+      }
     </style>
   </head>
   <body>
@@ -167,6 +171,14 @@
         }
 
         event-entry {
+          --visible-elements: 1;
+          --padding: 0.5rem 1rem;
+          display: block;
+          padding: var(--padding);
+          margin: 1rem;
+          border-radius: 0.5rem;
+          min-width: min-content;
+          text-align: center; /* Center CTA button */
           box-shadow: color-mix(
               in srgb,
               var(--color, currentcolor),
@@ -174,30 +186,109 @@
             )
             0px 0px 0.3rem;
 
-          &::part(description) {
+          @media (640px < width) {
+            --visible-elements: 1;
+            --padding: 1rem;
+
+            summary {
+              /* Show a row instead of a column of elements */
+              --grid-template: 1fr / repeat(var(--visible-elements), 1fr);
+              --row-gap: 2rem;
+            }
+          }
+
+          summary {
+            --row-gap: 1rem;
+            --grid-template: repeat(var(--visible-elements), 1fr) / 1fr;
+
+            display: grid;
+            grid-template: var(--grid-template);
+            align-items: center;
+            gap: var(--row-gap) 1rem;
+            cursor: pointer;
+            margin-block: 1rem;
+            align-items: start;
+            position: relative;
+
+            .event-image {
+              width: 100%;
+            }
+
+            .location,
+            .datetime {
+              display: flex;
+              gap: 0.5rem;
+            }
+
+            > * {
+              --display: flex;
+              --flow: column;
+              display: var(--display);
+              flex-flow: var(--flow) nowrap;
+              align-items: center;
+              justify-content: space-between;
+              gap: 0.5rem;
+
+              @media (640px < width) {
+                & {
+                  --flow: column;
+                }
+              }
+
+              svg {
+                color: color-mix(in srgb, currentColor 60%, transparent);
+              }
+
+              input[type="date"] {
+                -webkit-appearance: none; /* Remove arrow in chrome mobile */
+                background: transparent;
+                width: min-content;
+                border: none;
+                padding: 0;
+
+                font-family: inherit;
+                font-size: inherit;
+                color: inherit;
+
+                &:disabled {
+                  /* Allow click on parent to toggle details open/close */
+                  pointer-events: none;
+                }
+              }
+
+              p {
+                --margin: 0 2px; /* match input date */
+                text-align: center;
+                margin: var(--margin);
+              }
+            }
+
+            &::-webkit-details-marker {
+              display: none;
+            }
+          }
+
+          [part="description"] {
             word-break: break-word;
           }
 
-          &::part(button) {
+          [part="button"] {
             display: inline-block;
-            background-color: transparent;
-            color: var(--color, currentColor);
             border-radius: 2px;
-            text-align: center;
             text-decoration: none;
             margin: 1rem 2px;
             cursor: pointer;
-            padding: 1rem 1.5rem;
             transition-duration: 0.2s;
-            width: 3rem;
-            height: 3rem;
-          }
-          &::part(button):hover {
-            background-color: color-mix(
-              in srgb,
-              var(--color, currentColor) 10%,
-              transparent
-            );
+            padding: 1rem 1.5rem;
+            height: 5rem;
+
+            &:hover {
+              background-color: color-mix(
+                in srgb,
+                var(--color, currentColor) 10%,
+                transparent
+              );
+            }
           }
         }
       }
@@ -257,9 +348,11 @@
       // Provide a image_url
       const imageIdRegexp = /id=([\d\w-]*)/gm;
       const imageIdMatch = imageIdRegexp.exec(event["Imagen"]);
-      const fileId = imageIdMatch ? imageIdMatch[1] : null;
-      if (fileId)
-        event.image_url = `https://drive.google.com/thumbnail?id=${fileId}&sz=w768`;
+      const fileId = imageIdMatch && imageIdMatch[1];
+      if (fileId) {
+        event.id = fileId;
+        event.imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w768`;
+      }
 
       // Replace URLs in the content with anchor tags without query parameters
       if (event["Descripción"]) {
