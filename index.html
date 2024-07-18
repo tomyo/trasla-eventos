@@ -180,16 +180,6 @@
         margin-inline: auto;
         gap: 1rem;
 
-        event-entry:hover,
-        event-entry[open] {
-          background-color: color-mix(
-            in srgb,
-            var(--color, currentcolor) 7%,
-            transparent
-          );
-          transition-duration: 0.2s;
-        }
-
         event-entry {
           --visible-elements: 1;
           --padding: 0.5rem 1rem;
@@ -198,6 +188,12 @@
           border-radius: 2px;
           min-width: min-content;
           text-align: center; /* Center CTA button */
+
+          background-image: linear-gradient(
+            to bottom,
+            transparent,
+            color-mix(in srgb, var(--color, currentcolor) 7%, transparent)
+          );
 
           .event-image {
             width: 100%;
@@ -210,7 +206,7 @@
           summary {
             align-items: center;
             cursor: pointer;
-            margin-block: 1rem;
+            margin-block: 0.5rem;
             align-items: start;
             position: relative;
 
