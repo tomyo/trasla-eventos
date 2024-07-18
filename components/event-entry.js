@@ -175,6 +175,14 @@ function enhanceEvent(event) {
 
     // Replace new lines with <br> tags
     event["Descripción"] = event["Descripción"].replace(/\n/g, "<br>");
+
+    // Replace phone numbers with WhatsApp links
+    const phoneRegex = /(\+?\d{2,3})?(\d{10})/g;
+    event["Descripción"] = event["Descripción"].replace(phoneRegex, (match) => {
+      return `<a href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
+        match
+      )}" target="_blank">${match}</a>`;
+    });
   }
 
   return event;
