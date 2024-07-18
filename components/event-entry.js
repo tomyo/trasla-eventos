@@ -11,6 +11,7 @@
  * @property {string} [TelefonoDeContacto] - The contact phone number ("Teléfono de contacto").
  * @property {string} [Instagram] - The Instagram handle.
  * @property {string} [Titulo] - The title of the event. ("Título")
+ * @property {String} [Instagram] - The Instagram handle.
  */
 
 /**
@@ -114,6 +115,8 @@ customElements.define(
     renderButtons() {
       let htmlString = "";
       const event = this._data;
+
+      // Add WhatsApp button
       if (event["Teléfono de contacto"]) {
         let helloMsg =
           "Hola! 😃\nTe escribo desde eventos.trasla.com.ar por una consulta:\n\n";
@@ -121,11 +124,23 @@ customElements.define(
           <a part="button" target="_blank" title="Contactarse por este evento" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
             event["Teléfono de contacto"]
           )}&text=${encodeURI(helloMsg)}">
-            <img src="/assets/icons/whatsapp-w256.png" height="100%" alt="WhatsApp" loading="lazy"/>
+            <img src="/assets/icons/whatsapp-256w.png" height="100%" alt="WhatsApp" loading="lazy"/>
           </a>
         `;
       }
 
+      // Add Instagram button
+      if (event["Instagram"]) {
+        htmlString += /*html*/ `
+          <a part="button" target="_blank" href="https://instagram.com/${event[
+            "Instagram"
+          ].replace("@", "")}">
+            <img src="/assets/icons/instagram-240w.png" height="100%" alt="Instagram" loading="lazy"/>
+          </a>
+        `;
+      }
+
+      // Add Google Maps button
       if (event["Ubicación"]) {
         let href = event["Ubicación"];
         if (!isValidUrl(href))
@@ -135,11 +150,12 @@ customElements.define(
 
         htmlString += /*html*/ `
           <a part="button" target="_blank" href=${href} title="Ir a la ubicación del evento">
-            <img src="/assets/icons/google-maps-w256.png" height="100%" alt="Google Maps" loading="lazy"/>
+            <img src="/assets/icons/google-maps-256w.png" height="100%" alt="Google Maps" loading="lazy"/>
           </a>
         `;
       }
 
+      // Add Google Calendar button
       htmlString += /*html*/ `<a target="_blank" part="button" href="${createGoogleCalendarUrl(
         event
       )}"><img src="/assets/icons/google-calendar.svg" height="100%"></a>`;
