@@ -9,7 +9,8 @@
  * @property {string} Comienzo - The start time of the event.
  * @property {string} [Cierre] - The end time of the event.
  * @property {string} [TelefonoDeContacto] - The contact phone number ("Teléfono de contacto").
- * @property {string|null} [Instagram] - The Instagram handle (can be null).
+ * @property {string} [Instagram] - The Instagram handle.
+ * @property {string} [Titulo] - The title of the event. ("Título")
  */
 
 /**
@@ -136,6 +137,10 @@ customElements.define(
         `;
       }
 
+      htmlString += /*html*/ `<a target="_blank" part="button" href="${createGoogleCalendarUrl(
+        event
+      )}"><img src="/assets/icons/google-calendar.svg" height="100%"></a>`;
+
       return htmlString;
     }
 
@@ -198,4 +203,47 @@ function enhanceEvent(event) {
   }
 
   return event;
+}
+
+/**
+ *
+ * @param {EventData} event
+ * @returns
+ */
+function createGoogleCalendarUrl(event) {
+  const hook = "Más información en https://eventos.trasla.com.ar\n\n";
+  const eventTitle = `${event["Título"] || "Evento"} en ${event["Localidad"]}`;
+
+  const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
+  const encodedDetails = encodeURIComponent(hook + event["Descripción"] || "");
+  const encodedLocation = encodeURIComponent(event["Ubicación"] || "");
+  const encodedSummary = encodeURIComponent("Evento en " + event["Localidad"]);
+
+  let url = `${baseUrl}&text=${encodedSummary}&details=${encodedDetails}&location=${encodedLocation}`;
+  const startDate = parseDateString(event["Comienzo"]);
+  const startDateString = startDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+
+  let endDate = new Date(startDate);
+  endDate.setHours(startDate.getHours() + 2); // Default duration is 2 hours if Cierre not provided.
+
+  if (event["Cierre"]) endDate = parseDateString(event["Cierre"]);
+  const endDateString = endDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+  url += `&dates=${startDateString}/${endDateString}`;
+  console.log(startDate, endDate, startDateString, endDateString);
+
+  return url;
+}
+
+/**
+ *
+ * @param {String} dateString
+ * @returns {Date}
+ *
+ * Format expected: "dd/mm/yyyy hh:mm:ss"
+ */
+function parseDateString(dateString) {
+  const [date, time] = dateString.split(" ");
+  const [day, month, year] = date.split("/");
+  const [hour, minute] = time.split(":");
+  return new Date(year, month - 1, day, hour, minute);
 }
