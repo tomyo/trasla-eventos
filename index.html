@@ -312,11 +312,12 @@
     import { getSheetData } from "/get-gsheet-data.js";
     const eventsElement = document.getElementById("events");
     const fetchedEvents = await getSheetData();
-
+    const now = new Date();
     eventsElement.innerHTML = ""; /* Clear loading message */
 
     for (let event of fetchedEvents) {
-      if (isOlderThanNow(event["Comienzo"])) {
+      const eventDate = parseDateString(event["Comienzo"]);
+      if (eventDate < now) {
         console.info("Omitting old event:", event["Comienzo"]);
         continue;
       }
@@ -359,24 +360,6 @@
       return new Date(year, month - 1, day, hour, minute);
     }
 
-    function isOlderThanNow(dateString) {
-      if (!dateString) return true;
-      // Parse the input date string
-      const [datePart, timePart] = dateString.split(" ");
-      const [day, month, year] = datePart.split("/");
-      const [hours, minutes, seconds] = timePart.split(":");
-
-      // Create a Date object from the parsed components
-      // Note: months are 0-indexed in JavaScript Date
-      const inputDate = new Date(year, month - 1, day, hours, minutes, seconds);
-
-      // Get the current date and time
-      const now = new Date();
-
-      // Compare the dates
-      return inputDate < now;
-    }
-
     function enhanceEvent(event) {
       // Provide a image_url
       const imageIdRegexp = /id=([\d\w-]*)/gm;
@@ -387,23 +370,22 @@
         event.imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w512`;
       }
 
-      // Replace URLs in the content with anchor tags without query parameters
       if (event["Descripción"]) {
+        // Replace URLs in the content with proper anchor tags
         const urlRegex =
           /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
 
         event["Descripción"] = event["Descripción"].replace(
           urlRegex,
           (match) => {
-            // Create a URL object to easily manipulate the URL
             let url = new URL(match);
-            // Remove the query parameters
+            // Remove the query parameters from the visual text
             url.search = "";
-            // Return the modified URL in an anchor tag
             return `<a href="${match}" target="_blank">${url.href}</a>`;
           }
         );
       }
+
       return event;
     }
 
