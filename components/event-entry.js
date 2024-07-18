@@ -230,8 +230,8 @@ function createGoogleCalendarUrl(event) {
   const startDate = parseDateString(event["Comienzo"]);
   const startDateString = startDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
 
-  let endDate = new Date(startDate);
-  endDate.setHours(startDate.getHours() + 2); // Default duration is 2 hours if Cierre not provided.
+  // Default event duration is 2 hours if end time is not provided.
+  let endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
 
   if (event["Cierre"]) endDate = parseDateString(event["Cierre"]);
   const endDateString = endDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
