@@ -381,7 +381,7 @@
       // Provide a image_url
       const imageIdRegexp = /id=([\d\w-]*)/gm;
       const imageIdMatch = imageIdRegexp.exec(event["Imagen"]);
-      const fileId = imageIdMatch && imageIdMatch[1];
+      const fileId = imageIdMatch && imageIdMatch.pop(); // Get the last file
       if (fileId) {
         event.id = fileId;
         event.imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w512`;
