@@ -325,7 +325,38 @@
 
       const eventElement = document.createElement("event-entry");
       eventElement.data = enhanceEvent(event);
+      eventElement.style = `order: ${getSortOrder(
+        parseDateString(event["Comienzo"])
+      )}`;
       eventsElement.appendChild(eventElement);
+    }
+
+    /**
+     *
+     * @param {Date} date
+     * @returns
+     */
+    function getSortOrder(date) {
+      const items = [
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+      ];
+      return items.map((t) => t.toString().padStart(2, "0")).join("");
+    }
+    /**
+     *
+     * @param {String} dateString
+     * @returns {Date}
+     *
+     * Format expected: "dd/mm/yyyy hh:mm:ss"
+     */
+    function parseDateString(dateString) {
+      const [date, time] = dateString.split(" ");
+      const [day, month, year] = date.split("/");
+      const [hour, minute] = time.split(":");
+      return new Date(year, month - 1, day, hour, minute);
     }
 
     function isOlderThanNow(dateString) {
