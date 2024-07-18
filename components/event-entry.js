@@ -85,6 +85,9 @@ customElements.define(
       const event = this._data;
 
       this.innerHTML = /*html*/ `
+      <h3 ${
+        isDateToday(event.startDate) ? "" : "hidden"
+      } class="today-reminder">¡HOY!</h3>
       <img class="event-image" height="400px" src="${
         event.imageUrl
       }" loading="lazy" alt="Evento en ${
@@ -158,6 +161,10 @@ customElements.define(
  * @returns {EventData}
  */
 function enhanceEvent(event) {
+  // Add start/end Date objects
+  event.startDate = parseDateString(event["Comienzo"]);
+  event.endDate = event["Cierre"] ? parseDateString(event["Cierre"]) : null;
+
   // Provide a image_url
   const imageIdRegexp = /id=([\d\w-]*)/gm;
   const imageIdMatch = imageIdRegexp.exec(event["Imagen"]);
@@ -246,4 +253,18 @@ function parseDateString(dateString) {
   const [day, month, year] = date.split("/");
   const [hour, minute] = time.split(":");
   return new Date(year, month - 1, day, hour, minute);
+}
+
+/**
+ *
+ * @param {Date} date
+ * @returns {boolean} True if the date is today.
+ */
+function isDateToday(date) {
+  const now = new Date();
+  return (
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear()
+  );
 }
