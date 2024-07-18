@@ -1,7 +1,22 @@
 /**
- * @type {CSSStyleSheet?}
+ * @typedef {Object} EventResponse - The response from the Google Form.
+ * @property {string} MarcaTemporal - The timestamp of the event.
+ * @property {string} DireccionDeCorreoElectronico - The email address ("Dirección de correo electrónico").
+ * @property {string} Localidad - The locality.
+ * @property {string} Imagen - The URL of the image.
+ * @property {string} [Ubicacion] - The location description ("Ubicación").
+ * @property {string} [Descripcion] - The event description ("Descripción").
+ * @property {string} Comienzo - The start time of the event.
+ * @property {string} [Cierre] - The end time of the event.
+ * @property {string} [TelefonoDeContacto] - The contact phone number ("Teléfono de contacto").
+ * @property {string|null} [Instagram] - The Instagram handle (can be null).
  */
-let styles = null;
+
+/**
+ * @typedef  {EventResponse} EventData  - The iternal event data.
+ * @property {string} id - The unique identifier.
+ * @property {string} imageUrl - The URL for the image thumbnail.
+ */
 
 function formatDateString(dateString) {
   if (!dateString) return "";
@@ -35,11 +50,26 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+      this._data = null;
+    }
+
+    /**
+     * @param {EventResponse} event
+     */
+    set data(event) {
+      this._data = enhanceEvent(event);
+    }
+
+    /**
+     * @returns {EventData}
+     */
+    get data() {
+      return this._data;
     }
 
     connectedCallback() {
-      if (this.data) this.render();
-      this?.data?.id && this.setAttribute("id", this.data.id);
+      if (this._data) this.render();
+      this?._data?.id && this.setAttribute("id", this._data.id);
 
       this.querySelector("details").addEventListener("toggle", this);
     }
@@ -48,7 +78,7 @@ customElements.define(
      * @param {Object} event
      */
     render() {
-      const event = this.data;
+      const event = this._data;
 
       this.innerHTML = /*html*/ `
         <details> 
@@ -78,7 +108,7 @@ customElements.define(
 
     renderButtons() {
       let htmlString = "";
-      const event = this.data;
+      const event = this._data;
       if (event["Teléfono de contacto"]) {
         let helloMsg =
           "Hola! 😃\nTe escribo desde eventos.trasla.com.ar por una consulta:\n\n";
@@ -115,3 +145,37 @@ customElements.define(
     }
   }
 );
+
+/**
+ *
+ * @param {EventResponse} event
+ * @returns {EventData}
+ */
+function enhanceEvent(event) {
+  // Provide a image_url
+  const imageIdRegexp = /id=([\d\w-]*)/gm;
+  const imageIdMatch = imageIdRegexp.exec(event["Imagen"]);
+  const fileId = imageIdMatch && imageIdMatch.pop(); // Get the last file
+  if (fileId) {
+    event.id = fileId;
+    event.imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w512`;
+  }
+
+  if (event["Descripción"]) {
+    // Replace URLs in the content with proper anchor tags
+    const urlRegex =
+      /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+
+    event["Descripción"] = event["Descripción"].replace(urlRegex, (match) => {
+      let url = new URL(match);
+      // Remove the query parameters from the visual text
+      url.search = "";
+      return `<a href="${match}" target="_blank">${url.href}</a>`;
+    });
+
+    // Replace new lines with <br> tags
+    event["Descripción"] = event["Descripción"].replace(/\n/g, "<br>");
+  }
+
+  return event;
+}
