@@ -326,7 +326,7 @@
       console.info("Event to display received:", event);
 
       const eventElement = document.createElement("event-entry");
-      eventElement.data = enhanceEvent(event);
+      eventElement.data = event;
       eventElement.style = `order: ${getSortOrder(
         parseDateString(event["Comienzo"])
       )}`;
@@ -359,38 +359,6 @@
       const [day, month, year] = date.split("/");
       const [hour, minute] = time.split(":");
       return new Date(year, month - 1, day, hour, minute);
-    }
-
-    function enhanceEvent(event) {
-      // Provide a image_url
-      const imageIdRegexp = /id=([\d\w-]*)/gm;
-      const imageIdMatch = imageIdRegexp.exec(event["Imagen"]);
-      const fileId = imageIdMatch && imageIdMatch.pop(); // Get the last file
-      if (fileId) {
-        event.id = fileId;
-        event.imageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w512`;
-      }
-
-      if (event["Descripción"]) {
-        // Replace URLs in the content with proper anchor tags
-        const urlRegex =
-          /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-
-        event["Descripción"] = event["Descripción"].replace(
-          urlRegex,
-          (match) => {
-            let url = new URL(match);
-            // Remove the query parameters from the visual text
-            url.search = "";
-            return `<a href="${match}" target="_blank">${url.href}</a>`;
-          }
-        );
-
-        // Replace new lines with <br> tags
-        event["Descripción"] = event["Descripción"].replace(/\n/g, "<br>");
-      }
-
-      return event;
     }
 
     document.querySelectorAll("summary").forEach((summary) => {
