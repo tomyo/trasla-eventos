@@ -183,6 +183,17 @@ function enhanceEvent(event) {
         match
       )}" target="_blank">${match}</a>`;
     });
+
+    // Replace Instagram handles with links
+    const instagramRegex = /@([a-zA-Z0-9_.]{1,30})/g;
+    event["Descripción"] = event["Descripción"].replace(
+      instagramRegex,
+      (match) => {
+        return `<a href="https://instagram.com/${match.slice(
+          1
+        )}" target="_blank">${match}</a>`;
+      }
+    );
   }
 
   return event;
