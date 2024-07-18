@@ -123,6 +123,7 @@
       </a>
     </header>
     <main>
+      <h3 id="todaySign" hidden>¡HOY!</h3>
       <section id="events">
         <p style="text-align: center">Cargando eventos...</p>
       </section>
@@ -165,6 +166,11 @@
       main {
         max-width: 37ch;
         margin: auto;
+
+        #todaySign {
+          text-align: center;
+          margin: 0;
+        }
       }
 
       #events {
@@ -310,12 +316,24 @@
 
       console.info("Event to display received:", event);
 
+      if (isDateToday(eventDate)) {
+        todaySign.hidden = false;
+      }
+
       const eventElement = document.createElement("event-entry");
       eventElement.data = event;
       eventElement.style = `order: ${getSortOrder(
         parseDateString(event["Comienzo"])
       )}`;
       eventsElement.appendChild(eventElement);
+    }
+
+    function isDateToday(date) {
+      return (
+        date.getDate() === now.getDate() &&
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear()
+      );
     }
 
     /**
