@@ -29,6 +29,14 @@
         scroll-behavior: smooth;
       }
 
+      details summary {
+        cursor: pointer;
+      }
+
+      details summary > * {
+        display: inline;
+      }
+
       /* Global styles */
 
       /* <theme> */
@@ -164,6 +172,7 @@
         flex-flow: column nowrap;
         max-width: 90ch;
         margin-inline: auto;
+        gap: 2rem;
 
         event-entry:hover,
         event-entry[open] {
@@ -179,62 +188,37 @@
           --visible-elements: 1;
           --padding: 0.5rem 1rem;
           display: block;
-          padding: var(--padding);
-          margin: 1rem;
+          padding: 1rem;
           border-radius: 2px;
           min-width: min-content;
           text-align: center; /* Center CTA button */
 
-          @media (640px < width) {
-            --visible-elements: 1;
-            --padding: 1rem;
-
-            summary {
-              /* Show a row instead of a column of elements */
-              --grid-template: 1fr / repeat(var(--visible-elements), 1fr);
-              --row-gap: 2rem;
-            }
+          .event-image {
+            width: 100%;
+            height: auto;
+            min-height: 15rem;
+            object-fit: contain;
+            cursor: pointer;
           }
 
           summary {
-            --row-gap: 1rem;
-            --grid-template: repeat(var(--visible-elements), 1fr) / 1fr;
-
-            display: grid;
-            grid-template: var(--grid-template);
             align-items: center;
-            gap: var(--row-gap) 1rem;
             cursor: pointer;
             margin-block: 1rem;
             align-items: start;
             position: relative;
 
-            .event-image {
-              width: 100%;
-              height: auto;
-              min-height: 15rem;
-              object-fit: contain;
-            }
-
-            .location,
-            .datetime {
-              display: flex;
-              gap: 0.5rem;
-            }
-
-            > * {
-              --display: flex;
-              --flow: column;
-              display: var(--display);
-              flex-flow: var(--flow) nowrap;
+            .info {
+              display: inline-flex;
               align-items: center;
               justify-content: space-between;
               gap: 0.5rem;
+              width: calc(100% - 3ch); /* 3ch for the arrow */
 
-              @media (640px < width) {
-                & {
-                  --flow: column;
-                }
+              .location,
+              .datetime {
+                display: flex;
+                gap: 0.5rem;
               }
 
               svg {
@@ -274,6 +258,7 @@
             word-break: break-word;
             text-wrap: balance;
             text-align: start;
+            margin-inline: 1rem;
           }
 
           [part="button"] {
