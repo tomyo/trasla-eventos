@@ -272,6 +272,7 @@
 
           [part="description"] {
             word-break: break-word;
+            text-align: start;
           }
 
           [part="button"] {
@@ -384,6 +385,9 @@
             return `<a href="${match}" target="_blank">${url.href}</a>`;
           }
         );
+
+        // Replace new lines with <br> tags
+        event["Descripción"] = event["Descripción"].replace(/\n/g, "<br>");
       }
 
       return event;
