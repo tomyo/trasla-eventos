@@ -304,7 +304,7 @@
 
     for (let event of fetchedEvents) {
       const eventDate = parseDateString(event["Comienzo"]);
-      if (eventDate < now) {
+      if (!isDateToday(eventDate) && eventDate < now) {
         console.info("Omitting old event:", event["Comienzo"]);
         continue;
       }
