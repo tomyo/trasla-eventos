@@ -381,6 +381,7 @@
       const url = new URL(location);
       const query = url.searchParams.get("q") || "";
       let eventsToAppend = [];
+      eventsElement.innerHTML = ""; /* Clear loading message */
 
       if (query) {
         const Fuse = (await import("/assets/js/fuse.v7.0.0.mjs")).default;
@@ -402,7 +403,6 @@
         return appendEvent(event, { open: true });
       }
 
-      eventsElement.innerHTML = ""; /* Clear loading message */
       appendEvents(events);
     }
 
