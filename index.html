@@ -97,7 +97,7 @@
           alt="Sol/Luna: Alternar color del tema"
         />
       </theme-toggle>
-      <h2>EVENTOS.TRASLA</h2>
+      <a href="/" style="text-decoration: none"><h2>EVENTOS.TRASLA</h2></a>
       <a
         id="addEvent"
         target="_blank"
@@ -256,14 +256,20 @@
             margin-inline: 1rem;
           }
 
+          [part="buttons"] {
+            display: flex;
+            justify-content: space-evenly;
+            margin-block: 2rem 1rem;
+          }
+
           [part="button"] {
             display: inline-block;
             border-radius: 2px;
             text-decoration: none;
             cursor: pointer;
             transition-duration: 0.2s;
-            padding: 1rem 1.5rem;
-            height: 4rem;
+            padding: 0.5rem;
+            height: 2.5rem;
 
             &:hover {
               background-color: color-mix(
@@ -291,27 +297,6 @@
 
   <script type="module">
     import { getSheetData } from "/get-gsheet-data.js";
-    const eventsElement = document.getElementById("events");
-    const fetchedEvents = await getSheetData();
-    const now = new Date();
-    eventsElement.innerHTML = ""; /* Clear loading message */
-
-    for (let event of fetchedEvents) {
-      const eventDate = parseDateString(event["Comienzo"]);
-      if (!isDateToday(eventDate) && eventDate < now) {
-        console.info("Omitting old event:", event["Comienzo"]);
-        continue;
-      }
-
-      console.info("Event to display received:", event);
-
-      const eventElement = document.createElement("event-entry");
-      eventElement.data = event;
-      eventElement.style = `order: ${getSortOrder(
-        parseDateString(event["Comienzo"])
-      )}`;
-      eventsElement.appendChild(eventElement);
-    }
 
     function isDateToday(date) {
       return (
@@ -361,5 +346,75 @@
         );
       });
     });
+
+    function appendEvents(events) {
+      for (const event of events) {
+        const eventDate = parseDateString(event["Comienzo"]);
+        if (!isDateToday(eventDate) && eventDate < now) {
+          // console.info("Omitting old event:", event["Comienzo"]);
+          continue;
+        }
+
+        // console.info("Event to display received:", event);
+        appendEvent(event);
+      }
+    }
+
+    /**
+     * @param {EventData} event
+     */
+    function appendEvent(event) {
+      const eventElement = document.createElement("event-entry");
+      eventElement.data = event;
+      eventElement.style = `order: ${getSortOrder(
+        parseDateString(event["Comienzo"])
+      )}`;
+      eventsElement.appendChild(eventElement);
+    }
+
+    async function showEvents(events) {
+      // Fuzzy search
+      const url = new URL(location);
+      const query = url.searchParams.get("q") || "";
+      let eventsToAppend = [];
+
+      if (query) {
+        const Fuse = (await import("/assets/js/fuse.v7.0.0.mjs")).default;
+        const fuse = new Fuse(events, {
+          keys: ["Descripción", "Comienzo", "Localidad", "Título", "Instagram"],
+          includeScore: true,
+          ignoreLocation: true,
+          threshold: 0.7, // 0 full strict, 1 full relax
+        });
+
+        const searchResults = fuse.search(query);
+        if (!searchResults) {
+          eventsElement.innerHTML =
+            "No encontramos nada con: " + query; /* Clear loading message */
+          return;
+        }
+        const sortedResults = searchResults.sort((a, b) => a.score - b.score);
+        const bestMatch = sortedResults[0].item;
+        eventsToAppend = [bestMatch];
+      } else {
+        eventsToAppend = events;
+      }
+
+      eventsElement.innerHTML = ""; /* Clear loading message */
+      appendEvents(eventsToAppend);
+    }
+
+    // RUN
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const eventsElement = document.getElementById("events");
+
+    // Get all events and drop old ones
+    const upcomingEvents = (await getSheetData()).filter((event) => {
+      return today <= parseDateString(event["Comienzo"]);
+    });
+
+    showEvents(upcomingEvents);
   </script>
 </html>
