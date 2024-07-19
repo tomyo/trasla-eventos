@@ -123,7 +123,7 @@
     </header>
     <main>
       <section id="events">
-        <p style="text-align: center">Cargando eventos...</p>
+        <p style="text-align: center">· 🌼 ·</p>
       </section>
     </main>
 
@@ -363,12 +363,16 @@
     /**
      * @param {EventData} event
      */
-    function appendEvent(event) {
+    function appendEvent(event, { open, order } = {}) {
       const eventElement = document.createElement("event-entry");
+      if (!order) {
+        order = getSortOrder(parseDateString(event["Comienzo"]));
+      }
       eventElement.data = event;
-      eventElement.style = `order: ${getSortOrder(
-        parseDateString(event["Comienzo"])
-      )}`;
+      if (open) {
+        eventElement.open = true;
+      }
+      eventElement.style = `order: ${order}`;
       eventsElement.appendChild(eventElement);
     }
 
@@ -394,14 +398,12 @@
           return;
         }
         const sortedResults = searchResults.sort((a, b) => a.score - b.score);
-        const bestMatch = sortedResults[0].item;
-        eventsToAppend = [bestMatch];
-      } else {
-        eventsToAppend = events;
+        const event = sortedResults[0].item;
+        return appendEvent(event, { open: true });
       }
 
       eventsElement.innerHTML = ""; /* Clear loading message */
-      appendEvents(eventsToAppend);
+      appendEvents(events);
     }
 
     // RUN
