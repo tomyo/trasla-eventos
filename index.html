@@ -298,7 +298,7 @@
   </body>
 
   <script type="module">
-    import { getSheetData } from "/get-gsheet-data.js";
+    import { getSheetData } from "/lib/get-gsheet-data.js";
 
     function isDateToday(date) {
       return (
@@ -386,23 +386,14 @@
       eventsElement.innerHTML = ""; /* Clear loading message */
 
       if (query) {
-        const Fuse = (await import("/assets/js/fuse.v7.0.0.mjs")).default;
-        const fuse = new Fuse(events, {
-          keys: ["Descripción", "Comienzo", "Localidad", "Título", "Instagram"],
-          includeScore: true,
-          ignoreLocation: true,
-          threshold: 0.7, // 0 full strict, 1 full relax
-        });
+        const { fuzzySearch } = await import("/lib/fuzzy-search-events.js");
 
-        const searchResults = fuse.search(query);
+        const searchResults = fuzzySearch(events, query);
         if (!searchResults) {
-          eventsElement.innerHTML =
-            "No encontramos nada con: " + query; /* Clear loading message */
+          eventsElement.innerHTML = /*html*/ `<p>No encontramos resultados con: ${query}</p>`; /* Clear loading message */
           return;
         }
-        const sortedResults = searchResults.sort((a, b) => a.score - b.score);
-        const event = sortedResults[0].item;
-        return appendEvent(event, { open: true });
+        return appendEvent(searchResults[0].item, { open: true });
       }
 
       appendEvents(events);
