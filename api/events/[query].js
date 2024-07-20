@@ -16,13 +16,13 @@ export default async function handler(req) {
   let html = await (await fetch(url.origin)).text();
 
   if (searchResults) {
-    // Add meta tags for the first search result
+    // Add meta tags for the first search result found
     // Replace title
     html = html.replace(
       /<title>.*<\/title>/is,
       `<title>${getEventShareTitle(eventData)}</title>`
     );
-    // Replace existing description
+    // Replace description
     html = html.replace(
       /<meta\s+name="description".*?>/is,
       `<meta name="description" content="${eventData.description}">`
@@ -30,17 +30,16 @@ export default async function handler(req) {
 
     const extraMetadata = /*html*/ `
         <!-- Open Graph Meta Tags -->
+      <meta property="og:locale" content="es" />
       <meta property="og:title" content="${getEventShareTitle(eventData)}" />
+      <meta property="og:description" content="${eventData.description}" />
       <meta property="og:image" content="${eventData["image-url"]}" />
       <meta property="og:image:width" content="512" />
-      <meta property="og:url" content="${url}" />
       <meta property="og:type" content="website" />
-
-      <meta property="og:locale" content="es" />
-      <meta property="og:description" content="${eventData.description}" />
+      <meta property="og:url" content="${url}" />
     `;
 
-    html = html.replace("</head>", `${extraMetadata}</head>`); // Expand head's meta tags
+    html = html.replace("</head>", `${extraMetadata}</head>`);
 
     let eventEntry = /*html*/ `
       <event-entry
