@@ -299,6 +299,13 @@
 
   <script type="module">
     import { getSheetData } from "/lib/get-gsheet-data.js";
+    import {
+      escapeHtml,
+      slugify,
+      encodeForDataset,
+      formatEventResponse,
+      parseEventResponseDateString,
+    } from "/lib/utils.js";
 
     function isDateToday(date) {
       return (
@@ -322,19 +329,6 @@
       ];
       return items.map((t) => t.toString().padStart(2, "0")).join("");
     }
-    /**
-     *
-     * @param {String} dateString
-     * @returns {Date}
-     *
-     * Format expected: "dd/mm/yyyy hh:mm:ss"
-     */
-    function parseDateString(dateString) {
-      const [date, time] = dateString.split(" ");
-      const [day, month, year] = date.split("/");
-      const [hour, minute] = time.split(":");
-      return new Date(year, month - 1, day, hour, minute);
-    }
 
     document.querySelectorAll("summary").forEach((summary) => {
       summary.addEventListener("click", (event) => {
@@ -351,26 +345,33 @@
 
     function appendEvents(events) {
       for (const event of events) {
-        const eventDate = parseDateString(event["Comienzo"]);
+        const eventDate = parseEventResponseDateString(event["Comienzo"]);
         if (!isDateToday(eventDate) && eventDate < now) {
-          // console.info("Omitting old event:", event["Comienzo"]);
           continue;
         }
 
-        // console.info("Event to display received:", event);
         appendEvent(event);
       }
     }
 
     /**
-     * @param {EventData} event
+     * @param {EventResponse} event
      */
-    function appendEvent(event, { open, order } = {}) {
+    function appendEvent(eventResponse, { open, order } = {}) {
+      const eventData = formatEventResponse(eventResponse);
       const eventElement = document.createElement("event-entry");
+
       if (!order) {
-        order = getSortOrder(parseDateString(event["Comienzo"]));
+        order = getSortOrder(new Date(eventData["start-date"]));
       }
-      eventElement.data = event;
+      for (const [key, value] of Object.entries(eventData)) {
+        if (!Object.hasOwnProperty.call(eventData, key)) continue;
+        if (typeof value !== "string")
+          console.error(`Value for key ${key} is not a string: ${value}`);
+
+        eventElement.setAttribute(`data-${key}`, escapeHtml(value));
+      }
+
       if (open) {
         eventElement.open = true;
       }
@@ -407,7 +408,7 @@
 
     // Get all events and drop old ones
     const upcomingEvents = (await getSheetData()).filter((event) => {
-      return today <= parseDateString(event["Comienzo"]);
+      return today <= parseEventResponseDateString(event["Comienzo"]);
     });
 
     showEvents(upcomingEvents);
