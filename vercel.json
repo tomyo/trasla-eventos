@@ -1,10 +1,20 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
     { "source": "/admin", "destination": "/admin/" },
     {
       "source": "/:query",
       "destination": "/api/events/[query].js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3666, stale-while-revalidate=120"
+        }
+      ]
     }
   ]
 }
