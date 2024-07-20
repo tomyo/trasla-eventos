@@ -104,7 +104,7 @@ export function formatDescription(description) {
  * @param {String} dateString as formated by gsheet es-AR locale
  * @param {Number} timezone, offset in hours from UTC
  *
- * @returns {Date|null}
+ * @returns {Date|null} UTC Date object
  *
  * Format expected: "dd/mm/yyyy hh:mm:ss"
  */
@@ -149,16 +149,30 @@ export function formatDateString(dateString) {
 
 /**
  *
- * @param {Date} date
+ * @param {Date} date - A Date object to read UTC time from
  * @returns {String} [dd]/[mm]/[yy] - [hh]:[mm]h
  */
-export function formatDate(date) {
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear().toString().slice(-2);
-  const hour = date.getHours().toString().padStart(2, "0");
-  const minute = date.getMinutes().toString().padStart(2, "0");
-  return `${day}/${month}/${year} - ${hour}:${minute}h`;
+export function formatDate(date, timezone = -3) {
+  // Fix to display timezone
+  const targetUtcDate = new Date(date);
+  targetUtcDate.setUTCHours(targetUtcDate.getUTCHours() + timezone);
+
+  const day = targetUtcDate.getUTCDate().toString().padStart(2, "0");
+  const month = (targetUtcDate.getUTCMonth() + 1).toString().padStart(2, "0");
+  const year = targetUtcDate.getUTCFullYear().toString().slice(-2);
+  const hour = targetUtcDate.getUTCHours().toString().padStart(2, "0");
+  const minute = targetUtcDate.getUTCMinutes().toString().padStart(2, "0");
+  return `${day}/${month}/${year} - ${hour}:${minute}hs`;
+}
+
+/**
+ * Parses a date string and returns a Date object if valid, or null if invalid.
+ * @param {string} dateString - The date string to parse.
+ * @returns {Date|null} The Date object if valid, or null if invalid.
+ */
+export function parseDate(dateString) {
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? null : date;
 }
 
 export function formatPhoneNumber(phoneNumber) {
@@ -290,14 +304,4 @@ export function decodeFromDataset(encodedData) {
     console.error("Error decoding data:", error);
     return null;
   }
-}
-
-/**
- * Parses a date string and returns a Date object if valid, or null if invalid.
- * @param {string} dateString - The date string to parse.
- * @returns {Date|null} The Date object if valid, or null if invalid.
- */
-export function parseDate(dateString) {
-  const date = new Date(dateString);
-  return isNaN(date.getTime()) ? null : date;
 }
