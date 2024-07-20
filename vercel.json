@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/admin/" },
+    {
+      "source": "/:query",
+      "destination": "/api/events/[query].js"
+    }
+  ]
+}
