@@ -42,7 +42,7 @@ customElements.define(
       }" loading="lazy" alt="Evento en ${this.dataset.locality} el ${formatDate(
         this.startDate
       )}">
-        <details ${this.open ? "open" : ""}>
+        <details ${this.hasAttribute("open") ? "open" : ""}>
           <summary>
 
           <div class="info">

@@ -44,6 +44,7 @@ export default async function handler(req) {
 
     let eventEntry = /*html*/ `
       <event-entry
+        open=""
         data-title="${eventData.title}"
         data-description="${eventData.description}"
         data-start-date="${eventData["start-date"]}"
