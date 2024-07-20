@@ -411,6 +411,8 @@
       return today <= parseEventResponseDateString(event["Comienzo"]);
     });
 
-    showEvents(upcomingEvents);
+    if (!document.querySelector("#events event-entry")) {
+      showEvents(upcomingEvents);
+    }
   </script>
 </html>
