@@ -101,17 +101,25 @@ export function formatDescription(description) {
 
 /**
  *
- * @param {String} dateString
+ * @param {String} dateString as formated by gsheet es-AR locale
+ * @param {Number} timezone, offset in hours from UTC
+ *
  * @returns {Date|null}
  *
  * Format expected: "dd/mm/yyyy hh:mm:ss"
  */
-export function parseEventResponseDateString(dateString) {
+export function parseEventResponseDateString(dateString, timezone = -3) {
   try {
     const [date, time] = dateString.split(" ");
     const [day, month, year] = date.split("/");
     const [hour, minute] = time.split(":");
-    return new Date(year, month - 1, day, hour, minute);
+
+    // Create a local timezone Date object, interpreting the response as UTC
+    const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+
+    // Substract the utc offset, we do it this way to avoid hours overflow
+    return new Date(localDate.setUTCHours(localDate.getUTCHours() - timezone));
+    // return new Date(year, month - 1, day, hour, minute);
   } catch (error) {
     console.error("Error parsing date:", error);
     return null;
