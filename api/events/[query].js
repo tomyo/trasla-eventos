@@ -12,14 +12,23 @@ export default async function handler(req) {
 
   const events = await getSheetData();
   const searchResults = fuzzySearch(events, query);
+  const eventData = formatEventResponse(searchResults[0].item);
   let html = await (await fetch(url.origin)).text();
 
   if (searchResults) {
     // Add meta tags for the first search result
-    const eventData = formatEventResponse(searchResults[0].item);
-    const meta = /*html*/ `
-      <title>${getEventShareTitle(eventData)}</title>
-      <meta name="description" content="${eventData.description}">
+    // Replace title
+    html = html.replace(
+      /<title>.*<\/title>/is,
+      `<title>${getEventShareTitle(eventData)}</title>`
+    );
+    // Replace existing description
+    html = html.replace(
+      /<meta\s+name="description".*?>/is,
+      `<meta name="description" content="${eventData.description}">`
+    );
+
+    const extraMetadata = /*html*/ `
         <!-- Open Graph Meta Tags -->
       <meta property="og:title" content="${getEventShareTitle(eventData)}" />
       <meta property="og:image" content="${eventData["image-url"]}" />
@@ -31,7 +40,7 @@ export default async function handler(req) {
       <meta property="og:description" content="${eventData.description}" />
     `;
 
-    html = html.replace("<head>", `<head>${meta}\n`);
+    html = html.replace("</head>", `${extraMetadata}</head>`); // Expand head's meta tags
 
     let eventEntry = /*html*/ `
       <event-entry
