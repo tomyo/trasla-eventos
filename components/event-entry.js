@@ -26,11 +26,11 @@ customElements.define(
       this.details = this.querySelector("details");
       this.image = this.querySelector(".event-image");
       this.summary = this.querySelector("summary");
-      this.details.addEventListener("toggle", this);
+      this.details?.addEventListener("toggle", this);
       this.image.addEventListener("click", (event) => {
         event.target.nextElementSibling.firstElementChild.click();
       });
-      this.summary.addEventListener("click", this);
+      this.summary?.addEventListener("click", this);
     }
 
     /**
