@@ -48,7 +48,7 @@ customElements.define(
         </p>
       </div>
 
-      <img class="event-image" height="400px" src="${
+      <img class="event-image" height="400" src="${
         this.dataset.imageUrl
       }" loading="lazy" alt="Evento en ${this.dataset.locality} el ${formatDate(
         this.startDate
