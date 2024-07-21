@@ -324,111 +324,111 @@
         }
       }
     </style>
+
+    <script type="module">
+      import { getSheetData } from "/lib/get-gsheet-data.js";
+      import {
+        escapeHtml,
+        slugify,
+        encodeForDataset,
+        formatEventResponse,
+        parseEventResponseDateString,
+      } from "/lib/utils.js";
+
+      function isDateToday(date) {
+        return (
+          date.getDate() === now.getDate() &&
+          date.getMonth() === now.getMonth() &&
+          date.getFullYear() === now.getFullYear()
+        );
+      }
+
+      /**
+       *
+       * @param {Date} date
+       * @returns
+       */
+      function getSortOrder(date) {
+        const items = [
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          date.getHours(),
+        ];
+        return items.map((t) => t.toString().padStart(2, "0")).join("");
+      }
+
+      function appendEvents(events) {
+        for (const event of events) {
+          const eventDate = parseEventResponseDateString(event["Comienzo"]);
+          if (!isDateToday(eventDate) && eventDate < now) {
+            continue;
+          }
+
+          appendEvent(event);
+        }
+      }
+
+      /**
+       * @param {EventResponse} event
+       */
+      function appendEvent(eventResponse, { open, order } = {}) {
+        const eventData = formatEventResponse(eventResponse);
+        const eventElement = document.createElement("event-entry");
+
+        if (!order) {
+          order = getSortOrder(new Date(eventData["start-date"]));
+        }
+        for (const [key, value] of Object.entries(eventData)) {
+          if (!Object.hasOwnProperty.call(eventData, key)) continue;
+          if (typeof value !== "string")
+            console.error(`Value for key ${key} is not a string: ${value}`);
+
+          eventElement.setAttribute(`data-${key}`, escapeHtml(value));
+        }
+
+        if (open) {
+          eventElement.open = true;
+        }
+        eventElement.style = `order: ${order}`;
+        eventsElement.appendChild(eventElement);
+      }
+
+      async function showEvents(events) {
+        // Fuzzy search
+        const url = new URL(location);
+        const query = url.searchParams.get("q") || "";
+        let eventsToAppend = [];
+        eventsElement.innerHTML = ""; /* Clear loading message */
+
+        if (query) {
+          const { fuzzySearch } = await import("/lib/fuzzy-search-events.js");
+
+          const searchResults = fuzzySearch(events, query);
+          if (!searchResults) {
+            eventsElement.innerHTML = /*html*/ `<p>No encontramos resultados con: ${query}</p>`; /* Clear loading message */
+            return;
+          }
+          return appendEvent(searchResults[0].item, { open: true });
+        }
+
+        appendEvents(events);
+      }
+
+      // RUN
+
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const eventsElement = document.getElementById("events");
+
+      // Get all events and drop old ones
+      const upcomingEvents = (await getSheetData()).filter((event) => {
+        return today <= parseEventResponseDateString(event["Comienzo"]);
+      });
+
+      if (!document.querySelector("#events event-entry")) {
+        showEvents(upcomingEvents);
+      }
+    </script>
   </body>
-
-  <script type="module">
-    import { getSheetData } from "/lib/get-gsheet-data.js";
-    import {
-      escapeHtml,
-      slugify,
-      encodeForDataset,
-      formatEventResponse,
-      parseEventResponseDateString,
-    } from "/lib/utils.js";
-
-    function isDateToday(date) {
-      return (
-        date.getDate() === now.getDate() &&
-        date.getMonth() === now.getMonth() &&
-        date.getFullYear() === now.getFullYear()
-      );
-    }
-
-    /**
-     *
-     * @param {Date} date
-     * @returns
-     */
-    function getSortOrder(date) {
-      const items = [
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        date.getHours(),
-      ];
-      return items.map((t) => t.toString().padStart(2, "0")).join("");
-    }
-
-    function appendEvents(events) {
-      for (const event of events) {
-        const eventDate = parseEventResponseDateString(event["Comienzo"]);
-        if (!isDateToday(eventDate) && eventDate < now) {
-          continue;
-        }
-
-        appendEvent(event);
-      }
-    }
-
-    /**
-     * @param {EventResponse} event
-     */
-    function appendEvent(eventResponse, { open, order } = {}) {
-      const eventData = formatEventResponse(eventResponse);
-      const eventElement = document.createElement("event-entry");
-
-      if (!order) {
-        order = getSortOrder(new Date(eventData["start-date"]));
-      }
-      for (const [key, value] of Object.entries(eventData)) {
-        if (!Object.hasOwnProperty.call(eventData, key)) continue;
-        if (typeof value !== "string")
-          console.error(`Value for key ${key} is not a string: ${value}`);
-
-        eventElement.setAttribute(`data-${key}`, escapeHtml(value));
-      }
-
-      if (open) {
-        eventElement.open = true;
-      }
-      eventElement.style = `order: ${order}`;
-      eventsElement.appendChild(eventElement);
-    }
-
-    async function showEvents(events) {
-      // Fuzzy search
-      const url = new URL(location);
-      const query = url.searchParams.get("q") || "";
-      let eventsToAppend = [];
-      eventsElement.innerHTML = ""; /* Clear loading message */
-
-      if (query) {
-        const { fuzzySearch } = await import("/lib/fuzzy-search-events.js");
-
-        const searchResults = fuzzySearch(events, query);
-        if (!searchResults) {
-          eventsElement.innerHTML = /*html*/ `<p>No encontramos resultados con: ${query}</p>`; /* Clear loading message */
-          return;
-        }
-        return appendEvent(searchResults[0].item, { open: true });
-      }
-
-      appendEvents(events);
-    }
-
-    // RUN
-
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const eventsElement = document.getElementById("events");
-
-    // Get all events and drop old ones
-    const upcomingEvents = (await getSheetData()).filter((event) => {
-      return today <= parseEventResponseDateString(event["Comienzo"]);
-    });
-
-    if (!document.querySelector("#events event-entry")) {
-      showEvents(upcomingEvents);
-    }
-  </script>
 </html>
