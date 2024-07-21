@@ -28,9 +28,8 @@ customElements.define(
       this.summary = this.querySelector("summary");
       this.details?.addEventListener("toggle", this);
       this.image.addEventListener("click", (event) => {
-        event.target.nextElementSibling.firstElementChild.click();
+        this.summary?.click();
       });
-      this.summary?.addEventListener("click", this);
     }
 
     /**
