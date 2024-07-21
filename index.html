@@ -50,16 +50,17 @@
       }
 
       :root {
-        --brand-color: #303030;
-        --color: #222222;
-        --background-color: color-mix(in srgb, var(--brand-color) 15%, white);
+        --color-light: #fafafa;
+        --color-dark: #222222;
+        --color: var(--color-dark);
+        --background-color: var(--color-light);
         color-scheme: var(--color-scheme, dark light);
 
         &[data-theme="🌑"] {
           color-scheme: dark;
 
-          --color: #f5f5f5;
-          --background-color: var(--brand-color);
+          --color: var(--color-light);
+          --background-color: var(--color-dark);
         }
       }
       /* </theme> */
@@ -146,7 +147,7 @@
 
       header {
         text-align: center;
-        padding: 2rem; /* margin adds scroll */
+        padding: 2rem; /* margins adds scroll */
         padding-top: 3.3rem;
 
         theme-toggle {
@@ -204,10 +205,12 @@
             transparent,
             color-mix(in srgb, var(--color, currentcolor) 7%, transparent)
           );
-          border: 1px white solid;
           padding: 1.5rem;
-          background: #fafafa;
-          color: #222222;
+          background-color: color-mix(
+            in srgb,
+            var(--color, currentcolor) 7%,
+            var(--background-color, currentcolor)
+          );
 
           .event-image {
             width: 100%;
