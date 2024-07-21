@@ -53,21 +53,22 @@ customElements.define(
       }" loading="lazy" alt="Evento en ${this.dataset.locality} el ${formatDate(
         this.startDate
       )}">
-        <details ${this.hasAttribute("open") ? "open" : ""}>
-          <summary>
-            Ver más
-          </summary>
+      <div part="buttons">
+        ${this.renderButtons()}
+      </div>
 
-          <p slot="description" part="description">${formatDescription(
-            this.dataset.description
-          )} </p>
-
-          <div part="buttons">
-            ${this.renderButtons()}
-          </div>
-
-        </details>
-      `;
+      ${
+        this.dataset.description
+          ? /*html*/ `<details ${this.hasAttribute("open") ? "open" : ""}>
+        <summary>
+          Ver más
+        </summary>
+        <p slot="description" part="description">${formatDescription(
+          this.dataset.description
+        )}</p>
+      </details>`
+          : ""
+      }`;
     }
     static observedAttributes = ["open", "order"];
 
@@ -122,7 +123,7 @@ customElements.define(
           )}`;
 
         htmlString += /*html*/ `
-          <a part="button" target="_blank" href=${href} title="Ir a la ubicación del evento">
+          <a part="button" target="_blank" href=${href} title="Como llegar">
             <img src="/assets/icons/google-maps-256w.png" height="100%" alt="Google Maps" loading="lazy"/>
           </a>
         `;
