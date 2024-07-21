@@ -23,10 +23,14 @@ customElements.define(
       this.dataset.id && this.setAttribute("id", this.dataset.id); // to link to it inside the page
       this.render();
 
-      this.querySelector("details").addEventListener("toggle", this);
-      this.querySelector(".event-image").addEventListener("click", (event) => {
+      this.details = this.querySelector("details");
+      this.image = this.querySelector(".event-image");
+      this.summary = this.querySelector("summary");
+      this.details.addEventListener("toggle", this);
+      this.image.addEventListener("click", (event) => {
         event.target.nextElementSibling.firstElementChild.click();
       });
+      this.summary.addEventListener("click", this);
     }
 
     /**
@@ -37,6 +41,13 @@ customElements.define(
       <h3 ${
         isDateToday(this.startDate) ? "" : "hidden"
       } class="today-reminder">¡HOY!</h3>
+      <div class="info">
+        <p>${this.dataset.locality}</p>
+        <p class="datetime">
+        ${formatDate(this.startDate)}
+        </p>
+      </div>
+
       <img class="event-image" height="400px" src="${
         this.dataset.imageUrl
       }" loading="lazy" alt="Evento en ${this.dataset.locality} el ${formatDate(
@@ -44,13 +55,7 @@ customElements.define(
       )}">
         <details ${this.hasAttribute("open") ? "open" : ""}>
           <summary>
-
-          <div class="info">
-            <p>${this.dataset.locality}</p>
-            <p class="datetime">
-            ${formatDate(this.startDate)}
-            </p>
-          </div>
+            Ver más
           </summary>
 
           <p slot="description" part="description">${formatDescription(
@@ -77,7 +82,6 @@ customElements.define(
     handleEvent(event) {
       if (event.type === "toggle") {
         if (event.target.open != this.open) this.open = event.target.open;
-        // this.toggleAttribute("open", event.target.open);
       }
     }
 
