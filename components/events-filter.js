@@ -4,7 +4,7 @@ customElements.define(
     constructor() {
       super();
       this.addEventListener("input", this);
-      this.events = document.querySelector("#events");
+      this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
 
       // Detect events changes and update hide/show them according to the filters.
@@ -29,7 +29,7 @@ customElements.define(
       }
     }
 
-    updateLocalitiesOptions(events) {
+    updateLocalitiesOptions(events, { showCount = false } = {}) {
       const availableLocalities = new Map();
       events.querySelectorAll("event-entry").forEach((event) => {
         let locality = event.dataset.locality;
@@ -43,9 +43,10 @@ customElements.define(
           option.hidden = true;
           continue;
         }
-        option.textContent = `${option.value} (${availableLocalities.get(
-          option.value
-        )})`;
+        if (showCount)
+          option.textContent = `${option.value} (${availableLocalities.get(
+            option.value
+          )})`;
         option.hidden = false;
       }
     }
