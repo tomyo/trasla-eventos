@@ -13,7 +13,8 @@ export default async function handler(req) {
   const events = await getSheetData();
   const searchResults = fuzzySearch(events, query);
   const eventData = formatEventResponse(searchResults[0].item);
-  let html = await (await fetch(url.origin)).text();
+
+  let html = await (await fetch(`${url.origin}/index.html`)).text();
 
   if (searchResults) {
     // Add meta tags for the first search result found
@@ -58,7 +59,7 @@ export default async function handler(req) {
     `;
 
     html = html.replace(
-      /(?<openTag><section\s+id="events"[^>]*>).*?(?<closeTag><\/section>)/is,
+      /(?<openTag><event-entries\s+[^>]*>).*?(?<closeTag><\/event-entries>)/is,
       "$<openTag>" + eventEntry + "$<closeTag>"
     );
   }
