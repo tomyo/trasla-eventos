@@ -255,9 +255,7 @@
 
     <style>
       :root {
-        --main-max-width: 40ch;
         &[data-theme="🌑"] {
-          #logo,
           theme-toggle {
             filter: invert(1);
           }
@@ -289,6 +287,8 @@
           text-align: center;
           padding-block: 5rem;
           height: 100vh;
+          height: 100lvh;
+
           color: var(--color-light);
 
           &::before {
@@ -308,6 +308,7 @@
                 type("image/jpeg")
             );
           }
+
           @media (orientation: landscape) {
             &::before {
               background-image: url("/assets/images/portada-landscape-2048w.avif");
@@ -336,7 +337,7 @@
       }
 
       section#events {
-        form {
+        events-filter form {
           text-align: center;
           display: grid;
           justify-items: start;
@@ -461,12 +462,15 @@
 
       /* css support warning */
       @supports not selector(&) {
-        main::after {
-          content: "🚨 Este sitio por ahora requiere de una versión mas actualizada de tu navegador...";
+        body::before {
+          content: "🚨 El sitio requiere de una versión mas actualizada del navegador.";
           display: block;
+          position: sticky;
+          top: 0;
           color: red;
           font-size: 1.5rem;
           text-align: center;
+          padding: 1rem;
         }
       }
     </style>
