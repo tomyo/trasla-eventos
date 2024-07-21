@@ -114,11 +114,11 @@ customElements.define(
       }
 
       // Add Google Maps button
-      if (this.dataset.ubicacion) {
-        let href = this.dataset.ubicacion;
+      if (this.dataset.location) {
+        let href = this.dataset.location;
         if (!isValidUrl(href))
           href = `https://www.google.com/maps/search/?api=1&query=${encodeURI(
-            this.dataset.ubicacion
+            this.dataset.location
           )}`;
 
         htmlString += /*html*/ `
