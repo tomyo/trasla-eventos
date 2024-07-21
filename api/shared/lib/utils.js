@@ -58,14 +58,14 @@ export function formatEventResponse(eventResponse) {
 
 /**
  *
- * @param {String} description
+ * @param {String} description - text to format, html scaped.
  * @returns {String} sanitized and formated description ready to be inserted in html
  */
 export function formatDescription(description) {
   // Replace URLs in the content with proper anchor tags
   if (!description) return "";
 
-  let result = description;
+  let result = unescapeHtml(description);
 
   const urlRegex =
     /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
@@ -272,7 +272,7 @@ export function escapeHtml(unsafeText) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/'/g, "&apos;");
 }
 
 /**
