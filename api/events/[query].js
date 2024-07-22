@@ -57,9 +57,8 @@ export default async function handler(req) {
         data-image-url="${eventData["image-url"]}"
       ></event-entry>
     `;
-
     html = html.replace(
-      /(?<openTag><event-entries\s+[^>]*>).*?(?<closeTag><\/event-entries>)/is,
+      /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
       "$<openTag>" + eventEntry + "$<closeTag>"
     );
   }
