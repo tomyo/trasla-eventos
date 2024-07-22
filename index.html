@@ -115,12 +115,21 @@
         alt="Sol/Luna: Alternar color del tema"
       />
     </theme-toggle>
+    <script src="/components/type-writer.js" type="module"></script>
     <main>
       <section id="hero">
-        <a href="/" style="text-decoration: none">
-          <h1>EVENTOS.TRASLA</h1>
-        </a>
-
+        <div>
+          <a href="/" style="text-decoration: none">
+            <h1>EVENTOS.TRASLA</h1>
+          </a>
+          <h4 class="moto">
+            La forma más fácil de
+            <type-writer
+              data-words="ver, compartir, publicar, buscar, agendar"
+            ></type-writer>
+            eventos
+          </h4>
+        </div>
         <div id="actions">
           <a
             id="addEvent"
@@ -288,6 +297,16 @@
               );
             }
           }
+          .moto {
+            width: max-content;
+            margin: auto;
+            text-align: start;
+            font-weight: 300;
+
+            type-writer {
+              text-transform: uppercase;
+            }
+          }
 
           #actions {
             display: grid;
@@ -298,7 +317,6 @@
 
           h1 {
             font-weight: 300;
-            margin-bottom: 0.4rem;
             letter-spacing: 1px;
           }
         }
@@ -558,6 +576,16 @@
 
       if (!document.querySelector("event-entry")) {
         showEvents(upcomingEvents);
+      } else {
+        // Focus already visible event entry
+        const eventToFocus = document.querySelector("event-entry");
+        const focusElement = () =>
+          eventToFocus.scrollIntoView({ behavior: "smooth" });
+        if (document.readyState === "complete") {
+          focusElement();
+        } else {
+          window.addEventListener("load", focusElement);
+        }
       }
     </script>
   </body>
