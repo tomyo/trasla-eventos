@@ -15,12 +15,11 @@ customElements.define(
           }
         });
 
-        this.updateLocalitiesOptions(
-          this.events,
-          this.form.querySelector("[name=locality]")
-        );
+        this.updateLocalitiesOptions(this.events);
       });
       observer.observe(this.events, { childList: true });
+
+      this.updateLocalitiesOptions(this.events);
     }
 
     handleEvent(event) {

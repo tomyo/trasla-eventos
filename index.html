@@ -117,41 +117,6 @@
     </theme-toggle>
     <main>
       <section id="hero">
-        <!-- <picture>
-          <source
-            srcset="/assets/images/portada-landscape-2048w.avif"
-            type="image/avif"
-            media="(orientation: landscape)"
-          />
-          <source
-            srcset="/assets/images/portada-landscape-2048w.jpg"
-            type="image/jpeg"
-            media="(orientation: landscape)"
-          />
-          <source
-            srcset="/assets/images/portada-portrait-600w.avif"
-            type="image/avif"
-            media="(orientation: portrait)"
-          />
-          <img
-            id="bgImage"
-            src="/assets/images/portada-portrait-600w.jpg"
-            type="image/jpeg"
-            media="(orientation: portrait)"
-            alt=""
-          />
-          <style>
-            #bgImage {
-              position: absolute;
-              inset: 0;
-              width: 100%;
-              height: 100%;
-              z-index: -1;
-              object-fit: cover;
-              object-position: center;
-            }
-          </style>
-        </picture> -->
         <a href="/" style="text-decoration: none">
           <h1>EVENTOS.TRASLA</h1>
         </a>
@@ -171,6 +136,7 @@
       </section>
       <section id="events">
         <events-filter>
+          <a id="seeAll" href="/#events">Ver todos</a>
           <details>
             <summary>
               <h5>Filtrar por</h5>
@@ -279,6 +245,7 @@
 
         section {
           padding-block: 2rem;
+          padding-inline: 1rem;
         }
 
         section#hero {
@@ -338,12 +305,24 @@
       }
 
       section#events {
-        events-filter form {
-          text-align: center;
-          display: grid;
-          justify-items: start;
-          width: max-content;
-          margin: auto;
+        events-filter {
+          display: flex;
+          flex-flow: column;
+          gap: 2rem;
+
+          #seeAll {
+            position: absolute;
+            line-height: 2;
+            z-index: 1;
+          }
+
+          > details > summary {
+            position: relative;
+            text-align: end;
+          }
+          form {
+            text-align: end;
+          }
         }
 
         event-entries {
@@ -351,12 +330,11 @@
           flex-flow: column nowrap;
           max-width: 90ch;
           margin-inline: auto;
-          gap: 1rem;
+          gap: 2rem;
 
           event-entry {
             --visible-elements: 1;
             --padding: 4.5rem 1rem;
-            margin: 2rem 1rem;
             border-radius: 10px;
             min-width: min-content;
             text-align: center;
