@@ -307,22 +307,21 @@
             background-attachment: fixed;
             background-size: cover;
             background-position: center;
-            background-image: url("/assets/images/portada-portrait-600w.avif");
+            background-image: url("/assets/images/portada-720w-1280h.jpg");
             background-image: image-set(
-              url("/assets/images/portada-portrait-600w.avif") 1x
+              url("/assets/images/portada-720w-1280h.avif") 1x
                 type("image/avif"),
-              url("/assets/images/portada-portrait-600w.jpg") 1x
-                type("image/jpeg")
+              url("/assets/images/portada-720w-1280h.jpg") 1x type("image/jpeg")
             );
           }
 
           @media (orientation: landscape) {
             &::before {
-              background-image: url("/assets/images/portada-landscape-2048w.avif");
+              background-image: url("/assets/images/portada-1920w-1200h.jpg");
               background-image: image-set(
-                url("/assets/images/portada-landscape-2048w.avif") 1x
+                url("/assets/images/portada-1920w-1200h.avif") 1x
                   type("image/avif"),
-                url("/assets/images/portada-landscape-2048w.jpg") 1x
+                url("/assets/images/portada-1920w-1200h.jpg") 1x
                   type("image/jpeg")
               );
             }
