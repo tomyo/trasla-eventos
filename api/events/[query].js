@@ -4,6 +4,7 @@ import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
 import {
   getEventShareTitle,
   formatEventResponse,
+  escapeHtml,
 } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
@@ -14,46 +15,72 @@ export default async function handler(req) {
   const searchResults = fuzzySearch(events, query);
   const eventData = formatEventResponse(searchResults[0].item);
 
+  // WARNING: escape event data before inserting it into the HTML
+
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
   if (searchResults) {
     // Add meta tags for the first search result found
     // Replace title
-    html = html.replace(
-      /<title>.*<\/title>/is,
-      `<title>${getEventShareTitle(eventData)}</title>`
-    );
-    // Replace description
-    html = html.replace(
-      /<meta\s+name="description".*?>/is,
-      `<meta name="description" content="${eventData.description}">`
-    );
+    // html = html.replace(
+    //   /<title>.*<\/title>/is,
+    //   `<title>${getEventShareTitle(eventData)}</title>`
+    // );
+    // // Replace description
+    // html = html.replace(
+    //   /<meta\s+name="description".*?>/is,
+    //   `<meta name="description" content="${eventData.description}">`
+    // );
 
-    const extraMetadata = /*html*/ `
-        <!-- Open Graph Meta Tags -->
-      <meta property="og:locale" content="es" />
-      <meta property="og:title" content="${getEventShareTitle(eventData)}" />
-      <meta property="og:description" content="${eventData.description}" />
-      <meta property="og:image" content="${eventData["image-url"]}" />
-      <meta property="og:image:width" content="512" />
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content="${url}" />
+    // const extraMetadata = /*html*/ `
+    //     <!-- Open Graph Meta Tags -->
+    //   <meta property="og:locale" content="es" />
+    //   <meta property="og:title" content="${getEventShareTitle(eventData)}" />
+    //   <meta property="og:description" content="${eventData.description}" />
+    //   <meta property="og:image" content="${eventData["image-url"]}" />
+    //   <meta property="og:image:width" content="512" />
+    //   <meta property="og:type" content="website" />
+    //   <meta property="og:url" content="${url}" />
+    // `;
+
+    const contentMeta = /*html*/ `
+    <title property="og:title">${escapeHtml(
+      getEventShareTitle(eventData)
+    )}</title>
+    <link
+      rel="canonical"
+      property="og:url"
+      href="https://eventos.trasla.com.ar"
+    />
+    <meta
+      name="description"
+      property="og:description"
+      content="${escapeHtml(eventData.description)}"
+    />
+    <meta property="og:image" content="${eventData["image-url"]}" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:type" content="event" />
+    <meta property="og:url" content="${url}" />
+
+    <meta property="og:site_name" content="EVENTOS.TRASLA" />
+    <meta property="og:locale" content="es-AR" />
     `;
 
-    html = html.replace("</head>", `${extraMetadata}</head>`);
+    const contentMetaRegex =
+      /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
+    html = html.replace(contentMetaRegex, contentMeta);
 
     let eventEntry = /*html*/ `
       <event-entry
         open=""
-        data-title="${eventData.title}"
-        data-description="${eventData.description}"
+        data-title="${escapeHtml(eventData.title)}"
+        data-description="${escapeHtml(eventData.description)}"
         data-start-date="${eventData["start-date"]}"
         data-end-date="${eventData["end-date"]}"
         data-locality="${eventData.locality}"
         data-instagram="${eventData.instagram}"
-        data-location="${eventData.location}"
+        data-location="${escapeHtml(eventData.location)}"
         data-phone="${eventData.phone}"
-        data-suggestion="${eventData.suggestion}"
         data-image-url="${eventData["image-url"]}"
       ></event-entry>
     `;
