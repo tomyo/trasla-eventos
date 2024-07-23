@@ -118,8 +118,9 @@ customElements.define(
         let href = this.dataset.location;
         if (!isValidUrl(href))
           href = `https://www.google.com/maps/search/?api=1&query=${encodeURI(
-            this.dataset.location
-          )}`;
+            this.dataset.location +
+              `, ${this.dataset.locality}, Córdoba, Argentina`
+          )},`;
 
         htmlString += /*html*/ `
           <a part="button" target="_blank" href=${href} title="Como llegar">
