@@ -20,50 +20,27 @@ export default async function handler(req) {
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
   if (searchResults) {
-    // Add meta tags for the first search result found
-    // Replace title
-    // html = html.replace(
-    //   /<title>.*<\/title>/is,
-    //   `<title>${getEventShareTitle(eventData)}</title>`
-    // );
-    // // Replace description
-    // html = html.replace(
-    //   /<meta\s+name="description".*?>/is,
-    //   `<meta name="description" content="${eventData.description}">`
-    // );
-
-    // const extraMetadata = /*html*/ `
-    //     <!-- Open Graph Meta Tags -->
-    //   <meta property="og:locale" content="es" />
-    //   <meta property="og:title" content="${getEventShareTitle(eventData)}" />
-    //   <meta property="og:description" content="${eventData.description}" />
-    //   <meta property="og:image" content="${eventData["image-url"]}" />
-    //   <meta property="og:image:width" content="512" />
-    //   <meta property="og:type" content="website" />
-    //   <meta property="og:url" content="${url}" />
-    // `;
-
     const contentMeta = /*html*/ `
-    <title property="og:title">${escapeHtml(
-      getEventShareTitle(eventData)
-    )}</title>
-    <link
-      rel="canonical"
-      property="og:url"
-      href="https://eventos.trasla.com.ar"
-    />
-    <meta
-      name="description"
-      property="og:description"
-      content="${escapeHtml(eventData.description)}"
-    />
-    <meta property="og:image" content="${eventData["image-url"]}" />
-    <meta property="og:image:width" content="512" />
-    <meta property="og:type" content="event" />
-    <meta property="og:url" content="${url}" />
+      <title property="og:title">${escapeHtml(
+        getEventShareTitle(eventData)
+      )}</title>
+      <link
+        rel="canonical"
+        property="og:url"
+        href="https://eventos.trasla.com.ar"
+      />
+      <meta
+        name="description"
+        property="og:description"
+        content="${escapeHtml(eventData.description)}"
+      />
+      <meta property="og:image" content="${eventData["image-url"]}" />
+      <meta property="og:image:width" content="512" />
+      <meta property="og:type" content="event" />
+      <meta property="og:url" content="${url}" />
 
-    <meta property="og:site_name" content="EVENTOS.TRASLA" />
-    <meta property="og:locale" content="es-AR" />
+      <meta property="og:site_name" content="EVENTOS.TRASLA" />
+      <meta property="og:locale" content="es-AR" />
     `;
 
     const contentMetaRegex =
