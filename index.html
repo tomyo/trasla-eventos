@@ -606,7 +606,9 @@
       if (!document.querySelector("event-entry")) {
         showEvents(upcomingEvents);
       } else {
-        // Focus already visible event entry
+        // SSR prerendered events
+
+        // Scroll into first event
         const eventToFocus = document.querySelector("event-entry");
         const focusElement = () =>
           eventToFocus.scrollIntoView({ behavior: "smooth" });
@@ -614,6 +616,11 @@
           focusElement();
         } else {
           window.addEventListener("load", focusElement);
+        }
+
+        if (document.querySelectorAll("event-entry").length === 1) {
+          // Hide details summary (Ver más) since the event will be open by default
+          eventToFocus.querySelector("summary").toggleAttribute("hidden");
         }
       }
     </script>
