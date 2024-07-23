@@ -186,12 +186,7 @@ export function isValidUrl(string) {
     new URL(string);
     return true;
   } catch {
-    try {
-      new URL(`http://${string}`);
-      return true;
-    } catch {
-      return false;
-    }
+    return false;
   }
 }
 
