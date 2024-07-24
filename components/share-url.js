@@ -1,191 +1,54 @@
-class ShareUrl extends HTMLElement {
-  // Setup
-  constructor() {
-    super();
+customElements.define(
+  "share-url",
+  class extends HTMLElement {
+    constructor() {
+      super();
 
-    this.options = {
-      selector: ".share-url",
-      activeClass: "is-active",
-      action: "share",
-      url: document.location.href,
-      title: document.title,
-      urlParameter: "url",
-      titleParameter: "text",
-      textSelector: null,
-      textLabel: "",
-      textSuccess: "Shared",
-      maintainSize: false,
-      fallback: false,
-    };
+      this.element = this.querySelector("button, a");
+      if (!this.element) return;
 
-    this.platforms = [
-      { name: "twitter", url: "https://twitter.com/intent/tweet" },
-      {
-        name: "linkedin",
-        url: "https://www.linkedin.com/shareArticle?mini=true",
-      },
-      {
-        name: "facebook",
-        url: "https://facebook.com/sharer/sharer.php",
-        titleParameter: "t",
-        urlParameter: "u",
-      },
-    ];
-
-    this.setup();
-  }
-
-  connectedCallback() {
-    this.setup();
-  }
-
-  setup() {
-    if (this._instantiated) return;
-
-    this.element = this.querySelector("button, a");
-    if (!this.element) return;
-
-    for (const item of this.getAttributeNames()) {
-      let prop = this.camelCase(item);
-      let value = this.checkBoolean(this.getAttribute(item));
-      this.options[prop] = value;
-    }
-
-    if (this.element.href && !this.getAttribute("action"))
-      this.options.action = this.element.href;
-
-    if (this.options.fallback && navigator.share !== undefined) {
-      this.hideElement();
-      return;
-    }
-
-    this.textElement = this.querySelector(this.options.textSelector);
-    if (this.textElement === null) this.textElement = this.element;
-    if (this.options.textLabel)
-      this.textElement.innerText = this.options.textLabel;
-
-    if (
-      this.options.action === "share" ||
-      this.options.action === "clipboard"
-    ) {
-      navigator[this.options.action]
-        ? this.element.addEventListener("click", () => this.shareEvent())
-        : (this.style.display = "none");
-    } else {
-      this.element.addEventListener("click", (event) =>
-        this.sharePlatform(event)
-      );
-    }
-
-    this._instantiated = true;
-  }
-
-  // Utilities
-  checkBoolean(string) {
-    if (string.toLowerCase() === "true") return true;
-    if (string.toLowerCase() === "false") return false;
-    return string;
-  }
-
-  isValidUrl(string) {
-    try {
-      new URL(string);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  hideElement() {
-    this.style.display = "none";
-  }
-
-  camelCase(text, delimiter = "-") {
-    const pattern = new RegExp(`${delimiter}([a-z])`, "g");
-    return text.replace(pattern, (match, replacement) =>
-      replacement.toUpperCase()
-    );
-  }
-
-  // Methods
-  async shareEvent() {
-    try {
-      if (this.options.action === "share")
-        await navigator.share({
-          title: this.options.title,
-          text: this.options.title,
-          url: this.options.url,
-        });
-      if (this.options.action === "clipboard")
-        await navigator.clipboard.writeText(this.options.url);
-
-      this.shareSuccess();
-    } catch (error) {
-      if (error.name !== "AbortError") console.error(error.name, error.message);
-    }
-  }
-
-  sharePlatform(event) {
-    event.preventDefault();
-
-    let platformData = this.platforms.find(
-      (item) => item.name === this.options.action
-    );
-    if (platformData) {
-      this.options.action = platformData.url;
-      if (platformData.titleParameter)
-        this.options.titleParameter = platformData.titleParameter;
-      if (platformData.urlParameter)
-        this.options.urlParameter = platformData.urlParameter;
-    }
-
-    if (this.options.action === "mastodon") {
-      let mastodonInstance = localStorage.getItem("mastodon-instance");
-
-      if (!mastodonInstance) {
-        let mastodonPrompt = prompt("Enter your Mastodon instance");
-        if (mastodonPrompt === "" || mastodonPrompt === null) return;
-
-        localStorage.setItem("mastodon-instance", mastodonPrompt);
-        mastodonInstance = localStorage.getItem("mastodon-instance");
+      if (navigator[this.dataset.action]) {
+        this.element.addEventListener("click", this);
       }
-
-      this.options.action = `https://${mastodonInstance}/share`;
     }
 
-    if (!this.isValidUrl(this.options.action)) return;
-
-    const platformURL = new URL(this.options.action);
-
-    if (this.options.urlParameter === "") {
-      this.options.title += ` ${this.options.url}`;
-    } else {
-      platformURL.searchParams.append(
-        this.options.urlParameter,
-        this.options.url
-      );
+    canShare() {
+      return navigator.share && location.protocol === "https:";
     }
 
-    platformURL.searchParams.append(
-      this.options.titleParameter,
-      this.options.title
-    );
+    handleEvent(event) {
+      if (event.type === "click") {
+        this.shareEvent();
+      }
+    }
 
-    window.open(platformURL.href, "_blank", "noreferrer,noopener");
-    this.shareSuccess();
+    async shareEvent() {
+      const url =
+        this.dataset.url || this.element.href || document.location.href;
+      try {
+        if (this.canShare())
+          await navigator.share({
+            title: this.dataset.title || document.title,
+            text: this.dataset.title || document.title,
+            url,
+          });
+        else await navigator.clipboard.writeText(url);
+
+        this.shareSuccess();
+      } catch (error) {
+        if (error.name !== "AbortError")
+          console.error(error.name, error.message);
+      }
+    }
+
+    shareSuccess = () => {
+      const originalContent = this.element.innerText || this.element.innerHTML;
+      this.element.innerText = this.canShare()
+        ? this.dataset.textSuccess
+        : this.dataset.textSuccessFallback;
+      setTimeout(() => {
+        this.element.innerHTML = originalContent;
+      }, 2000);
+    };
   }
-
-  shareSuccess() {
-    let textWidth = this.textElement.offsetWidth;
-    this.textElement.innerText = this.options.textSuccess;
-    if (this.options.maintainSize)
-      this.textElement.style.width = `${Math.max(
-        textWidth,
-        this.textElement.offsetWidth
-      )}px`;
-    this.element.classList.add(this.options.activeClass);
-  }
-}
-
-customElements.define("share-url", ShareUrl);
-export { ShareUrl };
+);
