@@ -14,10 +14,15 @@ class TypeWriter extends HTMLElement {
     this.words = this.getAttribute("data-words")
       .split(",")
       .map((word) => word.trim());
-    this.typeWriter();
+
+    if (document.readyState === "complete") {
+      this.typeWriter();
+    } else {
+      window.addEventListener("load", this.typeWriter);
+    }
   }
 
-  typeWriter() {
+  typeWriter = () => {
     const current = this.currentIndex % this.words.length;
     const fullWord = this.words[current];
 
@@ -41,7 +46,7 @@ class TypeWriter extends HTMLElement {
     }
 
     setTimeout(() => this.typeWriter(), typeSpeed);
-  }
+  };
 }
 
 customElements.define("type-writer", TypeWriter);
