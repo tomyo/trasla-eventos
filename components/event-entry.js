@@ -93,7 +93,7 @@ customElements.define(
         let helloMsg =
           "Hola! 😃\nTe escribo desde eventos.trasla.com.ar por una consulta:\n\n";
         htmlString += /*html*/ `
-          <a part="button" target="_blank" title="Contactarse por este evento" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
+          <a part="button" target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
             this.dataset.phone
           )}&text=${encodeURI(helloMsg)}">
             <img src="/assets/icons/whatsapp-256w.png" height="21" alt="WhatsApp" loading="lazy"/>
@@ -104,7 +104,7 @@ customElements.define(
       // Add Instagram button
       if (this.dataset.instagram) {
         htmlString += /*html*/ `
-          <a part="button" target="_blank" href="https://instagram.com/${this.dataset.instagram.replace(
+          <a part="button" target="_blank" title="Instagram" href="https://instagram.com/${this.dataset.instagram.replace(
             "@",
             ""
           )}">
@@ -123,7 +123,7 @@ customElements.define(
           )},`;
 
         htmlString += /*html*/ `
-          <a part="button" target="_blank" href=${href} title="Como llegar">
+          <a part="button" target="_blank" href=${href} title="¿Cómo llegar?">
             <img src="/assets/icons/google-maps-256w.png" height="21" alt="Google Maps" loading="lazy"/>
           </a>
         `;
@@ -131,7 +131,7 @@ customElements.define(
 
       // Add Google Calendar button
       htmlString += /*html*/ `
-        <a target="_blank" part="button"  title="Agregar a tu calendario"
+        <a target="_blank" part="button"  title="Agendar"
             href="${createGoogleCalendarUrl(this)}">
           <img src="/assets/icons/google-calendar.svg" height="21" alt="">
         </a>`;
