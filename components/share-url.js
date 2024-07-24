@@ -18,6 +18,7 @@ customElements.define(
 
     handleEvent(event) {
       if (event.type === "click") {
+        event.preventDefault();
         this.shareEvent();
       }
     }
