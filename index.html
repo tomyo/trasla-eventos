@@ -178,79 +178,56 @@
           <a id="seeAll" href="/#events">Ver todos</a>
           <details>
             <summary>
-              <h5>Filtrar por</h5>
+              <span>Filtrar por</span>
             </summary>
             <form>
-              <label
-                >Lugar
-                <select name="locality">
-                  <option value="" default>Todos</option>
-                  <option value="Arroyo de Los Patos">
-                    Arroyo de Los Patos
-                  </option>
-                  <option value="Boca del Rio">Boca del Rio</option>
-                  <option value="Dique de La Viña">Dique de La Viña</option>
-                  <option value="El Pueblito">El Pueblito</option>
-                  <option value="La Paz">La Paz</option>
-                  <option value="La Población">La Población</option>
-                  <option value="Las Calles">Las Calles</option>
-                  <option value="Las Chacras">Las Chacras</option>
-                  <option value="Las Rabonas">Las Rabonas</option>
-                  <option value="Las Tapias">Las Tapias</option>
-                  <option value="Los Hornillos">Los Hornillos</option>
-                  <option value="Los Molles">Los Molles</option>
-                  <option value="Los Pozos">Los Pozos</option>
-                  <option value="Luyaba">Luyaba</option>
-                  <option value="Mina Clavero">Mina Clavero</option>
-                  <option value="Nono">Nono</option>
-                  <option value="Panaholma">Panaholma</option>
-                  <option value="Piedra Pintada">Piedra Pintada</option>
-                  <option value="San Huberto">San Huberto</option>
-                  <option value="San Javier">San Javier</option>
-                  <option value="San Lorenzo">San Lorenzo</option>
-                  <option value="San Pedro">San Pedro</option>
-                  <option value="Travesia">Travesia</option>
-                  <option value="Villa Cura Brochero">
-                    Villa Cura Brochero
-                  </option>
-                  <option value="Villa de Las Rosas">Villa de Las Rosas</option>
-                  <option value="Villa Dolores">Villa Dolores</option>
-                  <option value="Yacanto">Yacanto</option>
-                </select> </label
-              ><br />
-              <label>
-                A partir del
-                <input type="date" name="startDate" />
+              <label>Lugar</label>
+              <select name="locality">
+                <option value="" default>Todos</option>
+                <option value="Arroyo de Los Patos">Arroyo de Los Patos</option>
+                <option value="Boca del Rio">Boca del Rio</option>
+                <option value="Dique de La Viña">Dique de La Viña</option>
+                <option value="El Pueblito">El Pueblito</option>
+                <option value="La Paz">La Paz</option>
+                <option value="La Población">La Población</option>
+                <option value="Las Calles">Las Calles</option>
+                <option value="Las Chacras">Las Chacras</option>
+                <option value="Las Rabonas">Las Rabonas</option>
+                <option value="Las Tapias">Las Tapias</option>
+                <option value="Los Hornillos">Los Hornillos</option>
+                <option value="Los Molles">Los Molles</option>
+                <option value="Los Pozos">Los Pozos</option>
+                <option value="Luyaba">Luyaba</option>
+                <option value="Mina Clavero">Mina Clavero</option>
+                <option value="Nono">Nono</option>
+                <option value="Panaholma">Panaholma</option>
+                <option value="Piedra Pintada">Piedra Pintada</option>
+                <option value="San Huberto">San Huberto</option>
+                <option value="San Javier">San Javier</option>
+                <option value="San Lorenzo">San Lorenzo</option>
+                <option value="San Pedro">San Pedro</option>
+                <option value="Travesia">Travesia</option>
+                <option value="Villa Cura Brochero">Villa Cura Brochero</option>
+                <option value="Villa de Las Rosas">Villa de Las Rosas</option>
+                <option value="Villa Dolores">Villa Dolores</option>
+                <option value="Yacanto">Yacanto</option>
+              </select>
+              <label> Fecha </label>
 
-                <script>
-                  // Set date to today by default (if empty)
-                  const dateInput = document.querySelector(
-                    "events-filter [name=startDate]"
-                  );
-                  if (dateInput.value == "") {
-                    const formattedDate = new Date()
-                      .toISOString()
-                      .split("T")[0];
-                    dateInput.value = formattedDate;
-                  }
-                </script>
-              </label>
+              <input type="date" name="startDate" />
+
+              <script>
+                // Set date to today by default (if empty)
+                const dateInput = document.querySelector(
+                  "events-filter [name=startDate]"
+                );
+                if (dateInput.value == "") {
+                  const formattedDate = new Date().toISOString().split("T")[0];
+                  dateInput.value = formattedDate;
+                }
+              </script>
             </form>
           </details>
-          <style>
-            events-filter {
-              text-wrap: balance;
-
-              details {
-                line-height: 2;
-
-                summary {
-                  text-align: center;
-                  margin-block-end: 0.5rem;
-                }
-              }
-            }
-          </style>
           <event-entries>
             <!-- SSR replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
@@ -357,6 +334,7 @@
           display: flex;
           flex-flow: column;
           gap: 2rem;
+          text-wrap: balance;
 
           #seeAll {
             position: absolute;
@@ -364,12 +342,21 @@
             z-index: 1;
           }
 
-          > details > summary {
-            position: relative;
-            text-align: end;
-          }
-          form {
-            text-align: end;
+          > details {
+            line-height: 2;
+
+            > summary {
+              position: relative;
+              text-align: end;
+              margin-block-end: 0.5rem;
+            }
+
+            form {
+              text-align: end;
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 0.5rem;
+            }
           }
         }
 
