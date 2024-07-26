@@ -96,7 +96,28 @@ export function formatDescription(description) {
     )}" target="_blank">${match}</a>`;
   });
 
-  return result;
+  return applyWhatsAppFormatting(result);
+}
+
+/**
+ *
+ * @param {String} waText
+ * @returns
+ */
+function applyWhatsAppFormatting(waText) {
+  // Replace *bold* with <b>bold</b>
+  waText = waText.replace(/\*(.*?)\*/g, "<b>$1</b>");
+
+  // Replace _italic_ with <i>italic</i>
+  waText = waText.replace(/_(.*?)_/g, "<i>$1</i>");
+
+  // Replace ~strikethrough~ with <s>strikethrough</s>
+  waText = waText.replace(/~(.*?)~/g, "<s>$1</s>");
+
+  // Replace `code` with <code>code</code>
+  waText = waText.replace(/`(.*?)`/g, "<code>$1</code>");
+
+  return waText;
 }
 
 /**
