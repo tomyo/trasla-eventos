@@ -10,12 +10,12 @@ export function getEventShareTitle(eventData) {
 /**
  * 
  * @param {String} imageId 
- * @returns {String} an image url from a google drive file link
+ * @param {Number} width in pixels
+ * @returns {URL} Image url from a google drive to use in <img>
  
  */
 export function createGoogleDriveImageUrl(imageId, width = 512) {
-  //
-  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${width}`;
+  return `https://lh3.googleusercontent.com/d/${imageId}=w${width}`;
 }
 
 /**
