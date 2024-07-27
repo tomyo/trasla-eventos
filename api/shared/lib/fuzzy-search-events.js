@@ -3,13 +3,11 @@ import { unslugify } from "./utils.js";
 
 const defaultOptions = {
   keys: [
-    // "Descripción",
-    // { name: "Comienzo", weight: 3 },
-    // { name: "Localidad", weight: 3 },
-    "Comienzo",
-    "Localidad",
-    "Título",
+    { name: "Comienzo", weight: 2 },
+    { name: "Localidad", weight: 2 },
+    { name: "Título", weight: 1 },
     "Instagram",
+    "Descripción",
   ],
   includeScore: true,
   ignoreLocation: true,
@@ -26,7 +24,6 @@ const defaultOptions = {
  */
 export function fuzzySearch(events, query, options = defaultOptions) {
   const fuse = new Fuse(events, options);
-
   const searchResults = fuse.search(unslugify(query));
   return searchResults ? searchResults.sort((a, b) => a.score - b.score) : [];
 }
