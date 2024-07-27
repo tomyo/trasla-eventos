@@ -183,7 +183,7 @@ export function formatDate(date, timezone = -3) {
   const year = targetUtcDate.getUTCFullYear().toString().slice(-2);
   const hour = targetUtcDate.getUTCHours().toString().padStart(2, "0");
   const minute = targetUtcDate.getUTCMinutes().toString().padStart(2, "0");
-  return `${day}/${month}/${year} - ${hour}:${minute}hs`;
+  return `${day}/${month}/${year} - ${hour}:${minute}h`;
 }
 
 /**

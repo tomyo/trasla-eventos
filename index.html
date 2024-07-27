@@ -585,16 +585,20 @@
 
       // RUN
 
+      // Registed Service Worker
+      // if ("serviceWorker" in navigator) {
+      //   navigator.serviceWorker.register("/sw.js");
+      // }
+
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const eventsElement = document.querySelector("event-entries");
 
-      // Get all events and drop old ones
-      const upcomingEvents = (await getSheetData()).filter((event) => {
-        return today <= parseEventResponseDateString(event["Comienzo"]);
-      });
-
       if (!document.querySelector("event-entry")) {
+        // Get all events and drop old ones
+        const upcomingEvents = (await getSheetData()).filter((event) => {
+          return today <= parseEventResponseDateString(event["Comienzo"]);
+        });
         showEvents(upcomingEvents);
       } else {
         // SSR prerendered events
@@ -611,7 +615,7 @@
 
         if (document.querySelectorAll("event-entry").length === 1) {
           // Hide details summary (Ver más) since the event will be open by default
-          eventToFocus.querySelector("summary").toggleAttribute("hidden");
+          eventToFocus.querySelector("summary")?.toggleAttribute("hidden");
         }
       }
     </script>
