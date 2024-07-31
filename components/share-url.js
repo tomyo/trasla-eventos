@@ -13,7 +13,11 @@ customElements.define(
     }
 
     canShare() {
-      return navigator.share && location.protocol === "https:";
+      return (
+        navigator.share &&
+        location.protocol === "https:" &&
+        navigator.canShare()
+      );
     }
 
     handleEvent(event) {
