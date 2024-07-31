@@ -40,5 +40,5 @@ async function handleShareTarget(request) {
   // Get the query string
   const queryString = searchParams.toString();
 
-  return Response.redirect(`http://testingshareapi.com/?${queryString}`, 303); // Redirect after handling
+  return Response.redirect(`/share-target?${queryString}`, 303); // Redirect after handling
 }
