@@ -37,13 +37,13 @@ customElements.define(
      */
     render() {
       this.innerHTML = /*html*/ `
-      <h3 ${
-        isDateToday(this.startDate) ? "" : "hidden"
-      } class="today-reminder">¡HOY!</h3>
       <div class="info">
+        <h3 ${
+          isDateToday(this.startDate) ? "" : "hidden"
+        } style="margin-block: 0.5rem;">¡HOY!</h3>
         <p>${this.dataset.locality}</p>
         <p class="datetime">
-        ${formatDate(this.startDate)}
+        ${formatEventDate(this.startDate)}
         </p>
       </div>
 
@@ -154,3 +154,49 @@ customElements.define(
     }
   }
 );
+
+/**
+ *
+ * @param {Date} date
+ * @returns {String}
+ */
+function formatEventDate(date, timezone = -3) {
+  const dayNames = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ];
+
+  // Fix to display timezone
+  const targetUtcDate = new Date(date);
+  targetUtcDate.setUTCHours(targetUtcDate.getUTCHours() + timezone);
+
+  if (!isDateWithinWeek(targetUtcDate)) return formatDate(date);
+
+  const today = new Date();
+  dayNames[today.getDay()] = "¡HOY!";
+  dayNames[(today.getDay() + 1) % 7] = "Mañana";
+
+  const day = targetUtcDate.getUTCDate().toString().padStart(2, "0");
+  const month = (targetUtcDate.getUTCMonth() + 1).toString().padStart(2, "0");
+  const hour = targetUtcDate.getUTCHours().toString().padStart(2, "0");
+  const minute = targetUtcDate.getUTCMinutes().toString().padStart(2, "0");
+  return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
+}
+
+function isDateWithinWeek(dateToCheck, referenceDate = new Date()) {
+  dateToCheck = new Date(dateToCheck);
+  referenceDate = new Date(referenceDate);
+
+  dateToCheck.setHours(0, 0, 0, 0);
+  referenceDate.setHours(0, 0, 0, 0);
+
+  const diffTime = dateToCheck.getTime() - referenceDate.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays >= 0 && diffDays <= 6;
+}
