@@ -217,11 +217,11 @@ export function isValidUrl(string) {
  * @returns {String} A google calendar url to create an event
  */
 export function createGoogleCalendarUrl(eventElement) {
-  const hook = "Más información en https://eventos.trasla.com.ar\n\n";
-  const eventTitle = `${eventElement.dataset.title || "Evento"} en ${
-    eventElement.dataset.locality
-  }`;
-
+  const hook = `https://eventos.trasla.com.ar/${eventElement.slug}\n\n`;
+  let eventTitle = eventElement.dataset.title;
+  if (!eventTitle) {
+    eventTitle = `Actividad en ${eventElement.dataset.locality}`;
+  }
   const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
   const encodedDetails = encodeURIComponent(
     hook + eventElement.dataset.description || ""
@@ -229,9 +229,7 @@ export function createGoogleCalendarUrl(eventElement) {
   const encodedLocation = encodeURIComponent(
     eventElement.dataset.location || ""
   );
-  const encodedSummary = encodeURIComponent(
-    "Evento en " + eventElement.dataset.locality
-  );
+  const encodedSummary = encodeURIComponent(eventTitle);
 
   let url = `${baseUrl}&text=${encodedSummary}&details=${encodedDetails}&location=${encodedLocation}`;
   const startDateString = eventElement.startDate
