@@ -248,26 +248,24 @@ export function createGoogleCalendarUrl(eventElement) {
   return url;
 }
 
+/**
+ *
+ * @param {String} text
+ * @returns {String} text without accents (ie.  á -> a)
+ */
+function unaccent(text) {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 export function slugify(text) {
-  const from = "àáäâãåçèéêëìíîïñòóôöõùúûüýÿ";
-  const to = "aaaaaaceeeeiiiinooooouuuuyy";
-
-  // Create a map of accented characters to their replacements
-  const map = {};
-  for (let i = 0; i < from.length; i++) {
-    map[from.charAt(i)] = to.charAt(i);
-  }
-
   // Replace accented characters and other necessary replacements
-  const slug = text
+  return unaccent(text)
     .toLowerCase()
-    .replace(/[^a-z0-9\s-/]/g, (char) => map[char] || "") // Replace non-ASCII chars with mapped chars or remove
+    .replace(/[^a-z0-9\s-/]/g, "") // Remove non-ASCII chars
     .replace(/\s+/g, "-") // Replace spaces with hyphens
     .replace(/\//g, "-") // Replace slashes with hyphens
     .replace(/-+/g, "-") // Replace multiple hyphens with a single hyphen
     .replace(/^-+|-+$/g, ""); // Remove leading and trailing hyphens
-
-  return slug;
 }
 
 export function unslugify(slug) {
