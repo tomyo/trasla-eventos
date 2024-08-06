@@ -3,28 +3,34 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
-      this.addEventListener("input", this);
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
+
+      this.setStartDate();
+      this.updateLocalitiesOptions(this.events);
+
+      this.addEventListener("input", this);
+      this.addEventListener("click", this);
 
       // Detect events changes and update hide/show them according to the filters.
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === "childList") {
-            showHideEvents(this.events, [...new FormData(this.form)]);
+            this.showHideEvents();
           }
         });
 
         this.updateLocalitiesOptions(this.events);
       });
       observer.observe(this.events, { childList: true });
-
-      this.updateLocalitiesOptions(this.events);
     }
 
     handleEvent(event) {
       if (event.type === "input") {
-        showHideEvents(this.events, [...new FormData(this.form)]);
+        this.showHideEvents();
+      }
+      if (event.type === "click" && event.target.type === "reset") {
+        this.resetFilters();
       }
     }
 
@@ -37,6 +43,7 @@ customElements.define(
           : 0;
         availableLocalities.set(event.dataset.locality, localityCount + 1);
       });
+
       for (const option of this.form.querySelector("[name=locality]").options) {
         if (option.value == "") continue;
         if (!availableLocalities.has(option.value)) {
@@ -50,12 +57,45 @@ customElements.define(
         option.hidden = false;
       }
     }
+
+    /**
+     *
+     * @param {Date} [date] - The date to set the input to. If empty, defaults to today.
+     */
+    setStartDate(date) {
+      if (!date) date = new Date();
+
+      const formattedDate = date.toISOString().split("T")[0];
+      this.form["startDate"].value = formattedDate;
+    }
+
+    resetFilters() {
+      this.form.reset();
+      this.setStartDate();
+      this.updateLocalitiesOptions(this.events);
+      this.showHideEvents();
+    }
+
+    /**
+     *  Show or hide events based on the current filters.
+     */
+    showHideEvents() {
+      this.events.querySelectorAll("event-entry").forEach((event) => {
+        showHideElement(event, new FormData(this.form));
+      });
+    }
   }
 );
 
-function showHideElement(element, criteriaFormData) {
+/**
+ *
+ * @param {event-entry} element
+ * @param {FormData} filters
+ * @returns
+ */
+function showHideElement(element, filters) {
   let shouldHide = false;
-  for (const [key, value] of criteriaFormData) {
+  for (const [key, value] of filters) {
     // Filter by locality
     if (key === "locality") {
       if (!element.dataset.locality.includes(value)) {
@@ -72,15 +112,4 @@ function showHideElement(element, criteriaFormData) {
   if (shouldHide) return element.toggleAttribute("hidden", true);
 
   element.removeAttribute("hidden");
-}
-
-/**
- *
- * @param {[HTMLElement]} events
- * @param {FormData} criteriaFormData
- */
-function showHideEvents(events, criteriaFormData) {
-  events.querySelectorAll("event-entry").forEach((event) => {
-    showHideElement(event, criteriaFormData);
-  });
 }
