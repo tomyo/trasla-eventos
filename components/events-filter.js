@@ -38,6 +38,7 @@ customElements.define(
         availableLocalities.set(event.dataset.locality, localityCount + 1);
       });
       for (const option of this.form.querySelector("[name=locality]").options) {
+        if (option.value == "") continue;
         if (!availableLocalities.has(option.value)) {
           option.hidden = true;
           continue;
