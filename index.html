@@ -128,6 +128,9 @@
         padding: 0.7rem 1.5rem;
         border-radius: 2rem;
         text-transform: uppercase;
+        background: none;
+        border: none;
+        cursor: pointer;
 
         &:hover,
         &:focus-within {
@@ -171,6 +174,7 @@
             Publicar evento
           </a>
           <a class="button" title="Ver eventos" href="/#eventos">Ver eventos</a>
+          <button hidden id="installButton">Instalar</button>
         </div>
       </section>
       <section id="eventos">
@@ -632,5 +636,27 @@
         };
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
+
+    <script>
+      // PWA install
+      let deferredPrompt;
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        deferredPrompt = e;
+        // Show the install button
+        installButton.removeAttribute("hidden");
+        installButton.addEventListener("click", install);
+      });
+      async function install(event) {
+        // Show the install prompt
+        const result = await deferredPrompt.prompt();
+        console.info(`Install was: ${result.outcome}`);
+
+        // Hide the install button
+        installButton.setAttribute("hidden", "");
+      }
+    </script>
   </body>
 </html>
