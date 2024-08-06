@@ -297,23 +297,3 @@ export function unescapeHtml(escapedText) {
   textarea.innerHTML = escapedText;
   return textarea.value;
 }
-
-// Encode function to safely store data in dataset
-export function encodeForDataset(data) {
-  // Convert data to JSON string
-  const jsonString = JSON.stringify(data);
-  // Encode the JSON string to base64
-  return btoa(encodeURIComponent(jsonString));
-}
-
-// Decode function to retrieve data from dataset
-export function decodeFromDataset(encodedData) {
-  try {
-    // Decode from base64 and parse JSON
-    const jsonString = decodeURIComponent(atob(encodedData));
-    return JSON.parse(jsonString);
-  } catch (error) {
-    console.error("Error decoding data:", error);
-    return null;
-  }
-}
