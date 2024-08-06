@@ -8,6 +8,7 @@ import {
   formatDate,
   parseDate,
   formatDescription,
+  unescapeHtml,
 } from "../lib/utils.js";
 
 customElements.define(
@@ -137,12 +138,7 @@ customElements.define(
         </a>`;
 
       // Add link to share the event
-      const slug = slugify(
-        this.dataset.title ||
-          this.dataset.locality + " " + formatDate(this.startDate)
-      );
-
-      const shareUrl = `${location.origin}/${encodeURI(slug)}`;
+      const shareUrl = `${location.origin}/${this.slug}`;
       htmlString += /*html*/ `
         <share-url data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${shareUrl}" title="${shareUrl}">
           <a part="button" href=${shareUrl} title="Compartir">
@@ -151,6 +147,15 @@ customElements.define(
         </share-url>`;
 
       return htmlString;
+    }
+
+    get slug() {
+      return slugify(
+        unescapeHtml(
+          this.dataset.title ||
+            this.dataset.locality + " " + formatDate(this.startDate)
+        )
+      );
     }
   }
 );
