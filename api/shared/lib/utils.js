@@ -293,6 +293,7 @@ export function escapeHtml(unsafeText) {
  * @returns
  */
 export function unescapeHtml(escapedText) {
+  if (!escapedText) return "";
   const textarea = document.createElement("textarea");
   textarea.innerHTML = escapedText;
   return textarea.value;
