@@ -28,9 +28,11 @@ customElements.define(
     }
 
     async shareEvent() {
+      const url =
+        this.dataset.url || this?.element?.href || document.location.href;
       const shareData = {
         title: this.dataset.title || document.title,
-        url: this.dataset.url || this.element.href || document.location.href,
+        url,
       };
 
       try {
