@@ -12,11 +12,11 @@ customElements.define(
       }
     }
 
-    canShare() {
+    canShare(shareData) {
       return (
         navigator.share &&
         location.protocol === "https:" &&
-        navigator.canShare()
+        navigator.canShare(shareData)
       );
     }
 
@@ -28,15 +28,14 @@ customElements.define(
     }
 
     async shareEvent() {
-      const url =
-        this.dataset.url || this.element.href || document.location.href;
+      const shareData = {
+        title: this.dataset.title || document.title,
+        text: this.dataset.title || document.title,
+        url: this.dataset.url || this.element.href || document.location.href,
+      };
+
       try {
-        if (this.canShare())
-          await navigator.share({
-            title: this.dataset.title || document.title,
-            text: this.dataset.title || document.title,
-            url,
-          });
+        if (this.canShare(shareData)) await navigator.share(shareData);
         else await navigator.clipboard.writeText(url);
 
         this.shareSuccess();
