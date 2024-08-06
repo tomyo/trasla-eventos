@@ -170,12 +170,12 @@
           >
             Publicar evento
           </a>
-          <a class="button" title="Ver eventos" href="/#events">Ver eventos</a>
+          <a class="button" title="Ver eventos" href="/#eventos">Ver eventos</a>
         </div>
       </section>
-      <section id="events">
+      <section id="eventos">
         <events-filter>
-          <a id="seeAll" href="/#events">Ver todos</a>
+          <a id="seeAll" href="/#eventos">Ver todos</a>
           <details>
             <summary>
               <span>Filtrar por</span>
@@ -329,12 +329,17 @@
         }
       }
 
-      section#events {
+      section#eventos {
         events-filter {
           display: flex;
           flex-flow: column;
           gap: 2rem;
           text-wrap: balance;
+
+          &:has(event-entry:only-of-type) {
+            /* Only one event is shown */
+            --filters-visibility: hidden;
+          }
 
           #seeAll {
             position: absolute;
@@ -344,6 +349,7 @@
 
           > details {
             line-height: 2;
+            visibility: var(--filters-visibility, visible);
 
             > summary {
               position: relative;
