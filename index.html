@@ -175,7 +175,7 @@
       </section>
       <section id="eventos">
         <events-filter>
-          <a id="seeAll" href="/#eventos">Ver todos</a>
+          <a id="seeAll" href="/#eventos" type="reset">Ver todos</a>
           <details>
             <summary>
               <span>Filtrar por</span>
@@ -213,19 +213,7 @@
                 <option value="Yacanto">Yacanto</option>
               </select>
               <label> Fecha </label>
-
               <input type="date" name="startDate" />
-
-              <script>
-                // Set date to today by default (if empty)
-                const dateInput = document.querySelector(
-                  "events-filter [name=startDate]"
-                );
-                if (dateInput.value == "") {
-                  const formattedDate = new Date().toISOString().split("T")[0];
-                  dateInput.value = formattedDate;
-                }
-              </script>
             </form>
           </details>
           <event-entries>
