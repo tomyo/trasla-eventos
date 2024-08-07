@@ -7,11 +7,7 @@
 
     <!-- START CONTENT_METADATA_BLOCK -->
     <title property="og:title">EVENTOS.TRASLA</title>
-    <link
-      rel="canonical"
-      property="og:url"
-      href="https://eventos.trasla.com.ar"
-    />
+    <link rel="canonical" property="og:url" href="https://eventos.trasla.com.ar" />
     <meta
       name="description"
       property="og:description"
@@ -24,10 +20,7 @@
     <meta property="og:image:type" content="image/avif" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="600" />
-    <meta
-      property="og:image"
-      content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-600h.jpg"
-    />
+    <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-600h.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="600" />
@@ -102,15 +95,13 @@
         font-weight: 400;
         font-display: swap;
         src: url("/assets/fonts/DM-Sans.woff2") format("woff2");
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
-          U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
-          U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+          U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
       }
 
       body {
-        font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-          "Helvetica Neue", sans-serif;
+        font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+          Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
         background-color: var(--background-color);
         color: var(--color);
 
@@ -161,9 +152,7 @@
           </a>
           <h2 class="moto">
             La forma más fácil de
-            <type-writer
-              data-words="encontrar, compartir, publicar, buscar, agendar"
-            ></type-writer>
+            <type-writer data-words="encontrar, compartir, publicar, buscar, agendar"></type-writer>
             eventos
           </h2>
         </div>
@@ -220,6 +209,7 @@
                 <option value="Villa Dolores">Villa Dolores</option>
                 <option value="Yacanto">Yacanto</option>
               </select>
+
               <label> Fecha </label>
               <input type="date" name="startDate" />
             </form>
@@ -282,8 +272,7 @@
             background-position: center;
             background-image: url("/assets/images/portada-720w-1280h.jpg");
             background-image: image-set(
-              url("/assets/images/portada-720w-1280h.avif") 1x
-                type("image/avif"),
+              url("/assets/images/portada-720w-1280h.avif") 1x type("image/avif"),
               url("/assets/images/portada-720w-1280h.jpg") 1x type("image/jpeg")
             );
           }
@@ -292,10 +281,8 @@
             &::before {
               background-image: url("/assets/images/portada-1920w-1200h.jpg");
               background-image: image-set(
-                url("/assets/images/portada-1920w-1200h.avif") 1x
-                  type("image/avif"),
-                url("/assets/images/portada-1920w-1200h.jpg") 1x
-                  type("image/jpeg")
+                url("/assets/images/portada-1920w-1200h.avif") 1x type("image/avif"),
+                url("/assets/images/portada-1920w-1200h.jpg") 1x type("image/jpeg")
               );
             }
           }
@@ -469,11 +456,7 @@
               outline: none;
 
               &:hover {
-                background-color: color-mix(
-                  in srgb,
-                  var(--color, currentColor) 10%,
-                  transparent
-                );
+                background-color: color-mix(in srgb, var(--color, currentColor) 10%, transparent);
               }
             }
           }
@@ -497,12 +480,7 @@
 
     <script type="module">
       import { getSheetData } from "/lib/get-gsheet-data.js";
-      import {
-        escapeHtml,
-        slugify,
-        formatEventResponse,
-        parseEventResponseDateString,
-      } from "/lib/utils.js";
+      import { escapeHtml, slugify, formatEventResponse, parseEventResponseDateString } from "/lib/utils.js";
 
       function isDateToday(date) {
         return (
@@ -518,12 +496,7 @@
        * @returns
        */
       function getSortOrder(date) {
-        const items = [
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          date.getHours(),
-        ];
+        const items = [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours()];
         return items.map((t) => t.toString().padStart(2, "0")).join("");
       }
 
@@ -550,8 +523,7 @@
         }
         for (const [key, value] of Object.entries(eventData)) {
           if (!Object.hasOwnProperty.call(eventData, key)) continue;
-          if (typeof value !== "string")
-            console.error(`Value for key ${key} is not a string: ${value}`);
+          if (typeof value !== "string") console.error(`Value for key ${key} is not a string: ${value}`);
 
           eventElement.setAttribute(`data-${key}`, escapeHtml(value));
         }
@@ -589,13 +561,8 @@
       // Registed Service Worker
       if ("serviceWorker" in navigator) {
         try {
-          const registration = await navigator.serviceWorker.register(
-            "/service-worker.js"
-          );
-          console.log(
-            "Service Worker registered with scope:",
-            registration.scope
-          );
+          const registration = await navigator.serviceWorker.register("/service-worker.js");
+          console.log("Service Worker registered with scope:", registration.scope);
         } catch (error) {
           console.log("Service Worker registration failed:", error);
         }
@@ -616,8 +583,7 @@
 
         // Scroll into first event
         const eventToFocus = document.querySelector("event-entry");
-        const focusElement = () =>
-          eventToFocus.scrollIntoView({ behavior: "smooth" });
+        const focusElement = () => eventToFocus.scrollIntoView({ behavior: "smooth" });
         if (document.readyState === "complete") {
           focusElement();
         } else {
