@@ -14,12 +14,6 @@ customElements.define(
 
       // Detect events changes and update hide/show them according to the filters.
       const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === "childList") {
-            this.showHideEvents();
-          }
-        });
-
         this.updateLocalitiesOptions(this.events);
       });
       observer.observe(this.events, { childList: true });
@@ -38,9 +32,7 @@ customElements.define(
       const availableLocalities = new Map();
       events.querySelectorAll("event-entry").forEach((event) => {
         let locality = event.dataset.locality;
-        let localityCount = availableLocalities.has(locality)
-          ? availableLocalities.get(locality)
-          : 0;
+        let localityCount = availableLocalities.has(locality) ? availableLocalities.get(locality) : 0;
         availableLocalities.set(event.dataset.locality, localityCount + 1);
       });
 
@@ -50,10 +42,7 @@ customElements.define(
           option.hidden = true;
           continue;
         }
-        if (showCount)
-          option.textContent = `${option.value} (${availableLocalities.get(
-            option.value
-          )})`;
+        if (showCount) option.textContent = `${option.value} (${availableLocalities.get(option.value)})`;
         option.hidden = false;
       }
     }
@@ -109,6 +98,12 @@ function showHideElement(element, filters) {
       }
     }
   }
+
+  const activities = filters.getAll("activities[]");
+  if (!activities.includes(element.dataset.activity)) {
+    shouldHide = true;
+  }
+
   if (shouldHide) return element.toggleAttribute("hidden", true);
 
   element.removeAttribute("hidden");
