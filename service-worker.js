@@ -1,8 +1,5 @@
 self.addEventListener("fetch", (event) => {
-  if (
-    event.request.method === "POST" &&
-    event.request.url.endsWith("/share-target")
-  ) {
+  if (event.request.method === "POST" && event.request.url.endsWith("/share-target")) {
     event.respondWith(handleShareTarget(event.request));
   }
 });
@@ -33,12 +30,24 @@ async function handleShareTarget(request) {
     }
   }
 
-  // Normal flow when we want to publish an event starting with the received data
-  // TODO
-  const formBaseUrl =
-    "https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform";
-  const queryParams = `usp=pp_url&entry.466826621=${title}&entry.529436666=${text}`;
-  // "https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=pp_url&entry.466826621=titu&entry.529436666=des&entry.1874927722=Eventos+/+Fiestas&entry.816687713=Boca+del+Rio&entry.357474557=2024-01-11+11:11&entry.1712632081=5493544123456&entry.1406465718=loc&entry.141426947=inst&entry.312680970=sug"
+  const response = await fetch("/api/upload-file-to-drive", {
+    method: "POST",
+    body: formData,
+  });
 
-  return Response.redirect(`${formBaseUrl}?${queryParams}`, 303); // Redirect after handling
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const result = await response.json();
+  if (result.fileId) {
+    console.log("Uploaded file ID:", result.fileId);
+  } else {
+    console.error("Error:", result.error);
+  }
+
+  return Response.redirect(
+    `/publicar-evento?fileId=${result?.fileId}&description=${encodeURIComponent(text)}`,
+    303
+  );
 }
