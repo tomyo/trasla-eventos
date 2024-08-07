@@ -59,6 +59,7 @@ export default async function handler(req) {
         data-location="${escapeHtml(eventData.location)}"
         data-phone="${eventData.phone}"
         data-image-url="${eventData["image-url"]}"
+        data-activity="${eventData.activity}"
       ></event-entry>
     `;
     html = html.replace(

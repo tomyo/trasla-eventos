@@ -11,7 +11,7 @@ export function getEventShareTitle(eventData) {
  * 
  * @param {String} imageId 
  * @param {Number} width in pixels
- * @returns {URL} Image url from a google drive to use in <img>
+ * @returns {String} Image url from a google drive to use in <img>
  
  */
 export function createGoogleDriveImageUrl(imageId, width = 512) {
@@ -41,7 +41,7 @@ export function formatEventResponse(eventResponse) {
     eventResponse["Comienzo"]
   ).toISOString();
   event["end-date"] = eventResponse["Cierre"]
-    ? parseEventResponseDateString(eventResponse["Cierre"]).toISOString()
+    ? parseEventResponseDateString(eventResponse["Cierre"])?.toISOString()
     : "";
   event["id"] = getFileIdFromDriveUrls(eventResponse["Imagen"]);
   event["image-url"] = createGoogleDriveImageUrl(event["id"]);
@@ -51,7 +51,8 @@ export function formatEventResponse(eventResponse) {
   event["location"] = eventResponse["Ubicación"] || "";
   event["phone"] = eventResponse["Teléfono de contacto"] || "";
   event["suggestion"] = eventResponse["Sugerencia"] || "";
-  event["description"] = eventResponse["Descripción"];
+  event["description"] = eventResponse["Descripción"] || "";
+  event["activity"] = eventResponse["Actividad"] || "";
 
   return event;
 }
