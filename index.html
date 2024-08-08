@@ -219,7 +219,7 @@
               </label>
               <label>
                 <input checked type="checkbox" name="activities[]" value="Taller/Curso" />
-                Cursos / Talleres
+                Talleres / Cursos
               </label>
             </form>
           </details>
@@ -403,6 +403,34 @@
 
               svg {
                 color: color-mix(in srgb, currentColor 60%, transparent);
+              }
+
+              .badges {
+                display: flex;
+                justify-content: space-evenly;
+                margin-bottom: 0.5rem;
+
+                > * {
+                  display: inline-block;
+                  padding: 0.35em 0.65em;
+                  font-size: 0.66em;
+                  font-weight: 600;
+                  line-height: 1;
+                  color: #fff;
+                  text-align: center;
+                  white-space: nowrap;
+                  border-radius: 0.25rem;
+
+                  &[data-type="today"] {
+                    background-color: green;
+                  }
+                  &[data-type="tomorrow"] {
+                    background-color: darkslateblue;
+                  }
+                  &[data-type="activity"] {
+                    background-color: cornflowerblue;
+                  }
+                }
               }
 
               input[type="date"] {
