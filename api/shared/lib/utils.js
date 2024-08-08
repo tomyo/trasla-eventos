@@ -1,9 +1,6 @@
 export function getEventShareTitle(eventData) {
   return (
-    eventData.title ||
-    `Evento en ${eventData.locality} el ${formatDate(
-      new Date(eventData["start-date"])
-    )}`
+    eventData.title || `Evento en ${eventData.locality} el ${formatDate(new Date(eventData["start-date"]))}`
   );
 }
 
@@ -37,9 +34,7 @@ export function getFileIdFromDriveUrls(urls) {
 export function formatEventResponse(eventResponse) {
   const event = {};
 
-  event["start-date"] = parseEventResponseDateString(
-    eventResponse["Comienzo"]
-  ).toISOString();
+  event["start-date"] = parseEventResponseDateString(eventResponse["Comienzo"]).toISOString();
   event["end-date"] = eventResponse["Cierre"]
     ? parseEventResponseDateString(eventResponse["Cierre"])?.toISOString()
     : "";
@@ -68,8 +63,7 @@ export function formatDescription(description) {
 
   let result = unescapeHtml(description);
 
-  const urlRegex =
-    /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+  const urlRegex = /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
 
   result = result.replace(urlRegex, (match) => {
     let url = new URL(match);
@@ -92,9 +86,7 @@ export function formatDescription(description) {
   // Replace Instagram handles with links
   const instagramRegex = /@([a-zA-Z0-9_.]{1,30})/g;
   result = result.replace(instagramRegex, (match) => {
-    return `<a href="https://instagram.com/${match.slice(
-      1
-    )}" target="_blank">${match}</a>`;
+    return `<a href="https://instagram.com/${match.slice(1)}" target="_blank">${match}</a>`;
   });
 
   return applyWhatsAppFormatting(result);
@@ -162,6 +154,29 @@ export function isDateToday(date) {
   );
 }
 
+export function isDateTomorrow(date) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return (
+    date.getDate() === tomorrow.getDate() &&
+    date.getMonth() === tomorrow.getMonth() &&
+    date.getFullYear() === tomorrow.getFullYear()
+  );
+}
+
+export function isDateWithinWeek(dateToCheck, referenceDate = new Date()) {
+  dateToCheck = new Date(dateToCheck);
+  referenceDate = new Date(referenceDate);
+
+  dateToCheck.setHours(0, 0, 0, 0);
+  referenceDate.setHours(0, 0, 0, 0);
+
+  const diffTime = dateToCheck.getTime() - referenceDate.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays >= 0 && diffDays <= 6;
+}
+
 export function formatDateString(dateString) {
   if (!dateString) return "";
   return dateString
@@ -224,18 +239,12 @@ export function createGoogleCalendarUrl(eventElement) {
     eventTitle = `Actividad en ${eventElement.dataset.locality}`;
   }
   const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
-  const encodedDetails = encodeURIComponent(
-    hook + eventElement.dataset.description || ""
-  );
-  const encodedLocation = encodeURIComponent(
-    eventElement.dataset.location || ""
-  );
+  const encodedDetails = encodeURIComponent(hook + eventElement.dataset.description || "");
+  const encodedLocation = encodeURIComponent(eventElement.dataset.location || "");
   const encodedSummary = encodeURIComponent(eventTitle);
 
   let url = `${baseUrl}&text=${encodedSummary}&details=${encodedDetails}&location=${encodedLocation}`;
-  const startDateString = eventElement.startDate
-    .toISOString()
-    .replace(/-|:|\.\d\d\d/g, "");
+  const startDateString = eventElement.startDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
 
   // Default event duration is 2 hours if end time is not provided.
   let endDate = eventElement.endDate

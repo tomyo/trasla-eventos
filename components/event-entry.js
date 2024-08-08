@@ -1,6 +1,8 @@
 import "./share-url.js";
 import {
   isDateToday,
+  isDateWithinWeek,
+  isDateTomorrow,
   formatPhoneNumber,
   isValidUrl,
   createGoogleCalendarUrl,
@@ -39,20 +41,18 @@ customElements.define(
     render() {
       this.innerHTML = /*html*/ `
       <div class="info">
-        <h3 ${
-          isDateToday(this.startDate) ? "" : "hidden"
-        } style="margin-block: 0.5rem;">¡HOY!</h3>
+        <div class="badges">
+          ${this.renderBadges()}
+        </div>
         <p>${this.dataset.locality}</p>
         <p class="datetime">
-        ${formatEventDate(this.startDate)}
+          ${formatEventDate(this.startDate)}
         </p>
       </div>
 
-      <img class="event-image" height="400" src="${
-        this.dataset.imageUrl
-      }" loading="lazy" alt="Evento en ${this.dataset.locality} el ${formatDate(
-        this.startDate
-      )}">
+      <img class="event-image" height="400" src="${this.dataset.imageUrl}" loading="lazy" alt="Evento en ${
+        this.dataset.locality
+      } el ${formatDate(this.startDate)}">
       <div part="buttons">
         ${this.renderButtons()}
       </div>
@@ -63,9 +63,7 @@ customElements.define(
         <summary>
           Ver más
         </summary>
-        <p slot="description" part="description">${formatDescription(
-          this.dataset.description
-        )}</p>
+        <p slot="description" part="description">${formatDescription(this.dataset.description)}</p>
       </details>`
           : ""
       }`;
@@ -86,13 +84,26 @@ customElements.define(
       }
     }
 
+    renderBadges() {
+      let htmlString = "";
+      if (isDateToday(this.startDate)) {
+        htmlString += /*html*/ `<span data-type="today">¡HOY!</span>`;
+      }
+      if (isDateTomorrow(this.startDate)) {
+        htmlString += /*html*/ `<span data-type="tomorrow">¡Mañana!</span>`;
+      }
+      if (this.dataset.activity && this.dataset.activity != "Evento") {
+        htmlString += /*html*/ `<span data-type="activity">${this.dataset.activity}</span>`;
+      }
+      return htmlString;
+    }
+
     renderButtons() {
       let htmlString = "";
 
       // Add WhatsApp button
       if (this.dataset.phone) {
-        let helloMsg =
-          "Hola! 😃\nTe escribo desde eventos.trasla.com.ar por una consulta:\n\n";
+        let helloMsg = "Hola! 😃\nTe escribo desde eventos.trasla.com.ar por una consulta:\n\n";
         htmlString += /*html*/ `
           <a part="button" target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
             this.dataset.phone
@@ -119,8 +130,7 @@ customElements.define(
         let href = this.dataset.location;
         if (!isValidUrl(href))
           href = `https://www.google.com/maps/search/?api=1&query=${encodeURI(
-            this.dataset.location +
-              `, ${this.dataset.locality}, Córdoba, Argentina`
+            this.dataset.location + `, ${this.dataset.locality}, Córdoba, Argentina`
           )},`;
 
         htmlString += /*html*/ `
@@ -151,10 +161,7 @@ customElements.define(
 
     get slug() {
       return slugify(
-        unescapeHtml(
-          this.dataset.title ||
-            this.dataset.locality + " " + formatDate(this.startDate)
-        )
+        unescapeHtml(this.dataset.title || this.dataset.locality + " " + formatDate(this.startDate))
       );
     }
   }
@@ -166,15 +173,7 @@ customElements.define(
  * @returns {String}
  */
 function formatEventDate(date, timezone = -3) {
-  const dayNames = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-  ];
+  const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
   // Fix to display timezone
   const targetUtcDate = new Date(date);
@@ -182,26 +181,13 @@ function formatEventDate(date, timezone = -3) {
 
   if (!isDateWithinWeek(targetUtcDate)) return formatDate(date);
 
-  const today = new Date();
-  dayNames[today.getDay()] = "¡HOY!";
-  dayNames[(today.getDay() + 1) % 7] = "Mañana";
+  // const today = new Date();
+  // dayNames[today.getDay()] = "¡HOY!";
+  // dayNames[(today.getDay() + 1) % 7] = "Mañana";
 
   const day = targetUtcDate.getUTCDate().toString().padStart(2, "0");
   const month = (targetUtcDate.getUTCMonth() + 1).toString().padStart(2, "0");
   const hour = targetUtcDate.getUTCHours().toString().padStart(2, "0");
   const minute = targetUtcDate.getUTCMinutes().toString().padStart(2, "0");
   return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
-}
-
-function isDateWithinWeek(dateToCheck, referenceDate = new Date()) {
-  dateToCheck = new Date(dateToCheck);
-  referenceDate = new Date(referenceDate);
-
-  dateToCheck.setHours(0, 0, 0, 0);
-  referenceDate.setHours(0, 0, 0, 0);
-
-  const diffTime = dateToCheck.getTime() - referenceDate.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  return diffDays >= 0 && diffDays <= 6;
 }
