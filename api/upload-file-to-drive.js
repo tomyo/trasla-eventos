@@ -1,85 +1,76 @@
-import https from "https";
-
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  runtime: "edge",
 };
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+export default async function handler(request) {
+  if (request.method !== "POST") {
+    return new Response("Method Not Allowed", { status: 405 });
   }
 
   const folderId = process.env.DRIVE_FOLDER_ID;
+  const serviceAccount = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
+  const apiKey = process.env.GOOGLE_API_KEY;
 
   if (!folderId) {
     return res.status(500).json({ error: "DRIVE_FOLDER_ID is not set" });
   }
-
-  const chunks = [];
-  for await (const chunk of req) {
-    chunks.push(chunk);
+  if (!apiKey) {
+    return res.status(500).json({ error: "GOOGLE_API_KEY is not set" });
   }
-  const buffer = Buffer.concat(chunks);
 
-  const boundary = req.headers["content-type"].split("boundary=")[1];
-  const parts = buffer.toString().split(`--${boundary}`);
+  try {
+    const formData = await request.formData();
+    const title = formData.get("title");
+    const text = formData.get("text");
+    const url = formData.get("url");
+    const files = formData.getAll("files");
 
-  let fileContent, fileName;
-  parts.forEach((part) => {
-    if (part.includes("filename=")) {
-      fileName = part.match(/filename="(.+)"/)[1];
-      fileContent = part.split("\r\n\r\n")[1].trim();
+    for (const file of files) {
+      console.info("File name:", file.name);
+      console.info("File type:", file.type);
+      console.info("File size:", file.size, "bytes");
     }
-  });
 
-  if (!fileContent || !fileName) {
-    return res.status(400).json({ error: "No file uploaded" });
-  }
+    const file = files ? files[0] : null;
 
-  const metadata = JSON.stringify({
-    name: fileName,
-    parents: [folderId],
-  });
+    console.info("Received formData: ", [...formData.entries()], folderId);
 
-  const options = {
-    hostname: "www.googleapis.com",
-    path: "/upload/drive/v3/files?uploadType=multipart&fields=id",
-    method: "POST",
-    headers: {
-      "Content-Type": `multipart/related; boundary=foo_bar_baz`,
-    },
-  };
+    // Process the file or save it to storage here
+    const metadata = {
+      name: file.name,
+      mimeType: file.type,
+      parents: [folderId],
+    };
 
-  return new Promise((resolve, reject) => {
-    const req = https
-      .request(options, (response) => {
-        let data = "";
-        response.on("data", (chunk) => {
-          data += chunk;
-        });
-        response.on("end", () => {
-          const result = JSON.parse(data);
-          if (result.id) {
-            res.status(200).json({ fileId: result.id });
-          } else {
-            res.status(500).json({ error: "Failed to get file ID" });
-          }
-        });
-      })
-      .on("error", (error) => {
-        console.error(error);
-        res.status(500).json({ error: "Failed to upload file" });
-      });
+    const form = new FormData();
+    form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+    form.append("file", file);
 
-    req.write(
-      "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" +
-        metadata +
-        "\r\n--foo_bar_baz\r\nContent-Type: application/octet-stream\r\n\r\n" +
-        fileContent +
-        "\r\n--foo_bar_baz--"
+    const response = await fetch(
+      "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: form,
+      }
     );
-    req.end();
-  });
+    const result = await response.json();
+    console.log(result);
+
+    return new Response(
+      JSON.stringify({
+        message: "File uploaded successfully",
+        result,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  } catch (error) {
+    console.error("Error:", error);
+    return new Response("Error uploading file", { status: 500 });
+  }
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Publicar evento</title>
+  </head>
+  <body>
+    <form action="/api/upload-file-to-drive" method="post" enctype="multipart/form-data">
+      <label for="title">Título</label>
+      <input type="text" id="title" name="title" />
+      <label for="text">Texto</label>
+      <textarea id="text" name="text"></textarea>
+      <label for="url">URL</label>
+      <input type="url" id="url" name="url" />
+      <label for="files">Archivos</label>
+      <input type="file" id="files" name="files" multiple />
+      <button type="submit">Publicar</button>
+    </form>
+    <style>
+      form {
+        display: grid;
+        gap: 1rem;
+      }
+    </style>
+  </body>
+</html>
