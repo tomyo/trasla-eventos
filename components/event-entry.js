@@ -92,8 +92,8 @@ customElements.define(
       if (isDateTomorrow(this.startDate)) {
         htmlString += /*html*/ `<span data-type="tomorrow">¡Mañana!</span>`;
       }
-      if (this.dataset.activity && this.dataset.activity != "Evento") {
-        htmlString += /*html*/ `<span data-type="activity">${this.dataset.activity}</span>`;
+      if (this.dataset.activity) {
+        htmlString += /*html*/ `<span data-type="${this.dataset.activity}">${this.dataset.activity}</span>`;
       }
       return htmlString;
     }
