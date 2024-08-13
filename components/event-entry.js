@@ -40,14 +40,14 @@ customElements.define(
      */
     render() {
       this.innerHTML = /*html*/ `
-      <div class="info">
-        <div class="badges">
-          ${this.renderBadges()}
-        </div>
-        <p>${this.dataset.locality}</p>
-        <p class="datetime">
-          ${formatEventDate(this.startDate)}
+      <div class="top-info">
+        <p style="text-transform: uppercase; font-weight: 600;">${this.dataset.locality}</p>
+        <p class="datetime" >
+        ${formatEventDate(this.startDate)}
         </p>
+        <div class="badges">
+            ${this.renderBadges()}
+        </div>
       </div>
 
       <img class="event-image" height="400" src="${this.dataset.imageUrl}" loading="lazy" alt="Evento en ${
