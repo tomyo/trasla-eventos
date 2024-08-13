@@ -395,20 +395,22 @@
               border-radius: 10px;
             }
 
-            .info {
+            [part="buttons"] {
+              display: flex;
+              justify-content: space-evenly;
+              margin-block: 1rem;
+            }
+
+            .top-info {
               display: grid;
               justify-content: center;
               gap: 0.5rem;
               margin-bottom: 1em;
-
-              svg {
-                color: color-mix(in srgb, currentColor 60%, transparent);
-              }
+              position: relative;
 
               .badges {
                 display: flex;
                 justify-content: space-evenly;
-                margin-bottom: 0.5rem;
 
                 > * {
                   display: inline-block;
@@ -462,7 +464,6 @@
             summary {
               align-items: center;
               cursor: pointer;
-              padding-block: 0.5rem;
               align-items: start;
               position: relative;
 
@@ -477,11 +478,7 @@
               text-align: start;
             }
 
-            [part="buttons"] {
-              display: flex;
-              justify-content: space-evenly;
-              margin-block: 1rem;
-            }
+
 
             [part="button"] {
               display: inline-block;
