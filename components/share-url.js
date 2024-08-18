@@ -13,11 +13,7 @@ customElements.define(
     }
 
     canShare(shareData) {
-      return (
-        navigator.share &&
-        location.protocol === "https:" &&
-        navigator.canShare(shareData)
-      );
+      return navigator.share && location.protocol === "https:" && navigator.canShare(shareData);
     }
 
     handleEvent(event) {
@@ -28,8 +24,7 @@ customElements.define(
     }
 
     async shareEvent() {
-      const url =
-        this.dataset.url || this?.element?.href || document.location.href;
+      const url = this.dataset.url || this?.element?.href || document.location.href;
       const shareData = {
         title: this.dataset.title || document.title,
         url,
@@ -37,20 +32,24 @@ customElements.define(
 
       try {
         if (this.canShare(shareData)) await navigator.share(shareData);
-        else await navigator.clipboard.writeText(url);
+        else await fallbackShare(shareData);
 
         this.shareSuccess();
       } catch (error) {
         if (error.name !== "AbortError")
-          console.error(error.name, error.message);
+          console.error(error.name, error.message, " ...Retrying with fallback");
+        this.fallbackShare(shareData);
       }
+    }
+
+    async fallbackShare(shareData) {
+      await navigator.clipboard.writeText(shareData.url);
+      this.shareSuccess();
     }
 
     shareSuccess = () => {
       const originalContent = this.element.innerText || this.element.innerHTML;
-      this.element.innerText = this.canShare()
-        ? this.dataset.textSuccess
-        : this.dataset.textSuccessFallback;
+      this.element.innerText = this.canShare() ? this.dataset.textSuccess : this.dataset.textSuccessFallback;
       setTimeout(() => {
         this.element.innerHTML = originalContent;
       }, 2000);
