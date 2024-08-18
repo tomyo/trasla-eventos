@@ -103,7 +103,8 @@ customElements.define(
 
       // Add WhatsApp button
       if (this.dataset.phone) {
-        let helloMsg = "Hola! 😃\nTe escribo desde eventos.trasla.com.ar por una consulta:\n\n";
+        const shareUrl = `${location.origin}/${this.slug}`;
+        let helloMsg = `Hola! 😃\nTe escribo desde ${shareUrl} por el evento ${this.dataset.title}:\n\n`;
         htmlString += /*html*/ `
           <a part="button" target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
             this.dataset.phone
