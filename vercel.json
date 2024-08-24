@@ -1,4 +1,12 @@
 {
+  "functions": {
+    "api/events/[slug].js": {
+      "maxDuration": 30
+    },
+    "api/web-push-subscribe.js": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     { "source": "/admin", "destination": "/admin/" },
     { "source": "/publicar-evento", "destination": "/publish-event.html" },
