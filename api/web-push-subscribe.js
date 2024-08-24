@@ -5,7 +5,7 @@ const vapidKeys = {
   privateKey: process.env.VAPID_PRIVATE_KEY,
 };
 
-console.log("VAPID Keys", vapidKeys);
+console.log("VAPID Keys", vapidKeys, process.env);
 webPush.setVapidDetails("mailto:info@trasla.com.ar", vapidKeys.publicKey, vapidKeys.privateKey);
 
 export async function POST(request) {
