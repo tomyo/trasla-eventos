@@ -1,8 +1,8 @@
 import webPush from "web-push";
 
 const vapidKeys = {
-  publicKey: process.env.VAPID_PUBLIC_KEY,
-  privateKey: process.env.VAPID_PRIVATE_KEY,
+  publicKey: process.env.VAPID_KEY_PUBLIC,
+  privateKey: process.env.VAPID_KEY_PRIVATE,
 };
 
 console.log("VAPID Keys", vapidKeys, process.env);
