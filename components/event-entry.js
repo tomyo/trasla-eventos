@@ -1,6 +1,5 @@
 import "./share-url.js";
 import "./notify-button.js";
-import "./preview-expand.js";
 import {
   isDateToday,
   isDateWithinWeek,
@@ -55,16 +54,6 @@ customElements.define(
       <img class="event-image" height="400" src="${this.dataset.imageUrl}" loading="lazy" alt="Evento en ${
         this.dataset.locality
       } el ${formatDate(this.startDate)}">
-       <!--
-       ${
-         this.dataset.description
-           ? /*html*/ `
-        <preview-expand>
-          <p part="description">${formatDescription(this.dataset.description)}</p>
-        </preview-expand>
-      `
-           : ""
-       }-->
       ${
         this.dataset.description
           ? /*html*/ `<details ${this.hasAttribute("open") ? "open" : ""}>
