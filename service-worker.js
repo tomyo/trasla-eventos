@@ -51,3 +51,18 @@ async function handleShareTarget(request) {
     303
   );
 }
+
+// Notifications
+self.addEventListener("push", (event) => {
+  const data = event.data.json();
+  console.log("Push received", data);
+
+  const options = {
+    body: data.body,
+    // icon: data.icon,
+    // data: data.url,
+    vibrate: [200, 100, 200],
+  };
+
+  event.waitUntil(self.registration.sendNotification(data.title ?? "Recordatorio de evento", options));
+});

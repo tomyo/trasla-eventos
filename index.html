@@ -386,6 +386,28 @@
               var(--background-color, currentcolor)
             );
 
+            notify-button {
+              svg {
+                display: none;
+                color: color-mix(in srgb, currentColor 60%, black);
+              }
+
+              &:not(:has(input:checked)) {
+                [data-notify] {
+                  display: initial;
+                }
+              }
+
+              &:has(input:checked) {
+                [data-unnotify] {
+                  display: initial;
+                }
+                /* svg {
+                  fill: #bc1733;
+                } */
+              }
+            }
+
             .event-image {
               width: 100%;
               height: auto;
@@ -399,6 +421,7 @@
             [part="buttons"] {
               display: flex;
               justify-content: space-evenly;
+              align-items: center;
               margin-block: 1rem;
             }
 
@@ -462,14 +485,16 @@
               }
             }
 
+            details {
+              margin-block: 0.5rem;
+
             summary {
-              align-items: center;
               cursor: pointer;
-              align-items: start;
               position: relative;
 
               &::-webkit-details-marker {
                 display: none;
+                }
               }
             }
 
@@ -479,10 +504,7 @@
               text-align: start;
             }
 
-
-
             [part="button"] {
-              display: inline-block;
               border-radius: 2px;
               text-decoration: none;
               cursor: pointer;
@@ -493,7 +515,8 @@
               background: none;
               outline: none;
 
-              &:hover {
+              &:hover,
+              &:focus {
                 background-color: color-mix(in srgb, var(--color, currentColor) 10%, transparent);
               }
             }
@@ -596,15 +619,24 @@
 
       // RUN
 
-      // Registed Service Worker
+      // START: Service Worker
+      /**
+       * @type {ServiceWorkerRegistration}
+       */
+      let swRegistration;
+
       if ("serviceWorker" in navigator) {
         try {
-          const registration = await navigator.serviceWorker.register("/service-worker.js");
-          console.log("Service Worker registered with scope:", registration.scope);
+          swRegistration = await navigator.serviceWorker.register("/service-worker.js");
+          console.log("Service Worker registered:", swRegistration);
         } catch (error) {
           console.log("Service Worker registration failed:", error);
         }
       }
+
+      // END: Service Worker
+
+      // Get events
 
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -665,6 +697,29 @@
         // Hide the install button
         installButton.setAttribute("hidden", "");
       }
+    </script>
+
+    <script type="module">
+      // auth
+      import { useUser } from "/hooks/useUser.js";
+      import { useDB } from "/hooks/useDB.js";
+      window.db = useDB();
+      window.user = useUser();
+
+      function readOrCreateUserId() {
+        let userId = localStorage.getItem("userId");
+        if (!userId) {
+          userId = crypto.randomUUID();
+          localStorage.setItem("userId", userId);
+        }
+        return userId;
+      }
+
+      const userId = readOrCreateUserId();
+
+      const gun = (window.gun = useDB());
+      const prefix = "v1.eventos.trasla.com.ar-";
+      const likes = gun.get(prefix + "likes");
     </script>
   </body>
 </html>
