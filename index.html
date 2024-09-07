@@ -180,7 +180,7 @@
             </summary>
             <form>
               <label>Lugar</label>
-              <select name="locality">
+              <select name="locality" style="width: 100%">
                 <option value="" default>Todos</option>
                 <option value="Arroyo de Los Patos">Arroyo de Los Patos</option>
                 <option value="Boca del Rio">Boca del Rio</option>
@@ -212,7 +212,7 @@
               </select>
 
               <label> Fecha </label>
-              <input type="date" name="startDate" />
+              <input type="date" name="startDate" style="width: 100%" />
 
               <label>
                 <input checked type="checkbox" name="activities[]" value="Evento" />
@@ -488,12 +488,12 @@
             details {
               margin-block: 0.5rem;
 
-            summary {
-              cursor: pointer;
-              position: relative;
+              summary {
+                cursor: pointer;
+                position: relative;
 
-              &::-webkit-details-marker {
-                display: none;
+                &::-webkit-details-marker {
+                  display: none;
                 }
               }
             }
