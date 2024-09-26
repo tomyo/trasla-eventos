@@ -60,6 +60,8 @@ export default async function handler(req) {
         data-phone="${eventData.phone}"
         data-image-url="${eventData["image-url"]}"
         data-activity="${eventData.activity}"
+        data-spotify="${eventData.spotify}"
+        data-youtube="${eventData.youtube}"
       ></event-entry>
     `;
     html = html.replace(
