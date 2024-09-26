@@ -151,12 +151,31 @@ customElements.define(
         `;
       }
 
+      // Add Youtube button
+      if (this.dataset.youtube) {
+        htmlString += /*html*/ `
+        <a part="button" target="_blank" title="YouTube" href="${this.dataset.youtube}">
+          <img height="21" src="/assets/icons/youtube-256w.png" alt="YouTube" loading="lazy"/>
+        </a>
+      `;
+      }
+
+      // Add Spotify button
+      if (this.dataset.spotify) {
+        htmlString += /*html*/ `
+          <a part="button" target="_blank" title="Spotify" href="${this.dataset.spotify}">
+            <img src="/assets/icons/spotify-256w.png" height="21" alt="Spotify" loading="lazy"/>
+          </a>
+        `;
+      }
+
       // Add Google Calendar button
       htmlString += /*html*/ `
         <a target="_blank" part="button"  title="Agregar a tu Google Calendar"
             href="${createGoogleCalendarUrl(this)}">
           <img src="/assets/icons/google-calendar.svg" height="21" alt="">
-        </a>`;
+        </a>
+      `;
 
       // Add notify-me button
       htmlString += /*html*/ `

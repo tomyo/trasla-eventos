@@ -48,6 +48,8 @@ export function formatEventResponse(eventResponse) {
   event["suggestion"] = eventResponse["Sugerencia"] || "";
   event["description"] = eventResponse["Descripción"] || "";
   event["activity"] = eventResponse["Actividad"] || "";
+  event["spotify"] = eventResponse["Spotify"] || "";
+  event["youtube"] = eventResponse["YouTube"] || "";
 
   return event;
 }
