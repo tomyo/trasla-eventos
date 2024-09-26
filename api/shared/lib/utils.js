@@ -22,8 +22,8 @@ export function createGoogleDriveImageUrl(imageId, width = 512) {
  */
 export function getFileIdFromDriveUrls(urls) {
   const imageIdRegexp = /id=([\d\w-]*)/gm;
-  const imageIdMatch = imageIdRegexp.exec(urls);
-  return imageIdMatch && imageIdMatch.pop(); // Get the last match
+  const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
+  return ids.pop(); // Get the last match
 }
 
 /**
