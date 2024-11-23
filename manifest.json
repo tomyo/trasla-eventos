@@ -9,6 +9,20 @@
   "theme_color": "#303030",
   "background_color": "#303030",
   "orientation": "portrait",
+  "scope": "/",
+  "protocol_handlers": [
+    {
+      "protocol": "https",
+      "url": "%s",
+      "handles": ["trasla.com.ar", "eventos.trasla.com.ar"]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://eventos.trasla.com.ar/manifest.json"
+    }
+  ],
   "icons": [
     {
       "src": "/assets/icons/favicon-192x192.png",
