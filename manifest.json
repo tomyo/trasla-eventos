@@ -6,8 +6,8 @@
   "description": "La agenda cultural de Traslasierra.",
   "lang": "es-AR",
   "dir": "auto",
-  "theme_color": "#303030",
-  "background_color": "#303030",
+  "theme_color": "#E6DECA",
+  "background_color": "#E6DECA",
   "orientation": "portrait",
   "scope": "/",
   "protocol_handlers": [
