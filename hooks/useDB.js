@@ -9,7 +9,7 @@ let db;
 const config = {
   peers: [
     "http://localhost:8765/gun",
-    "https://gundb.fly.dev/gun", // Self hosted peer
+    "https://gun.trasla.com.ar/gun", // Self hosted peer
     "https://gun-manhattan.herokuapp.com/gun",
   ],
 };
