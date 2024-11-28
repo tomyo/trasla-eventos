@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>QR Code Generator</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="./qrcode.js"></script>
+    <style>
+      :root {
+        --bg-color: #ede1c3;
+      }
+      body {
+        margin: 1rem;
+      }
+      #controls {
+        margin-block: 1rem;
+        display: grid;
+        gap: 1rem;
+        max-width: 40ch;
+      }
+
+      #qrcode table {
+        --cell-width: 13px;
+        --image-size: calc(var(--cell-width) * 11);
+        position: relative;
+
+        &::after {
+          content: "";
+          display: block;
+          background-color: var(--bg-color);
+          width: var(--image-size);
+          height: var(--image-size);
+          position: absolute;
+          top: 253.5px;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-image: url("/assets/images/loica.png");
+          background-size: contain;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Trasla QR Code Generator</h2>
+    <div id="controls">
+      <label>
+        URL
+        <input id="text" type="text" value="trasla.com.ar" oninput="makeCode()" />
+      </label>
+      <div>
+        <label>
+          Fondo
+          <input id="bgColor" type="color" value="#ede1c3" list="presetColors" oninput="makeCode()" />
+        </label>
+        <label>
+          Frente
+          <input id="fgColor" type="color" value="#000000" list="presetColors" oninput="makeCode()" />
+        </label>
+      </div>
+      <datalist id="presetColors">
+        <option value="#A53E1A">Rojo</option>
+        <option value="#3D3F20">Verde</option>
+        <option value="#D18630">Amarillo</option>
+        <option value="#E6DECA">Crema</option>
+        <option value="#ede1c3">Cremilla</option>
+      </datalist>
+    </div>
+
+    <div id="qrcode" style="height: 500px; margin-top: auto"></div>
+
+    <script type="text/javascript">
+      function makeCode() {
+        const options = {
+          width: 400,
+          height: 400,
+          output: "table", // or "svg" / "canvas" / "table"
+          correctLevel: QRCode.CorrectLevel.H, // { L: 1, M: 0, Q: 3, H: 2 }
+          colorDark: fgColor.value,
+          colorLight: bgColor.value,
+        };
+        document.documentElement.style.setProperty("--bg-color", bgColor.value);
+
+        var qrcode = new QRCode(document.getElementById("qrcode"), options);
+        var elText = document.getElementById("text");
+
+        if (!elText.value) {
+          alert("Input a text");
+          elText.focus();
+          return;
+        }
+
+        qrcode.setCode(elText.value);
+      }
+
+      makeCode();
+    </script>
+  </body>
+</html>
