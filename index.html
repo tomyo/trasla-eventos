@@ -160,6 +160,18 @@
           background-color: color-mix(in srgb, currentColor 10%, transparent);
         }
       }
+
+      .font-body-2 {
+        font-size: 0.75rem;
+        line-height: 1.2;
+        letter-spacing: 0.1rem;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+        line-height: 1.28;
+        letter-spacing: 0.15rem;
+      }
     </style>
   </head>
   <body>
@@ -263,13 +275,13 @@
               }
             </style>
           </a>
-          <h2 class="moto">
+          <h1 class="moto">
             La forma más
             <br />
             fácil de <type-writer data-words="encontrar, compartir, publicar, buscar, agendar"></type-writer>
             <br />
             Eventos en Traslasierra
-          </h2>
+          </h1>
         </div>
       </section>
       <style>
@@ -346,6 +358,26 @@
           <!-- <button hidden id="installButton">Instalar</button> -->
         </div>
       </section>
+      <section id="about" style="text-transform: uppercase">
+        <style>
+          #about {
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: center;
+            text-align: center;
+
+            img {
+              margin-block-end: 1rem;
+            }
+          }
+        </style>
+        <img src="/assets/images/mountain.svg" height="80" />
+        <h2>¿Qué es trasla?</h2>
+        <p class="font-body-2">
+          una plataforma gratuita y autoadministrable que funciona como un puente entre los creadores de
+          eventos y la comunidad.
+        </p>
+      </section>
       <section id="eventos">
         <events-filter>
           <a id="seeAll" href="/#eventos" type="reset">Ver todos</a>
@@ -416,6 +448,10 @@
         section {
           padding-block: 2rem;
           padding-inline: 1rem;
+
+          > p {
+            max-width: 60ch;
+          }
         }
 
         section#hero {
