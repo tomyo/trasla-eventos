@@ -281,10 +281,30 @@
           </h2>
         </div>
       </section>
-      <section id="quick-actions">
+      <style>
+        .mountains-top {
+          position: relative;
+          --height: 149px;
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: calc(var(--height) / -2);
+            left: 0;
+            right: 0;
+            height: var(--height);
+            background-image: url("/assets/textures/mountain-shape.svg");
+            background-size: contain;
+            background-position: center;
+            background-repeat: repeat-x;
+            z-index: -1;
+          }
+        }
+      </style>
+      <section id="quick-actions" class="mountains-top">
         <style>
           #quick-actions {
-            padding-block: 5rem;
+            padding-block: 3rem;
 
             .buttons {
               --card-width: 11rem;
