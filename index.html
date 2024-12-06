@@ -36,7 +36,6 @@
     <!-- END CONTENT_METADATA_BLOCK -->
 
     <script type="module" src="/components/event-entry.js"></script>
-    <script type="module" src="/components/theme-toggle.js"></script>
     <script type="module" src="/components/events-filter.js"></script>
     <link rel="manifest" href="/manifest.json" />
 
@@ -86,7 +85,7 @@
         --color-dark: #222222;
         --color: var(--color-dark);
         --background-color: var(--color-light);
-        color-scheme: var(--color-scheme, dark light);
+        color-scheme: var(--color-scheme, light);
 
         &[data-theme="🌑"] {
           color-scheme: dark;
@@ -164,14 +163,6 @@
     </style>
   </head>
   <body>
-    <theme-toggle title="Alternar color del tema">
-      <img
-        src="/assets/images/theme-toggle.png"
-        width="25"
-        height="25"
-        alt="Sol/Luna: Alternar color del tema"
-      />
-    </theme-toggle>
     <script src="/components/type-writer.js" type="module"></script>
     <picture>
       <source
@@ -418,22 +409,6 @@
     </main>
 
     <style>
-      :root {
-        &[data-theme="🌑"] {
-          theme-toggle {
-            filter: invert(1);
-          }
-        }
-      }
-
-      theme-toggle {
-        position: absolute;
-        cursor: pointer;
-        top: max(1.5rem, 5vmin);
-        left: max(1.5rem, 7vmin);
-        visibility: hidden;
-      }
-
       main {
         display: flex;
         flex-flow: column;
