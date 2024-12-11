@@ -439,6 +439,79 @@
         </events-filter>
       </section>
     </main>
+    <footer class="font-body-2">
+      <svg-mask>
+        <style>
+          svg-mask {
+            display: block;
+            width: 100%;
+            height: var(--height, 30px);
+            position: relative;
+            background-color: var(--color, currentColor);
+            mask: var(--src, url("/assets/images/trasla-eventos.svg")) no-repeat center;
+          }
+        </style>
+      </svg-mask>
+      <a title="Ver eventos" href="/#eventos">Ver Eventos</a>
+      <a
+        title="Publicar nuevo evento"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+        >Cargar Evento</a
+      >
+      <a href="/#about">Trasla</a>
+      <a id="installButton" href="#" hidden>Instalar</a>
+
+      <style>
+        footer {
+          position: relative;
+          display: flex;
+          flex-flow: column;
+          align-items: center;
+          gap: 1rem;
+          padding: 2rem;
+          background-color: var(--color-green);
+          color: var(--color-light);
+          text-align: center;
+          text-transform: uppercase;
+
+          > * {
+            z-index: 1;
+            text-decoration: none;
+          }
+
+          &::before {
+            content: "";
+            display: block;
+            height: 100%;
+            mask: url("/assets/textures/mountain-shape.svg") repeat-x center;
+            mask-size: contain;
+            background-color: var(--color-green);
+            position: absolute;
+            top: -41%;
+            left: 0;
+            right: 0;
+          }
+
+          svg-mask {
+            --src: url(/assets/images/trasla-eventos.svg);
+            --color: var(--color-light);
+            margin-bottom: 1rem;
+          }
+
+          &::after {
+            content: "";
+            display: block;
+            height: min(7rem, 50%);
+            aspect-ratio: 200/102;
+            mask: url("/assets/images/mountain.svg") no-repeat center;
+            background-color: #5d5d40;
+            position: absolute;
+            bottom: 0;
+            left: 45%;
+          }
+        }
+      </style>
+    </footer>
 
     <style>
       main {
@@ -447,6 +520,10 @@
 
         section {
           padding: 2rem;
+
+          &:last-child {
+            padding-bottom: 7rem;
+          }
 
           > p {
             max-width: 60ch;
