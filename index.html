@@ -645,28 +645,6 @@
               var(--background-color, currentcolor)
             );
 
-            notify-button {
-              svg {
-                display: none;
-                color: color-mix(in srgb, currentColor 60%, black);
-              }
-
-              &:not(:has(input:checked)) {
-                [data-notify] {
-                  display: initial;
-                }
-              }
-
-              &:has(input:checked) {
-                [data-unnotify] {
-                  display: initial;
-                }
-                /* svg {
-                  fill: #bc1733;
-                } */
-              }
-            }
-
             .event-image {
               width: 100%;
               height: auto;
