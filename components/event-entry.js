@@ -40,41 +40,35 @@ customElements.define(
      */
     render() {
       this.innerHTML = /*html*/ `
-      <div class="top-info">
-        <p style="text-transform: uppercase; font-weight: 600;">${this.dataset.locality}</p>
-        <p class="datetime" >
-        ${formatEventDate(this.startDate)}
-        </p>
-        <div class="badges">
-            ${this.renderBadges()}
-        </div>
-      </div>
+        <h2 part="title">${this.dataset.title}</h2>
 
-      <img class="event-image" height="400" src="${this.dataset.imageUrl}" loading="lazy" alt="Evento en ${
+        <img class="event-image" height="400" src="${this.dataset.imageUrl}" loading="lazy" alt="Evento en ${
         this.dataset.locality
       } el ${formatDate(this.startDate)}">
-      ${
-        this.dataset.description
-          ? /*html*/ `<details ${this.hasAttribute("open") ? "open" : ""}>
-        <summary>
-          Ver más
-        </summary>
-        <p slot="description" part="description">${formatDescription(this.dataset.description)}</p>
-      </details>`
-          : ""
-      }
+
+        <div part="where-and-when">
+          <p part="locality">${this.dataset.locality}</p>
+          <p part="datetime">${formatEventDate(this.startDate)}</p>
+        </div>
+        
+        <div class="badges">
+          ${this.renderBadges()}
+        </div>
+
+        ${
+          this.dataset.description
+            ? /*html*/ `<details ${this.hasAttribute("open") ? "open" : ""}>
+          <summary>
+            Ver más
+          </summary>
+          <p slot="description" part="description">${formatDescription(this.dataset.description)}</p>
+        </details>`
+            : ""
+        }
 
       <div part="buttons">
         ${this.renderButtons()}
       </div>
-      <!--
-      <div class="quick-actions">
-          
-          <comment-button>
-            <svg aria-label="Comentarios" fill="currentColor" height="21" width="21" role="img" viewBox="0 0 24 24" ><title>Comentar</title><path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path></svg>
-          </comment-button>
-        </div>
-      -->
       `;
     }
     static observedAttributes = ["open", "order"];
@@ -95,14 +89,14 @@ customElements.define(
 
     renderBadges() {
       let htmlString = "";
+      if (this.dataset.activity) {
+        htmlString += /*html*/ `<span data-type="${this.dataset.activity}">${this.dataset.activity}</span>`;
+      }
       if (isDateToday(this.startDate)) {
         htmlString += /*html*/ `<span data-type="today">¡HOY!</span>`;
       }
       if (isDateTomorrow(this.startDate)) {
         htmlString += /*html*/ `<span data-type="tomorrow">¡Mañana!</span>`;
-      }
-      if (this.dataset.activity) {
-        htmlString += /*html*/ `<span data-type="${this.dataset.activity}">${this.dataset.activity}</span>`;
       }
       return htmlString;
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es-AR">
   <head>
-    <meta name="theme-color" content="#303030" />
+    <meta name="theme-color" content="#e6deca" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -85,7 +85,9 @@
         --color-dark: #222222;
         --color: var(--color-dark);
         --background-color: var(--color-light);
+        --border-radius: 10px;
         color-scheme: var(--color-scheme, light);
+        accent-color: var(--color-green);
 
         &[data-theme="🌑"] {
           color-scheme: dark;
@@ -603,6 +605,44 @@
             line-height: 2;
             visibility: var(--filters-visibility, visible);
 
+            select {
+              border-radius: var(--border-radius);
+              border: none;
+              background-color: color-mix(
+                in srgb,
+                var(--color, currentcolor) 7%,
+                var(--background-color, currentcolor)
+              );
+            }
+
+            input[type="date"] {
+              -webkit-appearance: none; /* Remove arrow in chrome mobile */
+              background: transparent;
+              width: min-content;
+              border-radius: var(--border-radius);
+              border: none;
+              padding: 0;
+              background-color: color-mix(
+                in srgb,
+                var(--color, currentcolor) 7%,
+                var(--background-color, currentcolor)
+              );
+
+              font-family: inherit;
+              font-size: inherit;
+              color: inherit;
+
+              &:disabled {
+                /* Allow click on parent to toggle details open/close */
+                pointer-events: none;
+              }
+            }
+
+            p {
+              margin: var(--margin);
+              width: 100%;
+            }
+
             > summary {
               position: relative;
               text-align: end;
@@ -628,22 +668,12 @@
           width: 100%;
 
           event-entry {
-            --visible-elements: 1;
-            --padding: 4.5rem 1rem;
-            border-radius: 10px;
+            border-radius: var(--border-radius);
             min-width: min-content;
             text-align: center;
-            background-image: linear-gradient(
-              to bottom,
-              transparent,
-              color-mix(in srgb, var(--color, currentcolor) 7%, transparent)
-            );
+            border: 1px solid;
+
             padding: 1.5rem;
-            background-color: color-mix(
-              in srgb,
-              var(--color, currentcolor) 7%,
-              var(--background-color, currentcolor)
-            );
 
             .event-image {
               width: 100%;
@@ -653,6 +683,60 @@
               object-fit: contain;
               cursor: pointer;
               border-radius: 10px;
+              margin-block: 1rem;
+            }
+
+            .badges {
+              display: flex;
+              justify-content: center;
+              gap: 0.5rem;
+              text-transform: uppercase;
+              margin-block: 2rem;
+
+              font-weight: bold;
+              letter-spacing: 0.1rem;
+
+              > * {
+                display: inline-block;
+                padding: 0.35em 0.65em;
+                font-size: 0.66em;
+                font-weight: 600;
+                line-height: 1;
+                color: #fff;
+                text-align: center;
+                white-space: nowrap;
+                border-radius: calc(var(--border-radius) / 2);
+
+                &[data-type="today"] {
+                  background-color: var(--color-yellow);
+                }
+                &[data-type="tomorrow"] {
+                  background-color: var(--color-yellow);
+                }
+                &[data-type="Taller"] {
+                  background-color: var(--color-red);
+                }
+                &[data-type="Evento"] {
+                  background-color: var(--color-green);
+                }
+              }
+            }
+
+            [part="where-and-when"] {
+              width: max-content;
+              margin-inline: auto;
+            }
+
+            [part="title"],
+            [part="locality"],
+            [part="datetime"] {
+              text-transform: uppercase;
+              &::after {
+                content: "";
+                display: block;
+                border-block-end: 1px solid var(--color);
+                margin-block-start: 0.5rem;
+              }
             }
 
             [part="buttons"] {
@@ -663,67 +747,12 @@
             }
 
             .top-info {
-              display: grid;
-              justify-content: center;
-              gap: 0.5rem;
               margin-bottom: 1em;
-              position: relative;
-
-              .badges {
-                display: flex;
-                justify-content: space-evenly;
-
-                > * {
-                  display: inline-block;
-                  padding: 0.35em 0.65em;
-                  font-size: 0.66em;
-                  font-weight: 600;
-                  line-height: 1;
-                  color: #fff;
-                  text-align: center;
-                  white-space: nowrap;
-                  border-radius: 0.25rem;
-
-                  &[data-type="today"] {
-                    background-color: green;
-                  }
-                  &[data-type="tomorrow"] {
-                    background-color: darkslateblue;
-                  }
-                  &[data-type="Taller"] {
-                    background-color: cornflowerblue;
-                  }
-                  &[data-type="Evento"] {
-                    background-color: darkorchid;
-                  }
-                }
-              }
-
-              input[type="date"] {
-                -webkit-appearance: none; /* Remove arrow in chrome mobile */
-                background: transparent;
-                width: min-content;
-                border: none;
-                padding: 0;
-
-                font-family: inherit;
-                font-size: inherit;
-                color: inherit;
-
-                &:disabled {
-                  /* Allow click on parent to toggle details open/close */
-                  pointer-events: none;
-                }
-              }
-
-              p {
-                margin: var(--margin);
-                width: 100%;
-              }
+              border-bottom: 1px solid;
             }
 
             details {
-              margin-block: 0.5rem;
+              margin-block: 2rem;
 
               summary {
                 cursor: pointer;
