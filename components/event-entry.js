@@ -112,7 +112,7 @@ customElements.define(
           <a part="button" target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
             this.dataset.phone
           )}&text=${encodeURI(helloMsg)}">
-            <img src="/assets/icons/whatsapp-256w.png" height="21" alt="WhatsApp" loading="lazy"/>
+            <img src="/assets/icons/whatsapp.svg" height="21" alt="WhatsApp"/>
           </a>
         `;
       }
@@ -124,7 +124,7 @@ customElements.define(
             "@",
             ""
           )}">
-            <img src="/assets/icons/instagram-240w.png" height="21" alt="Instagram" loading="lazy"/>
+            <img src="/assets/icons/instagram.svg" height="21" alt="Instagram"/>
           </a>
         `;
       }
@@ -139,7 +139,7 @@ customElements.define(
 
         htmlString += /*html*/ `
           <a part="button" target="_blank" href=${href} title="¿Cómo llegar?">
-            <img src="/assets/icons/google-maps-256w.png" height="21" alt="Google Maps" loading="lazy"/>
+            <img src="/assets/icons/maps.svg" height="23" alt="Google Maps"/>
           </a>
         `;
       }
@@ -148,7 +148,7 @@ customElements.define(
       if (this.dataset.youtube) {
         htmlString += /*html*/ `
         <a part="button" target="_blank" title="YouTube" href="${this.dataset.youtube}">
-          <img height="21" src="/assets/icons/youtube-256w.png" alt="YouTube" loading="lazy"/>
+          <img height="21" src="/assets/icons/youtube.svg" alt="YouTube"/>
         </a>
       `;
       }
@@ -157,7 +157,7 @@ customElements.define(
       if (this.dataset.spotify) {
         htmlString += /*html*/ `
           <a part="button" target="_blank" title="Spotify" href="${this.dataset.spotify}">
-            <img src="/assets/icons/spotify-256w.png" height="21" alt="Spotify" loading="lazy"/>
+            <img src="/assets/icons/spotify.svg" height="21" alt="Spotify"/>
           </a>
         `;
       }
@@ -166,7 +166,7 @@ customElements.define(
       htmlString += /*html*/ `
         <a target="_blank" part="button"  title="Agregar a tu Google Calendar"
             href="${createGoogleCalendarUrl(this)}">
-          <img src="/assets/icons/google-calendar.svg" height="21" alt="">
+          <img src="/assets/icons/calendar.svg" height="21" alt="">
         </a>
       `;
 
@@ -175,7 +175,8 @@ customElements.define(
         
       <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.slug}" data-title="${this.dataset.title}">
         <a href="${location.origin}/${this.slug}" title="Compartir">
-          <svg xmlns="http://www.w3.org/2000/svg" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+        <img src="/assets/icons/share.svg" height="21" alt="Compartir"/>
+
         </a>
       </share-url>`;
 
