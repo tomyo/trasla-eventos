@@ -197,7 +197,7 @@ customElements.define(
  * @returns {String}
  */
 function formatEventDate(date, timezone = -3) {
-  const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  const dayNames = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
 
   // Fix to display timezone
   const targetUtcDate = new Date(date);
