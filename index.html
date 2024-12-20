@@ -728,9 +728,13 @@
             }
 
             [part="title"],
+            [part="locality"] {
+              text-transform: uppercase;
+            }
+
+            [part="title"],
             [part="locality"],
             [part="datetime"] {
-              text-transform: uppercase;
               &::after {
                 content: "";
                 display: block;
