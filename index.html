@@ -295,20 +295,17 @@
       <style>
         .mountains-top {
           position: relative;
-          --height: 149px;
 
           &::before {
             content: "";
+            display: block;
             position: absolute;
-            top: calc(var(--height) / -2);
+            height: 100%;
+            background-color: inherit;
+            top: -100%;
             left: 0;
             right: 0;
-            height: var(--height);
-            background-image: url("/assets/textures/mountain-shape.svg");
-            background-size: contain;
-            background-position: center;
-            background-repeat: repeat-x;
-            z-index: -1;
+            mask: url("/assets/textures/mountain-shape.svg") repeat-x bottom;
           }
         }
       </style>
@@ -446,7 +443,7 @@
         </events-filter>
       </section>
     </main>
-    <footer class="font-body-2">
+    <footer class="font-body-2 mountains-top">
       <svg-mask>
         <style>
           svg-mask {
@@ -484,19 +481,6 @@
           > * {
             z-index: 1;
             text-decoration: none;
-          }
-
-          &::before {
-            content: "";
-            display: block;
-            height: 100%;
-            mask: url("/assets/textures/mountain-shape.svg") repeat-x center;
-            mask-size: contain;
-            background-color: var(--color-green);
-            position: absolute;
-            top: -41%;
-            left: 0;
-            right: 0;
           }
 
           svg-mask {
