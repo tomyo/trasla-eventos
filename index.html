@@ -310,41 +310,6 @@
         }
       </style>
       <section id="quick-actions" class="mountains-top">
-        <style>
-          #quick-actions {
-            padding-block: 3rem;
-
-            .buttons {
-              --card-width: 12rem;
-              display: flex;
-              flex-flow: row wrap;
-              justify-content: center;
-              gap: 1rem;
-
-              & > * {
-                /* button */
-                display: flex;
-                flex-flow: row wrap;
-                background-color: var(--color-yellow);
-                align-items: center;
-                color: var(--color-light);
-                gap: 1rem;
-                font-size: 0.66rem;
-                font-weight: 600;
-                letter-spacing: 0.1rem;
-                width: var(--card-width);
-              }
-
-              & > :nth-child(1) {
-                background-color: var(--color-red);
-              }
-
-              & > :nth-child(2) {
-                background-color: var(--color-yellow);
-              }
-            }
-          }
-        </style>
         <div class="buttons">
           <a
             id="addEvent"
@@ -360,7 +325,59 @@
             <img src="/assets/icons/binocular.png" width="30px" />
             Ver eventos
           </a>
+          <button install hidden>
+            <svg-mask
+              style="
+                --src: url('/assets/icons/loica.svg');
+                --color: var(--color-light);
+                width: 30px;
+                height: 18px;
+              "
+            >
+            </svg-mask>
+            Instalar
+          </button>
         </div>
+        <style>
+          #quick-actions {
+            padding-block: 3rem;
+
+            .buttons {
+              display: flex;
+              flex-flow: row wrap;
+              justify-content: center;
+              gap: 1rem;
+
+              & > *:not([hidden]) {
+                /* button */
+                display: flex;
+                flex-flow: row wrap;
+                background-color: var(--color-yellow);
+                align-items: center;
+                justify-content: initial;
+                color: var(--color-light);
+                gap: 1rem;
+                font-size: 0.66rem;
+                font-weight: 600;
+                letter-spacing: 0.1rem;
+                width: 12rem;
+                height: 3rem;
+              }
+
+              & > :nth-child(1) {
+                background-color: var(--color-red);
+              }
+
+              & > :nth-child(2) {
+                background-color: var(--color-yellow);
+              }
+
+              & > :nth-child(3) {
+                background-color: var(--color-green);
+              }
+            }
+          }
+        </style>
       </section>
       <section id="about" style="text-transform: uppercase">
         <style>
@@ -463,8 +480,7 @@
         >Cargar Evento</a
       >
       <a href="/#about">Trasla</a>
-      <a id="installButton" href="#" hidden>Instalar</a>
-
+      <button install hidden>Instalar</button>
       <style>
         footer {
           position: relative;
@@ -925,8 +941,10 @@
         // Stash the event so it can be triggered later
         deferredPrompt = e;
         // Show the install button
-        installButton.removeAttribute("hidden");
-        installButton.addEventListener("click", install);
+        for (const installButton of document.querySelectorAll("[install]")) {
+          installButton.addEventListener("click", install);
+          installButton.removeAttribute("hidden");
+        }
       });
       async function install(event) {
         // Show the install prompt
@@ -934,7 +952,9 @@
         console.info(`Install was: ${result.outcome}`);
 
         // Hide the install button
-        installButton.setAttribute("hidden", "");
+        for (const installButton of document.querySelectorAll("[install]")) {
+          installButton.toggleAttribute("hidden", true);
+        }
       }
     </script>
 
