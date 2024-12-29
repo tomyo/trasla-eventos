@@ -203,12 +203,6 @@ function formatEventDate(date, timezone = -3) {
   const targetUtcDate = new Date(date);
   targetUtcDate.setUTCHours(targetUtcDate.getUTCHours() + timezone);
 
-  if (!isDateWithinWeek(targetUtcDate)) return formatDate(date);
-
-  // const today = new Date();
-  // dayNames[today.getDay()] = "¡HOY!";
-  // dayNames[(today.getDay() + 1) % 7] = "Mañana";
-
   const day = targetUtcDate.getUTCDate().toString().padStart(2, "0");
   const month = (targetUtcDate.getUTCMonth() + 1).toString().padStart(2, "0");
   const hour = targetUtcDate.getUTCHours().toString().padStart(2, "0");
