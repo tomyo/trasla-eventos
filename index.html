@@ -164,6 +164,17 @@
         }
       }
 
+      input,
+      select {
+        background-color: color-mix(
+          in srgb,
+          var(--color, currentcolor) 7%,
+          var(--background-color, currentcolor)
+        );
+        border-radius: var(--border-radius);
+        border: none;
+      }
+
       .font-button {
         font-size: 0.66rem;
         font-weight: 600;
@@ -400,7 +411,7 @@
           <a id="seeAll" href="/#eventos" type="reset" class="font-button">Ver todos</a>
           <details>
             <summary>
-              <span class="font-button">Filtrar por</span>
+              <span class="font-button">Filtrar por </span>
             </summary>
             <form>
               <label>Lugar</label>
@@ -446,6 +457,9 @@
               <label>
                 <input checked type="checkbox" name="activities[]" value="Taller" />
                 Talleres
+              </label>
+              <label style="grid-column-end: 3">
+                <input type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
               </label>
             </form>
           </details>
@@ -605,6 +619,8 @@
           flex-flow: column;
           gap: 2rem;
           text-wrap: balance;
+          max-width: 80ch;
+          margin-inline: auto;
 
           > *:not(event-entries) {
             text-transform: uppercase;
@@ -626,16 +642,6 @@
           > details {
             line-height: 2;
             visibility: var(--filters-visibility, visible);
-
-            select {
-              border-radius: var(--border-radius);
-              border: none;
-              background-color: color-mix(
-                in srgb,
-                var(--color, currentcolor) 7%,
-                var(--background-color, currentcolor)
-              );
-            }
 
             input[type="date"] {
               -webkit-appearance: none; /* Remove arrow in chrome mobile */
