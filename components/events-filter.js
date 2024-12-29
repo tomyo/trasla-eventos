@@ -9,8 +9,9 @@ customElements.define(
       this.setStartDate();
       this.updateLocalitiesOptions(this.events);
 
-      this.addEventListener("input", this);
-      this.addEventListener("click", this);
+      this.form.addEventListener("input", this);
+      this.form.addEventListener("click", this);
+      this.form.addEventListener("submit", this);
 
       // Detect events changes and update hide/show them according to the filters.
       const observer = new MutationObserver((mutations) => {
@@ -20,6 +21,9 @@ customElements.define(
     }
 
     handleEvent(event) {
+      if (event.type === "submit") {
+        event.preventDefault();
+      }
       if (event.type === "input") {
         this.showHideEvents();
       }
@@ -95,6 +99,14 @@ function showHideElement(element, filters) {
     if (key == "startDate") {
       if (element.startDate < new Date(value)) {
         shouldHide = true;
+      }
+    }
+    // Filter by search term
+    if (key == "search") {
+      for (const word of value.toLowerCase().trim().split(" ")) {
+        if (!element.dataset.title.toLowerCase().includes(word)) {
+          shouldHide = true;
+        }
       }
     }
   }
