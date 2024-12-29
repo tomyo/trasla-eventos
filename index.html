@@ -465,9 +465,24 @@
             position: relative;
             background-color: var(--color, currentColor);
             mask: var(--src, url("/assets/images/trasla-eventos.svg")) no-repeat center;
+            mask-size: contain;
           }
         </style>
       </svg-mask>
+      <h3 style="margin-bottom: 0; font-weight: 400">Contacto</h3>
+      <div class="contact-links">
+        <a href="mailto:hola@trasla.com.ar" title="Email">
+          <svg-mask style="--src: url('/assets/icons/email.svg')"></svg-mask>
+        </a>
+        <a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=+5493544643473">
+          <svg-mask style="--src: url('/assets/icons/whatsapp.svg')"></svg-mask>
+        </a>
+
+        <a href="https://www.instagram.com/que.hacer.en.trasla.hoy/" target="_blank" title="Instagram">
+          <svg-mask style="--src: url('/assets/icons/instagram.svg')"></svg-mask>
+        </a>
+      </div>
+
       <a title="Ver eventos" href="/#eventos">Ver Eventos</a>
       <a
         title="Publicar nuevo evento"
@@ -510,6 +525,17 @@
             position: absolute;
             bottom: 0;
             left: 45%;
+          }
+
+          .contact-links {
+            display: flex;
+            --icon-width: 1.3rem;
+            gap: var(--icon-width);
+
+            svg-mask {
+              width: var(--icon-width);
+              height: var(--icon-width);
+            }
           }
         }
       </style>
