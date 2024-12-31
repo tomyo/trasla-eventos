@@ -471,8 +471,21 @@
       </section>
     </main>
     <footer class="font-body-2 mountains-top">
+      <div class="bg-pattern">
+        <div class="pattern-row"></div>
+        <div class="pattern-row"></div>
+      </div>
       <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')"> </svg-mask>
-      <h3 style="margin-bottom: 0; font-weight: 400">Contacto</h3>
+
+      <a title="Ver eventos" href="/#eventos">Ver Eventos</a>
+      <a
+        title="Publicar nuevo evento"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+        >Cargar Evento</a
+      >
+      <a href="/#about">Trasla</a>
+      <button install hidden>Instalar</button>
+      <h3 style="margin-bottom: 0">Contacto</h3>
       <div class="contact-links">
         <a href="mailto:hola@trasla.com.ar" title="Email">
           <svg-mask style="--src: url('/assets/icons/email.svg')"></svg-mask>
@@ -485,16 +498,52 @@
           <svg-mask style="--src: url('/assets/icons/instagram.svg')"></svg-mask>
         </a>
       </div>
-
-      <a title="Ver eventos" href="/#eventos">Ver Eventos</a>
-      <a
-        title="Publicar nuevo evento"
-        href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-        >Cargar Evento</a
-      >
-      <a href="/#about">Trasla</a>
-      <button install hidden>Instalar</button>
       <style>
+        .bg-pattern {
+          position: absolute;
+          inset: 0;
+
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: color-mix(in srgb, var(--color-green), transparent 20%);
+          }
+
+          .pattern-row {
+            --row-height: 50px;
+            --row-offset: 50px;
+            position: relative;
+            width: 100%;
+            height: calc(var(--row-height) * 3);
+            background-image: url("/assets/images/pattern.png");
+            background-size: 200px;
+            background-position: 0px 0px;
+            background-repeat: repeat-x;
+
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              width: 100%;
+              height: var(--row-height);
+              background-image: url("/assets/images/pattern.png");
+              background-size: 200px;
+              background-repeat: repeat-x;
+              left: 0;
+              top: var(--row-height);
+            }
+
+            &::before {
+              background-position: calc(2 * var(--row-offset)) 0;
+            }
+
+            &::after {
+              top: calc(2 * var(--row-height));
+              background-position: calc(5 * var(--row-offset)) 0;
+            }
+          }
+        }
         footer {
           position: relative;
           display: flex;
@@ -515,18 +564,6 @@
           svg-mask {
             --color: var(--color-light);
             margin-bottom: 1rem;
-          }
-
-          &::after {
-            content: "";
-            display: block;
-            height: min(7rem, 50%);
-            aspect-ratio: 200/102;
-            mask: url("/assets/images/mountain.svg") no-repeat center;
-            background-color: #5d5d40;
-            position: absolute;
-            bottom: 0;
-            left: 45%;
           }
 
           .contact-links {
