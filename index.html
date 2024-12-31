@@ -471,19 +471,7 @@
       </section>
     </main>
     <footer class="font-body-2 mountains-top">
-      <svg-mask>
-        <style>
-          svg-mask {
-            display: block;
-            width: 100%;
-            height: var(--height, 30px);
-            position: relative;
-            background-color: var(--color, currentColor);
-            mask: var(--src, url("/assets/images/trasla-eventos.svg")) no-repeat center;
-            mask-size: contain;
-          }
-        </style>
-      </svg-mask>
+      <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')"> </svg-mask>
       <h3 style="margin-bottom: 0; font-weight: 400">Contacto</h3>
       <div class="contact-links">
         <a href="mailto:hola@trasla.com.ar" title="Email">
@@ -525,7 +513,6 @@
           }
 
           svg-mask {
-            --src: url(/assets/images/trasla-eventos.svg);
             --color: var(--color-light);
             margin-bottom: 1rem;
           }
@@ -828,6 +815,19 @@
           text-align: center;
           padding: 1rem;
         }
+      }
+    </style>
+
+    <style>
+      /* Utils */
+      svg-mask {
+        display: block;
+        width: 100%;
+        height: var(--height, 30px);
+        position: relative;
+        background-color: var(--color, currentColor);
+        mask: var(--src, url("/assets/images/trasla-eventos.svg")) no-repeat center;
+        mask-size: contain;
       }
     </style>
 
