@@ -1,3 +1,6 @@
+const SHEET_ID_FUTURE_EVENTS = "1SqqTT8nqEJ_4O2LBLoXcHBKxc7-NCJEZBbsVyObsuq8";
+const SHEET_ID_ALL_EVENTS = "1MQQwYAcLdsTDw328-p8QOAMMXxLxIaHYKshDGxEEX8w";
+
 /* 
     Receive a gsheet array as input in the form of
     [
@@ -48,9 +51,9 @@ function table_to_objects(gsheet_array) {
   return final_object;
 }
 
-async function getSheetData() {
-  var id = "1SqqTT8nqEJ_4O2LBLoXcHBKxc7-NCJEZBbsVyObsuq8";
-  var gid = "0";
+async function getSheetData({ includePastEvents = false } = {}) {
+  var id = includePastEvents ? SHEET_ID_ALL_EVENTS : SHEET_ID_FUTURE_EVENTS;
+  var gid = includePastEvents ? "2075906374" : "0";
   var txt = await (
     await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&tq?gid=${gid}`)
   ).text();
