@@ -1,17 +1,13 @@
 // api/event/[id].js
 import { getSheetData } from "../shared/lib/get-gsheet-data.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import {
-  getEventShareTitle,
-  formatEventResponse,
-  escapeHtml,
-} from "../shared/lib/utils.js";
+import { getEventShareTitle, formatEventResponse, escapeHtml } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
   const query = url.pathname.split("/").pop();
 
-  const events = await getSheetData();
+  const events = await getSheetData({ includePastEvents: true });
   const searchResults = fuzzySearch(events, query);
   const eventData = formatEventResponse(searchResults[0].item);
 
@@ -21,9 +17,7 @@ export default async function handler(req) {
 
   if (searchResults) {
     const contentMeta = /*html*/ `
-      <title property="og:title">${escapeHtml(
-        getEventShareTitle(eventData)
-      )}</title>
+      <title property="og:title">${escapeHtml(getEventShareTitle(eventData))}</title>
       <link
         rel="canonical"
         property="og:url"
