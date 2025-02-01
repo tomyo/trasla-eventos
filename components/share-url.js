@@ -4,22 +4,31 @@ customElements.define(
     constructor() {
       super();
 
-      this.element = this.querySelector("button, a");
-      if (!this.element) return;
-
       if (navigator[this.dataset.action]) {
-        this.element.addEventListener("click", this);
+        this.addEventListener("click", this);
       }
     }
 
-    canShare(shareData) {
-      return navigator.share && location.protocol === "https:" && navigator.canShare(shareData);
+    canShare(shareData = {}) {
+      try {
+        // Check if running on mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+
+        return (
+          navigator.share && location.protocol === "https:" && navigator.canShare(shareData) && isMobile // Only return true for mobile devices
+        );
+      } catch (error) {
+        console.warn("Share API check failed:", error);
+        return false;
+      }
     }
 
-    handleEvent(event) {
+    async handleEvent(event) {
       if (event.type === "click") {
         event.preventDefault();
-        this.shareEvent();
+        await this.shareEvent();
       }
     }
 
@@ -30,28 +39,29 @@ customElements.define(
         url,
       };
 
+      let mustFallback = false;
       try {
         if (this.canShare(shareData)) await navigator.share(shareData);
-        else await fallbackShare(shareData);
-
-        this.shareSuccess();
+        else mustFallback = true;
       } catch (error) {
         if (error.name !== "AbortError")
-          console.error(error.name, error.message, " ...Retrying with fallback");
-        this.fallbackShare(shareData);
+          console.warn(error.name, error.message, " ...Retrying with fallback");
+        mustFallback = true;
+      }
+      if (mustFallback) {
+        // Fallback share using clipboard
+        navigator.clipboard.writeText(shareData.url).then(() => {
+          this.fallbackShareSuccess();
+        });
       }
     }
 
-    async fallbackShare(shareData) {
-      await navigator.clipboard.writeText(shareData.url);
-      this.shareSuccess();
-    }
-
-    shareSuccess = () => {
-      const originalContent = this.element.innerText || this.element.innerHTML;
-      this.element.innerText = this.canShare() ? this.dataset.textSuccess : this.dataset.textSuccessFallback;
+    fallbackShareSuccess = () => {
+      const element = this.querySelector(":first-child") || this;
+      const originalContent = element.innerText || element.innerHTML;
+      element.innerText = this.canShare() ? this.dataset.textSuccess : this.dataset.textSuccessFallback;
       setTimeout(() => {
-        this.element.innerHTML = originalContent;
+        element.innerHTML = originalContent;
       }, 2000);
     };
   }
