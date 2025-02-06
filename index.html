@@ -467,6 +467,35 @@
             <!-- SSR replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
+          <button class="view-more" onclick="showAllFutureEvents();this.remove();">
+            <style>
+              .view-more {
+                display: flex;
+                flex-flow: row nowrap;
+                background-color: var(--color-green) !important;
+                align-items: center;
+                justify-content: initial;
+                color: var(--color-light);
+                gap: 1rem;
+                font-size: 0.66rem;
+                font-weight: 600;
+                width: 12rem;
+                height: 3rem;
+                margin-inline: auto;
+              }
+            </style>
+            <svg-mask
+              style="
+                --src: url('/assets/icons/loica.svg');
+                --color: var(--color-light);
+                width: 30px;
+                height: 18px;
+              "
+            >
+            </svg-mask
+            >Ver más eventos
+          </button>
+          <script></script>
         </events-filter>
       </section>
     </main>
@@ -925,6 +954,25 @@
         eventsElement.appendChild(eventElement);
       }
 
+      async function showAllFutureEvents() {
+        const upcomingEvents = (await getSheetData()).filter((event) => {
+          return today <= parseEventResponseDateString(event["Comienzo"]);
+        });
+        showEvents(upcomingEvents);
+      }
+
+      window.showAllFutureEvents = showAllFutureEvents;
+
+      async function showThisWeeksEvents() {
+        const upcomingEvents = (await getSheetData()).filter((event) => {
+          const startDate = parseEventResponseDateString(event["Comienzo"]);
+          return (
+            today <= startDate && startDate <= new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7)
+          );
+        });
+        showEvents(upcomingEvents);
+      }
+
       async function showEvents(events) {
         // Fuzzy search
         const url = new URL(location);
@@ -972,11 +1020,7 @@
       const eventsElement = document.querySelector("event-entries");
 
       if (!document.querySelector("event-entry")) {
-        // Get all events and drop old ones
-        const upcomingEvents = (await getSheetData()).filter((event) => {
-          return today <= parseEventResponseDateString(event["Comienzo"]);
-        });
-        showEvents(upcomingEvents);
+        showThisWeeksEvents();
       } else {
         // SSR prerendered events
 
