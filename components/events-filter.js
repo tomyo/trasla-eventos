@@ -6,11 +6,16 @@ customElements.define(
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
 
-      this.setStartDate();
+      this.setStartDateToToday();
+
+      // Set the end date to one week from now by default
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 7);
+      this.setEndDate(endDate);
       this.updateLocalitiesOptions(this.events);
 
       this.form.addEventListener("input", this);
-      this.form.addEventListener("click", this);
+      this.addEventListener("click", this);
       this.form.addEventListener("submit", this);
 
       // Detect events changes and update hide/show them according to the filters.
@@ -55,16 +60,26 @@ customElements.define(
      *
      * @param {Date} [date] - The date to set the input to. If empty, defaults to today.
      */
-    setStartDate(date) {
-      if (!date) date = new Date();
+    setStartDateToToday(date) {
+      date = new Date();
+      date.setUTCDate(date.getDate());
+      this.form["startDate"].value = date.toISOString().split("T")[0];
+    }
 
-      const formattedDate = date.toISOString().split("T")[0];
-      this.form["startDate"].value = formattedDate;
+    setEndDate(date) {
+      let value = ""; // No end date by default
+      if (!!date) {
+        date.setDate(date.getUTCDate());
+        date.setHours(23, 59, 59);
+        value = date.toISOString().split("T")[0];
+      }
+      this.form["endDate"].value = value;
     }
 
     resetFilters() {
       this.form.reset();
-      this.setStartDate();
+      this.setStartDateToToday();
+      this.setEndDate();
       this.updateLocalitiesOptions(this.events);
       this.showHideEvents();
     }
@@ -97,7 +112,20 @@ function showHideElement(element, filters) {
     }
     // Filter by start date
     if (key == "startDate") {
-      if (element.startDate < new Date(value)) {
+      const startDate = new Date(value);
+      startDate.setDate(startDate.getUTCDate());
+      startDate.setHours(0);
+      if (element.startDate < startDate) {
+        shouldHide = true;
+      }
+    }
+
+    // Filter by end date
+    if (key == "endDate") {
+      const endDate = new Date(value);
+      endDate.setDate(endDate.getUTCDate());
+      endDate.setHours(23, 59, 59);
+      if (element.startDate > endDate) {
         shouldHide = true;
       }
     }

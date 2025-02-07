@@ -407,7 +407,7 @@
         </p>
       </section>
       <section id="eventos">
-        <events-filter>
+        <events-filter id="eventsFilter">
           <a id="seeAll" href="/#eventos" type="reset" class="font-button">Ver todos</a>
           <details>
             <summary>
@@ -447,9 +447,10 @@
                 <option value="Yacanto">Yacanto</option>
               </select>
 
-              <label> Fecha </label>
+              <label> Desde </label>
               <input type="date" name="startDate" style="width: 100%" />
-
+              <label for="endDate"> Hasta </label>
+              <input name="endDate" type="date" />
               <label>
                 <input checked type="checkbox" name="activities[]" value="Evento" />
                 Eventos
@@ -458,16 +459,15 @@
                 <input checked type="checkbox" name="activities[]" value="Taller" />
                 Talleres
               </label>
-              <label style="grid-column-end: 3">
-                <input type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
-              </label>
+              <label> 🔎 </label>
+              <input type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
             </form>
           </details>
           <event-entries>
             <!-- SSR replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
-          <button class="view-more" onclick="showAllFutureEvents();this.remove();">
+          <button class="view-more" onclick="eventsFilter.resetFilters();this.remove();">
             <style>
               .view-more {
                 display: flex;
@@ -959,18 +959,7 @@
           return today <= parseEventResponseDateString(event["Comienzo"]);
         });
         showEvents(upcomingEvents);
-      }
-
-      window.showAllFutureEvents = showAllFutureEvents;
-
-      async function showThisWeeksEvents() {
-        const upcomingEvents = (await getSheetData()).filter((event) => {
-          const startDate = parseEventResponseDateString(event["Comienzo"]);
-          return (
-            today <= startDate && startDate <= new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7)
-          );
-        });
-        showEvents(upcomingEvents);
+        eventsFilter.showHideEvents();
       }
 
       async function showEvents(events) {
@@ -1020,7 +1009,7 @@
       const eventsElement = document.querySelector("event-entries");
 
       if (!document.querySelector("event-entry")) {
-        showThisWeeksEvents();
+        showAllFutureEvents();
       } else {
         // SSR prerendered events
 
