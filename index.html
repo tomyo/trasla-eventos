@@ -319,20 +319,6 @@
       </style>
       <section id="quick-actions" class="mountains-top">
         <div class="buttons">
-          <a
-            id="addEvent"
-            class="button"
-            target="_blank"
-            title="Publicar nuevo evento"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-          >
-            <img src="/assets/icons/upload.svg" width="20px" />
-            Cargar evento
-          </a>
-          <a class="button" title="Ver eventos" href="/#eventos">
-            <img src="/assets/icons/binocular.png" width="30px" />
-            Ver eventos
-          </a>
           <button install hidden>
             <svg-mask
               style="
@@ -345,6 +331,20 @@
             </svg-mask>
             Instalar
           </button>
+          <a class="button" title="Ver eventos" href="/#eventos">
+            <img src="/assets/icons/binocular.png" width="30px" />
+            Ver eventos
+          </a>
+          <a
+            id="addEvent"
+            class="button"
+            target="_blank"
+            title="Publicar nuevo evento"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+          >
+            <img src="/assets/icons/upload.svg" width="20px" />
+            Cargar evento
+          </a>
         </div>
         <style>
           #quick-actions {
@@ -373,7 +373,7 @@
               }
 
               & > :nth-child(1) {
-                background-color: var(--color-red);
+                background-color: var(--color-green);
               }
 
               & > :nth-child(2) {
@@ -381,7 +381,7 @@
               }
 
               & > :nth-child(3) {
-                background-color: var(--color-green);
+                background-color: var(--color-red);
               }
             }
           }
