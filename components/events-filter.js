@@ -6,12 +6,14 @@ customElements.define(
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
 
-      this.setStartDateToToday();
+      if (!this.form["dateFrom"].value) {
+        this.setStartDateToToday();
+      }
 
       // Set the end date to one week from now by default
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + 7);
-      this.setEndDate(endDate);
+      this.setEndDate();
       this.updateLocalitiesOptions(this.events);
 
       this.form.addEventListener("input", this);
