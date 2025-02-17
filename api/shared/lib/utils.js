@@ -144,11 +144,19 @@ export function parseEventResponseDateString(dateString, timezone = -3) {
 
 /**
  *
- * @param {Date} date
+ * @param {Date} dateOrString - A Date object or a date string in yyyy-mm-dd format.
  * @returns {boolean} True if the date is today.
  */
-export function isDateToday(date) {
+export function isDateToday(dateOrString) {
+  if (!dateOrString) return false;
   const now = new Date();
+  let date = new Date(dateOrString);
+
+  if (typeof dateOrString === "string") {
+    const [year, month, day] = dateOrString.split("-");
+    date = new Date(year, month - 1, day);
+  }
+
   return (
     date.getDate() === now.getDate() &&
     date.getMonth() === now.getMonth() &&

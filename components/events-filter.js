@@ -5,13 +5,17 @@ customElements.define(
       super();
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
+      this.paginateAt = 10;
+      this.allShown = false;
 
-      this.setStartDateToToday();
+      if (!this.form["dateFrom"].value) {
+        this.setStartDateToToday();
+      }
 
       // Set the end date to one week from now by default
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + 7);
-      this.setEndDate(endDate);
+      this.setEndDate();
       this.updateLocalitiesOptions(this.events);
 
       this.form.addEventListener("input", this);
@@ -84,13 +88,27 @@ customElements.define(
       this.showHideEvents();
     }
 
+    showMore(howManyMoreToShow = 10) {
+      this.paginateAt += howManyMoreToShow;
+      this.showHideEvents();
+    }
+
     /**
      *  Show or hide events based on the current filters.
      */
     showHideEvents() {
+      let shownCount = 0;
+      let moreEventsAvailable = false;
       this.events.querySelectorAll("event-entry").forEach((event) => {
-        showHideElement(event, new FormData(this.form));
+        if (shownCount < this.paginateAt) {
+          const shown = showHideElement(event, new FormData(this.form));
+          if (shown) shownCount++;
+        } else {
+          moreEventsAvailable = true;
+          showHideElement(event, new FormData(this.form), { shouldHide: true });
+        }
       });
+      if (!moreEventsAvailable) this.allShown = true;
     }
   }
 );
@@ -99,10 +117,9 @@ customElements.define(
  *
  * @param {event-entry} element
  * @param {FormData} filters
- * @returns
+ * @returns true if the element should be shown, false otherwise.
  */
-function showHideElement(element, filters) {
-  let shouldHide = false;
+function showHideElement(element, filters, { shouldHide = false } = {}) {
   for (const [key, value] of filters) {
     // Filter by locality
     if (key === "locality") {
@@ -144,7 +161,8 @@ function showHideElement(element, filters) {
     shouldHide = true;
   }
 
-  if (shouldHide) return element.toggleAttribute("hidden", true);
+  if (shouldHide) element.toggleAttribute("hidden", true);
+  else element.removeAttribute("hidden");
 
-  element.removeAttribute("hidden");
+  return !shouldHide;
 }

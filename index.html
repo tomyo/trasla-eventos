@@ -86,6 +86,7 @@
         --color-dark: #222222;
         --color: var(--color-dark);
         --background-color: var(--color-light);
+        --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color));
         --border-radius: 10px;
         color-scheme: var(--color-scheme, light);
         accent-color: var(--color-green);
@@ -165,13 +166,13 @@
       }
 
       input,
-      select {
+      select,
+      button {
         background-color: color-mix(
           in srgb,
           var(--color, currentcolor) 7%,
           var(--background-color, currentcolor)
         );
-        border-radius: var(--border-radius);
         border: none;
       }
 
@@ -195,7 +196,7 @@
     </style>
   </head>
   <body>
-    <script src="/components/type-writer.js" type="module"></script>
+    <script src="/components/today-date-picker.js" type="module"></script>
     <picture>
       <source
         srcset="/assets/images/portada-1920w-1200h.avif 1x"
@@ -294,11 +295,7 @@
             }
           </style>
         </a>
-        <h1 class="moto">
-          ¿Qué hacer<br />
-          En traslasierra<br />
-          <type-writer data-words="hoy, este finde, esta semana"></type-writer>?
-        </h1>
+        <h1 class="moto">La agenda cultural de Traslasierra</h1>
       </section>
       <style>
         .mountains-top {
@@ -387,87 +384,101 @@
           }
         </style>
       </section>
-      <section id="about" style="text-transform: uppercase">
+      <section id="about">
         <style>
           #about {
             display: flex;
             flex-flow: column nowrap;
             align-items: center;
             text-align: center;
-
-            > img {
-              margin-block-end: 1rem;
-            }
           }
         </style>
         <img src="/assets/images/mountain.svg" height="100" />
-        <h2>¿Qué es trasla?</h2>
-        <p class="font-body-2">La agenda cultural gratuita de la comunidad de Traslasierra.</p>
       </section>
       <section id="eventos">
         <events-filter id="eventsFilter">
-          <a id="seeAll" href="/#eventos" type="reset" class="font-button">Ver todos</a>
-          <details>
-            <summary>
-              <span class="font-button">Filtrar por </span>
-            </summary>
-            <form>
-              <label>Lugar</label>
-              <select name="locality" style="width: 100%">
-                <option value="" default>Todos</option>
-                <option value="Arroyo de Los Patos">Arroyo de Los Patos</option>
-                <option value="Boca del Rio">Boca del Rio</option>
-                <option value="Dique de La Viña">Dique de La Viña</option>
-                <option value="El Pueblito">El Pueblito</option>
-                <option value="La Paz">La Paz</option>
-                <option value="La Población">La Población</option>
-                <option value="Las Calles">Las Calles</option>
-                <option value="Las Chacras">Las Chacras</option>
-                <option value="Las Rabonas">Las Rabonas</option>
-                <option value="Las Tapias">Las Tapias</option>
-                <option value="Los Hornillos">Los Hornillos</option>
-                <option value="Los Molles">Los Molles</option>
-                <option value="Los Pozos">Los Pozos</option>
-                <option value="Luyaba">Luyaba</option>
-                <option value="Merlo">Merlo</option>
-                <option value="Mina Clavero">Mina Clavero</option>
-                <option value="Nono">Nono</option>
-                <option value="Panaholma">Panaholma</option>
-                <option value="Piedra Pintada">Piedra Pintada</option>
-                <option value="San Huberto">San Huberto</option>
-                <option value="San Javier">San Javier</option>
-                <option value="San Lorenzo">San Lorenzo</option>
-                <option value="San Pedro">San Pedro</option>
-                <option value="Travesia">Travesia</option>
-                <option value="Villa Cura Brochero">Villa Cura Brochero</option>
-                <option value="Villa de Las Rosas">Villa de Las Rosas</option>
-                <option value="Villa Dolores">Villa Dolores</option>
-                <option value="Yacanto">Yacanto</option>
-              </select>
+          <form>
+            <h3>Eventos en</h3>
+            <select name="locality">
+              <option value="" default>TRASLASIERRA</option>
+              <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
+              <option value="Boca del Rio">BOCA DEL RIO</option>
+              <option value="Dique de La Viña">DIQUE DE LA VIÑA</option>
+              <option value="El Pueblito">EL PUEBLITO</option>
+              <option value="La Paz">LA PAZ</option>
+              <option value="La Población">LA POBLACIÓN</option>
+              <option value="Las Calles">LAS CALLES</option>
+              <option value="Las Chacras">LAS CHACRAS</option>
+              <option value="Las Rabonas">LAS RABONAS</option>
+              <option value="Las Tapias">LAS TAPIAS</option>
+              <option value="Los Hornillos">LOS HORNILLOS</option>
+              <option value="Los Molles">LOS MOLLES</option>
+              <option value="Los Pozos">LOS POZOS</option>
+              <option value="Luyaba">LUYABA</option>
+              <option value="Merlo">MERLO</option>
+              <option value="Mina Clavero">MINA CLAVERO</option>
+              <option value="Nono">NONO</option>
+              <option value="Panaholma">PANAHOLMA</option>
+              <option value="Piedra Pintada">PIEDRA PINTADA</option>
+              <option value="San Huberto">SAN HUBERTO</option>
+              <option value="San Javier">SAN JAVIER</option>
+              <option value="San Lorenzo">SAN LORENZO</option>
+              <option value="San Pedro">SAN PEDRO</option>
+              <option value="Travesia">TRAVESIA</option>
+              <option value="Villa Cura Brochero">VILLA CURA BROCHERO</option>
+              <option value="Villa de Las Rosas">VILLA DE LAS ROSAS</option>
+              <option value="Villa Dolores">VILLA DOLORES</option>
+              <option value="Yacanto">YACANTO</option>
+            </select>
+            <h3>A Partir de<span id="hideOnToday">l</span></h3>
+            <today-date-picker onclick="dateFrom.showPicker()">
+              <input id="dateFrom" type="date" name="startDate" />
 
-              <label> Desde </label>
-              <input type="date" name="startDate" style="width: 100%" />
-              <label for="endDate"> Hasta </label>
-              <input name="endDate" type="date" />
-              <label>
-                <input checked type="checkbox" name="activities[]" value="Evento" />
-                Eventos
-              </label>
-              <label>
-                <input checked type="checkbox" name="activities[]" value="Taller" />
-                Talleres
-              </label>
-              <label> 🔎 </label>
-              <input type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
-            </form>
-          </details>
+              <style>
+                form:has(today-date-picker[today]) #hideOnToday {
+                  display: none;
+                }
+
+                today-date-picker {
+                  position: relative;
+
+                  > * {
+                    width: 100%;
+                  }
+
+                  &[today]::after {
+                    content: "Hoy";
+                    position: absolute;
+                    inset: 0;
+                    display: grid;
+                    place-content: center;
+                    background-color: var(--background-color-darker);
+                  }
+                }
+              </style>
+            </today-date-picker>
+            <input name="endDate" type="date" hidden />
+            <label hidden>
+              <input checked type="checkbox" name="activities[]" value="Evento" />
+              Eventos
+            </label>
+            <label hidden>
+              <input checked type="checkbox" name="activities[]" value="Taller" />
+              Talleres
+            </label>
+            <label hidden> 🔎 </label>
+            <input hidden type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
+          </form>
           <event-entries>
-            <!-- SSR replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
+            <!-- SSR (via [slug].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
-          <button class="view-more" onclick="eventsFilter.resetFilters();this.remove();">
+          <button
+            id="viewMoreEvents"
+            onclick="eventsFilter.showMore();if (eventsFilter.allShown) this.remove()"
+          >
             <style>
-              .view-more {
+              #viewMoreEvents {
                 display: flex;
                 flex-flow: row nowrap;
                 background-color: var(--color-green) !important;
@@ -643,11 +654,6 @@
             font-family: "Poster Cut Neue", sans-serif;
             margin-block: 6rem;
             min-height: 6ch;
-
-            type-writer {
-              text-transform: uppercase;
-              font-weight: bold;
-            }
           }
 
           #actions {
@@ -673,6 +679,27 @@
           max-width: 80ch;
           margin-inline: auto;
 
+          form {
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: stretch;
+            text-align: center;
+            gap: 0.66rem;
+            width: 12rem;
+            margin-inline: auto;
+
+            h3 {
+              margin: 0;
+            }
+
+            button,
+            select,
+            input {
+              padding: 0.5rem;
+              text-align: inherit;
+            }
+          }
+
           > *:not(event-entries) {
             text-transform: uppercase;
           }
@@ -680,61 +707,6 @@
           &:has(event-entry:only-of-type) {
             /* Only one event is shown */
             --filters-visibility: hidden;
-          }
-
-          #seeAll {
-            position: absolute;
-            line-height: 2;
-            z-index: 1;
-            margin-top: 0.5rem;
-            text-decoration: none;
-          }
-
-          > details {
-            line-height: 2;
-            visibility: var(--filters-visibility, visible);
-
-            input[type="date"] {
-              -webkit-appearance: none; /* Remove arrow in chrome mobile */
-              background: transparent;
-              width: min-content;
-              border-radius: var(--border-radius);
-              border: none;
-              padding: 0;
-              background-color: color-mix(
-                in srgb,
-                var(--color, currentcolor) 7%,
-                var(--background-color, currentcolor)
-              );
-
-              font-family: inherit;
-              font-size: inherit;
-              color: inherit;
-
-              &:disabled {
-                /* Allow click on parent to toggle details open/close */
-                pointer-events: none;
-              }
-            }
-
-            p {
-              margin: var(--margin);
-              width: 100%;
-            }
-
-            > summary {
-              position: relative;
-              text-align: end;
-              margin-block-end: 0.5rem;
-            }
-
-            form {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              align-items: center;
-              text-align: end;
-              gap: 0.5rem;
-            }
           }
         }
 
@@ -903,15 +875,17 @@
 
     <script type="module">
       import { getSheetData } from "/lib/get-gsheet-data.js";
-      import { escapeHtml, slugify, formatEventResponse, parseEventResponseDateString } from "/lib/utils.js";
+      import {
+        escapeHtml,
+        slugify,
+        formatEventResponse,
+        parseEventResponseDateString,
+        isDateToday,
+      } from "/lib/utils.js";
 
-      function isDateToday(date) {
-        return (
-          date.getDate() === now.getDate() &&
-          date.getMonth() === now.getMonth() &&
-          date.getFullYear() === now.getFullYear()
-        );
-      }
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const eventsElement = document.querySelector("event-entries");
 
       /**
        *
@@ -919,49 +893,48 @@
        * @returns
        */
       function getSortOrder(date) {
-        const items = [date.getFullYear(), date.getMonth(), date.getDate(), date.getHours()];
-        return items.map((t) => t.toString().padStart(2, "0")).join("");
-      }
-
-      function appendEvents(events) {
-        for (const event of events) {
-          const eventDate = parseEventResponseDateString(event["Comienzo"]);
-          if (!isDateToday(eventDate) && eventDate < now) {
-            continue;
-          }
-
-          appendEvent(event);
-        }
+        const items = [
+          date.getFullYear() - 2000,
+          date.getMonth(),
+          date.getDate(),
+          date.getHours(),
+          date.getMinutes(),
+        ];
+        return Number(items.map((t) => t.toString().padStart(2, "0")).join(""));
       }
 
       /**
        * @param {EventResponse} event
        */
-      function appendEvent(eventResponse, { open, order } = {}) {
+      function appendEvent(eventResponse, { open } = {}) {
         const eventData = formatEventResponse(eventResponse);
         const eventElement = document.createElement("event-entry");
 
-        if (!order) {
-          order = getSortOrder(new Date(eventData["start-date"]));
-        }
         for (const [key, value] of Object.entries(eventData)) {
           if (!Object.hasOwnProperty.call(eventData, key)) continue;
           if (typeof value !== "string") console.error(`Value for key ${key} is not a string: ${value}`);
 
+          // keys come in kebab-case
           eventElement.setAttribute(`data-${key}`, escapeHtml(value));
         }
 
         if (open) {
           eventElement.open = true;
         }
-        eventElement.style = `order: ${order}`;
         eventsElement.appendChild(eventElement);
       }
 
       async function showAllFutureEvents() {
-        const upcomingEvents = (await getSheetData()).filter((event) => {
-          return today <= parseEventResponseDateString(event["Comienzo"]);
-        });
+        const upcomingEvents = (await getSheetData())
+          .filter((event) => {
+            return today <= parseEventResponseDateString(event["Comienzo"]);
+          })
+          .sort((a, b) => {
+            return (
+              getSortOrder(parseEventResponseDateString(a["Comienzo"])) -
+              getSortOrder(parseEventResponseDateString(b["Comienzo"]))
+            );
+          });
         showEvents(upcomingEvents);
         eventsFilter.showHideEvents();
       }
@@ -984,7 +957,9 @@
           return appendEvent(searchResults[0].item, { open: true });
         }
 
-        appendEvents(events);
+        for (const event of events) {
+          appendEvent(event);
+        }
       }
 
       // RUN
@@ -1007,10 +982,6 @@
       // END: Service Worker
 
       // Get events
-
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const eventsElement = document.querySelector("event-entries");
 
       if (!document.querySelector("event-entry")) {
         showAllFutureEvents();
