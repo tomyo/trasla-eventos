@@ -86,6 +86,7 @@
         --color-dark: #222222;
         --color: var(--color-dark);
         --background-color: var(--color-light);
+        --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color));
         --border-radius: 10px;
         color-scheme: var(--color-scheme, light);
         accent-color: var(--color-green);
@@ -430,8 +431,7 @@
               <option value="Yacanto">YACANTO</option>
             </select>
             <h3>A Partir de<span id="hideOnToday">l</span></h3>
-            <today-date-picker>
-              <button onclick="dateFrom.showPicker()" id="pickStartDate" type="button" hidden>hoy</button>
+            <today-date-picker onclick="dateFrom.showPicker()">
               <input id="dateFrom" type="date" name="startDate" />
 
               <style>
@@ -440,15 +440,19 @@
                 }
 
                 today-date-picker {
-                  display: contents;
+                  position: relative;
 
-                  &[today] {
-                    button {
-                      display: unset;
-                    }
-                    input {
-                      display: none;
-                    }
+                  > * {
+                    width: 100%;
+                  }
+
+                  &[today]::after {
+                    content: "Hoy";
+                    position: absolute;
+                    inset: 0;
+                    display: grid;
+                    place-content: center;
+                    background-color: var(--background-color-darker);
                   }
                 }
               </style>
