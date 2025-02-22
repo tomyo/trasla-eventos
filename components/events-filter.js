@@ -6,7 +6,6 @@ customElements.define(
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
       this.paginateAt = 10;
-      this.allShown = false;
 
       if (!this.form["dateFrom"].value) {
         this.setStartDateToToday();
@@ -14,6 +13,14 @@ customElements.define(
 
       this.form.addEventListener("input", this);
       this.form.addEventListener("submit", this);
+    }
+
+    set allShown(value) {
+      this.toggleAttribute("all-shown", value);
+    }
+
+    get allShown() {
+      return this.hasAttribute("all-shown");
     }
 
     handleEvent(event) {
@@ -78,11 +85,10 @@ customElements.define(
 
     /**
      *  Filter events based on the current filters.
-     *  An event is considered filtered out when it has the 'excluded' attribute.
+     *  An event is considered filtered out when it has the `excluded` attribute.
      */
     filterEvents() {
       let includedCount = 0;
-      let moreEventsAvailable = false;
       const formData = new FormData(this.form);
       // Events DOM order expected by date
       this.events.querySelectorAll("event-entry").forEach((event) => {
@@ -93,12 +99,12 @@ customElements.define(
           event.toggleAttribute("excluded", false);
         }
       });
-
-      if (!moreEventsAvailable) this.allShown = true;
     }
 
-    /*
-     *  Show included events until `this.paginateAt`.
+    /**
+     * Show events until `this.paginateAt`. Hide the rest.
+     * Skips excluded events.
+     * Sets `all-shown` attribute if all events are shown.
      */
     toggleEventsPaginationVisibility() {
       let shownCount = 0;
