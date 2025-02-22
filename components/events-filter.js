@@ -12,38 +12,23 @@ customElements.define(
         this.setStartDateToToday();
       }
 
-      // Set the end date to one week from now by default
-      const endDate = new Date();
-      endDate.setDate(endDate.getDate() + 7);
-      this.setEndDate();
-      this.updateLocalitiesOptions(this.events);
-
       this.form.addEventListener("input", this);
-      this.addEventListener("click", this);
       this.form.addEventListener("submit", this);
-
-      // Detect events changes and update hide/show them according to the filters.
-      const observer = new MutationObserver((mutations) => {
-        this.updateLocalitiesOptions(this.events);
-      });
-      observer.observe(this.events, { childList: true });
     }
 
     handleEvent(event) {
       if (event.type === "submit") {
         event.preventDefault();
       }
-      if (event.type === "input") {
-        this.showHideEvents();
-      }
-      if (event.type === "click" && event.target.type === "reset") {
-        this.resetFilters();
-      }
+
+      this.updateUI();
     }
 
-    updateLocalitiesOptions(events, { showCount = false } = {}) {
+    updateLocalitiesOptions({ showCount = false } = {}) {
       const availableLocalities = new Map();
-      events.querySelectorAll("event-entry").forEach((event) => {
+      const formData = new FormData(this.form);
+      this.events.querySelectorAll("event-entry").forEach((event) => {
+        if (shouldExcludeEvent(event, formData, { keysToOmit: ["locality"] })) return;
         let locality = event.dataset.locality;
         let localityCount = availableLocalities.has(locality) ? availableLocalities.get(locality) : 0;
         availableLocalities.set(event.dataset.locality, localityCount + 1);
@@ -80,51 +65,79 @@ customElements.define(
       this.form["endDate"].value = value;
     }
 
-    resetFilters() {
-      this.form.reset();
-      this.setStartDateToToday();
-      this.setEndDate();
-      this.updateLocalitiesOptions(this.events);
-      this.showHideEvents();
+    showMore(moreToShow = 10) {
+      this.paginateAt += moreToShow;
+      this.toggleEventsPaginationVisibility();
     }
 
-    showMore(howManyMoreToShow = 10) {
-      this.paginateAt += howManyMoreToShow;
-      this.showHideEvents();
+    updateUI() {
+      this.filterEvents();
+      this.toggleEventsPaginationVisibility();
+      this.updateLocalitiesOptions();
     }
 
     /**
-     *  Show or hide events based on the current filters.
+     *  Filter events based on the current filters.
+     *  An event is considered filtered out when it has the 'excluded' attribute.
      */
-    showHideEvents() {
-      let shownCount = 0;
+    filterEvents() {
+      let includedCount = 0;
       let moreEventsAvailable = false;
+      const formData = new FormData(this.form);
+      // Events DOM order expected by date
       this.events.querySelectorAll("event-entry").forEach((event) => {
-        if (shownCount < this.paginateAt) {
-          const shown = showHideElement(event, new FormData(this.form));
-          if (shown) shownCount++;
+        if (shouldExcludeEvent(event, formData)) {
+          event.toggleAttribute("excluded", true);
+          includedCount++;
         } else {
-          moreEventsAvailable = true;
-          showHideElement(event, new FormData(this.form), { shouldHide: true });
+          event.toggleAttribute("excluded", false);
         }
       });
+
       if (!moreEventsAvailable) this.allShown = true;
+    }
+
+    /*
+     *  Show included events until `this.paginateAt`.
+     */
+    toggleEventsPaginationVisibility() {
+      let shownCount = 0;
+      let allShown = true;
+      // Events DOM order expected by date
+      this.events.querySelectorAll("event-entry").forEach((event) => {
+        if (event.hasAttribute("excluded")) return;
+
+        if (shownCount < this.paginateAt) {
+          shownCount++;
+          event.hidden = false;
+          return;
+        }
+
+        event.hidden = true;
+        allShown = false;
+      });
+
+      this.allShown = allShown;
     }
   }
 );
 
 /**
  *
- * @param {event-entry} element
+ * @param {eventEntry} element
  * @param {FormData} filters
- * @returns true if the element should be shown, false otherwise.
+ * @param {Object} options
+ * @returns true if the element should be ex, false otherwise.
  */
-function showHideElement(element, filters, { shouldHide = false } = {}) {
+function shouldExcludeEvent(element, filters, { keysToOmit = [] } = {}) {
+  let shouldExclude = false;
   for (const [key, value] of filters) {
+    if (keysToOmit.includes(key)) continue;
+
     // Filter by locality
     if (key === "locality") {
       if (!element.dataset.locality.includes(value)) {
-        shouldHide = true;
+        shouldExclude = true;
       }
     }
     // Filter by start date
@@ -133,7 +146,7 @@ function showHideElement(element, filters, { shouldHide = false } = {}) {
       startDate.setDate(startDate.getUTCDate());
       startDate.setHours(0);
       if (element.startDate < startDate) {
-        shouldHide = true;
+        shouldExclude = true;
       }
     }
 
@@ -143,14 +156,14 @@ function showHideElement(element, filters, { shouldHide = false } = {}) {
       endDate.setDate(endDate.getUTCDate());
       endDate.setHours(23, 59, 59);
       if (element.startDate > endDate) {
-        shouldHide = true;
+        shouldExclude = true;
       }
     }
     // Filter by search term
     if (key == "search") {
       for (const word of value.toLowerCase().trim().split(" ")) {
         if (!element.dataset.title.toLowerCase().includes(word)) {
-          shouldHide = true;
+          shouldExclude = true;
         }
       }
     }
@@ -158,11 +171,8 @@ function showHideElement(element, filters, { shouldHide = false } = {}) {
 
   const activities = filters.getAll("activities[]");
   if (!activities.includes(element.dataset.activity)) {
-    shouldHide = true;
+    shouldExclude = true;
   }
 
-  if (shouldHide) element.toggleAttribute("hidden", true);
-  else element.removeAttribute("hidden");
-
-  return !shouldHide;
+  return shouldExclude;
 }
