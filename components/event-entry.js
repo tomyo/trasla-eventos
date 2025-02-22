@@ -40,7 +40,7 @@ customElements.define(
      */
     render() {
       this.innerHTML = /*html*/ `
-        <h2 part="title">${this.dataset.title}</h2>
+        <h3 part="title">${this.dataset.title}</h3>
 
         <img class="event-image" height="400" src="${this.dataset.imageUrl}" loading="lazy" alt="Evento en ${
         this.dataset.locality
