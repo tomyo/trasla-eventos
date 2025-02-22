@@ -475,10 +475,11 @@
           </event-entries>
           <button
             id="viewMoreEvents"
+            hidden
             onclick="eventsFilter.showMore();if (eventsFilter.allShown) this.remove()"
           >
             <style>
-              #viewMoreEvents {
+              #viewMoreEvents:not([hidden]) {
                 display: flex;
                 flex-flow: row nowrap;
                 background-color: var(--color-green) !important;
@@ -997,11 +998,23 @@
           window.addEventListener("load", focusElement);
         }
 
+        // Special logic for single event
         if (document.querySelectorAll("event-entry").length === 1) {
+          // Hide filters if only one event is shown
+          document.querySelector("events-filter form").style.display = "none";
+
           // Hide details summary (Ver más) since the event will be open by default
-          eventToFocus.querySelector("summary")?.toggleAttribute("hidden");
+          eventToFocus.querySelector("summary")?.toggleAttribute("hidden", true);
+
+          // Make viewMore button redirect to events page
+          viewMoreEvents.addEventListener("click", () => {
+            // Only one event means we are on a event link, so we should redirect to the events page
+            location.href = "/#eventos";
+          });
         }
       }
+
+      viewMoreEvents.hidden = false;
     </script>
 
     <script>
