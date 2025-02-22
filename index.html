@@ -473,17 +473,23 @@
             <!-- SSR (via [slug].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
-          <button
-            id="viewMoreEvents"
-            onclick="eventsFilter.showMore();if (eventsFilter.allShown) this.remove()"
-          >
+          <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
             <style>
               events-filter:not(:has(event-entry)) #viewMoreEvents {
-                --view-more-display: none;
+                display: none;
               }
 
-              #viewMoreEvents:not([hidden]) {
-                display: var(--view-more-display, flex);
+              events-filter:not(:has(event-entry:not([excluded]):nth-of-type(10))) #viewMoreEvents {
+                /* If less than 10 events can be shown, hide the button */
+                display: none;
+              }
+
+              events-filter[all-shown] #viewMoreEvents {
+                display: none;
+              }
+
+              #viewMoreEvents {
+                display: flex;
                 flex-flow: row nowrap;
                 background-color: var(--color-green) !important;
                 align-items: center;
@@ -1007,13 +1013,15 @@
           window.addEventListener("load", focusElement);
         }
 
-        // Special logic for single event
+        // Special logic for single event view (rendered via [slug].js)
         if (document.querySelectorAll("event-entry").length === 1) {
           // Make viewMore button redirect to events page
-          viewMoreEvents.addEventListener("click", () => {
-            // Only one event means we are on a event link, so we should redirect to the events page
+          viewMoreEvents.addEventListener("click", (event) => {
+            event.preventDefault();
+            // redirect to the events page
             location.href = "/#eventos";
           });
+          viewMoreEvents.style = "display: flex;";
         }
       }
     </script>
