@@ -146,22 +146,18 @@ function shouldExcludeEvent(element, filters, { keysToOmit = [] } = {}) {
         shouldExclude = true;
       }
     }
-    // Filter by start date
+    // Filter out events starting before given date
     if (key == "startDate") {
-      const startDate = new Date(value);
-      startDate.setDate(startDate.getUTCDate());
-      startDate.setHours(0);
-      if (element.startDate < startDate) {
+      const minDate = new Date(value + "T00:00:00");
+      if (element.startDate < minDate) {
         shouldExclude = true;
       }
     }
 
-    // Filter by end date
+    // Filter out events starting after given date
     if (key == "endDate") {
-      const endDate = new Date(value);
-      endDate.setDate(endDate.getUTCDate());
-      endDate.setHours(23, 59, 59);
-      if (element.startDate > endDate) {
+      const maxDate = new Date(value + "T23:59:59");
+      if (maxDate < element.startDate) {
         shouldExclude = true;
       }
     }
