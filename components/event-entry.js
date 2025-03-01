@@ -1,8 +1,5 @@
 import "./share-url.js";
 import {
-  isDateToday,
-  isDateWithinWeek,
-  isDateTomorrow,
   formatPhoneNumber,
   isValidUrl,
   createGoogleCalendarUrl,
@@ -46,10 +43,9 @@ customElements.define(
         this.dataset.locality
       } el ${formatDate(this.startDate)}">
 
-        <div part="where-and-when">
-          <p part="locality">${this.dataset.locality}</p>
-          <p part="datetime">${formatEventDate(this.startDate)}</p>
-        </div>
+        <p part="where-and-when">
+          ${this.dataset.locality} - ${formatEventDate(this.startDate, { onlyTime: true })}
+        </p>
         
         <div class="badges">
           ${this.renderBadges()}
@@ -91,12 +87,6 @@ customElements.define(
       let htmlString = "";
       if (this.dataset.activity) {
         htmlString += /*html*/ `<span data-type="${this.dataset.activity}">${this.dataset.activity}</span>`;
-      }
-      if (isDateToday(this.startDate)) {
-        htmlString += /*html*/ `<span data-type="today">¡HOY!</span>`;
-      }
-      if (isDateTomorrow(this.startDate)) {
-        htmlString += /*html*/ `<span data-type="tomorrow">¡Mañana!</span>`;
       }
       return htmlString;
     }
@@ -196,7 +186,7 @@ customElements.define(
  * @param {Date} date
  * @returns {String}
  */
-function formatEventDate(date, timezone = -3) {
+function formatEventDate(date, { timezone = -3, onlyTime = false } = {}) {
   const dayNames = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
 
   // Fix to display timezone
@@ -207,5 +197,7 @@ function formatEventDate(date, timezone = -3) {
   const month = (targetUtcDate.getUTCMonth() + 1).toString().padStart(2, "0");
   const hour = targetUtcDate.getUTCHours().toString().padStart(2, "0");
   const minute = targetUtcDate.getUTCMinutes().toString().padStart(2, "0");
+  if (onlyTime) return `${hour}:${minute}h`;
+
   return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
 }
