@@ -753,6 +753,33 @@
           margin-inline: auto;
           gap: 2rem;
           width: 100%;
+
+          & time {
+            text-align: center;
+            position: sticky;
+            top: 1rem;
+            width: 17ch;
+            margin-inline: auto;
+            color: var(--color-light);
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.3rem;
+
+            &:has(+ event-entry[hidden]) {
+              /* Hide the date if there are no visible events after */
+              display: none;
+            }
+
+            &::before {
+              content: "";
+              inset: 0;
+              width: 100%;
+              position: absolute;
+              z-index: -1;
+              background-color: var(--color-red);
+              border-radius: calc(var(--border-radius) / 2);
+            }
+          }
         }
 
         event-entry:not([hidden]) {
@@ -1006,6 +1033,23 @@
         eventsFilter.updateUI();
       }
 
+      /**
+       * @param {Date} date
+       * @returns {string}
+       */
+      function formatDateTitle(date) {
+        if (isDateToday(date)) {
+          return "¡HOY!";
+        }
+        return date
+          .toLocaleDateString("es-AR", {
+            weekday: "long",
+            day: "2-digit",
+            month: "2-digit",
+          })
+          .toUpperCase();
+      }
+
       async function renderEvents(events) {
         // Fuzzy search
         const url = new URL(location);
@@ -1024,7 +1068,24 @@
           return appendEvent(searchResults[0].item, { open: true });
         }
 
+        // Add date titles between events
+        let lastDate = today;
+        let shouldAddTime = true;
         for (const event of events) {
+          lastDate.setHours(23, 59, 59, 999);
+          const eventDate = parseEventResponseDateString(event["Comienzo"]);
+
+          if (lastDate < eventDate) {
+            shouldAddTime = true;
+          }
+          if (shouldAddTime) {
+            const dateTitle = document.createElement("time");
+            dateTitle.setAttribute("datetime", eventDate.toISOString()?.split("T")[0]);
+            dateTitle.textContent = formatDateTitle(eventDate);
+            eventsElement.appendChild(dateTitle);
+            lastDate = eventDate;
+            shouldAddTime = false;
+          }
           appendEvent(event);
         }
       }
