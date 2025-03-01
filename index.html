@@ -762,7 +762,7 @@
             margin-inline: auto;
             color: var(--color-light);
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             padding: 0.3rem;
 
             &:has(+ event-entry[hidden]) {
@@ -844,18 +844,17 @@
           [part="where-and-when"] {
             width: max-content;
             margin-inline: auto;
+            align-self: center;
           }
 
           [part="title"],
-          [part="locality"],
-          [part="datetime"] {
+          [part="where-and-when"] {
             text-transform: uppercase;
             margin: 0;
           }
 
           [part="title"],
-          [part="locality"],
-          [part="datetime"] {
+          [part="where-and-when"] {
             &::after {
               content: "";
               display: block;
