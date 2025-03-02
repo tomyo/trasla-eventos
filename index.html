@@ -765,7 +765,8 @@
             font-weight: 600;
             padding: 0.3rem;
 
-            &:has(+ event-entry[hidden]) {
+            &:has(+ event-entry[hidden]),
+            &:has(+ event-entry[excluded]) {
               /* Hide the date if there are no visible events after */
               display: none;
             }
