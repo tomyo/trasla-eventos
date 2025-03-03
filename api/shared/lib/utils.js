@@ -212,6 +212,14 @@ export function formatDate(date, timezone = -3) {
   return `${day}/${month}/${year} - ${hour}:${minute}h`;
 }
 
+
+export function formatLocalDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 /**
  * Parses a date string and returns a Date object if valid, or null if invalid.
  * @param {string} dateString - The date string to parse.

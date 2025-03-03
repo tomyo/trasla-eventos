@@ -755,6 +755,7 @@
           width: 100%;
 
           & time {
+            display: none; /* Shown per [date] via js custom css */
             text-align: center;
             position: sticky;
             top: 1rem;
@@ -764,12 +765,6 @@
             font-size: 1rem;
             font-weight: 600;
             padding: 0.3rem;
-
-            &:has(+ event-entry[hidden]),
-            &:has(+ event-entry[excluded]) {
-              /* Hide the date if there are no visible events after */
-              display: none;
-            }
 
             &::before {
               content: "";
@@ -969,6 +964,7 @@
         formatEventResponse,
         parseEventResponseDateString,
         isDateToday,
+        formatLocalDate
       } from "/lib/utils.js";
 
       const now = new Date();
@@ -1005,6 +1001,8 @@
           // keys come in kebab-case
           eventElement.setAttribute(`data-${key}`, escapeHtml(value));
         }
+        // Add date attribute to handle <time> title hidden logic
+        eventElement.setAttribute('date', formatLocalDate(new Date(eventElement.dataset.startDate)));
 
         if (open) {
           eventElement.open = true;
@@ -1063,6 +1061,7 @@
         }
 
         // Add date titles between events
+        const dates = [];
         let lastDate = today;
         let shouldAddTime = true;
         for (const event of events) {
@@ -1074,14 +1073,30 @@
           }
           if (shouldAddTime) {
             const dateTitle = document.createElement("time");
-            dateTitle.setAttribute("datetime", eventDate.toISOString()?.split("T")[0]);
+            const dateString = formatLocalDate(eventDate);
+            dates.push(dateString);
+            dateTitle.setAttribute("date", dateString);
             dateTitle.textContent = formatDateTitle(eventDate);
+
             eventsElement.appendChild(dateTitle);
             lastDate = eventDate;
             shouldAddTime = false;
           }
           appendEvent(event);
         }
+
+        const style = document.createElement("style");
+        style.textContent = dates
+          .map(
+            (date) => /*css*/`
+              time[date="${date}"]:has(~ event-entry[date="${date}"]:not([excluded]):not([hidden])) {
+                display: revert !important;
+              }
+            `
+          )
+          .join("\n");
+        eventsElement.appendChild(style);
+
       }
 
       // RUN
