@@ -1,55 +1,67 @@
+const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw_0-QeAq8wbM75_YCwEsKHXAEICKQT3f9gLRo3PmM/dev";
+
+
 self.addEventListener("fetch", (event) => {
-  if (event.request.method === "POST" && event.request.url.endsWith("/share-target")) {
-    event.respondWith(handleShareTarget(event.request));
+  if (event.request.method === "POST" && event.request.url.includes("/share-target")) {
+    return event.respondWith(handleShareTarget(event.request));
   }
+  console.info("Skipping unrecognized fetch event", event);
 });
 
+
+function readAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * @param {Request} request - The incoming request containing form data to be processed.
+ * @returns {Promise<Response>} - A promise that resolves to a redirect response or an error response if sharing fails.
+ */
 async function handleShareTarget(request) {
   console.info(request);
-  const formData = await request.formData();
-  const title = formData.get("title");
-  const text = formData.get("text");
-  const url = formData.get("url");
-  const files = formData.getAll("files");
+  try {
+    const formData = await request.formData();
+    const params = new URLSearchParams();
+    console.info("Received formData: ", [...formData.entries()]);
+    // Standard fields
+    ['title', 'text', 'url'].forEach(field => {
+      params.append(field, formData.get(field) || '');
+    });
 
-  for (const file of files) {
-    console.info("File name:", file.name);
-    console.info("File type:", file.type);
-    console.info("File size:", file.size, "bytes");
-  }
-
-  const file = files ? files[0] : null;
-
-  console.info("Received formData: ", [...formData.entries()]);
-
-  if (!url && !file) {
-    const urlInText = URL.parse(text);
-    if (urlInText.hostname === "eventos.trasla.com.ar") {
-      // We are receiving an event URL, let's open it
-      return Response.redirect(urlInText, 303); // Redirect after handling
+    // Send files as base64 encoded strings
+    for (const file of formData.getAll('files')) {
+      if (file.size === 0) {
+        console.warn('Skipping empty file:', file.name);
+        continue;
+      }
+      // Append to params (creates multiple "files" entries)
+      params.append('files', await readAsDataURL(file));
     }
+
+    const response = await fetch(APP_SCRIPT_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: params
+    });
+
+    const json = await response.json();
+    console.info('Share response:', json);
+    if (json.status == 303) return Response.redirect(json.location, 303); 
+
+    
+    return Response.redirect(
+      `/publicar-evento?fileId=${result?.fileId}&description=${encodeURIComponent(text)}`,
+      303
+    );
+  } catch (error) {
+    console.error('Sharing failed:', error);
+    return new Response('Share failed', {status: 500});
   }
-
-  const response = await fetch("/api/upload-file-to-drive", {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-
-  const result = await response.json();
-  if (result.fileId) {
-    console.log("Uploaded file ID:", result.fileId);
-  } else {
-    console.error("Error:", result.error);
-  }
-
-  return Response.redirect(
-    `/publicar-evento?fileId=${result?.fileId}&description=${encodeURIComponent(text)}`,
-    303
-  );
 }
 
 // Notifications
