@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -6,15 +6,25 @@
     <title>Publicar evento</title>
   </head>
   <body>
-    <form action="/api/upload-file-to-drive" method="post" enctype="multipart/form-data">
+    <form action="https://script.google.com/macros/s/AKfycbw_0-QeAq8wbM75_YCwEsKHXAEICKQT3f9gLRo3PmM/dev" method="post" enctype="application/x-www-form-urlencoded">
+    <!--  action="https://script.google.com/macros/s/AKfycbygDXWO970cFPbJGO3arowWZoXZ5vcld6dcYfDLyFP_ZCEgDZYhGQYGhk-ALkjkGy5m/exec" -->
       <label for="title">Título</label>
       <input type="text" id="title" name="title" />
       <label for="text">Texto</label>
-      <textarea id="text" name="text"></textarea>
+      <textarea id="text" name="description"></textarea>
       <label for="url">URL</label>
       <input type="url" id="url" name="url" />
-      <label for="files">Archivos</label>
-      <input type="file" id="files" name="files" multiple />
+      <div id="preview"></div>
+      <label for="_files">Imagenes (max 5)</label>
+      <input type="file" id="files" accept="image/*" multiple/>
+      <div id="files" hidden>
+        <input type="hidden" name="files" />
+        <input type="hidden" name="files" />
+        <input type="hidden" name="files" />
+        <input type="hidden" name="files" />
+        <input type="hidden" name="files" />
+      </div>
+
       <button type="submit">Publicar</button>
     </form>
     <style>
@@ -23,5 +33,34 @@
         gap: 1rem;
       }
     </style>
+    <script type="module">
+      async function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      const form = document.querySelector('form');
+      
+      // Real time base64 conversion for the files
+      const fileInputs = document.querySelectorAll(`input[name="files"]`);
+      files.addEventListener('change', async function(event) {
+        console.log(event.target.files);
+        for (let i = 0; i < fileInputs.length; i++) {
+          const file = event.target.files[i];
+          if (file) {
+            fileInputs[i].disabled=false;
+            // fileInputs[i].value = `data:image/png;base64,ABC${i}`
+            fileInputs[i].value = await fileToBase64(event.target.files[i]);
+            continue;
+          }
+          fileInputs[i].disabled=true;
+        }
+      });
+
+    </script>
   </body>
 </html>
