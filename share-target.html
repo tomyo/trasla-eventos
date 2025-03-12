@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!-- https://developer.mozilla.org/en-US/docs/Web/Manifest/share_target -->
+<!-- https://web.dev/web-share-target/ -->
+
+<html lang="es" color-scheme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Publicar evento</title>
+  </head>
+  <body>
+    <h1>share_target emulator</h1>
+    <p>
+      Send a POST request emulating a Web Share Target API. The service worker expects a POST request to the
+      <span id="span"></span> endpoint.
+    </p>
+    <form id="form" method="post" enctype="multipart/form-data">
+      <label for="title">title</label>
+      <input type="text" id="title" name="title" />
+      <label for="text">text</label>
+      <textarea id="text" name="text"></textarea>
+      <label for="url">url</label>
+      <input type="url" id="url" name="url" />
+      <label for="files">files</label>
+      <input type="file" id="files" accept="image/*" multiple name="files" />
+
+      <button type="submit">POST</button>
+    </form>
+    <style>
+      :root {
+        color-scheme: only dark;
+      }
+      form {
+        display: grid;
+        gap: 1rem;
+      }
+    </style>
+
+    <script type="module">
+      const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
+      form.setAttribute("action", SHARE_TARGET_ACTION);
+      span.textContent = SHARE_TARGET_ACTION;
+    </script>
+  </body>
+</html>
