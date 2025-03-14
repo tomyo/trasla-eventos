@@ -1,6 +1,5 @@
 import { getSheetData } from "../shared/lib/get-gsheet-data.js";
-import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { getEventShareTitle, escapeHtml } from "../shared/lib/utils.js";
+import { escapeHtml } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
@@ -13,7 +12,7 @@ export default async function handler(req) {
       position: index + 1,
       item: {
         "@type": "Event",
-        name: event.name,
+        name: event.title,
         url: `${url.origin}/${event.slug}`,
         startDate: event.startDate,
         endDate: event.endDate,
