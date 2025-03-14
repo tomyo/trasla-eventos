@@ -9,7 +9,7 @@
   },
   "rewrites": [
     { "source": "/admin", "destination": "/admin/" },
-    { "source": "/publicar-evento", "destination": "/publish-event.html" },
+    { "source": "/publicar-evento", "destination": "/publicar-evento.html" },
     {
       "source": "/:slug([a-zA-Z0-9-]+)",
       "destination": "/api/events/[slug].js"
