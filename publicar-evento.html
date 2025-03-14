@@ -54,12 +54,17 @@
         for (const input of document.querySelectorAll("input[type=text],input[type=url], textarea")) {
           const key = input.name;
           const response = await cache.match(key);
-          const contentType = response.headers.get("content-type");
 
-          if (!response || !response.ok || !contentType?.includes("text")) {
-            console.warn(`[${SHARE_TARGET_ACTION}] Cache miss or content type != textfor key ${key}`);
+          if (!response || !response.ok) {
+            console.warn(`Cache miss or content type != textfor key ${key}`);
             continue;
           }
+          const contentType = response.headers.get("content-type");
+          if (!contentType?.includes("text")) {
+            console.warn(`Content type mismatch for key ${key}: expected text but got ${contentType}`);
+            continue;
+          }
+
           input.value = await response.text();
         }
 
