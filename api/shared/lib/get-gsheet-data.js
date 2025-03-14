@@ -1,6 +1,8 @@
 const SHEET_ID_FUTURE_EVENTS = "1SqqTT8nqEJ_4O2LBLoXcHBKxc7-NCJEZBbsVyObsuq8";
 const SHEET_ID_ALL_EVENTS = "1MQQwYAcLdsTDw328-p8QOAMMXxLxIaHYKshDGxEEX8w";
 
+import { formatEventResponse } from "./utils.js";
+
 /* 
     Receive a gsheet array as input in the form of
     [
@@ -51,7 +53,7 @@ function table_to_objects(gsheet_array) {
   return final_object;
 }
 
-async function getSheetData({ includePastEvents = false } = {}) {
+async function getRawSheetData({ includePastEvents = false } = {}) {
   var id = includePastEvents ? SHEET_ID_ALL_EVENTS : SHEET_ID_FUTURE_EVENTS;
   var gid = includePastEvents ? "2075906374" : "0";
   var txt = await (
@@ -72,11 +74,28 @@ async function getSheetData({ includePastEvents = false } = {}) {
       } catch (e) {
         var value = "";
       }
-      row.push(value);
+      row.push(typeof value == "string" ? value.trim() : value);
     });
+    const allValuesAreEmpty = row.reduce((acc, curr) => acc && !curr, true);
+    if (allValuesAreEmpty) return;
+
     table.push(row);
   });
   return table_to_objects(table);
 }
 
 export { getSheetData };
+
+async function getSheetData({ includePastEvents = false } = {}) {
+  const result = [];
+  for (const er of await getRawSheetData({ includePastEvents })) {
+    try {
+      result.push(formatEventResponse(er));
+    } catch (error) {
+      // Probably missing required data, skip this event.
+      console.error(error, er);
+      continue;
+    }
+  }
+  return result;
+}

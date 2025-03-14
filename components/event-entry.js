@@ -3,11 +3,9 @@ import {
   formatPhoneNumber,
   isValidUrl,
   createGoogleCalendarUrl,
-  slugify,
   formatDate,
   parseDate,
   formatDescription,
-  unescapeHtml,
 } from "../lib/utils.js";
 
 customElements.define(
@@ -96,7 +94,7 @@ customElements.define(
 
       // Add WhatsApp button
       if (this.dataset.phone) {
-        const shareUrl = `${location.origin}/${this.slug}`;
+        const shareUrl = `${location.origin}/${this.dataset.slug}`;
         let helloMsg = `Hola! 😃\nTe escribo desde ${shareUrl} por el evento ${this.dataset.title}:\n\n`;
         htmlString += /*html*/ `
           <a part="button" target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
@@ -163,20 +161,13 @@ customElements.define(
       // Add Share button
       htmlString += /*html*/ `
         
-      <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.slug}" data-title="${this.dataset.title}">
-        <a href="${location.origin}/${this.slug}" title="Compartir">
-        <img src="/assets/icons/share.svg" height="21" alt="Compartir"/>
-
+      <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}">
+        <a href="${location.origin}/${this.dataset.slug}" title="Ir a la página del evento">
+          <img src="/assets/icons/share.svg" height="21" alt="Compartir"/>
         </a>
       </share-url>`;
 
       return htmlString;
-    }
-
-    get slug() {
-      return slugify(
-        unescapeHtml(this.dataset.title || this.dataset.locality + " " + formatDate(this.startDate))
-      );
     }
   }
 );

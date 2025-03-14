@@ -958,14 +958,7 @@
 
     <script type="module">
       import { getSheetData } from "/lib/get-gsheet-data.js";
-      import {
-        escapeHtml,
-        slugify,
-        formatEventResponse,
-        parseEventResponseDateString,
-        isDateToday,
-        formatLocalDate
-      } from "/lib/utils.js";
+      import { escapeHtml, slugify, formatEventResponse, isDateToday, formatLocalDate } from "/lib/utils.js";
 
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -973,10 +966,11 @@
 
       /**
        *
-       * @param {Date} date
+       * @param {eventData} event
        * @returns
        */
-      function getSortOrder(date) {
+      function getSortOrder(event) {
+        const date = new Date(event.startDate);
         const items = [
           date.getFullYear() - 2000,
           date.getMonth(),
@@ -990,8 +984,7 @@
       /**
        * @param {EventResponse} event
        */
-      function appendEvent(eventResponse, { open } = {}) {
-        const eventData = formatEventResponse(eventResponse);
+      function appendEvent(eventData, { open } = {}) {
         const eventElement = document.createElement("event-entry");
 
         for (const [key, value] of Object.entries(eventData)) {
@@ -1002,7 +995,7 @@
           eventElement.setAttribute(`data-${key}`, escapeHtml(value));
         }
         // Add date attribute to handle <time> title hidden logic
-        eventElement.setAttribute('date', formatLocalDate(new Date(eventElement.dataset.startDate)));
+        eventElement.setAttribute("date", formatLocalDate(new Date(eventElement.dataset.startDate)));
 
         if (open) {
           eventElement.open = true;
@@ -1011,16 +1004,9 @@
       }
 
       async function showAllFutureEvents() {
-        const upcomingEvents = (await getSheetData())
-          .filter((event) => {
-            return today <= parseEventResponseDateString(event["Comienzo"]);
-          })
-          .sort((a, b) => {
-            return (
-              getSortOrder(parseEventResponseDateString(a["Comienzo"])) -
-              getSortOrder(parseEventResponseDateString(b["Comienzo"]))
-            );
-          });
+        const upcomingEvents = (await getSheetData()).sort((a, b) => {
+          return getSortOrder(a) - getSortOrder(b);
+        });
         renderEvents(upcomingEvents);
         eventsFilter.updateUI();
       }
@@ -1066,7 +1052,7 @@
         let shouldAddTime = true;
         for (const event of events) {
           lastDate.setHours(23, 59, 59, 999);
-          const eventDate = parseEventResponseDateString(event["Comienzo"]);
+          const eventDate = new Date(event.startDate);
 
           if (lastDate < eventDate) {
             shouldAddTime = true;
@@ -1088,7 +1074,7 @@
         const style = document.createElement("style");
         style.textContent = dates
           .map(
-            (date) => /*css*/`
+            (date) => /*css*/ `
               time[date="${date}"]:has(~ event-entry[date="${date}"]:not([excluded]):not([hidden])) {
                 display: revert !important;
               }
@@ -1096,7 +1082,6 @@
           )
           .join("\n");
         eventsElement.appendChild(style);
-
       }
 
       // RUN
@@ -1109,7 +1094,7 @@
 
       if ("serviceWorker" in navigator) {
         try {
-          swRegistration = await navigator.serviceWorker.register("/service-worker.js");
+          swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
           console.log("Service Worker registered:", swRegistration);
         } catch (error) {
           console.log("Service Worker registration failed:", error);
