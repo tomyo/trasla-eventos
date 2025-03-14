@@ -1159,6 +1159,20 @@
       }
     </script>
 
+    <script type="module" defer>
+      // Events list schema org script for rich results in google (hopefully)
+
+      try {
+        const schemaString = await (await fetch("/events/schema.jsonld")).text();
+        const script = document.createElement("script");
+        script.type = "application/ld+json";
+        script.textContent = schemaString;
+        document.head.appendChild(script);
+      } catch (err) {
+        console.warn(err);
+      }
+    </script>
+
     <!-- Vercel analytics -->
     <script>
       window.va =
