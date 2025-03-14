@@ -35,25 +35,25 @@ export default async function handler(req) {
           {
             "@context": "https://schema.org",
             "@type": "Event",
-            "name": ${eventData.title},
-            "description": ${eventData.description},
-            "image": ${eventData["image-url"]},
-            "startDate": ${eventData.startDate},
-            "endDate": ${eventData.endDate},
+            "name": "${eventData.title}",
+            "description": "${eventData.description}",
+            "image": "${eventData["image-url"]}",
+            "startDate": "${eventData.startDate}",
+            "endDate": "${eventData.endDate}",
             "location": {
               "@type": "Place",
-              "name": ${eventData.locality},
+              "name": "${eventData.locality}",
               "address": {
                 "@type": "PostalAddress",
-                "addressLocality": ${eventData.locality}
+                "addressLocality": "${eventData.locality}"
               },
-              "url": ${eventData.location}
+              "url": "${eventData.location}"
             },
             "organizer": {
-              "telephone": ${eventData.phone}
-              "instagram": ${eventData.instagram}
+              "telephone": "${eventData.phone}"
+              "instagram": "${eventData.instagram}"
             },
-            "url": ${url.origin}/${eventData.slug}
+            "url": "${url.origin}/${eventData.slug}"
           }
           </script>
     `;
