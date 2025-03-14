@@ -3,15 +3,16 @@ import { unslugify } from "./utils.js";
 
 const defaultOptions = {
   keys: [
-    { name: "Comienzo", weight: 2 },
-    { name: "Localidad", weight: 2 },
-    { name: "Título", weight: 1 },
-    "Instagram",
-    "Descripción",
+    { name: "slug", weight: 8 },
+    { name: "title", weight: 3 },
+    { name: "locality", weight: 2 },
+    { name: "start-date", weight: 2 },
   ],
   includeScore: true,
   ignoreLocation: true,
-  threshold: 0.7, // 0 full strict, 1 full relax
+  threshold: 0.5, // 0 full strict, 1 full relax
+  isCaseSensitive: false,
+  shouldSort: true,
 };
 
 /**

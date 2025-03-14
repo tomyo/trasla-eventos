@@ -1,7 +1,14 @@
 export function getEventShareTitle(eventData) {
-  return (
-    eventData.title || `Evento en ${eventData.locality} el ${formatDate(new Date(eventData["start-date"]))}`
-  );
+  return `${eventData.title} en ${eventData.locality} el ${formatDate(new Date(eventData["start-date"]))}`;
+}
+
+/**
+ *
+ * @param {eventData}
+ * @returns {String} slug for the event
+ */
+export function getEventSlug({ title, locality, startDate }) {
+  return slugify(unescapeHtml(title + " " + locality + " " + formatDate(startDate)));
 }
 
 /**
@@ -26,13 +33,34 @@ export function getFileIdFromDriveUrls(urls) {
   return ids.pop(); // Get the last match
 }
 
+function createCamelCaseProxy(obj) {
+  return new Proxy(obj, {
+    get(target, prop) {
+      // If the property exists directly, return it
+      if (prop in target) {
+        return target[prop];
+      }
+
+      // Convert camelCase to kebab-case and try to find it
+      const kebabProp = prop.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+      if (kebabProp in target) {
+        return target[kebabProp];
+      }
+
+      return undefined;
+    },
+  });
+}
+
 /**
  *
  * @param {EventResponse} event
- * @returns {EventData} A event object with formatted content and keys renamed in English in Kebab Case
+ * @returns {EventData} A event object with formatted content and keys renamed in English in kebab-case
+ *
+ * kebab-case is used to allow easy adding them as data-<attributes>
  */
 export function formatEventResponse(eventResponse) {
-  const event = {};
+  const event = createCamelCaseProxy({});
 
   event["start-date"] = parseEventResponseDateString(eventResponse["Comienzo"]).toISOString();
   event["end-date"] = eventResponse["Cierre"]
@@ -50,6 +78,9 @@ export function formatEventResponse(eventResponse) {
   event["activity"] = eventResponse["Actividad"] || "";
   event["spotify"] = eventResponse["Spotify"] || "";
   event["youtube"] = eventResponse["YouTube"] || "";
+
+  // Generated fields
+  event["slug"] = eventResponse["slug"] || getEventSlug(event);
 
   return event;
 }
@@ -135,7 +166,6 @@ export function parseEventResponseDateString(dateString, timezone = -3) {
 
     // Substract the utc offset, we do it this way to avoid hours overflow
     return new Date(localDate.setUTCHours(localDate.getUTCHours() - timezone));
-    // return new Date(year, month - 1, day, hour, minute);
   } catch (error) {
     console.error("Error parsing date:", error);
     return null;
@@ -212,11 +242,10 @@ export function formatDate(date, timezone = -3) {
   return `${day}/${month}/${year} - ${hour}:${minute}h`;
 }
 
-
 export function formatLocalDate(date) {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
 
@@ -284,6 +313,8 @@ function unaccent(text) {
 }
 
 export function slugify(text) {
+  if (!text) return "";
+
   // Replace accented characters and other necessary replacements
   return unaccent(text)
     .toLowerCase()
@@ -318,11 +349,32 @@ export function escapeHtml(unsafeText) {
 /**
  *
  * @param {String} escapedText
- * @returns
+ * @returns {String} unescaped text ready to be inserted in html
  */
 export function unescapeHtml(escapedText) {
   if (!escapedText) return "";
-  const textarea = document.createElement("textarea");
-  textarea.innerHTML = escapedText;
-  return textarea.value;
+
+  // Handle common HTML entities using a lookup table
+  const entityReplacements = {
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#39;": "'",
+    "&apos;": "'",
+    "&nbsp;": " ",
+  };
+
+  // First pass: Replace known entities
+  let unescaped = escapedText.replace(
+    /&(amp|lt|gt|quot|#39|apos|nbsp);/g,
+    (match) => entityReplacements[match]
+  );
+
+  // Second pass: Handle numeric entities (decimal and hex)
+  unescaped = unescaped.replace(/&#(x)?([0-9a-f]+);/gi, (_, isHex, code) =>
+    String.fromCodePoint(parseInt(code, isHex ? 16 : 10))
+  );
+
+  return unescaped;
 }

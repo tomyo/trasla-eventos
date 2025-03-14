@@ -1,16 +1,14 @@
 // api/event/[id].js
 import { getSheetData } from "../shared/lib/get-gsheet-data.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { getEventShareTitle, formatEventResponse, escapeHtml } from "../shared/lib/utils.js";
+import { getEventShareTitle, escapeHtml, unslugify } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const query = url.pathname.split("/").pop();
-
+  const query = unslugify(url.pathname.split("/").pop());
   const events = await getSheetData({ includePastEvents: true });
   const searchResults = fuzzySearch(events, query);
-  const eventData = formatEventResponse(searchResults[0].item);
-
+  const eventData = searchResults[0].item;
   // WARNING: escape event data before inserting it into the HTML
 
   let html = await (await fetch(`${url.origin}/index.html`)).text();
@@ -21,7 +19,7 @@ export default async function handler(req) {
       <link
         rel="canonical"
         property="og:url"
-        href="https://eventos.trasla.com.ar"
+        href="${url.origin}/${eventData.slug}"
       />
       <meta
         name="description"
@@ -56,6 +54,7 @@ export default async function handler(req) {
         data-activity="${eventData.activity}"
         data-spotify="${eventData.spotify}"
         data-youtube="${eventData.youtube}"
+        data-slug="${eventData.slug}"
       ></event-entry>
     `;
     html = html.replace(
