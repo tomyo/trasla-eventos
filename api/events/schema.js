@@ -1,0 +1,42 @@
+import { getSheetData } from "../shared/lib/get-gsheet-data.js";
+import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
+import { getEventShareTitle, escapeHtml } from "../shared/lib/utils.js";
+
+export default async function handler(req) {
+  const url = new URL(req.url);
+  const events = await getSheetData({ includePastEvents: false });
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: events.map((event, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Event",
+        name: event.name,
+        url: `${url.origin}/${event.slug}`,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        location: {
+          "@type": "Place",
+          name: event.locality,
+          address: `${event.locality}, Córdoba, Argentina`,
+          url: event.location,
+        },
+        description: escapeHtml(event.description),
+        image: event.imageUrl,
+      },
+    })),
+  };
+
+  const html = JSON.stringify(schema);
+
+  return new Response(html, {
+    headers: { "Content-Type": "application/ld+json" },
+  });
+}
+
+export const config = {
+  runtime: "edge",
+};

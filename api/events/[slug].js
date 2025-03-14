@@ -1,4 +1,3 @@
-// api/event/[id].js
 import { getSheetData } from "../shared/lib/get-gsheet-data.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
 import { getEventShareTitle, escapeHtml } from "../shared/lib/utils.js";

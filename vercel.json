@@ -10,6 +10,7 @@
   "rewrites": [
     { "source": "/admin", "destination": "/admin/" },
     { "source": "/publicar-evento", "destination": "/publicar-evento.html" },
+    { "source": "/events/schema.jsonld", "destination": "/api/events/schema.js" },
     {
       "source": "/:slug([a-zA-Z0-9-]+)",
       "destination": "/api/events/[slug].js"
