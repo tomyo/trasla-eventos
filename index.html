@@ -248,7 +248,7 @@
     </picture>
     <main>
       <section id="hero">
-        <a href="/">
+        <a href="/" aria-label="Home">
           <svg
             id="logo-title"
             xmlns="http://www.w3.org/2000/svg"
@@ -337,7 +337,7 @@
             Instalar
           </button>
           <a class="button" title="Ver eventos" href="/#eventos">
-            <img src="/assets/icons/binocular.png" width="30px" />
+            <img src="/assets/icons/binocular.png" width="30px" alt="" />
             Ver eventos
           </a>
           <a
@@ -347,7 +347,7 @@
             title="Publicar nuevo evento"
             href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
           >
-            <img src="/assets/icons/upload.svg" width="20px" />
+            <img src="/assets/icons/upload.svg" width="20px" alt="" />
             Cargar evento
           </a>
         </div>
@@ -402,14 +402,14 @@
             text-align: center;
           }
         </style>
-        <img src="/assets/images/mountain.svg" height="100" />
+        <img src="/assets/images/mountain.svg" height="100" alt="" />
       </section>
       <section id="eventos">
         <events-filter id="eventsFilter">
           <form>
             <h3>Eventos en</h3>
             <select-styled>
-              <select name="locality">
+              <select name="locality" aria-label="Localidad"">
                 <option value="" default>TRASLASIERRA</option>
                 <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
                 <option value="Boca del Rio">BOCA DEL RIO</option>
@@ -443,7 +443,7 @@
             </select-styled>
             <h3 data-nosnippet>A Partir de<span id="hideOnToday">l</span></h3>
             <today-date-picker onclick="dateFrom.showPicker()">
-              <input id="dateFrom" type="date" name="startDate" />
+              <input id="dateFrom" type="date" name="startDate" aria-label="Fecha de inicio" />
 
               <style>
                 form:has(today-date-picker[today]) #hideOnToday {
