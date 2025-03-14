@@ -8,11 +8,11 @@ export default async function handler(req) {
   const slug = url.pathname.split("/").pop();
   const events = await getSheetData({ includePastEvents: true });
   const searchResults = fuzzySearch(events, slug);
-  const eventData = searchResults[0].item;
+  const eventData = searchResults[0]?.item;
 
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
-  if (searchResults) {
+  if (eventData) {
     const contentMeta = /*html*/ `
       <title property="og:title">${escapeHtml(getEventShareTitle(eventData))}</title>
       <link
