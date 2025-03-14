@@ -1024,6 +1024,19 @@
           .toUpperCase();
       }
 
+      function addTimeEntry(eventDate, { prepend } = {}) {
+        const dateTitle = document.createElement("time");
+        const dateString = formatLocalDate(eventDate);
+        dateTitle.setAttribute("date", dateString);
+        dateTitle.textContent = formatDateTitle(eventDate);
+
+        if (prepend) {
+          dateTitle.style = "display: revert;"; // improve by adding css in SSR
+          return eventsElement.prepend(dateTitle);
+        }
+        eventsElement.appendChild(dateTitle);
+      }
+
       async function renderEvents(events) {
         // Fuzzy search
         const url = new URL(location);
@@ -1054,13 +1067,8 @@
             shouldAddTime = true;
           }
           if (shouldAddTime) {
-            const dateTitle = document.createElement("time");
-            const dateString = formatLocalDate(eventDate);
-            dates.push(dateString);
-            dateTitle.setAttribute("date", dateString);
-            dateTitle.textContent = formatDateTitle(eventDate);
-
-            eventsElement.appendChild(dateTitle);
+            addTimeEntry(eventDate);
+            dates.push(formatLocalDate(eventDate));
             lastDate = eventDate;
             shouldAddTime = false;
           }
@@ -1108,6 +1116,7 @@
 
         // Scroll into first event
         const eventToFocus = document.querySelector("event-entry");
+        addTimeEntry(new Date(eventToFocus.dataset.startDate), { prepend: true });
         const focusElement = () => eventToFocus.scrollIntoView({ behavior: "smooth" });
         if (document.readyState === "complete") {
           focusElement();
