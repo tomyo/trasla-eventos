@@ -1032,9 +1032,10 @@
 
         if (prepend) {
           dateTitle.style = "display: revert;"; // improve by adding css in SSR
-          return eventsElement.prepend(dateTitle);
+          eventsElement.prepend(dateTitle);
+          return dateTitle;
         }
-        eventsElement.appendChild(dateTitle);
+        return eventsElement.appendChild(dateTitle);
       }
 
       async function renderEvents(events) {
@@ -1116,8 +1117,8 @@
 
         // Scroll into first event
         const eventToFocus = document.querySelector("event-entry");
-        addTimeEntry(new Date(eventToFocus.dataset.startDate), { prepend: true });
-        const focusElement = () => eventToFocus.scrollIntoView({ behavior: "smooth" });
+        const timeEntry = addTimeEntry(new Date(eventToFocus.dataset.startDate), { prepend: true });
+        const focusElement = () => timeEntry.scrollIntoView({ behavior: "smooth" });
         if (document.readyState === "complete") {
           focusElement();
         } else {
