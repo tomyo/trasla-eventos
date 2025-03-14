@@ -4,6 +4,7 @@
     <meta name="theme-color" content="#e6deca" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="alternate" type="application/ld+json" href="/events/schema.jsonld" />
 
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/favicon-192x192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/favicon-512x512.png" />
@@ -16,7 +17,7 @@
       property="og:description"
       content="¿Qué hacer en Traslasierra? La agenda cultural de Trasla."
     />
-    <meta property="keywords" content="eventos, traslasierra, trasla, traslasierras" />
+    <meta property="keywords" content="eventos, traslasierra, trasla" />
     <meta
       property="og:image"
       content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.avif"
@@ -323,7 +324,7 @@
       </style>
       <section id="quick-actions" class="mountains-top">
         <div class="buttons">
-          <button install hidden>
+          <button install hidden data-nosnippet>
             <svg-mask
               style="
                 --src: url('/assets/icons/loica.svg');
@@ -440,7 +441,7 @@
                 <option value="Yacanto">YACANTO</option>
               </select>
             </select-styled>
-            <h3>A Partir de<span id="hideOnToday">l</span></h3>
+            <h3 data-nosnippet>A Partir de<span id="hideOnToday">l</span></h3>
             <today-date-picker onclick="dateFrom.showPicker()">
               <input id="dateFrom" type="date" name="startDate" />
 
