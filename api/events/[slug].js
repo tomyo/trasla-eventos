@@ -50,7 +50,7 @@ export default async function handler(req) {
               "url": "${eventData.location}"
             },
             "organizer": {
-              "telephone": "${eventData.phone}"
+              "telephone": "${eventData.phone}",
               "instagram": "${eventData.instagram}"
             },
             "url": "${url.origin}/${eventData.slug}"
