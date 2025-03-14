@@ -1015,9 +1015,6 @@
        * @returns {string}
        */
       function formatDateTitle(date) {
-        if (isDateToday(date)) {
-          return "¡HOY!";
-        }
         return date
           .toLocaleDateString("es-AR", {
             weekday: "long",
