@@ -1161,16 +1161,20 @@
 
     <script type="module" defer>
       // Events list schema org script for rich results in google (hopefully)
-
-      try {
-        const schemaString = await (await fetch("/events/schema.jsonld")).text();
-        const script = document.createElement("script");
-        script.type = "application/ld+json";
-        script.textContent = schemaString;
-        document.head.appendChild(script);
-      } catch (err) {
-        console.warn(err);
+      async function injectSchemaOrgScript() {
+        try {
+          const schemaString = await (await fetch("/events/schema.jsonld")).text();
+          const script = document.createElement("script");
+          script.type = "application/ld+json";
+          script.textContent = schemaString;
+          document.head.appendChild(script);
+        } catch (err) {
+          console.warn(err);
+        }
       }
+
+      const url = new URL(location);
+      if (url.pathname == "/") await injectSchemaOrgScript();
     </script>
 
     <!-- Vercel analytics -->
