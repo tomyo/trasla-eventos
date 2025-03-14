@@ -1,15 +1,14 @@
 // api/event/[id].js
 import { getSheetData } from "../shared/lib/get-gsheet-data.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { getEventShareTitle, escapeHtml, unslugify } from "../shared/lib/utils.js";
+import { getEventShareTitle, escapeHtml } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const query = unslugify(url.pathname.split("/").pop());
+  const slug = url.pathname.split("/").pop();
   const events = await getSheetData({ includePastEvents: true });
-  const searchResults = fuzzySearch(events, query);
+  const searchResults = fuzzySearch(events, slug);
   const eventData = searchResults[0].item;
-  // WARNING: escape event data before inserting it into the HTML
 
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
@@ -29,7 +28,7 @@ export default async function handler(req) {
       <meta property="og:image" content="${eventData["image-url"]}" />
       <meta property="og:image:width" content="512" />
       <meta property="og:type" content="event" />
-      <meta property="og:url" content="${url}" />
+      <meta property="og:url" content="${url.origin}/${eventData.slug}" />
 
       <meta property="og:site_name" content="EVENTOS.TRASLA" />
       <meta property="og:locale" content="es-AR" />
