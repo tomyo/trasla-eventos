@@ -1,6 +1,6 @@
 import { getSheetData } from "../shared/lib/get-gsheet-data.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { getEventShareTitle, escapeHtml } from "../shared/lib/utils.js";
+import { getEventShareTitle, escapeHtml, formatLocalDate } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
@@ -78,6 +78,7 @@ export default async function handler(req) {
         data-spotify="${eventData.spotify}"
         data-youtube="${eventData.youtube}"
         data-slug="${eventData.slug}"
+        date="${formatLocalDate(new Date(eventData.startDate))}"
       ></event-entry>
     `;
     html = html.replace(
