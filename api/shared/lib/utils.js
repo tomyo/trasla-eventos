@@ -62,6 +62,7 @@ function createCamelCaseProxy(obj) {
 export function formatEventResponse(eventResponse) {
   const event = createCamelCaseProxy({});
 
+  event["updated-at"] = parseEventResponseDateString(eventResponse["Marca temporal"]).toISOString();
   event["start-date"] = parseEventResponseDateString(eventResponse["Comienzo"]).toISOString();
   event["end-date"] = eventResponse["Cierre"]
     ? parseEventResponseDateString(eventResponse["Cierre"])?.toISOString()
