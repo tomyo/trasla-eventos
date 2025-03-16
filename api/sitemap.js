@@ -22,7 +22,7 @@ export default async function handler(req) {
               <loc>${url.origin}/${event.slug}</loc>
               <lastmod>${event.updatedAt}</lastmod>
               <changefreq>${isPastEvent ? "never" : "daily"}</changefreq>
-              <priority>0.8</priority>
+              <priority>${isPastEvent ? "0.4" : "0.8"}</priority>
             </url>
           `;
     })
