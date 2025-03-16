@@ -2,7 +2,7 @@ import { getSheetData } from "./shared/lib/get-gsheet-data.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const events = await getSheetData({ includePastEvents: false });
+  const events = await getSheetData({ includePastEvents: true });
 
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
