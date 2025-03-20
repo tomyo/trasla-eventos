@@ -32,30 +32,27 @@ export default async function handler(req) {
       <meta property="og:site_name" content="EVENTOS.TRASLA" />
       <meta property="og:locale" content="es-AR" />
       <script type="application/ld+json">
-          {
-            "@context": "https://schema.org",
-            "@type": "Event",
-            "name": "${eventData.title}",
-            "description": "${eventData.description}",
-            "image": "${eventData["image-url"]}",
-            "startDate": "${eventData.startDate}",
-            "endDate": "${eventData.endDate}",
-            "location": {
-              "@type": "Place",
-              "name": "${eventData.locality}",
-              "address": {
-                "@type": "PostalAddress",
-                "addressLocality": "${eventData.locality}"
-              },
-              "url": "${eventData.location}"
-            },
-            "organizer": {
-              "telephone": "${eventData.phone}",
-              "instagram": "${eventData.instagram}"
-            },
-            "url": "${url.origin}/${eventData.slug}"
-          }
-          </script>
+        ${JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Event",
+          name: eventData.title,
+          description: eventData.description,
+          image: eventData["image-url"],
+          startDate: eventData.startDate,
+          endDate: eventData.endDate,
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          location: {
+            "@type": "Place",
+            address: `${eventData.locality}, Córdoba, Argentina`,
+            url: eventData.location,
+          },
+          organizer: {
+            telephone: eventData.phone,
+            instagram: eventData.instagram,
+          },
+          url: url.origin + "/" + eventData.slug,
+        })}
+        </script>
     `;
 
     const contentMetaRegex =
