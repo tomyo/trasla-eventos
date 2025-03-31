@@ -1,13 +1,9 @@
-export function getEventShareTitle(eventData) {
-  return `${eventData.title} en ${eventData.locality} el ${formatDate(new Date(eventData["start-date"]))}`;
-}
-
 /**
  *
  * @param {eventData}
  * @returns {String} slug for the event
  */
-export function getEventSlug({ title, locality, startDate }) {
+export function getGoogleSheetEventslug({ title, locality, startDate }) {
   return slugify(unescapeHtml(title + " " + locality + " " + formatDate(startDate)));
 }
 
@@ -81,7 +77,7 @@ export function formatEventResponse(eventResponse) {
   event["youtube"] = eventResponse["YouTube"] || "";
 
   // Generated fields
-  event["slug"] = eventResponse["slug"] || getEventSlug(event);
+  event["slug"] = eventResponse["slug"] || getGoogleSheetEventslug(event);
 
   return event;
 }
