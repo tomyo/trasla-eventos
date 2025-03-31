@@ -1,11 +1,14 @@
-import { getSheetData } from "../shared/lib/get-gsheet-data.js";
+import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { getEventShareTitle, escapeHtml, formatLocalDate } from "../shared/lib/utils.js";
+import { escapeHtml, formatLocalDate } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
   const slug = url.pathname.split("/").pop();
-  const events = await getSheetData({ includePastEvents: true });
+  const events = await getGoogleSheetEvents(
+    process.env.ALL_EVENTS_GOOGLE_SHEET_ID,
+    process.env.ALL_EVENTS_GOOGLE_SHEET_GID
+  );
   const searchResults = fuzzySearch(events, slug);
   const eventData = searchResults[0]?.item;
 
@@ -13,12 +16,13 @@ export default async function handler(req) {
 
   if (eventData) {
     const contentMeta = /*html*/ `
-      <title property="og:title">${escapeHtml(getEventShareTitle(eventData))}</title>
+      <title>${escapeHtml(eventData.title)}</title>
       <link
         rel="canonical"
         property="og:url"
         href="${url.origin}/${eventData.slug}"
       />
+      <meta property="og:title" content="${escapeHtml(eventData.title)}" />
       <meta
         name="description"
         property="og:description"
@@ -28,8 +32,7 @@ export default async function handler(req) {
       <meta property="og:image:width" content="512" />
       <meta property="og:type" content="event" />
       <meta property="og:url" content="${url.origin}/${eventData.slug}" />
-
-      <meta property="og:site_name" content="EVENTOS.TRASLA" />
+      <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
       <script type="application/ld+json">
         ${JSON.stringify({
@@ -43,6 +46,7 @@ export default async function handler(req) {
           eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
           location: {
             "@type": "Place",
+            name: eventData.place || "",
             address: `${eventData.locality}, Córdoba, Argentina`,
             url: eventData.location,
           },
