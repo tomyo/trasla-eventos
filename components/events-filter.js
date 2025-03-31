@@ -5,7 +5,7 @@ customElements.define(
       super();
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
-      this.paginateAt = 10;
+      this.paginateAt = 10; // Minimum number of events to display at once
 
       if (!this.form["dateFrom"].value) {
         this.setStartDateToToday();
@@ -102,19 +102,29 @@ customElements.define(
     }
 
     /**
-     * Show events until `this.paginateAt`. Hide the rest.
-     * Skips excluded events.
+     * Show events in selected date or until `this.paginateAt`.
+     * Skips excluded events. Hide the rest.
      * Sets `all-shown` attribute if all events are shown.
      */
     toggleEventsPaginationVisibility() {
       let shownCount = 0;
       let allShown = true;
       // Events DOM order expected by date
+      const formData = new FormData(this.form);
       this.events.querySelectorAll("event-entry").forEach((event) => {
         if (event.hasAttribute("excluded")) return;
 
+        // Show up to this.paginateAt count of events
         if (shownCount < this.paginateAt) {
           shownCount++;
+          event.hidden = false;
+          return;
+        }
+
+        // Also ensure we show all events happening in selected `startDate` form input
+        if (event.startDate <= new Date(`${formData.get("startDate")}T23:59:59`)) {
+          shownCount++;
+          this.paginateAt++;
           event.hidden = false;
           return;
         }
