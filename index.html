@@ -956,7 +956,7 @@
     </style>
 
     <script type="module">
-      import { getSheetData } from "/lib/get-gsheet-data.js";
+      import { getGoogleSheetEvents } from "/lib/get-events.js";
       import { escapeHtml, slugify, formatEventResponse, isDateToday, formatLocalDate } from "/lib/utils.js";
 
       const now = new Date();
@@ -988,6 +988,7 @@
 
         for (const [key, value] of Object.entries(eventData)) {
           if (!Object.hasOwnProperty.call(eventData, key)) continue;
+          if (!value) continue;
           if (typeof value !== "string") console.error(`Value for key ${key} is not a string: ${value}`);
 
           // keys come in kebab-case
@@ -1003,7 +1004,7 @@
       }
 
       async function showAllFutureEvents() {
-        const upcomingEvents = (await getSheetData()).sort((a, b) => {
+        const upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
           return getSortOrder(a) - getSortOrder(b);
         });
         renderEvents(upcomingEvents);

@@ -1,8 +1,12 @@
-import { getSheetData } from "./shared/lib/get-gsheet-data.js";
+import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const events = (await getSheetData({ includePastEvents: true })).sort((a, b) => {
+  const events = await getGoogleSheetEvents(
+    process.env.ALL_EVENTS_GOOGLE_SHEET_ID,
+    process.env.ALL_EVENTS_GOOGLE_SHEET_GID
+  );
+  events.sort((a, b) => {
     return Number(new Date(b.startDate)) - Number(new Date(a.startDate)); // descending order
   });
 
