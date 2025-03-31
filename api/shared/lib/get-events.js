@@ -1,0 +1,113 @@
+const SHEET_ID_FUTURE_EVENTS = "1SqqTT8nqEJ_4O2LBLoXcHBKxc7-NCJEZBbsVyObsuq8";
+const SHEET_GID_FUTURE_EVENTS = "1955982099";
+
+import { formatEventResponse } from "./utils.js";
+
+/**
+ * Get formatted events from a Google Sheet using its ID and GID.
+ *
+ * @param {string} id - The ID of the Google Sheet.
+ * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
+ * @returns {Promise<Object[]>} A promise that resolves to an array of eventData objects.
+ */
+async function getGoogleSheetEvents(id = SHEET_ID_FUTURE_EVENTS, gid = 0) {
+  const result = [];
+  for (const er of await getRawSheetData(id, gid)) {
+    try {
+      result.push(formatEventResponse(er));
+    } catch (error) {
+      // Probably missing required data, skip this event.
+      console.error(error, er);
+      continue;
+    }
+  }
+  return result;
+}
+
+/**
+ * Fetches raw data from a Google Sheet and converts it into a JSON object.
+ *
+ * @param {string} id - The ID of the Google Sheet.
+ * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
+ * @returns {Promise<Object[]>} A promise that resolves to an array of objects representing the rows in the sheet, where each key is the corresponding column's header name
+ */
+async function getRawSheetData(id, gid = 0) {
+  const queryTextResponse = await (
+    await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&gid=${gid}`)
+  ).text();
+
+  ///Need to extract the JSON part between "google.visualization.Query.setResponse({"version":"0.6","reqId":"0","status":"ok","sig":"1053501725","table":{cols: [...], rows: [...]}});"
+  const jsonString = queryTextResponse.match(/(?<="table":).*(?=}\);)/g)[0];
+  const json = JSON.parse(jsonString);
+  const table = [];
+  const row = [];
+  json.cols.forEach((column) => row.push(column.label));
+  table.push(row);
+  json.rows.forEach((r) => {
+    const row = [];
+    r.c.forEach((cel) => {
+      let value = "";
+      if (cel && (cel.f || cel.v)) {
+        value = cel.f ? cel.f : cel.v;
+      }
+      row.push(typeof value == "string" ? value.trim() : value);
+    });
+    const allValuesAreEmpty = row.reduce((acc, curr) => acc && !curr, true);
+    if (allValuesAreEmpty) return;
+
+    table.push(row);
+  });
+  return table_to_objects(table);
+}
+
+/* 
+    Receive a gsheet array as input in the form of
+    [
+        ['header a', 'header b', 'header c'],
+        ['value 1 a', 'value 1 b', 'value 1 c'],
+        ['value 2 a', 'value 2 b', 'value 2 c'],
+    ]
+    
+    Output the corresponding json object associated
+    [
+        {
+            'header a': 'value 1 a',
+            'header b': 'value 1 b',
+            'header c': 'value 1 c'
+        },
+        {
+            'header a': 'value 2 a',
+            'header b': 'value 2 b',
+            'header c': 'value 2 c'
+        }
+    ]
+*/
+function table_to_objects(gsheet_array) {
+  // array containing the jsons
+  let final_object = [];
+
+  // iterate over the gsheet array receives from 1 to end
+  for (let row_values = 1; row_values < gsheet_array.length; row_values++) {
+    // each row in the gheet array will represent an object
+    const row = gsheet_array[row_values];
+    // store the index of the headers
+    let index_keys = 0;
+    // create a temporary object holding to hold the values of each row
+    let temp_object = {};
+
+    // loop over each row
+    for (let index_value = 0; index_value < row.length; index_value++) {
+      // get each value and assign it as a value to the respective key
+      const value = row[index_value];
+      temp_object[gsheet_array[index_keys][index_value]] = gsheet_array[row_values][index_value];
+    }
+
+    // append the current temporary object to the final array of objects
+    final_object.push(temp_object);
+  }
+
+  // return the final array of json
+  return final_object;
+}
+
+export { getGoogleSheetEvents };

@@ -1,9 +1,9 @@
-import { getSheetData } from "../shared/lib/get-gsheet-data.js";
+import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
 import { escapeHtml } from "../shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const events = await getSheetData({ includePastEvents: false });
+  const events = await getGoogleSheetEvents();
   const schema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
