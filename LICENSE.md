@@ -92,7 +92,7 @@ Visual elements, logos, names, and brands associated with "trasla" are private-u
 
 ---
 
-_© 2024 Tomás Hayes. All rights reserved under Argentine Law 11.723 on Intellectual Property._
+_© 2025 Tomás Hayes. All rights reserved under Argentine Law 11.723 on Intellectual Property._
 
 ---
 
