@@ -1,8 +1,6 @@
 const SHEET_ID_FUTURE_EVENTS = "1SqqTT8nqEJ_4O2LBLoXcHBKxc7-NCJEZBbsVyObsuq8";
 const SHEET_GID_FUTURE_EVENTS = "1955982099";
 
-import { formatEventResponse } from "./utils.js";
-
 /**
  * Get formatted events from a Google Sheet using its ID and GID.
  *
@@ -10,18 +8,30 @@ import { formatEventResponse } from "./utils.js";
  * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
  * @returns {Promise<Object[]>} A promise that resolves to an array of eventData objects.
  */
-async function getGoogleSheetEvents(id = SHEET_ID_FUTURE_EVENTS, gid = 0) {
+async function getGoogleSheetEvents(id = SHEET_ID_FUTURE_EVENTS, gid = SHEET_GID_FUTURE_EVENTS) {
   const result = [];
-  for (const er of await getRawSheetData(id, gid)) {
+  for (const eventRawData of await getSheetData(id, gid)) {
     try {
-      result.push(formatEventResponse(er));
+      // result.push(formatEventResponse(eventRawData));
+      result.push(enrichSheetEventData(eventRawData));
     } catch (error) {
       // Probably missing required data, skip this event.
-      console.error(error, er);
+      console.error(error, eventRawData);
       continue;
     }
   }
   return result;
+}
+
+/**
+ * Adds extra properties to the event data fetched from the Google Sheet.
+ *
+ * @param {Object} data - An raw event data object.
+ * @returns {Object} The processed eventData object with additional properties.
+ */
+function enrichSheetEventData(data) {
+  data.previewImage = getGoogleDriveImagesPreview(data.images);
+  return data;
 }
 
 /**
@@ -31,7 +41,7 @@ async function getGoogleSheetEvents(id = SHEET_ID_FUTURE_EVENTS, gid = 0) {
  * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
  * @returns {Promise<Object[]>} A promise that resolves to an array of objects representing the rows in the sheet, where each key is the corresponding column's header name
  */
-async function getRawSheetData(id, gid = 0) {
+async function getSheetData(id, gid = 0) {
   const queryTextResponse = await (
     await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&gid=${gid}`)
   ).text();
@@ -48,7 +58,13 @@ async function getRawSheetData(id, gid = 0) {
     r.c.forEach((cel) => {
       let value = "";
       if (cel && (cel.f || cel.v)) {
-        value = cel.f ? cel.f : cel.v;
+        // cel.v is the actual value, cel.f is the formatted value.
+        // i.e. { v: "Date(2025,2,30,21,1,11)", f: "30/3/2025 21:01:12" }
+        if (cel.f && cel.v && typeof cel.v == "string" && cel.v.startsWith("Date(")) {
+          value = parseEventResponseDateString(cel.f).toISOString();
+        } else if (cel.v) {
+          value = cel.v || cel.f;
+        }
       }
       row.push(typeof value == "string" ? value.trim() : value);
     });
@@ -108,6 +124,64 @@ function table_to_objects(gsheet_array) {
 
   // return the final array of json
   return final_object;
+}
+
+/**
+ * 
+ * @param {String} imageId 
+ * @param {Number} width in pixels
+ * @returns {String} Image url from a google drive to use in <img>
+ 
+ */
+function createGoogleDriveImageUrl(imageId, width = 512) {
+  return `https://lh3.googleusercontent.com/d/${imageId}=w${width}`;
+}
+
+/**
+ *
+ * @param {String} urls, a string containing google drive links separated by commas
+ * @returns {String} id of the last google drive link provided
+ */
+function getLastFileIdFromDriveUrls(urls) {
+  const imageIdRegexp = /id=([\d\w-]*)/gm;
+  const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
+  return ids.pop(); // Get the last match
+}
+
+/**
+ *
+ * @param {String} imageUrls A comma separated list of google drive urls
+ * @returns {String} preview image url for the last file on the list
+ * @returns
+ */
+function getGoogleDriveImagesPreview(imageUrls) {
+  return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls));
+}
+
+/**
+ *
+ * @param {String} dateString as formated by gsheet es-AR locale
+ * @param {Number} timezone, offset in hours from UTC
+ *
+ * @returns {Date|null} UTC Date object
+ *
+ * Format expected: "dd/mm/yyyy hh:mm:ss"
+ */
+function parseEventResponseDateString(dateString, timezone = -3) {
+  try {
+    const [date, time] = dateString.split(" ");
+    const [day, month, year] = date.split("/");
+    const [hour, minute] = time.split(":");
+
+    // Create a local timezone Date object, interpreting the response as UTC
+    const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+
+    // Substract the utc offset, we do it this way to avoid hours overflow
+    return new Date(localDate.setUTCHours(localDate.getUTCHours() - timezone));
+  } catch (error) {
+    console.error("Error parsing date:", error);
+    return null;
+  }
 }
 
 export { getGoogleSheetEvents };

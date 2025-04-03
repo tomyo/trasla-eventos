@@ -2,13 +2,13 @@ import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
 import { escapeHtml, formatLocalDate } from "../shared/lib/utils.js";
 
+let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
+let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
+
 export default async function handler(req) {
   const url = new URL(req.url);
   const slug = url.pathname.split("/").pop();
-  const events = await getGoogleSheetEvents(
-    process.env.ALL_EVENTS_GOOGLE_SHEET_ID,
-    process.env.ALL_EVENTS_GOOGLE_SHEET_GID
-  );
+  const events = await getGoogleSheetEvents(sheetId, sheetGid);
   const searchResults = fuzzySearch(events, slug);
   const eventData = searchResults[0]?.item;
 
@@ -28,7 +28,7 @@ export default async function handler(req) {
         property="og:description"
         content="${escapeHtml(eventData.description)}"
       />
-      <meta property="og:image" content="${eventData["image-url"]}" />
+      <meta property="og:image" content="${eventData.previewImage}" />
       <meta property="og:image:width" content="512" />
       <meta property="og:type" content="event" />
       <meta property="og:url" content="${url.origin}/${eventData.slug}" />
@@ -40,9 +40,9 @@ export default async function handler(req) {
           "@type": "Event",
           name: eventData.title,
           description: eventData.description,
-          image: eventData["image-url"],
-          startDate: eventData.startDate,
-          endDate: eventData.endDate,
+          image: eventData.previewImage,
+          startDate: eventData.startsAt,
+          endDate: eventData.endsAt,
           eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
           location: {
             "@type": "Place",
@@ -68,18 +68,19 @@ export default async function handler(req) {
         open=""
         data-title="${escapeHtml(eventData.title)}"
         data-description="${escapeHtml(eventData.description)}"
-        data-start-date="${eventData["start-date"]}"
-        data-end-date="${eventData["end-date"]}"
+        data-starts-at="${eventData.startsAt}"
+        data-ends-at="${eventData.endsAt}"
         data-locality="${eventData.locality}"
         data-instagram="${eventData.instagram}"
         data-location="${escapeHtml(eventData.location)}"
         data-phone="${eventData.phone}"
-        data-image-url="${eventData["image-url"]}"
+        data-images="${eventData.images}"
+        data-preview-image="${eventData.previewImage}"
         data-activity="${eventData.activity}"
         data-spotify="${eventData.spotify}"
         data-youtube="${eventData.youtube}"
         data-slug="${eventData.slug}"
-        date="${formatLocalDate(new Date(eventData.startDate))}"
+        date="${formatLocalDate(new Date(eventData.startsAt))}"
       ></event-entry>
     `;
     html = html.replace(

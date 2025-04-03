@@ -122,7 +122,7 @@ customElements.define(
         }
 
         // Also ensure we show all events happening in selected `startDate` form input
-        if (event.startDate <= new Date(`${formData.get("startDate")}T23:59:59`)) {
+        if (new Date(event.dataset.startsAt) <= new Date(`${formData.get("startDate")}T23:59:59`)) {
           shownCount++;
           this.paginateAt++;
           event.hidden = false;
@@ -159,7 +159,7 @@ function shouldExcludeEvent(element, filters, { keysToOmit = [] } = {}) {
     // Filter out events starting before given date
     if (key == "startDate") {
       const minDate = new Date(value + "T00:00:00");
-      if (element.startDate < minDate) {
+      if (new Date(element.dataset.startsAt) < minDate) {
         shouldExclude = true;
       }
     }
@@ -167,7 +167,7 @@ function shouldExcludeEvent(element, filters, { keysToOmit = [] } = {}) {
     // Filter out events starting after given date
     if (key == "endDate") {
       const maxDate = new Date(value + "T23:59:59");
-      if (maxDate < element.startDate) {
+      if (maxDate < new Date(element.dataset.startsAt)) {
         shouldExclude = true;
       }
     }
