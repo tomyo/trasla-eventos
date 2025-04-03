@@ -1,89 +1,5 @@
 /**
  *
- * @param {eventData}
- * @returns {String} slug for the event
- */
-export function getGoogleSheetEventslug({ title, locality, startDate }) {
-  return slugify(unescapeHtml(title + " " + locality + " " + formatDate(startDate)));
-}
-
-/**
- * 
- * @param {String} imageId 
- * @param {Number} width in pixels
- * @returns {String} Image url from a google drive to use in <img>
- 
- */
-export function createGoogleDriveImageUrl(imageId, width = 512) {
-  return `https://lh3.googleusercontent.com/d/${imageId}=w${width}`;
-}
-
-/**
- *
- * @param {String} urls, a string containing google drive links separated by commas
- * @returns {String} id of the last google drive link provided
- */
-export function getFileIdFromDriveUrls(urls) {
-  const imageIdRegexp = /id=([\d\w-]*)/gm;
-  const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
-  return ids.pop(); // Get the last match
-}
-
-function createCamelCaseProxy(obj) {
-  return new Proxy(obj, {
-    get(target, prop) {
-      // If the property exists directly, return it
-      if (prop in target) {
-        return target[prop];
-      }
-
-      // Convert camelCase to kebab-case and try to find it
-      const kebabProp = prop.replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
-      if (kebabProp in target) {
-        return target[kebabProp];
-      }
-
-      return undefined;
-    },
-  });
-}
-
-/**
- *
- * @param {EventResponse} event
- * @returns {EventData} A event object with formatted content and keys renamed in English in kebab-case
- *
- * kebab-case is used to allow easy adding them as data-<attributes>
- */
-export function formatEventResponse(eventResponse) {
-  const event = createCamelCaseProxy({});
-
-  event["updated-at"] = parseEventResponseDateString(eventResponse["Marca temporal"]).toISOString();
-  event["start-date"] = parseEventResponseDateString(eventResponse["Comienzo"]).toISOString();
-  event["end-date"] = eventResponse["Cierre"]
-    ? parseEventResponseDateString(eventResponse["Cierre"])?.toISOString()
-    : "";
-  event["id"] = getFileIdFromDriveUrls(eventResponse["Imagen"]);
-  event["image-url"] = createGoogleDriveImageUrl(event["id"]);
-  event["title"] = eventResponse["Título"] || "";
-  event["locality"] = eventResponse["Localidad"] || "";
-  event["instagram"] = eventResponse["Instagram"] || "";
-  event["location"] = eventResponse["Ubicación"] || "";
-  event["phone"] = eventResponse["Teléfono de contacto"] || "";
-  event["suggestion"] = eventResponse["Sugerencia"] || "";
-  event["description"] = eventResponse["Descripción"] || "";
-  event["activity"] = eventResponse["Actividad"] || "";
-  event["spotify"] = eventResponse["Spotify"] || "";
-  event["youtube"] = eventResponse["YouTube"] || "";
-
-  // Generated fields
-  event["slug"] = eventResponse["slug"] || getGoogleSheetEventslug(event);
-
-  return event;
-}
-
-/**
- *
  * @param {String} description - text to format, html scaped.
  * @returns {String} sanitized and formated description ready to be inserted in html
  */
@@ -141,32 +57,6 @@ function applyWhatsAppFormatting(waText) {
   waText = waText.replace(/`(.*?)`/g, "<code>$1</code>");
 
   return waText;
-}
-
-/**
- *
- * @param {String} dateString as formated by gsheet es-AR locale
- * @param {Number} timezone, offset in hours from UTC
- *
- * @returns {Date|null} UTC Date object
- *
- * Format expected: "dd/mm/yyyy hh:mm:ss"
- */
-export function parseEventResponseDateString(dateString, timezone = -3) {
-  try {
-    const [date, time] = dateString.split(" ");
-    const [day, month, year] = date.split("/");
-    const [hour, minute] = time.split(":");
-
-    // Create a local timezone Date object, interpreting the response as UTC
-    const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-
-    // Substract the utc offset, we do it this way to avoid hours overflow
-    return new Date(localDate.setUTCHours(localDate.getUTCHours() - timezone));
-  } catch (error) {
-    console.error("Error parsing date:", error);
-    return null;
-  }
 }
 
 /**
@@ -288,14 +178,15 @@ export function createGoogleCalendarUrl(eventElement) {
   const encodedSummary = encodeURIComponent(eventTitle);
 
   let url = `${baseUrl}&text=${encodedSummary}&details=${encodedDetails}&location=${encodedLocation}`;
-  const startDateString = eventElement.startDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+  const startDateString = eventElement.dataset.startsAt.replace(/-|:|\.\d\d\d/g, "");
+  let endDateString = eventElement.dataset.endsAt;
+  if (!endDateString) {
+    // Default event duration is 2 hours if end time is not provided.
+    const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
+    endDateString = new Date(new Date(eventElement.dataset.startsAt).getTime() + twoHoursInMilliseconds);
+  }
 
-  // Default event duration is 2 hours if end time is not provided.
-  let endDate = eventElement.endDate
-    ? eventElement.endDate
-    : new Date(eventElement.startDate.getTime() + 2 * 60 * 60 * 1000);
-
-  const endDateString = endDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+  endDateString = endDateString.replace(/-|:|\.\d\d\d/g, "");
   url += `&dates=${startDateString}/${endDateString}`;
   return url;
 }

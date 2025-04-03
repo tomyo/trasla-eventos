@@ -14,8 +14,8 @@ export default async function handler(req) {
         "@type": "Event",
         name: event.title,
         url: `${url.origin}/${event.slug}`,
-        startDate: event.startDate,
-        endDate: event.endDate,
+        startDate: event.startsAt,
+        endDate: event.endsAt,
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
         location: {
           "@type": "Place",
@@ -24,7 +24,7 @@ export default async function handler(req) {
           url: event.location,
         },
         description: escapeHtml(event.description),
-        image: event.imageUrl,
+        image: event.previewImage,
       },
     })),
   };

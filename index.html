@@ -957,7 +957,7 @@
 
     <script type="module">
       import { getGoogleSheetEvents } from "/lib/get-events.js";
-      import { escapeHtml, slugify, formatEventResponse, isDateToday, formatLocalDate } from "/lib/utils.js";
+      import { escapeHtml, slugify, isDateToday, formatLocalDate } from "/lib/utils.js";
 
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -969,7 +969,7 @@
        * @returns {number}
        */
       function getSortOrder(event) {
-        const date = new Date(event.startDate);
+        const date = new Date(event.startsAt);
         const items = [
           date.getFullYear() - 2000,
           date.getMonth(),
@@ -987,15 +987,12 @@
         const eventElement = document.createElement("event-entry");
 
         for (const [key, value] of Object.entries(eventData)) {
-          if (!Object.hasOwnProperty.call(eventData, key)) continue;
+          // if (!Object.hasOwnProperty.call(eventData, key)) continue;
           if (!value) continue;
-          if (typeof value !== "string") console.error(`Value for key ${key} is not a string: ${value}`);
-
-          // keys come in kebab-case
-          eventElement.setAttribute(`data-${key}`, escapeHtml(value));
+          eventElement.dataset[key] = value;
         }
         // Add date attribute to handle <time> title hidden logic
-        eventElement.setAttribute("date", formatLocalDate(new Date(eventElement.dataset.startDate)));
+        eventElement.setAttribute("date", formatLocalDate(new Date(eventElement.dataset.startsAt)));
 
         if (open) {
           eventElement.open = true;
@@ -1063,7 +1060,7 @@
         let shouldAddTime = true;
         for (const event of events) {
           lastDate.setHours(23, 59, 59, 999);
-          const eventDate = new Date(event.startDate);
+          const eventDate = new Date(event.startsAt);
 
           if (lastDate < eventDate) {
             shouldAddTime = true;
@@ -1118,7 +1115,7 @@
 
         // Scroll into first event
         const eventToFocus = document.querySelector("event-entry");
-        const timeEntry = addTimeEntry(new Date(eventToFocus.dataset.startDate), { prepend: true });
+        const timeEntry = addTimeEntry(new Date(eventToFocus.dataset.startsAt), { prepend: true });
         const focusElement = () => timeEntry.scrollIntoView({ behavior: "smooth" });
         if (document.readyState === "complete") {
           focusElement();
