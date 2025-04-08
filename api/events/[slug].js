@@ -80,6 +80,9 @@ export default async function handler(req) {
         data-spotify="${eventData.spotify}"
         data-youtube="${eventData.youtube}"
         data-slug="${eventData.slug}"
+        data-tickets="${eventData.tickets}"
+        data-form="${eventData.form}"
+        data-link="${eventData.link}"
         date="${formatLocalDate(new Date(eventData.startsAt))}"
       ></event-entry>
     `;

@@ -120,7 +120,7 @@ customElements.define(
 
         htmlString += /*html*/ `
           <a part="button" target="_blank" href=${href} title="¿Cómo llegar?">
-            <img src="/assets/icons/maps.svg" height="23" alt="Google Maps"/>
+            <img src="/assets/icons/maps.svg" height="23" alt=""/>
           </a>
         `;
       }
@@ -129,7 +129,7 @@ customElements.define(
       if (this.dataset.youtube) {
         htmlString += /*html*/ `
         <a part="button" target="_blank" title="YouTube" href="${this.dataset.youtube}">
-          <img height="21" src="/assets/icons/youtube.svg" alt="YouTube"/>
+          <img height="21" src="/assets/icons/youtube.svg" alt=""/>
         </a>
       `;
       }
@@ -138,9 +138,36 @@ customElements.define(
       if (this.dataset.spotify) {
         htmlString += /*html*/ `
           <a part="button" target="_blank" title="Spotify" href="${this.dataset.spotify}">
-            <img src="/assets/icons/spotify.svg" height="21" alt="Spotify"/>
+            <img src="/assets/icons/spotify.svg" height="21" alt=""/>
           </a>
         `;
+      }
+
+      // Add Tickets button
+      if (this.dataset.tickets) {
+        htmlString += /*html*/ `
+          <a part="button" target="_blank" title="Conseguir Entradas" href="${this.dataset.tickets}">
+            <img src="/assets/icons/ticket.svg" height="21" alt=""/>
+          </a>
+        `;
+      }
+
+      // Add Form button
+      if (this.dataset.form) {
+        htmlString += /*html*/ `
+        <a part="button" target="_blank" title="Formulario" href="${this.dataset.form}">
+          <img src="/assets/icons/form.svg" height="23" alt=""/>
+        </a>
+      `;
+      }
+
+      // Add Another link button
+      if (this.dataset.link) {
+        htmlString += /*html*/ `
+        <a part="button" target="_blank" title="Link externo" href="${this.dataset.link}">
+          <img src="/assets/icons/link.svg" height="23" alt=""/>
+        </a>
+      `;
       }
 
       // Add Google Calendar button
@@ -155,8 +182,8 @@ customElements.define(
       htmlString += /*html*/ `
         
       <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}">
-        <a href="${location.origin}/${this.dataset.slug}" title="Ir a la página del evento">
-          <img src="/assets/icons/share.svg" height="21" alt="Compartir"/>
+        <a href="${location.origin}/${this.dataset.slug}" title="Compartir este evento">
+          <img src="/assets/icons/share.svg" height="21" alt=""/>
         </a>
       </share-url>`;
 
