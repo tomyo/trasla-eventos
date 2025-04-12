@@ -51,6 +51,7 @@ async function getSheetData(id, gid = 0) {
   const json = JSON.parse(jsonString);
   const table = [];
   const row = [];
+  const dateRegexp = /Date\((.*)\)/;
   json.cols.forEach((column) => row.push(column.label));
   table.push(row);
   json.rows.forEach((r) => {
@@ -61,7 +62,8 @@ async function getSheetData(id, gid = 0) {
         // cel.v is the actual value, cel.f is the formatted value.
         // i.e. { v: "Date(2025,2,30,21,1,11)", f: "30/3/2025 21:01:12" }
         if (cel.f && cel.v && typeof cel.v == "string" && cel.v.startsWith("Date(")) {
-          value = parseEventResponseDateString(cel.f).toISOString();
+          console.log(cel);
+          value = new Date(...dateRegexp.exec(cel.v)[1].split(",")).toISOString();
         } else if (cel.v) {
           value = cel.v || cel.f;
         }
@@ -156,32 +158,6 @@ function getLastFileIdFromDriveUrls(urls) {
  */
 function getGoogleDriveImagesPreview(imageUrls) {
   return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls));
-}
-
-/**
- *
- * @param {String} dateString as formated by gsheet es-AR locale
- * @param {Number} timezone, offset in hours from UTC
- *
- * @returns {Date|null} UTC Date object
- *
- * Format expected: "dd/mm/yyyy hh:mm:ss"
- */
-function parseEventResponseDateString(dateString, timezone = -3) {
-  try {
-    const [date, time] = dateString.split(" ");
-    const [day, month, year] = date.split("/");
-    const [hour, minute] = time.split(":");
-
-    // Create a local timezone Date object, interpreting the response as UTC
-    const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
-
-    // Substract the utc offset, we do it this way to avoid hours overflow
-    return new Date(localDate.setUTCHours(localDate.getUTCHours() - timezone));
-  } catch (error) {
-    console.error("Error parsing date:", error);
-    return null;
-  }
 }
 
 export { getGoogleSheetEvents };
