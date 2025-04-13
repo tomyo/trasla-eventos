@@ -28,8 +28,9 @@ async function handleShareTarget(request) {
   const formData = await request.formData();
   console.info("[handleShareTarget] received formData: ", [...formData.entries()]);
 
-  // Update cache so it's available for preview in the app
   const cache = await caches.open(SHARE_TARGET_ACTION);
+  let url = "";
+
   // Clear previous cache entries
   const keys = await cache.keys();
   await Promise.all(keys.map((key) => cache.delete(key)));
@@ -38,17 +39,26 @@ async function handleShareTarget(request) {
   let filesCount = 0; // To make a unique cache key for each file
   for (let [key, value] of formData.entries()) {
     console.log("caching", key, value);
-    if (key === "files") {
+    // Expected keys: title, text, url, files (https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/share_target#params)
+    if (value instanceof FileList) {
       key = `/file-${filesCount}`;
       filesCount += 1;
+    } else if (key == "text" && URL.canParse(value)) {
+      key = "url"; // Fix url arriving in `text` instead of `url`
+      url = value;
     }
-    await cache.put(key, new Response(value));
+
+    if (!!value) await cache.put(key, new Response(value));
   }
 
-  return Response.redirect(`/publicar-evento.html`, 303);
+  if (url.toLowerCase().includes("instagram")) {
+    return new Response(Response.redirect(`/cargar-evento/instagram.html`, 303));
+  }
+  // Redirect to publish event page with form data in cache
+  return Response.redirect(`/share-target.html`, 303);
 }
 
-// Notifications
+// Push Notification handler
 self.addEventListener("push", (event) => {
   const data = event.data.json();
   console.log("Push received", data);
