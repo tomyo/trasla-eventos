@@ -45,17 +45,17 @@ async function handleShareTarget(request) {
       filesCount += 1;
     } else if (key == "text" && URL.canParse(value)) {
       key = "url"; // Fix url arriving in `text` instead of `url`
-      url = value;
     }
+    if (key == "url") url = value;
 
     if (!!value) await cache.put(key, new Response(value));
   }
 
   if (url.toLowerCase().includes("instagram")) {
-    return new Response(Response.redirect(`/cargar-evento/instagram.html`, 303));
+    return new Response.redirect(`/cargar-evento/instagram.html`, 303);
   }
   // Redirect to publish event page with form data in cache
-  return Response.redirect(`/share-target.html`, 303);
+  return Response.redirect(`/cargar-evento/`, 303);
 }
 
 // Push Notification handler
