@@ -27,32 +27,13 @@
       const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
       // const form = document.querySelector("form");
 
-      // form.addEventListener("submit", async (event) => {
-      //   event.preventDefault();
-      //   const formData = new FormData(event.target);
-      //   const cache = await caches.open(SHARE_TARGET_ACTION);
-      //   let action = form.action;
-
-      //   const response = await fetch(action, {
-      //     method: form.method,
-      //     body: formData,
-      //   });
-
-      //   if (!response || !response.ok) {
-      //     alert(response.statusText);
-      //     return;
-      //   }
-      //   const result = await response.text();
-      //   console.log("response:", result);
-      // });
-
       async function hydrateWithCachedData() {
         const cache = await caches.open(SHARE_TARGET_ACTION);
 
         // Hydrate texts
-        for (const input of document.querySelectorAll("input:not([type=file], textarea")) {
+        for (const input of document.querySelectorAll("input")) {
           const key = input.name;
-          const response = await cache.match(key);
+          const response = await cache.match(`/${key}`);
 
           if (!response || !response.ok) {
             console.info(`Cache miss for key ${key}`);

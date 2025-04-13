@@ -5,7 +5,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method === "POST" && url.pathname === SHARE_TARGET_ACTION) {
     console.info("Handling share target:", event.request);
-    return event.respondWith(handleShareTarget(event.request));
+    event.respondWith(handleShareTarget(event.request));
   }
 });
 
@@ -46,13 +46,13 @@ async function handleShareTarget(request) {
     } else if (key == "text" && URL.canParse(value)) {
       key = "url"; // Fix url arriving in `text` instead of `url`
     }
-    if (key == "url") url = value;
+    if (key == "url" && !!value) url = value;
 
     if (!!value) await cache.put(key, new Response(value));
   }
 
   if (url.toLowerCase().includes("instagram")) {
-    return new Response.redirect(`/cargar-evento/instagram.html`, 303);
+    return Response.redirect(`/cargar-evento/instagram.html`, 303);
   }
   // Redirect to publish event page with form data in cache
   return Response.redirect(`/cargar-evento/`, 303);
