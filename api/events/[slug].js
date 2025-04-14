@@ -1,7 +1,8 @@
 import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { escapeHtml } from "../shared/lib/utils.js";
+import { escapeHtml, getGoogleDriveImagesPreview } from "../shared/lib/utils.js";
 
+const OG_IMAGE_WIDTH = 1200;
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
 let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
 
@@ -28,8 +29,8 @@ export default async function handler(req) {
         property="og:description"
         content="${escapeHtml(eventData.description)}"
       />
-      <meta property="og:image" content="${eventData.previewImage}" />
-      <meta property="og:image:width" content="512" />
+      <meta property="og:image" content="${getGoogleDriveImagesPreview(eventData.images, OG_IMAGE_WIDTH)}" />
+      <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
       <meta property="og:type" content="event" />
       <meta property="og:url" content="${url.origin}/${eventData.slug}" />
       <meta property="og:site_name" content="TRASLA EVENTOS" />
