@@ -9,38 +9,9 @@ const SHEET_GID_FUTURE_EVENTS = "1955982099";
  * @returns {Promise<Object[]>} A promise that resolves to an array of eventData objects.
  */
 async function getGoogleSheetEvents(id = SHEET_ID_FUTURE_EVENTS, gid = SHEET_GID_FUTURE_EVENTS) {
-  const result = [];
-  for (const eventRawData of await getSheetData(id, gid)) {
-    try {
-      // result.push(formatEventResponse(eventRawData));
-      result.push(enrichSheetEventData(eventRawData));
-    } catch (error) {
-      // Probably missing required data, skip this event.
-      console.error(error, eventRawData);
-      continue;
-    }
-  }
-  return result;
+  return await getSheetData(id, gid);
 }
 
-/**
- * Adds extra properties to the event data fetched from the Google Sheet.
- *
- * @param {Object} data - An raw event data object.
- * @returns {Object} The processed eventData object with additional properties.
- */
-function enrichSheetEventData(data) {
-  data.previewImage = getGoogleDriveImagesPreview(data.images);
-  return data;
-}
-
-/**
- * Fetches raw data from a Google Sheet and converts it into a JSON object.
- *
- * @param {string} id - The ID of the Google Sheet.
- * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
- * @returns {Promise<Object[]>} A promise that resolves to an array of objects representing the rows in the sheet, where each key is the corresponding column's header name
- */
 async function getSheetData(id, gid = 0) {
   const queryTextResponse = await (
     await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&gid=${gid}`)
@@ -62,7 +33,6 @@ async function getSheetData(id, gid = 0) {
         // cel.v is the actual value, cel.f is the formatted value.
         // i.e. { v: "Date(2025,2,30,21,1,11)", f: "30/3/2025 21:01:12" }
         if (cel.f && cel.v && typeof cel.v == "string" && cel.v.startsWith("Date(")) {
-          console.log(cel);
           value = new Date(...dateRegexp.exec(cel.v)[1].split(",")).toISOString();
         } else if (cel.v) {
           value = cel.v || cel.f;
@@ -126,38 +96,6 @@ function table_to_objects(gsheet_array) {
 
   // return the final array of json
   return final_object;
-}
-
-/**
- * 
- * @param {String} imageId 
- * @param {Number} width in pixels
- * @returns {String} Image url from a google drive to use in <img>
- 
- */
-function createGoogleDriveImageUrl(imageId, width = 512) {
-  return `https://lh3.googleusercontent.com/d/${imageId}=w${width}`;
-}
-
-/**
- *
- * @param {String} urls, a string containing google drive links separated by commas
- * @returns {String} id of the last google drive link provided
- */
-function getLastFileIdFromDriveUrls(urls) {
-  const imageIdRegexp = /id=([\d\w-]*)/gm;
-  const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
-  return ids.pop(); // Get the last match
-}
-
-/**
- *
- * @param {String} imageUrls A comma separated list of google drive urls
- * @returns {String} preview image url for the last file on the list
- * @returns
- */
-function getGoogleDriveImagesPreview(imageUrls) {
-  return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls));
 }
 
 export { getGoogleSheetEvents };

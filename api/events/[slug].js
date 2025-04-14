@@ -1,6 +1,6 @@
 import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { escapeHtml, formatLocalDate } from "../shared/lib/utils.js";
+import { escapeHtml } from "../shared/lib/utils.js";
 
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
 let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
@@ -75,7 +75,6 @@ export default async function handler(req) {
         data-location="${escapeHtml(eventData.location)}"
         data-phone="${eventData.phone}"
         data-images="${eventData.images}"
-        data-preview-image="${eventData.previewImage}"
         data-activity="${eventData.activity}"
         data-spotify="${eventData.spotify}"
         data-youtube="${eventData.youtube}"
@@ -83,7 +82,6 @@ export default async function handler(req) {
         data-tickets="${eventData.tickets}"
         data-form="${eventData.form}"
         data-link="${eventData.link}"
-        date="${formatLocalDate(new Date(eventData.startsAt))}"
       ></event-entry>
     `;
     html = html.replace(
