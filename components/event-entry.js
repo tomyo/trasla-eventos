@@ -1,19 +1,54 @@
 import "./share-url.js";
-import { formatPhoneNumber, isValidUrl, formatDate, parseDate, formatDescription } from "../lib/utils.js";
+import {
+  formatPhoneNumber,
+  isValidUrl,
+  formatDate,
+  parseDate,
+  formatDescription,
+  formatLocalDate,
+} from "../lib/utils.js";
 
 customElements.define(
   "event-entry",
   class extends HTMLElement {
+    static requiredDatasetAttributes = ["title", "starts-at", "images", "locality", "slug"];
+
     constructor() {
       super();
     }
 
     connectedCallback() {
-      this.startDate = parseDate(this.dataset.startsAt);
-      this.endDate = parseDate(this.dataset.endsAt);
-      this.dataset.id && this.setAttribute("id", this.dataset.id); // to link to it inside the page
-      this.render();
+      if (!this.isDatasetValid()) return;
 
+      this.processData();
+      this.render();
+      this.addEventListeners();
+    }
+
+    validateDataset() {
+      // Check for required data attributes
+      const missingAttributes = this.requiredAttributes.filter((attr) => {
+        return this.dataset[attr] === undefined;
+      });
+
+      if (missingAttributes.length > 0) {
+        console.warn(
+          `Missing required data attributes: ${missingAttributes.map((attr) => `data-${attr}`).join(", ")}`
+        );
+        return false;
+      }
+
+      return true;
+    }
+
+    processData() {
+      this.startDate = parseDate(this.dataset.startsAt);
+      if (this.dataset.endsAt) this.endDate = parseDate(this.dataset.endsAt);
+      this.previewImage = getGoogleDriveImagesPreview(this.dataset.images);
+      this.setAttribute("date", formatLocalDate(new Date(this.dataset.startsAt)));
+    }
+
+    addEventListeners() {
       this.details = this.querySelector("details");
       this.image = this.querySelector(".event-image");
       this.summary = this.querySelector("summary");
@@ -23,6 +58,48 @@ customElements.define(
       });
     }
 
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (!this.isConnected || newValue === null) return; // Skip processing while disconnected
+
+      if (name === "open") {
+        this.open = !!newValue;
+        const details = this.querySelector("details");
+        if (details) details.open = !!newValue;
+        return;
+      }
+
+      if (oldValue !== newValue) {
+        // Re-validate and possibly re-render when attributes change
+        if (this.isDatasetValid()) {
+          this.processData();
+          this.render();
+        } else {
+          console.log("Invalid dataset. Skipping rendering.");
+        }
+      }
+    }
+
+    // Specify which attributes to observe for changes
+    static get observedAttributes() {
+      return ["open", ...this.requiredDatasetAttributes.map((attr) => `data-${attr}`)];
+    }
+
+    isDatasetValid() {
+      // Check for required data attributes
+      const missingAttributes = this.constructor.requiredDatasetAttributes.filter(
+        (attr) => !this.getAttribute(`data-${attr}`)
+      );
+
+      if (missingAttributes.length > 0) {
+        console.warn(
+          `Missing required data attributes: ${missingAttributes.map((attr) => `data-${attr}`).join(", ")}`
+        );
+        return false;
+      }
+
+      return true;
+    }
+
     /**
      * @param {Object} event
      */
@@ -30,9 +107,9 @@ customElements.define(
       this.innerHTML = /*html*/ `
         <h3 part="title">${this.dataset.title}</h3>
 
-        <img class="event-image" height="400" src="${
-          this.dataset.previewImage
-        }" loading="lazy" alt="Evento en ${this.dataset.locality} el ${formatDate(this.startDate)}">
+        <img class="event-image" height="400" src="${this.previewImage}" loading="lazy" alt="Evento en ${
+        this.dataset.locality
+      } el ${formatDate(this.startDate)}">
 
         <p part="where-and-when">
           ${this.dataset.locality} - ${formatEventDate(this.startDate, { onlyTime: true })}
@@ -57,15 +134,6 @@ customElements.define(
         ${this.renderButtons()}
       </div>
       `;
-    }
-    static observedAttributes = ["open", "order"];
-
-    attributeChangedCallback(name, oldValue, newValue) {
-      if (name === "open") {
-        this.open = !!newValue;
-        const details = this.querySelector("details");
-        if (details) details.open = !!newValue;
-      }
     }
 
     handleEvent(event) {
@@ -235,4 +303,36 @@ function createGoogleCalendarUrl(eventElement) {
   const endDateString = endDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
   url += `&dates=${startDateString}/${endDateString}`;
   return url;
+}
+
+/**
+ * 
+ * @param {String} imageId 
+ * @param {Number} width in pixels
+ * @returns {String} Image url from a google drive to use in <img>
+ 
+ */
+function createGoogleDriveImageUrl(imageId, width = 512) {
+  return `https://drive.google.com/thumbnail?sz=w${width}&id=${imageId}`;
+}
+
+/**
+ *
+ * @param {String} urls, a string containing google drive links separated by commas
+ * @returns {String} id of the last google drive link provided
+ */
+function getLastFileIdFromDriveUrls(urls) {
+  const imageIdRegexp = /id=([\d\w-]*)/gm;
+  const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
+  return ids.pop(); // Get the last match
+}
+
+/**
+ *
+ * @param {String} imageUrls A comma separated list of google drive urls
+ * @returns {String} preview image url for the last file on the list
+ * @returns
+ */
+function getGoogleDriveImagesPreview(imageUrls) {
+  return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls));
 }
