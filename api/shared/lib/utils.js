@@ -266,3 +266,35 @@ export function unescapeHtml(escapedText) {
 
   return unescaped;
 }
+
+/**
+ * 
+ * @param {String} imageId 
+ * @param {Number} width in pixels
+ * @returns {String} Image url from a google drive to use in <img>
+ 
+ */
+function createGoogleDriveImageUrl(imageId, width = 512) {
+  return `https://drive.google.com/thumbnail?sz=w${width}&id=${imageId}`;
+}
+
+/**
+ *
+ * @param {String} urls, a string containing google drive links separated by commas
+ * @returns {String} id of the last google drive link provided
+ */
+function getLastFileIdFromDriveUrls(urls) {
+  const imageIdRegexp = /id=([\d\w-]*)/gm;
+  const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
+  return ids.pop(); // Get the last match
+}
+
+/**
+ *
+ * @param {String} imageUrls A comma separated list of google drive urls
+ * @returns {String} preview image url for the last file on the list
+ * @returns
+ */
+export function getGoogleDriveImagesPreview(imageUrls, width = 512) {
+  return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls), width);
+}
