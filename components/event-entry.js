@@ -266,17 +266,13 @@ customElements.define(
  * @param {Date} date
  * @returns {String}
  */
-function formatEventDate(date, { timezone = -3, onlyTime = false } = {}) {
+function formatEventDate(date, { onlyTime = false } = {}) {
   const dayNames = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
 
-  // Fix to display timezone
-  const targetUtcDate = new Date(date);
-  targetUtcDate.setUTCHours(targetUtcDate.getUTCHours() + timezone);
-
-  const day = targetUtcDate.getUTCDate().toString().padStart(2, "0");
-  const month = (targetUtcDate.getUTCMonth() + 1).toString().padStart(2, "0");
-  const hour = targetUtcDate.getUTCHours().toString().padStart(2, "0");
-  const minute = targetUtcDate.getUTCMinutes().toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const hour = date.getHours().toString().padStart(2, "0");
+  const minute = date.getMinutes().toString().padStart(2, "0");
   if (onlyTime) return `${hour}:${minute}h`;
 
   return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
