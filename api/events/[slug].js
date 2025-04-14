@@ -16,6 +16,7 @@ export default async function handler(req) {
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
   if (eventData) {
+    const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, OG_IMAGE_WIDTH);
     const contentMeta = /*html*/ `
       <title>${escapeHtml(eventData.title)}</title>
       <link
@@ -29,7 +30,7 @@ export default async function handler(req) {
         property="og:description"
         content="${escapeHtml(eventData.description)}"
       />
-      <meta property="og:image" content="${getGoogleDriveImagesPreview(eventData.images, OG_IMAGE_WIDTH)}" />
+      <meta property="og:image" content="${previewImageUrl}" />
       <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
       <meta property="og:type" content="event" />
       <meta property="og:url" content="${url.origin}/${eventData.slug}" />
@@ -41,7 +42,7 @@ export default async function handler(req) {
           "@type": "Event",
           name: eventData.title,
           description: eventData.description,
-          image: eventData.previewImage,
+          image: previewImageUrl,
           startDate: eventData.startsAt,
           endDate: eventData.endsAt,
           eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
