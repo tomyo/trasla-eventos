@@ -9,20 +9,24 @@ export function formatDescription(description) {
 
   let result = unescapeHtml(description);
 
-  const urlRegex = /(\b(?:https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+  const urlRegex = /(\b(?:(?:(?:https?|ftp):\/\/)|www\.)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
 
   result = result.replace(urlRegex, (match) => {
+    match = match.trim().toLowerCase();
+    // Check if the URL already has a missing protocol prefix
+    if (!match.startsWith("http")) match = `https://${match}`;
+
     let url = new URL(match);
     // Remove the query parameters from the visual text
     url.search = "";
-    return `<a href="${match}" target="_blank">${url.href}</a>`;
+    return `<a href="${match}" target="_blank">${url.hostname + url.pathname}</a>`;
   });
 
   // Replace new lines with <br> tags
   result = result.replace(/\n/g, "<br>");
 
   // Replace phone numbers with WhatsApp links
-  const phoneRegex = /(\+?\d{2,3})?(\d{10})/g;
+  const phoneRegex = /\+?(\d[\s\-\d]{10,20})\b/g;
   result = result.replace(phoneRegex, (match) => {
     return `<a href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
       match
