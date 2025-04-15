@@ -18,7 +18,7 @@
 
       <button type="submit" name="submit">Cargar evento</button>
 
-      <output name="output">
+      <output name="output" style="white-space: pre">
         <event-entry></event-entry>
       </output>
     </form>
@@ -56,26 +56,30 @@
 
       hydrateWithCachedData();
 
+      async function extractSuccessResponse(response) {
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const jsonResponse = await response.json();
+        if (!jsonResponse.success) throw new Error(jsonResponse.message);
+        return jsonResponse.data;
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault(); // Prevent default submission
         form.elements["submit"].disabled = true;
-        form.elements["output"].textContent = "Procesando link del evento ...";
+        form.elements["output"].textContent = "Extrayendo información del link...\n";
 
-        const response = await fetch(form.action, {
-          method: form.method,
-          body: new FormData(form),
-        });
+        const result = await extractSuccessResponse(
+          await fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+          })
+        );
 
-        if (!response || !response.ok) {
-          alert(response.statusText);
-          return;
-        }
-        const result = await response.json();
         if (result.alreadyExists) {
           alert(`El evento ya fue cargado anteriormente con el ID ${result.id}.`);
+        } else {
+          form.elements["output"].textContent += "Procesando información del evento...\n";
         }
-
-        form.elements["output"].textContent = "Procesando info del evento...";
 
         if (!result.id) {
           alert(`Hubo un error al cargar el evento. Por favor intenta nuevamente más tarde. ${result}`);
@@ -85,14 +89,9 @@
         let eventData = {};
         const queryParameters = `endpoint=getDraftEventById&id=${result.id}`;
         const getDraftEventByIdURL = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec?${queryParameters}`;
+        form.elements["output"].textContent += "Cargando información del evento...\n";
         do {
-          const response = await fetch(getDraftEventByIdURL);
-          form.elements["output"].textContent = "Cargando info del evento...";
-
-          if (!response.ok) throw new Error(response.statusText);
-          const jsonResponse = await response.json();
-          if (!jsonResponse.success) throw new Error(jsonResponse.message);
-          eventData = jsonResponse.data;
+          eventData = await extractSuccessResponse(await fetch(getDraftEventByIdURL));
           console.log(`Event data received: `, eventData);
           // Add 1 second delay to refresh data
           if (eventData.slug) continue;
@@ -100,6 +99,8 @@
           await new Promise((resolve) => setTimeout(resolve, 1000));
           console.log("Refreshing eventData, not slug found yet...");
         } while (!eventData.slug);
+        form.elements["output"].textContent +=
+          "El evento está cargado!\n\nRedirigiendo a la página del evento...\n";
 
         // const eventEntry = document.querySelector("event-entry");
         // for (const [key, value] of Object.entries(eventData)) {
