@@ -8,12 +8,8 @@
   </head>
   <body>
     <h1>Cargar rápida de evento de Instagram</h1>
-    <form
-      action="https://hook.us2.make.com/810vwbmrsrbh6yi6rqzvp6ak5au7dtfc"
-      method="post"
-      enctype="multipart/form-data"
-    >
-      <label for="url">Link al post (videos o historias no soportadas)</label>
+    <form>
+      <label for="url">Link al post (solo posteos de imágenes soportadas)</label>
       <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
 
       <button type="submit" name="submit">Cargar evento</button>
@@ -64,55 +60,53 @@
       }
 
       form.addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevent default submission
-        form.elements["submit"].disabled = true;
-        form.elements["output"].textContent = "Extrayendo información del link...\n";
+        event.preventDefault();
+        const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
 
-        const result = await extractSuccessResponse(
-          await fetch(form.action, {
-            method: form.method,
-            body: new FormData(form),
-          })
-        );
+        try {
+          form.elements["submit"].disabled = true;
+          form.elements["output"].textContent = "Procesando y cargando el evento...\n";
 
-        if (result.alreadyExists) {
-          alert(`El evento ya fue cargado anteriormente con el ID ${result.id}.`);
-        } else {
-          form.elements["output"].textContent += "Procesando información del evento...\n";
+          const getOrCreateQuery = `?endpoint=getOrCreateEventByInstagramPostURL&url=${form.elements.url.value}`;
+          let eventData = await extractSuccessResponse(await fetch(api + getOrCreateQuery));
+
+          if (eventData.alreadyCreated) {
+            alert(`El evento ya existe con ID ${eventData.id}`);
+            form.elements["output"].textContent += "Evento existente encontrado ...✔️\n";
+          } else {
+            form.elements["output"].textContent += "Nuevo evento creando...✔️\n";
+          }
+
+          const getEventByIdQuery = `?endpoint=getEventById&id=${eventData.id}`;
+          const maxRetries = 5;
+          let retries = 0;
+          while (!eventData.slug) {
+            form.elements["output"].textContent += "Esperando que se cargue el evento...\n";
+            eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
+            console.log(`Event data received: `, eventData);
+            // Add 1 second delay to refresh data
+            if (eventData.slug) break;
+
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            retries++;
+            if (retries >= maxRetries) {
+              throw new Error(
+                `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
+              );
+            }
+          }
+          // Event uploaded or found succesfully
+          form.elements["output"].textContent += "\nRedirigiendo a la página del evento...\n";
+          cache.delete("/url");
+          form.reset();
+          console.log(`redirect to event page ${window.location.origin}/${eventData.slug}`);
+          window.location.href = `${window.location.origin}/${eventData.slug}`;
+        } catch (error) {
+          console.error(error);
+          alert(`Hubo un error al cargar el evento: ${JSON.stringify(error)}`);
+        } finally {
+          form.elements["submit"].disabled = false;
         }
-
-        if (!result.id) {
-          alert(`Hubo un error al cargar el evento. Por favor intenta nuevamente más tarde. ${result}`);
-          throw new Error(`No id returned in the response`, result);
-        }
-
-        let eventData = {};
-        const queryParameters = `endpoint=getDraftEventById&id=${result.id}`;
-        const getDraftEventByIdURL = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec?${queryParameters}`;
-        form.elements["output"].textContent += "Cargando información del evento...\n";
-        do {
-          eventData = await extractSuccessResponse(await fetch(getDraftEventByIdURL));
-          console.log(`Event data received: `, eventData);
-          // Add 1 second delay to refresh data
-          if (eventData.slug) continue;
-
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          console.log("Refreshing eventData, not slug found yet...");
-        } while (!eventData.slug);
-        form.elements["output"].textContent +=
-          "El evento está cargado!\n\nRedirigiendo a la página del evento...\n";
-
-        // const eventEntry = document.querySelector("event-entry");
-        // for (const [key, value] of Object.entries(eventData)) {
-        //   if (!key && !value) continue; // Skip empty values
-        //   eventEntry.dataset[key] = value;
-        // }
-
-        cache.delete("/url");
-        form.reset();
-
-        //redirect to event page
-        window.location.href = `${window.location.origin}/${eventData.slug}`;
       });
     </script>
   </body>
