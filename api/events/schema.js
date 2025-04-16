@@ -1,5 +1,6 @@
 import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
-import { escapeHtml } from "../shared/lib/utils.js";
+import { escapeHtml, getGoogleDriveImagesPreview } from "../shared/lib/utils.js";
+const OG_IMAGE_WIDTH = 1200;
 
 export default async function handler(req) {
   const url = new URL(req.url);
@@ -19,12 +20,12 @@ export default async function handler(req) {
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
         location: {
           "@type": "Place",
-          name: event.locality,
+          name: event.place || "",
           address: `${event.locality}, Córdoba, Argentina`,
           url: event.location,
         },
         description: escapeHtml(event.description),
-        image: event.previewImage,
+        image: getGoogleDriveImagesPreview(event.images, OG_IMAGE_WIDTH),
       },
     })),
   };
