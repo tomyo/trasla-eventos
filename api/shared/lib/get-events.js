@@ -60,7 +60,6 @@ async function getSheetData(id, gid = 0) {
             ...dateRegexp.exec(cel.v)[1].split(","),
             SHEET_TIMEZONE_OFFSET
           ).toISOString();
-          console.log("converting", cel.v, value);
         } else {
           value = cel.v || cel.f;
         }
