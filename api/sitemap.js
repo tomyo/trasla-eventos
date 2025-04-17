@@ -1,7 +1,7 @@
 import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
 
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
-let sheetGid = typeof process !== "undefined" ? process.env?.ALL_FUTURE_EVENTS_GOOGLE_SHEET_GID : undefined;
+let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
 export default async function handler(req) {
   const url = new URL(req.url);
   const events = await getGoogleSheetEvents(sheetId, sheetGid);
