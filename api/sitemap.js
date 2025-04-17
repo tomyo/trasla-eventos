@@ -12,9 +12,11 @@ export default async function handler(req) {
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
+  const lastModNow = new Date().toISOString();
+
   const mainPage = `<url>
         <loc>${url.origin}</loc>
-        <lastmod>${new Date().toISOString()}</lastmod>
+        <lastmod>${lastModNow}</lastmod>
         <changefreq>hourly</changefreq>
         <priority>1.0</priority>
       </url>`;
@@ -25,7 +27,7 @@ export default async function handler(req) {
       return `
             <url>
               <loc>${url.origin}/${event.slug}</loc>
-              <lastmod>${event.updatedAt}</lastmod>
+              <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
               <changefreq>${isPastEvent ? "never" : "daily"}</changefreq>
               <priority>${isPastEvent ? "0.4" : "0.8"}</priority>
             </url>
