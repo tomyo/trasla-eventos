@@ -20,7 +20,7 @@ export default async function handler(req) {
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
         location: {
           "@type": "Place",
-          name: event.place || "",
+          ...(event.place && { name: event.place }),
           address: `${event.locality}, Córdoba, Argentina`,
           url: event.location,
         },
