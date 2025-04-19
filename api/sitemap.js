@@ -37,11 +37,11 @@ export default async function handler(req) {
 
   xml += mainPage + eventsXml + "</urlset>";
 
-  const wholeDay = 86400; // 24 hours in seconds
+  const oneMinute = 60;
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml",
-      "Cache-Control": `public, s-maxage=${wholeDay / 4}, stale-while-revalidate=${wholeDay / 8}`,
+      "Cache-Control": `public, s-maxage=${oneMinute}, stale-while-revalidate=${oneMinute}`,
     },
   });
 }
