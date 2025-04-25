@@ -1,6 +1,6 @@
 import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
 import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { escapeHtml, getGoogleDriveImagesPreview } from "../shared/lib/utils.js";
+import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem } from "../shared/lib/utils.js";
 
 const OG_IMAGE_WIDTH = 1200;
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
@@ -39,24 +39,7 @@ export default async function handler(req) {
       <script type="application/ld+json">
         ${JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "Event",
-          name: eventData.title,
-          description: eventData.description,
-          image: previewImageUrl,
-          startDate: eventData.startsAt,
-          endDate: eventData.endsAt,
-          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-          location: {
-            "@type": "Place",
-            name: eventData.place || "",
-            address: `${eventData.locality}, Córdoba, Argentina`,
-            url: eventData.location,
-          },
-          organizer: {
-            telephone: eventData.phone,
-            instagram: eventData.instagram,
-          },
-          url: url.origin + "/" + eventData.slug,
+          ...eventToSchemaEventItem(eventData, url.origin),
         })}
         </script>
     `;
@@ -87,8 +70,9 @@ export default async function handler(req) {
       ></event-entry>
     `;
     html = html.replace(
-      /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-      "$<openTag>" + eventEntry + "$<closeTag>"
+      /(?<openTag><events-filter[^>]*>).*?(?<closeTag><\/events-filter>)/is,
+      // "$<openTag>" + eventEntry + "$<closeTag>"
+      "<event-entries>" + eventEntry + "</event-entries>"
     );
   }
 

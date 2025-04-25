@@ -1,3 +1,5 @@
+export const OG_IMAGE_WIDTH = 1200;
+
 /**
  *
  * @param {String} description - text to format, html scaped.
@@ -146,6 +148,18 @@ export function parseDate(dateString) {
   return isNaN(date.getTime()) ? null : date;
 }
 
+/**
+ * Adds a specified number of hours to a given date.
+ *
+ * @param {Date} date - The original date to which the offset will be added.
+ * @param {number} [offsetInHours=2] - The number of hours to add to the date. Defaults to 2 hours if not provided.
+ * @returns {Date} A new Date object with the specified number of hours added.
+ */
+export function addHoursOffsetToDate(date, offsetInHours = 2) {
+  const twoHoursInMilliseconds = offsetInHours * 60 * 60 * 1000;
+  return new Date(new Date(date).getTime() + twoHoursInMilliseconds);
+}
+
 export function formatPhoneNumber(phoneNumber) {
   if (!phoneNumber) return "";
   phoneNumber = phoneNumber.replace(/[^\d+]/g, "");
@@ -180,10 +194,9 @@ export function createGoogleCalendarUrl(eventElement) {
   let url = `${baseUrl}&text=${encodedSummary}&details=${encodedDetails}&location=${encodedLocation}`;
   const startDateString = eventElement.dataset.startsAt.replace(/-|:|\.\d\d\d/g, "");
   let endDateString = eventElement.dataset.endsAt;
-  if (!endDateString) {
+  if (!endDateString && eventElement.dataset.startsAt) {
     // Default event duration is 2 hours if end time is not provided.
-    const twoHoursInMilliseconds = 2 * 60 * 60 * 1000;
-    endDateString = new Date(new Date(eventElement.dataset.startsAt).getTime() + twoHoursInMilliseconds);
+    endDateString = addHoursOffsetToDate(new Date(eventElement.dataset.startsAt), 2).toISOString();
   }
 
   endDateString = endDateString.replace(/-|:|\.\d\d\d/g, "");
@@ -274,7 +287,7 @@ export function unescapeHtml(escapedText) {
  * @returns {String} Image url from a google drive to use in <img>
  
  */
-function createGoogleDriveImageUrl(imageId, width = 512) {
+function createGoogleDriveImageUrl(imageId, width = OG_IMAGE_WIDTH) {
   return `https://drive.google.com/thumbnail?sz=w${width}&id=${imageId}`;
 }
 
@@ -295,6 +308,56 @@ function getLastFileIdFromDriveUrls(urls) {
  * @returns {String} preview image url for the last file on the list
  * @returns
  */
-export function getGoogleDriveImagesPreview(imageUrls, width = 512) {
+export function getGoogleDriveImagesPreview(imageUrls, width = OG_IMAGE_WIDTH) {
   return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls), width);
+}
+
+/**
+ * Converts an array of event objects into a Schema.org ItemList format.
+ *
+ * @param {Array} events - An array of event objects to be converted.
+ * @returns {Object} A Schema.org ItemList object representing the events.
+ */
+export function eventsToSchemaOrgItemList(events, origin = "https://eventos.trasla.com.ar") {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: events.map((event, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: eventToSchemaEventItem(event, origin),
+    })),
+  };
+
+  return schema;
+}
+
+/**
+ * Converts a single event object into a Schema.org ItemList format.
+ * More info at https://developers.google.com/search/docs/appearance/structured-data/event
+ *
+ * @param {Object} event - The event object to be converted.
+ * @param {string} [origin="https://eventos.trasla.com.ar"] - The base URL for the event.
+ * @returns {Object} A Schema.org ItemList object representing the event.
+ */
+export function eventToSchemaEventItem(event, origin = "https://eventos.trasla.com.ar") {
+  const schema = {
+    "@type": "Event",
+    name: escapeHtml(event.title),
+    description: escapeHtml(event.description),
+    image: getGoogleDriveImagesPreview(event.images, OG_IMAGE_WIDTH),
+    startDate: event.startsAt,
+    endDate: event.endsAt || addHoursOffsetToDate(new Date(event.startsAt), 2).toISOString(),
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: {
+      "@type": "Place",
+      ...(event.place && { name: event.place }),
+      address: event.address || `${event.locality}, Córdoba, Argentina`,
+      url: event.location,
+    },
+    eventStatus: "https://schema.org/EventScheduled", // EventPostponed / EventRescheduled
+    url: `${origin}/${event.slug}`,
+  };
+
+  return schema;
 }

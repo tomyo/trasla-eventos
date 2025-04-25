@@ -13,7 +13,7 @@ export default async function handler(req) {
       position: index + 1,
       item: {
         "@type": "Event",
-        name: event.title,
+        name: escapeHtml(event.title),
         url: `${url.origin}/${event.slug}`,
         startDate: event.startsAt,
         endDate: event.endsAt,

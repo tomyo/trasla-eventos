@@ -7,6 +7,7 @@ import {
   formatDescription,
   formatLocalDate,
   getGoogleDriveImagesPreview,
+  createGoogleCalendarUrl,
 } from "../lib/utils.js";
 
 customElements.define(
@@ -276,28 +277,4 @@ function formatEventDate(date, { onlyTime = false } = {}) {
   if (onlyTime) return `${hour}:${minute}h`;
 
   return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
-}
-
-function createGoogleCalendarUrl(eventElement) {
-  const hook = `https://eventos.trasla.com.ar/${eventElement.slug}\n\n`;
-  let eventTitle = eventElement.dataset.title;
-  if (!eventTitle) {
-    eventTitle = `Actividad en ${eventElement.dataset.locality}`;
-  }
-  const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
-  const encodedDetails = encodeURIComponent(hook + eventElement.dataset.description || "");
-  const encodedLocation = encodeURIComponent(eventElement.dataset.location || "");
-  const encodedSummary = encodeURIComponent(eventTitle);
-
-  let url = `${baseUrl}&text=${encodedSummary}&details=${encodedDetails}&location=${encodedLocation}`;
-  const startDateString = eventElement.dataset.startsAt.replace(/-|:|\.\d\d\d/g, "");
-
-  // Default event duration is 2 hours if end time is not provided.
-  let endDate = eventElement.endDate
-    ? eventElement.endDate
-    : new Date(new Date(eventElement.dataset.startsAt).getTime() + 2 * 60 * 60 * 1000);
-
-  const endDateString = endDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
-  url += `&dates=${startDateString}/${endDateString}`;
-  return url;
 }
