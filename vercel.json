@@ -12,6 +12,10 @@
     { "source": "/events/schema.jsonld", "destination": "/api/events/schema.js" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap.js" },
     {
+      "source": "/lugar/:locality",
+      "destination": "/api/[locality].js"
+    },
+    {
       "source": "/:slug([a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-.+h)",
       "destination": "/api/events/[slug].js"
     }

@@ -562,10 +562,48 @@
       <div class="bg-pattern">
         <div class="pattern-row"></div>
         <div class="pattern-row"></div>
+        <div class="pattern-row"></div>
+        <div class="pattern-row"></div>
       </div>
       <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')"> </svg-mask>
+      <a title="Ver todos los eventos" href="/#eventos">Ver Todos los Eventos</a>
 
-      <a title="Ver eventos" href="/#eventos">Ver Eventos</a>
+      <fieldset>
+        <legend>Ver eventos en</legend>
+
+        <div>
+          <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos"
+            >Arroyo de Los Patos</a
+          >
+          <a title="Ver eventos en El Pueblito" href="/lugar/el-pueblito">El Pueblito</a> ·
+          <a title="Ver eventos en La Paz" href="/lugar/la-paz">La Paz</a> ·
+          <a title="Ver eventos en La Población" href="/lugar/la-poblacion">La Población</a> ·
+          <a title="Ver eventos en Las Calles" href="/lugar/las-calles">Las Calles</a> ·
+          <a title="Ver eventos en Las Chacras" href="/lugar/las-chacras">Las Chacras</a> ·
+          <a title="Ver eventos en Las Rabonas" href="/lugar/las-rabonas">Las Rabonas</a> ·
+          <a title="Ver eventos en Las Tapias" href="/lugar/las-tapias">Las Tapias</a> ·
+          <a title="Ver eventos en Los Hornillos" href="/lugar/los-hornillos">Los Hornillos</a> ·
+          <a title="Ver eventos en Los Molles" href="/lugar/los-molles">Los Molles</a> ·
+          <a title="Ver eventos en Los Pozos" href="/lugar/los-pozos">Los Pozos</a> ·
+          <a title="Ver eventos en Luyaba" href="/lugar/luyaba">Luyaba</a> ·
+          <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero">Mina Clavero</a> ·
+          <a title="Ver eventos en Nono" href="/lugar/nono">Nono</a> ·
+          <a title="Ver eventos en Panaholma" href="/lugar/panaholma">Panaholma</a> ·
+          <a title="Ver eventos en San Huberto" href="/lugar/san-huberto">San Huberto</a> ·
+          <a title="Ver eventos en San Javier" href="/lugar/san-javier">San Javier</a> ·
+          <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo">San Lorenzo</a> ·
+          <a title="Ver eventos en San Pedro" href="/lugar/san-pedro">San Pedro</a> ·
+          <a title="Ver eventos en Travesia" href="/lugar/travesia">Travesia</a> ·
+          <a title="Ver eventos en Villa Cura Brochero" href="/lugar/villa-cura-brochero"
+            >Villa Cura Brochero</a
+          >
+          ·
+          <a title="Ver eventos en Villa de Las Rosas" href="/lugar/villa-de-las-rosas">Villa de Las Rosas</a>
+          · <a title="Ver eventos en Villa de Merlo" href="/lugar/villa-de-merlo">Villa de Merlo</a> ·
+          <a title="Ver eventos en Villa Dolores" href="/lugar/villa-dolores">Villa Dolores</a> ·
+          <a title="Ver eventos en Yacanto" href="/lugar/yacanto">Yacanto</a>
+        </div>
+      </fieldset>
       <a
         title="Publicar nuevo evento"
         href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
@@ -587,51 +625,6 @@
         </a>
       </div>
       <style>
-        .bg-pattern {
-          position: absolute;
-          inset: 0;
-
-          &::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-color: color-mix(in srgb, var(--color-green), transparent 20%);
-          }
-
-          .pattern-row {
-            --row-height: 50px;
-            --row-offset: 50px;
-            position: relative;
-            width: 100%;
-            height: calc(var(--row-height) * 3);
-            background-image: url("/assets/images/pattern.png");
-            background-size: 200px;
-            background-position: 0px 0px;
-            background-repeat: repeat-x;
-
-            &::before,
-            &::after {
-              content: "";
-              position: absolute;
-              width: 100%;
-              height: var(--row-height);
-              background-image: url("/assets/images/pattern.png");
-              background-size: 200px;
-              background-repeat: repeat-x;
-              left: 0;
-              top: var(--row-height);
-            }
-
-            &::before {
-              background-position: calc(2 * var(--row-offset)) 0;
-            }
-
-            &::after {
-              top: calc(2 * var(--row-height));
-              background-position: calc(5 * var(--row-offset)) 0;
-            }
-          }
-        }
         footer {
           position: relative;
           display: flex;
@@ -644,17 +637,36 @@
           text-align: center;
           text-transform: uppercase;
 
-          > * {
+          & > * {
             z-index: 1;
             text-decoration: none;
           }
 
-          svg-mask {
+          & svg-mask {
             --color: var(--color-light);
             margin-bottom: 1rem;
           }
 
-          .contact-links {
+          & fieldset {
+            border-left-style: solid;
+            border-width: 1px;
+            border-color: var(--background-color);
+            outline: none;
+            max-width: 800px;
+            padding: 1rem;
+            line-height: 1rem;
+
+            a {
+              text-decoration: none;
+            }
+
+            & legend {
+              margin-inline: auto;
+              padding-inline: 0.5rem;
+            }
+          }
+
+          & .contact-links {
             display: flex;
             --icon-width: 22px;
             gap: 2rem;
@@ -752,12 +764,11 @@
           > *:not(event-entries) {
             text-transform: uppercase;
           }
-
-          &:has(event-entry:only-of-type) {
-            /* Only one event is shown */
-            --form-display: none;
-            --summary-display: none;
-          }
+        }
+        &:not(:has(events-filter)) {
+          /* Only one event is shown */
+          --form-display: none;
+          --summary-display: none;
         }
 
         event-entries {
@@ -968,6 +979,53 @@
         mask: var(--src, url("/assets/images/trasla-eventos.svg")) no-repeat center;
         mask-size: contain;
       }
+
+      .bg-pattern {
+        position: absolute;
+        overflow: hidden;
+        inset: 0;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-color: color-mix(in srgb, var(--color-green), transparent 20%);
+        }
+
+        .pattern-row {
+          --row-height: 50px;
+          --row-offset: 50px;
+          position: relative;
+          width: 100%;
+          height: calc(var(--row-height) * 3);
+          background-image: url("/assets/images/pattern.png");
+          background-size: 200px;
+          background-position: 0px 0px;
+          background-repeat: repeat-x;
+
+          &::before,
+          &::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: var(--row-height);
+            background-image: url("/assets/images/pattern.png");
+            background-size: 200px;
+            background-repeat: repeat-x;
+            left: 0;
+            top: var(--row-height);
+          }
+
+          &::before {
+            background-position: calc(2 * var(--row-offset)) 0;
+          }
+
+          &::after {
+            top: calc(2 * var(--row-height));
+            background-position: calc(5 * var(--row-offset)) 0;
+          }
+        }
+      }
     </style>
 
     <script type="module">
@@ -1139,7 +1197,7 @@
           window.addEventListener("load", focusElement);
         }
 
-        // Special logic for single event view (rendered via [slug].js)
+        // Special logic for single event view rendered via [slug].js
         if (document.querySelectorAll("event-entry").length === 1) {
           // Make viewMore button redirect to events page
           viewMoreEvents.addEventListener("click", (event) => {
@@ -1150,6 +1208,22 @@
           viewMoreEvents.style = "display: flex;";
         }
       }
+
+      // UX improvements when seeing a locality page (/lugar/locality-slug)
+      if (location.pathname.includes("/lugar/")) {
+        const linkToHighlight = document.querySelector(`[href="${location.pathname}"]`);
+        if (linkToHighlight) linkToHighlight.style.fontWeight = "bolder";
+        const localitySlug = location.pathname.split("/lugar/").pop();
+        // Highlight selected locality on dropdown menu
+        for (const option of document.querySelectorAll("[name='locality'] option")) {
+          if (slugify(option.value) == localitySlug) {
+            option.selected = true;
+            break;
+          }
+        }
+      }
+
+      //
     </script>
 
     <script>
