@@ -1131,7 +1131,8 @@
         // Scroll into first event
         const eventToFocus = document.querySelector("event-entry");
         const timeEntry = addTimeEntry(new Date(eventToFocus.dataset.startsAt), { prepend: true });
-        const focusElement = () => timeEntry.scrollIntoView({ behavior: "smooth" });
+        const focusElement = () =>
+          document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
         if (document.readyState === "complete") {
           focusElement();
         } else {
