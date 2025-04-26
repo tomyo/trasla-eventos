@@ -56,10 +56,7 @@ async function getSheetData(id, gid = 0) {
         // cel.v is the actual value, cel.f is the formatted value.
         // i.e. { v: "Date(2025,2,30,21,1,11)", f: "30/3/2025 21:01:12" }
         if (cel.f && cel.v && typeof cel.v == "string" && cel.v.startsWith("Date(")) {
-          value = createSheetDate(
-            ...dateRegexp.exec(cel.v)[1].split(","),
-            SHEET_TIMEZONE_OFFSET
-          ).toISOString();
+          value = createSheetDate(...dateRegexp.exec(cel.v)[1].split(","), SHEET_TIMEZONE_OFFSET).toISOString();
         } else {
           value = cel.v || cel.f;
         }

@@ -12,9 +12,7 @@ customElements.define(
     canShare(shareData = {}) {
       try {
         // Check if running on mobile device
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        );
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
         return (
           navigator.share && location.protocol === "https:" && navigator.canShare(shareData) && isMobile // Only return true for mobile devices
@@ -44,8 +42,7 @@ customElements.define(
         if (this.canShare(shareData)) await navigator.share(shareData);
         else mustFallback = true;
       } catch (error) {
-        if (error.name !== "AbortError")
-          console.warn(error.name, error.message, " ...Retrying with fallback");
+        if (error.name !== "AbortError") console.warn(error.name, error.message, " ...Retrying with fallback");
         mustFallback = true;
       }
       if (mustFallback) {

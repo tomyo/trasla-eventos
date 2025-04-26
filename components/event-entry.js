@@ -34,9 +34,7 @@ customElements.define(
       });
 
       if (missingAttributes.length > 0) {
-        console.warn(
-          `Missing required data attributes: ${missingAttributes.map((attr) => `data-${attr}`).join(", ")}`
-        );
+        console.warn(`Missing required data attributes: ${missingAttributes.map((attr) => `data-${attr}`).join(", ")}`);
         return false;
       }
 
@@ -93,9 +91,7 @@ customElements.define(
       );
 
       if (missingAttributes.length > 0) {
-        console.warn(
-          `Missing required data attributes: ${missingAttributes.map((attr) => `data-${attr}`).join(", ")}`
-        );
+        console.warn(`Missing required data attributes: ${missingAttributes.map((attr) => `data-${attr}`).join(", ")}`);
         return false;
       }
 

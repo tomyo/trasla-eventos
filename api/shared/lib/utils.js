@@ -30,9 +30,7 @@ export function formatDescription(description) {
   // Replace phone numbers with WhatsApp links
   const phoneRegex = /\+?(\d[\s\-\d]{10,20})\b/g;
   result = result.replace(phoneRegex, (match) => {
-    return `<a href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
-      match
-    )}" target="_blank">${match}</a>`;
+    return `<a href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(match)}" target="_blank">${match}</a>`;
   });
 
   // Replace Instagram handles with links
@@ -81,9 +79,7 @@ export function isDateToday(dateOrString) {
   }
 
   return (
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear()
+    date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()
   );
 }
 
@@ -267,10 +263,7 @@ export function unescapeHtml(escapedText) {
   };
 
   // First pass: Replace known entities
-  let unescaped = escapedText.replace(
-    /&(amp|lt|gt|quot|#39|apos|nbsp);/g,
-    (match) => entityReplacements[match]
-  );
+  let unescaped = escapedText.replace(/&(amp|lt|gt|quot|#39|apos|nbsp);/g, (match) => entityReplacements[match]);
 
   // Second pass: Handle numeric entities (decimal and hex)
   unescaped = unescaped.replace(/&#(x)?([0-9a-f]+);/gi, (_, isHex, code) =>
