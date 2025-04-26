@@ -1,4 +1,5 @@
 import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
+import { slugify } from "./shared/lib/utils.js";
 
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
 let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
@@ -21,10 +22,13 @@ export default async function handler(req) {
         <priority>1.0</priority>
       </url>`;
 
-  const eventsXml = events
-    .map((event) => {
-      const isPastEvent = new Date(event.startsAt) <= new Date();
-      return `
+  const localitiesInFutureEvents = [];
+  let localitiesPagesXml = "";
+  let eventsXml = "";
+
+  events.forEach((event) => {
+    const isPastEvent = new Date(event.startsAt) <= new Date();
+    eventsXml += `
             <url>
               <loc>${url.origin}/${event.slug}</loc>
               <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
@@ -32,10 +36,20 @@ export default async function handler(req) {
               <priority>${isPastEvent ? "0.4" : "0.8"}</priority>
             </url>
           `;
-    })
-    .join("");
+    if (!isPastEvent && !localitiesInFutureEvents.includes[event.locality]) {
+      localitiesInFutureEvents.push(event.locality);
+      localitiesPagesXml += `
+            <url>
+              <loc>${url.origin}/lugar/${slugify(event.locality)}/</loc>
+              <lastmod>${lastModNow}</lastmod>
+              <changefreq>daily</changefreq>
+              <priority>0.9</priority>
+            </url>
+          `;
+    }
+  });
 
-  xml += mainPage + eventsXml + "</urlset>";
+  xml += mainPage + localitiesPagesXml + eventsXml + "</urlset>";
 
   const oneMinute = 60;
   return new Response(xml, {
