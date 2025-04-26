@@ -13,7 +13,7 @@ export default async function handler(req) {
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
   const contentMeta = /*html*/ `
-      <title>Eventos en ${locality}</title>
+      <title>Próximos eventos en ${locality} | TRASLA EVENTOS</title>
       <link
         rel="canonical"
         property="og:url"
@@ -75,11 +75,8 @@ export default async function handler(req) {
   if (!events.length) {
     eventsHtml += /*html*/ `
     <event-entry
-    data-title="No hay eventos :("
-    data-description="No se encontraron eventos para esta localidad."
-    data-starts-at="${new Date().toISOString()}"
-    data-locality="${locality}"
-    data-images=""
+      data-starts-at="${new Date().toISOString()}"
+      data-locality="${locality}"
     >
     <h3>No se encontraron eventos :(</h3>
     </event-entry>

@@ -44,8 +44,7 @@ export default async function handler(req) {
         </script>
     `;
 
-    const contentMetaRegex =
-      /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
+    const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
     html = html.replace(contentMetaRegex, contentMeta);
 
     let eventEntry = /*html*/ `
