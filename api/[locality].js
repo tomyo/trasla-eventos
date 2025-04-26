@@ -3,7 +3,7 @@ import { escapeHtml, eventsToSchemaOrgItemList, slugify } from "./shared/lib/uti
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const localitySlug = url.pathname.split("lugar/").pop();
+  const localitySlug = url.pathname.replace(/\/lugar\/(.*)\//, "$1");
   const locality = localitySlug
     .split("-")
     .map((s) => s[0].toUpperCase() + s.slice(1))
