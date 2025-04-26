@@ -15,6 +15,10 @@ customElements.define(
       this.form.addEventListener("submit", this);
     }
 
+    connectedCallback() {
+      this.updateUI();
+    }
+
     set allShown(value) {
       this.toggleAttribute("all-shown", value);
     }

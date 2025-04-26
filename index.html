@@ -492,7 +492,7 @@
             <input hidden type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
           </form>
           <event-entries>
-            <!-- SSR (via [slug].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
+            <!-- SSR (via [{slug|locality}].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
           <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
@@ -526,7 +526,6 @@
             </svg-mask
             >Ver más eventos
           </button>
-          <script></script>
         </events-filter>
       </section>
     </main>
@@ -937,6 +936,10 @@
 
     <style>
       /* Utils */
+      [hidden] {
+        display: none !important;
+      }
+
       svg-mask {
         display: block;
         width: 100%;
@@ -1143,29 +1146,20 @@
       // Get events
 
       if (!document.querySelector("event-entry")) {
+        // Normal flow when requesting /index.html
         showAllFutureEvents();
       } else {
-        // SSR prerendered events
+        // SSR prerendered <event-entry> elements into the dom (vía [slug|locality].js)
 
-        // Scroll into first event
-        const eventToFocus = document.querySelector("event-entry");
-        const timeEntry = addTimeEntry(new Date(eventToFocus.dataset.startsAt), { prepend: true });
+        // Add missing sticky <time> entry before first event, since that's how we show the event's date now.
+        addTimeEntry(new Date(document.querySelector("event-entry").dataset.startsAt), { prepend: true });
+
+        // Scroll into event's section
         const focusElement = () => document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
         if (document.readyState === "complete") {
           focusElement();
         } else {
           window.addEventListener("load", focusElement);
-        }
-
-        // Special logic for single event view rendered via [slug].js
-        if (document.querySelectorAll("event-entry").length === 1) {
-          // Make viewMore button redirect to events page
-          viewMoreEvents.addEventListener("click", (event) => {
-            event.preventDefault();
-            // redirect to the events page
-            location.href = "/#eventos";
-          });
-          viewMoreEvents.style = "display: flex;";
         }
       }
 
