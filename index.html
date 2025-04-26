@@ -321,84 +321,7 @@
           }
         }
       </style>
-      <section id="quick-actions" class="mountains-top">
-        <div class="buttons">
-          <button install hidden data-nosnippet>
-            <svg-mask
-              style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 30px; height: 18px"
-            >
-            </svg-mask>
-            Instalar
-          </button>
-          <a class="button" title="Ver eventos" href="/#eventos">
-            <img src="/assets/icons/binocular.png" width="30px" alt="" />
-            Ver eventos
-          </a>
-          <a
-            id="addEvent"
-            class="button"
-            target="_blank"
-            title="Publicar nuevo evento"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-          >
-            <img src="/assets/icons/upload.svg" width="20px" alt="" />
-            Cargar evento
-          </a>
-        </div>
-        <style>
-          #quick-actions {
-            padding-block: 3rem;
-
-            .buttons {
-              display: flex;
-              flex-flow: row wrap;
-              justify-content: center;
-              gap: 1rem;
-
-              & > *:not([hidden]) {
-                /* button */
-                display: flex;
-                flex-flow: row nowrap;
-                background-color: var(--color-yellow);
-                align-items: center;
-                justify-content: initial;
-                color: var(--color-light);
-                gap: 1rem;
-                font-size: 0.7rem;
-                font-weight: 500;
-                letter-spacing: 0.1rem;
-                width: 13rem;
-                height: 3rem;
-                min-width: max-content;
-              }
-
-              & > :nth-child(1) {
-                background-color: var(--color-green);
-              }
-
-              & > :nth-child(2) {
-                background-color: var(--color-yellow);
-              }
-
-              & > :nth-child(3) {
-                background-color: var(--color-red);
-              }
-            }
-          }
-        </style>
-      </section>
-      <section id="about">
-        <style>
-          #about {
-            display: flex;
-            flex-flow: column nowrap;
-            align-items: center;
-            text-align: center;
-          }
-        </style>
-        <img src="/assets/images/mountain.svg" height="100" alt="" />
-      </section>
-      <section id="eventos">
+      <section id="eventos" class="mountains-top">
         <events-filter id="eventsFilter">
           <form>
             <h3>Eventos en</h3>
@@ -528,6 +451,83 @@
           </button>
         </events-filter>
       </section>
+      <section id="about">
+        <style>
+          #about {
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: center;
+            text-align: center;
+          }
+        </style>
+        <img src="/assets/images/mountain.svg" height="100" alt="" />
+      </section>
+      <section id="quick-actions">
+        <div class="buttons" hidden>
+          <button install hidden data-nosnippet>
+            <svg-mask
+              style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 20px; height: 18px"
+            >
+            </svg-mask>
+            Instalar
+          </button>
+          <a class="button" title="Ver eventos" href="/#eventos">
+            <img src="/assets/icons/binocular.png" width="30px" alt="" />
+            Ver eventos
+          </a>
+          <a
+            id="addEvent"
+            class="button"
+            target="_blank"
+            title="Publicar nuevo evento"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+          >
+            <img src="/assets/icons/upload.svg" width="20px" alt="" />
+            Cargar evento
+          </a>
+        </div>
+        <style>
+          #quick-actions {
+            padding-block: 3rem;
+
+            .buttons {
+              display: flex;
+              flex-flow: row wrap;
+              justify-content: center;
+              gap: 1rem;
+
+              & > *:not([hidden]) {
+                /* button */
+                display: flex;
+                flex-flow: row nowrap;
+                background-color: var(--color-yellow);
+                align-items: center;
+                justify-content: initial;
+                color: var(--color-light);
+                gap: 1rem;
+                font-size: 0.7rem;
+                font-weight: 500;
+                letter-spacing: 0.1rem;
+                width: 13rem;
+                height: 3rem;
+                min-width: max-content;
+              }
+
+              & > :nth-child(1) {
+                background-color: var(--color-green);
+              }
+
+              & > :nth-child(2) {
+                background-color: var(--color-yellow);
+              }
+
+              & > :nth-child(3) {
+                background-color: var(--color-red);
+              }
+            }
+          }
+        </style>
+      </section>
     </main>
     <footer class="font-body-2 mountains-top">
       <div class="bg-pattern">
@@ -536,11 +536,19 @@
         <div class="pattern-row"></div>
         <div class="pattern-row"></div>
       </div>
-      <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')"> </svg-mask>
-      <a title="Ver todos los eventos" href="/#eventos">Ver Todos los Eventos</a>
+      <a href="/" title="Ir a la página principal">
+        <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')" alt="Trasla Eventos"> </svg-mask>
+      </a>
+      <button install>Instalar</button>
+      <a
+        title="Publicar nuevo evento"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+      >
+        Cargar Evento
+      </a>
 
       <fieldset>
-        <legend>Ver eventos en</legend>
+        <legend>Ver próximos eventos en</legend>
 
         <div>
           <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos/">Arroyo de Los Patos</a> ·
@@ -570,14 +578,8 @@
           <a title="Ver eventos en Yacanto" href="/lugar/yacanto/">Yacanto</a>
         </div>
       </fieldset>
-      <a
-        title="Publicar nuevo evento"
-        href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-        >Cargar Evento</a
-      >
-      <a href="/#about">Trasla</a>
-      <button install hidden>Instalar</button>
-      <h3 style="margin-bottom: 0">Contacto</h3>
+
+      <h3 style="margin: 0">Contacto</h3>
       <div class="contact-links">
         <a href="mailto:hola@trasla.com.ar" title="Email">
           <svg-mask style="--src: url('/assets/icons/email.svg')"></svg-mask>
@@ -596,21 +598,27 @@
           display: flex;
           flex-flow: column;
           align-items: center;
-          gap: 1rem;
+          gap: 1.5rem;
           padding: 2rem;
           background-color: var(--color-green);
           color: var(--color-light);
           text-align: center;
           text-transform: uppercase;
 
+          button[install] {
+            background: none;
+            font: inherit;
+            padding: 0;
+          }
+
           & > * {
             z-index: 1;
             text-decoration: none;
+            min-width: 8rem;
           }
 
           & svg-mask {
             --color: var(--color-light);
-            margin-bottom: 1rem;
           }
 
           & fieldset {
@@ -621,6 +629,7 @@
             max-width: 800px;
             padding: 1rem;
             line-height: 1rem;
+            margin-block: 1rem;
 
             a {
               text-decoration: none;
