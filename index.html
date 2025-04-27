@@ -241,15 +241,14 @@
       </style>
     </picture>
     <header>
-      <a href="/" aria-label="Trasla Eventos">
+      <a class="logo-title" href="/" aria-label="Trasla Eventos">
         <svg
-          id="logo-title"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
           viewBox="0 0 300.04831 84.928"
         >
-          <title id="logo-title">Trasla Eventos</title>
-          <desc id="logo-desc">Logotipo de Trasla Eventos</desc>
+          <title>Trasla Eventos</title>
+          <desc>Logotipo de Trasla Eventos</desc>
           <defs>
             <path
               id="a"
@@ -289,10 +288,12 @@
             margin-block-start: 4rem;
             position: sticky;
             top: 1rem;
-          }
-          #logo-title {
-            width: 9rem;
-            color: var(--color-red);
+
+            & .logo-title {
+              display: inline-block;
+              width: 9rem;
+              color: var(--color-red);
+            }
           }
         </style>
       </a>
@@ -318,7 +319,7 @@
           }
         }
       </style>
-      <section id="eventos" class="mountains-top">
+      <section id="eventos" class="mountains-top" aria-label="Eventos">
         <events-filter id="eventsFilter">
           <form>
             <h3>Eventos en</h3>
