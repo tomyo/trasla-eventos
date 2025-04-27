@@ -152,7 +152,7 @@ customElements.define(
 function shouldExcludeEvent(element, filters, { keysToOmit = [] } = {}) {
   let shouldExclude = false;
   for (const [key, value] of filters) {
-    if (keysToOmit.includes(key)) continue;
+    if (keysToOmit.includes(key) || !value) continue;
 
     // Filter by locality
     if (key === "locality") {
@@ -178,7 +178,7 @@ function shouldExcludeEvent(element, filters, { keysToOmit = [] } = {}) {
     // Filter by search term
     if (key == "search") {
       for (const word of value.toLowerCase().trim().split(" ")) {
-        if (!element.dataset.title.toLowerCase().includes(word)) {
+        if (!element.dataset.title?.toLowerCase().includes(word)) {
           shouldExclude = true;
         }
       }
