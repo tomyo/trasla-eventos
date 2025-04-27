@@ -17,7 +17,7 @@ export default async function handler(req) {
       <link
         rel="canonical"
         property="og:url"
-        href="${url.origin}/${url.pathname}"
+        href="${url.origin}${url.pathname}"
       />
       <meta property="og:title" content="Próximos eventos en ${locality}" />
       <meta
@@ -38,7 +38,7 @@ export default async function handler(req) {
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="${url.origin}/${url.pathname}" />
+      <meta property="og:url" content="${url.origin}${url.pathname}" />
 
       <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
