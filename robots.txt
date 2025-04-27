@@ -1,2 +1,4 @@
 User-agent: *
 Disallow: /admin/
+
+Sitemap: https://eventos.trasla.com.ar/sitemap.xml
