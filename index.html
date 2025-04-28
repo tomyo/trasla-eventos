@@ -1249,22 +1249,5 @@
         };
     </script>
     <script defer src="/_vercel/speed-insights/script.js"></script>
-
-    <!-- onesignal push setup -->
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || [];
-      window.OneSignalDeferred.push(async function (OneSignal) {
-        await OneSignal.init({
-          appId: "b47a4f6c-f457-4d62-96db-7d734e498834",
-          safari_web_id: "web.onesignal.auto.3575d4da-2056-4635-b3df-37db701214ed",
-          notifyButton: {
-            enable: true,
-          },
-          serviceWorkerParam: { scope: "/push/onsesignal/" },
-          serviceWorkerPath: "/push/onesignal/OneSignalSDKWorker.js",
-        });
-      });
-    </script>
   </body>
 </html>
