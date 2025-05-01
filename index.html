@@ -928,7 +928,7 @@
       }
 
       svg-mask {
-        display: block;
+        display: inline-block;
         width: 100%;
         height: var(--height, 30px);
         position: relative;
@@ -941,13 +941,7 @@
         position: absolute;
         overflow: hidden;
         inset: 0;
-
-        &::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background-color: color-mix(in srgb, var(--color-green), transparent 20%);
-        }
+        opacity: 0.2;
 
         & .pattern-row {
           --row-height: 50px;
