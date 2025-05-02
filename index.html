@@ -348,6 +348,17 @@
           user-select: none;
           -webkit-tap-highlight-color: transparent;
 
+          /* Make sure the arrow in summary is hidden */
+          list-style: none; /* kill any default marker */
+          appearance: none;
+
+          &::-webkit-details-marker {
+            display: none !important;
+          }
+          &::marker {
+            content: none;
+          }
+
           details[open] & {
             --line-color: var(--color-light);
           }
