@@ -182,18 +182,6 @@
         font-weight: 500;
       }
     </style>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKZMRQ36KL"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-GKZMRQ36KL");
-    </script>
   </head>
   <body>
     <script src="/components/today-date-picker.js" type="module"></script>
@@ -1154,25 +1142,39 @@
       if (url.pathname == "/") await injectSchemaOrgScript();
     </script>
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKZMRQ36KL"></script>
+    <script>
+      if (!location.origin.includes("localhost")) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "G-GKZMRQ36KL");
+      }
+    </script>
+
     <!-- Vercel analytics -->
     <script>
-      window.va =
-        window.va ||
-        function () {
-          (window.vaq = window.vaq || []).push(arguments);
-        };
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+      if (!location.origin.includes("localhost")) {
+        window.va =
+          window.va ||
+          function () {
+            (window.vaq = window.vaq || []).push(arguments);
+          };
 
-    <!--Vercel Speed Insights -->
-    <script>
-      window.si =
-        window.si ||
-        function () {
-          (window.siq = window.siq || []).push(arguments);
-        };
+        // Vercel Speed Insights
+        window.si =
+          window.si ||
+          function () {
+            (window.siq = window.siq || []).push(arguments);
+          };
+      }
     </script>
-    <script defer src="/_vercel/speed-insights/script.js"></script>
+    <script async src="/_vercel/insights/script.js"></script>
+    <script async src="/_vercel/speed-insights/script.js"></script>
 
     <noscript>
       <link rel="stylesheet" href="/legacy.css" />
