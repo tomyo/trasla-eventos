@@ -333,6 +333,8 @@
       </style>
       <style>
         .summary-hamburger-button {
+          --line-color: var(--color-red);
+
           width: 2rem;
           display: flex;
           flex-direction: column;
@@ -340,7 +342,12 @@
           cursor: pointer;
           position: relative;
           z-index: 1;
-          --line-color: var(--color-red);
+          /* Avoid highlight on tap messing with lines color change animation */
+          outline: none;
+          -webkit-touch-callout: none;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+
           details[open] & {
             --line-color: var(--color-light);
           }
