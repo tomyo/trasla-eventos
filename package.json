@@ -11,6 +11,6 @@
   },
   "scripts": {
     "build:css": "node scripts/build-legacy-css.js",
-    "build": "npm run build:css"
+    "postinstall": "npm run build:css"
   }
 }
