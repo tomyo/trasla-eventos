@@ -182,6 +182,14 @@
         font-weight: 500;
       }
     </style>
+
+    <!-- Partytown: offload third‑party / intensive scripts to a Worker -->
+    <script>
+      partytown = {
+        forward: ["dataLayer.push"], // forward dataLayer.push calls into the Worker (gtag support)
+      };
+    </script>
+    <script src="/~partytown/partytown.js" async></script>
   </head>
   <body>
     <script src="/components/today-date-picker.js" type="module"></script>
@@ -216,7 +224,7 @@
       </style>
     </picture>
     <header>
-      <a href="/" style="opacity: 0"><img src="/assets/icons/favicon-192x192.png" height="20" /></a>
+      <a href="/" style="opacity: 0"><img src="/assets/icons/favicon-192x192.png" height="20" alt="logo" /></a>
       <details>
         <summary class="summary-hamburger-button">
           <span class="line"></span>
@@ -1291,7 +1299,7 @@
       }
     </script>
 
-    <script type="module" defer>
+    <script type="module" defer type="text/partytown">
       // Events list schema org script for rich results in google (hopefully)
       async function injectSchemaOrgScript() {
         try {
@@ -1310,8 +1318,8 @@
     </script>
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKZMRQ36KL"></script>
-    <script>
+    <script type="text/partytown" async src="https://www.googletagmanager.com/gtag/js?id=G-GKZMRQ36KL"></script>
+    <script type="text/partytown">
       if (!location.origin.includes("localhost")) {
         window.dataLayer = window.dataLayer || [];
         function gtag() {
