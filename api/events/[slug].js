@@ -71,7 +71,7 @@ export default async function handler(req) {
     html = html.replace(
       /(?<openTag><events-filter[^>]*>).*?(?<closeTag><\/events-filter>)/is,
       // "$<openTag>" + eventEntry + "$<closeTag>"
-      "<event-entries>" + eventEntry + "</event-entries>"
+      () => `<event-entries>${eventEntry}</event-entries>`
     );
   }
 
