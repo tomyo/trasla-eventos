@@ -419,84 +419,86 @@
       <section id="eventos" class="mountains-top" aria-label="Eventos">
         <events-filter id="eventsFilter">
           <form>
-            <h3>Eventos en</h3>
-            <select-styled>
-              <select name="locality" aria-label="Localidad">
-                <option value="" default>TRASLASIERRA</option>
-                <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
-                <option value="Boca del Rio">BOCA DEL RIO</option>
-                <option value="Dique de La Viña">DIQUE DE LA VIÑA</option>
-                <option value="El Pueblito">EL PUEBLITO</option>
-                <option value="La Paz">LA PAZ</option>
-                <option value="La Población">LA POBLACIÓN</option>
-                <option value="Las Calles">LAS CALLES</option>
-                <option value="Las Chacras">LAS CHACRAS</option>
-                <option value="Las Rabonas">LAS RABONAS</option>
-                <option value="Las Tapias">LAS TAPIAS</option>
-                <option value="Los Hornillos">LOS HORNILLOS</option>
-                <option value="Los Molles">LOS MOLLES</option>
-                <option value="Los Pozos">LOS POZOS</option>
-                <option value="Luyaba">LUYABA</option>
-                <option value="Merlo">MERLO</option>
-                <option value="Mina Clavero">MINA CLAVERO</option>
-                <option value="Nono">NONO</option>
-                <option value="Panaholma">PANAHOLMA</option>
-                <option value="Piedra Pintada">PIEDRA PINTADA</option>
-                <option value="San Huberto">SAN HUBERTO</option>
-                <option value="San Javier">SAN JAVIER</option>
-                <option value="San Lorenzo">SAN LORENZO</option>
-                <option value="San Pedro">SAN PEDRO</option>
-                <option value="Travesia">TRAVESIA</option>
-                <option value="Villa Cura Brochero">VILLA CURA BROCHERO</option>
-                <option value="Villa de Las Rosas">VILLA DE LAS ROSAS</option>
-                <option value="Villa Dolores">VILLA DOLORES</option>
-                <option value="Yacanto">YACANTO</option>
-              </select>
-            </select-styled>
-            <h3 data-nosnippet>A Partir de<span id="hideOnToday">l</span></h3>
-            <today-date-picker onclick="dateFrom.showPicker()">
-              <input id="dateFrom" type="date" name="startDate" aria-label="Fecha de inicio" />
+            <h2 class="form-filters-as-heading">
+              <span>Eventos en</span>
+              <select-styled>
+                <select name="locality" aria-label="Localidad">
+                  <option value="" default>TRASLASIERRA</option>
+                  <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
+                  <option value="Boca del Rio">BOCA DEL RIO</option>
+                  <option value="Dique de La Viña">DIQUE DE LA VIÑA</option>
+                  <option value="El Pueblito">EL PUEBLITO</option>
+                  <option value="La Paz">LA PAZ</option>
+                  <option value="La Población">LA POBLACIÓN</option>
+                  <option value="Las Calles">LAS CALLES</option>
+                  <option value="Las Chacras">LAS CHACRAS</option>
+                  <option value="Las Rabonas">LAS RABONAS</option>
+                  <option value="Las Tapias">LAS TAPIAS</option>
+                  <option value="Los Hornillos">LOS HORNILLOS</option>
+                  <option value="Los Molles">LOS MOLLES</option>
+                  <option value="Los Pozos">LOS POZOS</option>
+                  <option value="Luyaba">LUYABA</option>
+                  <option value="Merlo">MERLO</option>
+                  <option value="Mina Clavero">MINA CLAVERO</option>
+                  <option value="Nono">NONO</option>
+                  <option value="Panaholma">PANAHOLMA</option>
+                  <option value="Piedra Pintada">PIEDRA PINTADA</option>
+                  <option value="San Huberto">SAN HUBERTO</option>
+                  <option value="San Javier">SAN JAVIER</option>
+                  <option value="San Lorenzo">SAN LORENZO</option>
+                  <option value="San Pedro">SAN PEDRO</option>
+                  <option value="Travesia">TRAVESIA</option>
+                  <option value="Villa Cura Brochero">VILLA CURA BROCHERO</option>
+                  <option value="Villa de Las Rosas">VILLA DE LAS ROSAS</option>
+                  <option value="Villa Dolores">VILLA DOLORES</option>
+                  <option value="Yacanto">YACANTO</option>
+                </select>
+              </select-styled>
+              <span data-nosnippet>A Partir de<span id="hideOnToday">l</span></span>
+              <today-date-picker onclick="dateFrom.showPicker()">
+                <input id="dateFrom" type="date" name="startDate" aria-label="Fecha de inicio" />
 
-              <style>
-                form:has(today-date-picker[today]) #hideOnToday {
-                  display: none;
-                }
-
-                today-date-picker {
-                  position: relative;
-
-                  > * {
-                    width: 100%;
+                <style>
+                  form:has(today-date-picker[today]) #hideOnToday {
+                    display: none;
                   }
 
-                  &:not(:focus-within)[today] {
-                    &::before {
-                      content: "Hoy";
-                      position: absolute;
-                      inset: 0;
-                      display: grid;
-                      place-content: center;
-                      background-color: var(--background-color-darker);
-                      z-index: 1;
+                  today-date-picker {
+                    position: relative;
+
+                    > * {
+                      width: 100%;
                     }
 
-                    &::after {
-                      content: "";
-                      position: absolute;
-                      top: 50%;
-                      right: 0.5rem;
-                      width: 0;
-                      height: 0;
-                      border-left: 0.25rem solid transparent;
-                      border-right: 0.25rem solid transparent;
-                      border-top: 0.25rem solid gray;
-                      margin-top: -0.1rem;
-                      z-index: 1;
+                    &:not(:focus-within)[today] {
+                      &::before {
+                        content: "Hoy";
+                        position: absolute;
+                        inset: 0;
+                        display: grid;
+                        place-content: center;
+                        background-color: var(--background-color-darker);
+                        z-index: 1;
+                      }
+
+                      &::after {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        right: 0.5rem;
+                        width: 0;
+                        height: 0;
+                        border-left: 0.25rem solid transparent;
+                        border-right: 0.25rem solid transparent;
+                        border-top: 0.25rem solid gray;
+                        margin-top: -0.1rem;
+                        z-index: 1;
+                      }
                     }
                   }
-                }
-              </style>
-            </today-date-picker>
+                </style>
+              </today-date-picker>
+            </h2>
             <input name="endDate" type="date" hidden />
             <label hidden>
               <input checked type="checkbox" name="activities[]" value="Evento" />
@@ -821,8 +823,19 @@
             width: 13rem;
             margin-inline: auto;
 
-            & h3 {
+            & .form-filters-as-heading {
               margin: 0;
+              display: inherit;
+              flex-flow: inherit;
+              align-items: inherit;
+              gap: inherit;
+              font-weight: 1.2rem;
+              letter-spacing: initial;
+
+              & :not(span) {
+                font-weight: normal;
+                font-size: initial;
+              }
             }
 
             & button,
