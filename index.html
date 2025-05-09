@@ -86,6 +86,7 @@
         --background-color: var(--color-light);
         --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color));
         --border-radius: 10px;
+        --animation-time-short: 0.25s;
         color-scheme: var(--color-scheme, light);
         accent-color: var(--color-green);
 
@@ -301,10 +302,15 @@
             position: fixed;
             inset: 0;
             padding: 5rem 3rem;
-            transition: all 0.25s ease-in-out;
-            /* allow-discrete is for allowing the animation to work regardless of the discrete display value change */
-            transition-behavior: allow-discrete;
             background-color: var(--color-red);
+
+            &,
+            details:has(> &)::details-content {
+              /* ::details-content is a hack to animate details content on chrome */
+              transition: all var(--animation-time-short) ease-in-out;
+              /* allow-discrete is for allowing the animation to work regardless of the discrete display value change */
+              transition-behavior: allow-discrete;
+            }
 
             details[open] & {
               opacity: 1;
@@ -376,12 +382,12 @@
           height: 3px;
           background: var(--line-color);
           border-radius: 2px;
-          transition: all 0.25s ease-out;
+          transition: all var(--animation-time-short) ease-out;
         }
 
         /* morph into an X when open */
         details[open] .line:nth-of-type(1) {
-          transform: translateY(225%) rotate(135deg);
+          transform: translateY(225%) rotate(-45deg);
         }
         details[open] .line:nth-of-type(2) {
           opacity: 0;
