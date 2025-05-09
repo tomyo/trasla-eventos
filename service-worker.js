@@ -38,17 +38,19 @@ async function handleShareTarget(request) {
   // Cache all formData
   let filesCount = 0; // To make a unique cache key for each file
   for (let [key, value] of formData.entries()) {
-    console.log("caching", key, value);
     // Expected keys: title, description, url, files (see manifest.json share_target.params)
     if (value instanceof FileList || value instanceof File) {
       key = `/file-${filesCount}`;
       filesCount += 1;
-    } else if (key == "description" && URL.canParse(value)) {
-      key = "url"; // Fix url arriving in `description` instead of `url`
+    } else if ((key == "description" || key == "text") && URL.canParse(value)) {
+      key = "url"; // Fix url arriving in `description` instead of `url`, using "text" as fallback for buggy browsers that don't respect manifest config.
     }
     if (key == "url" && !!value) url = value;
 
-    if (!!value) await cache.put(key, new Response(value));
+    if (!value) continue;
+
+    await cache.put(key, new Response(value));
+    console.log("caching", key, value);
   }
 
   if (url.toLowerCase().includes("instagram")) {
