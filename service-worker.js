@@ -39,12 +39,12 @@ async function handleShareTarget(request) {
   let filesCount = 0; // To make a unique cache key for each file
   for (let [key, value] of formData.entries()) {
     console.log("caching", key, value);
-    // Expected keys: title, text, url, files (https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Manifest/Reference/share_target#params)
-    if (value instanceof FileList) {
+    // Expected keys: title, description, url, files (see manifest.json share_target.params)
+    if (value instanceof FileList || value instanceof File) {
       key = `/file-${filesCount}`;
       filesCount += 1;
-    } else if (key == "text" && URL.canParse(value)) {
-      key = "url"; // Fix url arriving in `text` instead of `url`
+    } else if (key == "description" && URL.canParse(value)) {
+      key = "url"; // Fix url arriving in `description` instead of `url`
     }
     if (key == "url" && !!value) url = value;
 

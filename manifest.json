@@ -41,7 +41,7 @@
     "enctype": "multipart/form-data",
     "params": {
       "title": "title",
-      "text": "text",
+      "text": "description",
       "url": "url",
       "files": [
         {

@@ -37,6 +37,8 @@
 
         & img {
           max-width: 100%;
+          object-fit: contain;
+          scroll-snap-align: start;
         }
       }
     </style>
@@ -77,9 +79,9 @@
         const cache = await caches.open(SHARE_TARGET_ACTION);
 
         // Hydrate texts
-        for (const input of document.querySelectorAll("input:not([type=file], textarea")) {
+        for (const input of document.querySelectorAll("input:not([type=file]), textarea")) {
           const key = input.name;
-          const response = await cache.match(key);
+          const response = await cache.match(`/${key}`);
 
           if (!response || !response.ok) {
             console.info(`Cache miss for key ${key}`);
