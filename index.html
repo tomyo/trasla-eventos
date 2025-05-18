@@ -184,13 +184,14 @@
       }
     </style>
 
-    <!-- Partytown: offload third‑party / intensive scripts to a Worker -->
-    <script>
+    <!-- Partytown START: offload third‑party / intensive scripts to a Worker -->
+    <!-- <script>
       partytown = {
         forward: ["dataLayer.push"], // forward dataLayer.push calls into the Worker (gtag support)
       };
     </script>
-    <script src="/~partytown/partytown.js" async></script>
+    <script src="/~partytown/partytown.js" async></script> -->
+    <!-- Partytown END -->
   </head>
   <body>
     <script src="/components/today-date-picker.js" type="module"></script>
@@ -1318,7 +1319,7 @@
       }
     </script>
 
-    <script type="module" defer type="text/partytown">
+    <script type="module" defer>
       // Events list schema org script for rich results in google (hopefully)
       async function injectSchemaOrgScript() {
         try {
@@ -1337,7 +1338,7 @@
     </script>
 
     <!-- Google Tag Manager -->
-    <script type="text/partytown">
+    <script defer>
       (function (w, d, s, l, i) {
         w[l] = w[l] || [];
         w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
