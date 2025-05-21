@@ -92,9 +92,9 @@ export default async function handler(req) {
   );
 
   html = html.replace(
-    /(?<openTag><h2.*moto.*>).*?(?<closeTag><\/h2>)/is,
+    /(?<openTag><h1.*moto.*>).*?(?<closeTag><\/h1>)/is,
     "$<openTag>" +
-      `La Agenda cultural de <br>
+      `Agenda de eventos de <br>
         <span style="font-size:larger;font-weight:bold">${locality}</span>` +
       "$<closeTag>"
   );
