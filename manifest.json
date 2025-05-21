@@ -17,12 +17,6 @@
       "handles": ["trasla.com.ar", "eventos.trasla.com.ar"]
     }
   ],
-  "related_applications": [
-    {
-      "platform": "webapp",
-      "url": "https://eventos.trasla.com.ar/manifest.json"
-    }
-  ],
   "icons": [
     {
       "src": "/assets/icons/favicon-192x192.png",
