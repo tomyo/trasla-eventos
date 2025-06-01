@@ -7,6 +7,7 @@ import {
   formatDescription,
   formatLocalDate,
   getGoogleDriveImagesPreview,
+  getGoogleDriveImagesPreviews,
   createGoogleCalendarUrl,
 } from "../lib/utils.js";
 
@@ -45,15 +46,16 @@ customElements.define(
       this.startDate = parseDate(this.dataset.startsAt);
       if (this.dataset.endsAt) this.endDate = parseDate(this.dataset.endsAt);
       this.previewImage = getGoogleDriveImagesPreview(this.dataset.images);
+      this.previewImages = getGoogleDriveImagesPreviews(this.dataset.images);
       this.setAttribute("date", formatLocalDate(new Date(this.dataset.startsAt)));
     }
 
     addEventListeners() {
       this.details = this.querySelector("details");
-      this.image = this.querySelector(".event-image");
+      this.images = this.querySelector(".carousel");
       this.summary = this.querySelector("summary");
       this.details?.addEventListener("toggle", this);
-      this.image.addEventListener("click", (event) => {
+      this.images.addEventListener("click", (event) => {
         this.summary?.click();
       });
     }
@@ -104,10 +106,30 @@ customElements.define(
     render() {
       this.innerHTML = /*html*/ `
         <h3 part="title">${this.dataset.title}</h3>
+        <div class="carousel">
+          ${this.previewImages.map((url) => `<img src="${url}" loading="lazy" alt="${this.dataset.title}">`).join("\n")}
+        </div>
+        ${
+          // Add carousel dots fallback for browsers without scroll marker support
+          !CSS.supports("scroll-marker-group", "after") && this.previewImages.length > 1
+            ? `
+        <div part="carousel-dots" >
+          ${this.previewImages.map((url) => `<button type="button">●</button type="button">`).join(" ")}
+        </div>
+        `
+            : `
+        <style>
+          [data-slug="${this.dataset.slug}"] .carousel {
+            anchor-name: --${this.dataset.slug};
 
-        <img class="event-image" height="400" src="${this.previewImage}" loading="lazy" alt="Evento en ${
-        this.dataset.locality
-      } el ${formatDate(this.startDate)}">
+            &::scroll-button(*) {
+              position-anchor: --${this.dataset.slug};
+            }
+          
+          }
+        </style>`
+        }
+
 
         <p part="where-and-when">
           ${this.dataset.locality} - ${formatEventDate(this.startDate, { onlyTime: true })}

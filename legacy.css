@@ -609,6 +609,109 @@ main section#hero #actions {
   display: none;
 }
 
+:scope section#eventos event-entry:not([hidden]) .carousel {
+  object-fit: contain;
+  cursor: pointer;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scroll-marker-group: after;
+  scrollbar-width: none;
+  counter-increment: carousel-counter;
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 15rem;
+  max-height: 80vh;
+  display: flex;
+  position: relative;
+  overflow-x: auto;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel::scroll-button(left) {
+  content: "◄" / "Imagen anterior";
+  left: calc(anchor(left)  - 2.2rem);
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel::scroll-button(right) {
+  content: "►" / "Imagen siguiente";
+  right: calc(anchor(right)  - 2.2rem);
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel::scroll-button(*) {
+  align-self: anchor-center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  height: 15rem;
+  padding: 1rem;
+  font-family: monospace;
+  line-height: 1;
+  position: absolute;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel:has(img:only-child)::scroll-button(*) {
+  display: none;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel::scroll-button(*):focus-visible {
+  outline-offset: .5rem;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel + [part="carousel-dots"] {
+  z-index: 1;
+  justify-content: center;
+  width: min-content;
+  margin-block-start: -.5rem;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  font-size: .5rem;
+  display: flex;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel + [part="carousel-dots"] > * {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  place-content: center;
+  padding: .5rem;
+  display: grid;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel::scroll-marker-group {
+  justify-content: center;
+  width: min-content;
+  margin-block-start: -.5rem;
+  margin-block-end: 1rem;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  display: flex;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel:has(img:only-child)::scroll-marker-group {
+  display: none;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel img {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  object-fit: contain;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel img::scroll-marker {
+  content: "●";
+  width: 1em;
+  height: 1em;
+  color: var(--color-green);
+  padding: .3rem;
+  text-decoration: none;
+}
+
+:scope section#eventos event-entry:not([hidden]) .carousel img::scroll-marker:target-current {
+  color: var(--color-yellow);
+}
+
 :scope section#eventos event-entry:not([hidden]) .event-image {
   object-fit: contain;
   cursor: pointer;

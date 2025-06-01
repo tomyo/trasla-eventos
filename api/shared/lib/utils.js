@@ -297,12 +297,33 @@ function getLastFileIdFromDriveUrls(urls) {
 
 /**
  *
+ * @param {String} urls, a string containing google drive links separated by commas
+ * @returns {String} id of the last google drive link provided
+ */
+function getFileIdsFromDriveUrls(urls) {
+  const imageIdRegexp = /id=([\d\w-]*)/gm;
+  const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
+  return ids; // Get the last match
+}
+
+/**
+ *
  * @param {String} imageUrls A comma separated list of google drive urls
  * @returns {String} preview image url for the last file on the list
  * @returns
  */
 export function getGoogleDriveImagesPreview(imageUrls, width = OG_IMAGE_WIDTH) {
   return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls), width);
+}
+
+/**
+ *
+ * @param {String} imageUrls A comma separated list of google drive urls
+ * @returns {String} preview image url for the last file on the list
+ * @returns {Array} Preview images urls
+ */
+export function getGoogleDriveImagesPreviews(imageUrls, width = OG_IMAGE_WIDTH) {
+  return getFileIdsFromDriveUrls(imageUrls).map((id) => createGoogleDriveImageUrl(id, width));
 }
 
 /**
