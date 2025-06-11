@@ -8,6 +8,7 @@
     <style>
       :root {
         --bg-color: #ede1c3;
+        --qr-size: 500px;
       }
       body {
         margin: 1rem;
@@ -25,13 +26,16 @@
         max-width: 25ch;
       }
       #imageVertical {
-        writing-mode: tb;
-        right: -10%;
+        transform: rotate(90deg);
+        right: -50%;
         position: absolute;
-        top: 35%;
+        top: 53%;
+        width: var(--qr-size);
       }
       #imageHorizontal {
         text-align: center;
+        width: var(--qr-size);
+        margin: 1rem;
       }
 
       #controls {
