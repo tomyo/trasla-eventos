@@ -183,6 +183,8 @@
           reader.readAsDataURL(image.files[0]);
         } else if (noImage.checked) {
           qrImage.setAttribute("src", "");
+        } else {
+          qrImage.setAttribute("src", "/assets/images/loica.png");
         }
 
         // Set the QR code content based on the input
