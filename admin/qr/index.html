@@ -4,7 +4,7 @@
     <title>QR Code Generator</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="text/javascript" src="qrcode.js"></script>
+    <script type="text/javascript" src="./qrcode.js"></script>
     <style>
       :root {
         --bg-color: #ede1c3;
@@ -12,53 +12,131 @@
       body {
         margin: 1rem;
       }
+      h1 {
+        text-align: center;
+      }
+
+      input {
+        padding: 0.25rem;
+        font-size: 1rem;
+      }
+
+      input[type="file"] {
+        max-width: 25ch;
+      }
+      #imageVertical {
+        writing-mode: tb;
+        right: -10%;
+        position: absolute;
+        top: 35%;
+      }
+      #imageHorizontal {
+        text-align: center;
+      }
+
       #controls {
         margin-block: 1rem;
-        display: grid;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
         gap: 1rem;
-        max-width: 40ch;
+        /* max-width: 40ch; */
+
+        fieldset {
+          display: flex;
+          flex-flow: column;
+          gap: 1rem;
+          border: 1px solid #ccc;
+          padding: 1rem;
+
+          legend {
+            font-weight: bold;
+          }
+
+          label {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+          }
+        }
+      }
+
+      article {
+        position: relative;
+        width: max-content;
+        margin-inline: auto;
+        text-align: center;
+
+        img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          object-fit: cover;
+          background-color: var(--bg-color, none);
+          transform: translate(-50%, -50%);
+        }
       }
 
       #qrcode table,
       #qrcode {
-        --cell-width: 13px;
-        --image-size: calc(var(--cell-width) * 11.5);
         position: relative;
         min-width: max-content;
-
-        &::after {
-          content: "";
-          display: block;
-          background-color: var(--bg-color);
-          width: var(--image-size);
-          height: var(--image-size);
-          position: absolute;
-          top: 52.7%;
-          left: 49.85%;
-          transform: translate(-50%, -50%);
-          background-image: url("/assets/images/loica.png");
-          background-size: contain;
-        }
       }
     </style>
   </head>
   <body>
-    <h2>Trasla QR Code Generator</h2>
+    <h1>Trasla QR Code Generator</h1>
     <div id="controls">
-      <label>
-        URL
-        <input id="text" type="text" value="trasla.com.ar" oninput="makeCode()" />
-      </label>
-      <div>
+      <fieldset>
+        <legend>Contenido QR</legend>
+        <label>
+          <input id="text" type="text" value="trasla.com.ar" oninput="makeCode()" />
+        </label>
+        <label>
+          <input name="treatAs" type="radio" value="text" checked oninput="makeCode()" />
+          Tratar como Texto
+        </label>
+
+        <label>
+          <input name="treatAs" type="radio" value="url" checked oninput="makeCode()" />
+          Tratar como URL
+        </label>
+
+        <label>
+          <input name="treatAs" type="radio" value="tel" oninput="makeCode()" />
+          Tratar como Teléfono
+        </label>
+
+        <label>
+          <input name="treatAs" type="radio" value="wha" oninput="makeCode()" />
+          Tratar como WhatsApp
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Colores QR</legend>
         <label>
           Fondo
           <input id="bgColor" type="color" value="#ede1c3" list="presetColors" oninput="makeCode()" />
         </label>
+
         <label>
           Frente
           <input id="fgColor" type="color" value="#000000" list="presetColors" oninput="makeCode()" />
         </label>
-      </div>
+      </fieldset>
+      <fieldset>
+        <legend>Imagen</legend>
+        <label> <input id="image" type="file" oninput="makeCode()" /> </label>
+        <label>
+          <input id="treatImageBgAsTransparent" type="checkbox" checked oninput="makeCode()" /> Fondo transparente
+        </label>
+        <label> <input id="noImage" type="checkbox" oninput="makeCode()" /> Sin imagen </label>
+        <label>
+          Tamaño
+          <input id="imageSize" type="range" min="100" max="500" value="250" oninput="adjustImage()" />
+        </label>
+      </fieldset>
+
       <datalist id="presetColors">
         <option value="#A53E1A">Rojo</option>
         <option value="#3D3F20">Verde</option>
@@ -68,10 +146,57 @@
       </datalist>
     </div>
 
-    <div id="qrcode" style="height: 500px; margin-top: auto"></div>
+    <article>
+      <input id="imageHorizontal" type="range" min="-1500" max="1000" value="-500" oninput="adjustImage()" />
+      <div id="qrcode" style="height: 500px; margin-top: auto"></div>
+      <input id="imageVertical" type="range" min="-1500" max="1000" value="-500" oninput="adjustImage()" />
+      <img id="qrImage" src="" alt="" />
+    </article>
 
     <script type="text/javascript">
+      // Adjust image size and position based on the input values
+      function adjustImage() {
+        const imageHorizontal = parseInt(document.getElementById("imageHorizontal").value, 10);
+        const imageVertical = parseInt(document.getElementById("imageVertical").value, 10);
+        const imageSize = parseInt(document.getElementById("imageSize").value, 10);
+
+        // document.documentElement.style.setProperty("--image-horizontal", `${imageHorizontal}%`);
+        // document.documentElement.style.setProperty("--image-vertical", `${imageVertical}%`);
+        // document.documentElement.style.setProperty("--image-size", `${imageSize}%`);
+        qrImage.style.width = `${imageSize / 10}%`;
+        qrImage.style.transform = `translate(${imageHorizontal / 10}%, ${imageVertical / 10}%)`;
+      }
+
       function makeCode() {
+        if (treatImageBgAsTransparent.checked) {
+          document.documentElement.style.setProperty("--bg-color", "transparent");
+        } else {
+          document.documentElement.style.setProperty("--bg-color", bgColor.value);
+        }
+
+        // If image exists, set it as background
+        if (image.files.length > 0 && !noImage.checked) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            qrImage.setAttribute("src", e.target.result);
+          };
+          reader.readAsDataURL(image.files[0]);
+        } else {
+          qrImage.setAttribute("src", "");
+        }
+
+        // Set the QR code content based on the input
+        const treatAs = document.querySelector('input[name="treatAs"]:checked').value;
+        let content = document.getElementById("text").value.trim();
+        if (treatAs === "url") {
+          content = content.startsWith("http://") || content.startsWith("https://") ? content : `http://${content}`;
+        } else if (treatAs === "tel") {
+          content = content.startsWith("tel:") ? content : `tel:${content}`;
+        } else if (treatAs === "wha") {
+          content = content.startsWith("https://wa.me/") ? content : `https://wa.me/${content}`;
+        }
+
+        // Create the QR code
         const options = {
           width: 400,
           height: 400,
@@ -80,21 +205,21 @@
           colorDark: fgColor.value,
           colorLight: bgColor.value,
         };
-        document.documentElement.style.setProperty("--bg-color", bgColor.value);
 
         var qrcode = new QRCode(document.getElementById("qrcode"), options);
         var elText = document.getElementById("text");
 
-        if (!elText.value) {
-          alert("Input a text");
-          elText.focus();
-          return;
-        }
+        // if (!elText.value) {
+        //   alert("Input a text");
+        //   elText.focus();
+        //   return;
+        // }
 
-        qrcode.setCode(elText.value);
+        qrcode.setCode(content);
       }
 
       makeCode();
+      adjustImage();
     </script>
   </body>
 </html>
