@@ -128,7 +128,7 @@
         <legend>Imagen</legend>
         <label> <input id="image" type="file" oninput="makeCode()" /> </label>
         <label>
-          <input id="treatImageBgAsTransparent" type="checkbox" checked oninput="makeCode()" /> Fondo transparente
+          <input id="treatImageBgAsTransparent" type="checkbox" oninput="makeCode()" /> Fondo transparente
         </label>
         <label> <input id="noImage" type="checkbox" oninput="makeCode()" /> Sin imagen </label>
         <label>
@@ -150,7 +150,7 @@
       <input id="imageHorizontal" type="range" min="-1500" max="1000" value="-500" oninput="adjustImage()" />
       <div id="qrcode" style="height: 500px; margin-top: auto"></div>
       <input id="imageVertical" type="range" min="-1500" max="1000" value="-500" oninput="adjustImage()" />
-      <img id="qrImage" src="" alt="" />
+      <img id="qrImage" src="/assets/images/loica.png" alt="" />
     </article>
 
     <script type="text/javascript">
@@ -181,7 +181,7 @@
             qrImage.setAttribute("src", e.target.result);
           };
           reader.readAsDataURL(image.files[0]);
-        } else {
+        } else if (noImage.checked) {
           qrImage.setAttribute("src", "");
         }
 
@@ -207,13 +207,6 @@
         };
 
         var qrcode = new QRCode(document.getElementById("qrcode"), options);
-        var elText = document.getElementById("text");
-
-        // if (!elText.value) {
-        //   alert("Input a text");
-        //   elText.focus();
-        //   return;
-        // }
 
         qrcode.setCode(content);
       }
