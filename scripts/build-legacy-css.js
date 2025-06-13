@@ -7,12 +7,17 @@ import { glob } from "glob";
 const OUTFILE = "legacy.css";
 
 async function main() {
-  // 1. Find all HTML files
-  const files = glob.sync("index.html");
+  // 1. Find all HTML and CSS files
+  const files = [...glob.sync("index.html"), ...glob.sync("*.css", { ignore: [OUTFILE] })];
 
-  // 2. Extract CSS from <style>…</style>
+  // 2. Extract CSS from <style>…</style> and include all CSS file content
   let combined = "";
   for (const file of files) {
+    if (file.endsWith(".css")) {
+      // Directly add CSS file content
+      combined += (await fs.readFile(file, "utf-8")) + "\n";
+      continue;
+    }
     const html = await fs.readFile(file, "utf-8");
     // Match all <style>…</style> blocks
     const parts = html.match(/<style\b[^>]*>([\s\S]*?)<\/style>/gi);
