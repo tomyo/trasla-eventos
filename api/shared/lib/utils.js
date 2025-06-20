@@ -287,12 +287,18 @@ function createGoogleDriveImageUrl(imageId, width = OG_IMAGE_WIDTH) {
 /**
  *
  * @param {String} urls, a string containing google drive links separated by commas
+ * @n {Number} n, the index of the file id to retrieve (0-based), allows negative indexing
  * @returns {String} id of the last google drive link provided
  */
-function getLastFileIdFromDriveUrls(urls) {
+function getNthFileIdFromDriveUrls(urls, n = 0) {
+  if (!urls) return "";
   const imageIdRegexp = /id=([\d\w-]*)/gm;
   const ids = Array.from(urls.matchAll(imageIdRegexp), (m) => m[1]);
-  return ids.pop(); // Get the last match
+  if (n < 0) {
+    // If n is negative, count from the end
+    n += ids.length;
+  }
+  return ids[n]; // Get the nth match
 }
 
 /**
@@ -313,7 +319,7 @@ function getFileIdsFromDriveUrls(urls) {
  * @returns
  */
 export function getGoogleDriveImagesPreview(imageUrls, width = OG_IMAGE_WIDTH) {
-  return createGoogleDriveImageUrl(getLastFileIdFromDriveUrls(imageUrls), width);
+  return createGoogleDriveImageUrl(getNthFileIdFromDriveUrls(imageUrls), width);
 }
 
 /**
