@@ -14,16 +14,15 @@
       <event-entry>
         <label for="url">Link al post</label>
         <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
-
-        <p>👀 El post debe ser público y no un video.</p>
-
-        <button type="submit" name="submit">Cargar evento</button>
       </event-entry>
+      <em>✔️ El post debe ser público.</em>
+      <em>❌ Videos no soportados.</em>
+      <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
     </form>
 
     <style>
       event-entry {
-        p {
+        em {
           font-size: 0.875rem;
           color: var(--color-red);
         }

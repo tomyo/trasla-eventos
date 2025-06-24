@@ -27,3 +27,14 @@ event-entry:not([hidden]) {
   border: 1px solid;
   padding: 1.5rem;
 }
+
+button[type="submit"] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+
+  img {
+    height: 1rem;
+  }
+}
