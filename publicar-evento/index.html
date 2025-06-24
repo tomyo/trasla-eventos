@@ -334,7 +334,12 @@ Teléfono, instagram, link a la página tickets, etc.
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         imagesPreview.insertBefore(img, imagesPreview.lastElementChild);
-        img.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+        // Debounce scrollIntoView to run only for the last image after 250ms
+        clearTimeout(addPreviewImage.scrollTimeout);
+        addPreviewImage.scrollTimeout = setTimeout(() => {
+          img.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 250);
       }
 
       hydrateWithCachedData();
