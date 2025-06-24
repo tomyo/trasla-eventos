@@ -37,10 +37,12 @@ async function handleShareTarget(request) {
 
   // Cache all formData
   let filesCount = 0; // To make a unique cache key for each file
+  const filesList = []; // To store file IDs for later use
   for (let [key, value] of formData.entries()) {
     // Expected keys: title, description, url, files (see manifest.json share_target.params)
     if (value instanceof FileList || value instanceof File) {
-      key = `/file-${filesCount}`;
+      key = `file-${filesCount}`;
+      filesList.push(key); // Store the file ID for later use
       filesCount += 1;
     } else if ((key == "description" || key == "text") && URL.canParse(value)) {
       // Using "text" as fallback for buggy browsers that don't respect manifest config.
@@ -50,7 +52,11 @@ async function handleShareTarget(request) {
 
     if (!value) continue;
 
-    await cache.put(key, new Response(value));
+    await cache.put(`/${key}`, new Response(value));
+    await cache.put(
+      `/files-list`, // Store the list of file IDs in the cache so we can ensure to use the user's desired order.
+      new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
+    );
     console.log("caching", key, value);
   }
 
