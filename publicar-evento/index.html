@@ -45,19 +45,50 @@ Teléfono, instagram, link a la página tickets, etc.
         scroll-behavior: auto;
         scroll-snap-type: x mandatory;
 
-        > :last-child {
-          width: 100%;
+        > * {
+          scroll-snap-align: center;
+          position: relative;
           min-width: 100%;
-          display: grid;
-          place-content: center;
+          width: 100%;
 
-          background-color: var(--background-color-darker);
+          button {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--color-red);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
+          }
+          &:hover,
+          &:focus-within {
+            button {
+              display: block;
+            }
+          }
+
+          /* Show the button on touch screens */
+          @media (hover: none) {
+            button {
+              display: block;
+            }
+          }
         }
 
-        > * {
-          max-width: 100%;
+        img {
+          width: 100%;
           object-fit: contain;
-          scroll-snap-align: center;
+        }
+
+        > :last-child {
+          /* Add button */
+          display: grid;
+          place-content: center;
+          background-color: var(--background-color-darker);
         }
       }
     </style>
@@ -92,7 +123,7 @@ Teléfono, instagram, link a la página tickets, etc.
           const compressedFile = await compressImageBlob(file);
           await cache.put(`/${uuid}`, new Response(compressedFile, { headers: { "Content-Type": "image/jpeg" } }));
           filesList.push(uuid);
-          addPreviewImage(compressedFile);
+          addPreviewImage(compressedFile, uuid);
         }
 
         await cache.put(
@@ -115,7 +146,12 @@ Teléfono, instagram, link a la página tickets, etc.
         for (const fileId of filesList) {
           const response = await cache.match(`/${fileId}`);
           if (response && response.headers.get("content-type")?.startsWith("image/")) {
-            fileBlobs.push(await response.blob());
+            const blob = await response.blob();
+            if (blob.size > 0) {
+              console.info(`Adding cached file: ${fileId}`);
+              blob.fileId = fileId; // Store the file ID in the blob for reference
+              fileBlobs.push(blob);
+            }
           }
         }
         return fileBlobs;
@@ -309,7 +345,7 @@ Teléfono, instagram, link a la página tickets, etc.
         }
         for (const blob of blobs) {
           console.info(`Hydrating file from cache.`);
-          addPreviewImage(blob);
+          addPreviewImage(blob, blob.fileId);
         }
       }
 
@@ -329,11 +365,33 @@ Teléfono, instagram, link a la página tickets, etc.
        * Adds a preview image to the imagesPreview container.
        * @param {File} file - The file to preview.
        */
-      function addPreviewImage(file) {
+      function addPreviewImage(file, fileId) {
         const imagesPreview = document.getElementById("imagesPreview");
+        const imagePreviewElement = document.createElement("image-preview");
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
-        imagesPreview.insertBefore(img, imagesPreview.lastElementChild);
+        imagePreviewElement.appendChild(img);
+        const button = document.createElement("button");
+        button.textContent = "❌";
+        button.type = "button"; // Prevent form submission
+        button.title = "Eliminar imagen";
+        button.addEventListener("click", async () => {
+          const cache = await caches.open(SHARE_TARGET_ACTION);
+          const filesList = await getCachedFilesList();
+          const index = filesList.indexOf(fileId);
+          if (index !== -1) {
+            filesList.splice(index, 1); // Remove the file ID from the list
+            await cache.put(
+              `/files-list`,
+              new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
+            );
+            await cache.delete(`/${fileId}`); // Delete the cached file
+            console.info(`Deleted cached file: ${fileId}`);
+          }
+          imagePreviewElement.remove();
+        });
+        imagePreviewElement.appendChild(button);
+        imagesPreview.insertBefore(imagePreviewElement, imagesPreview.lastElementChild);
 
         // Reverse debounce: scrollIntoView on the first image added within 250ms
         if (!addPreviewImage.scrollTimeout) {
