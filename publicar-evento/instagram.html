@@ -11,21 +11,24 @@
   <body>
     <h1>Cargar evento de Instagram</h1>
     <form>
-      <event-entry>
-        <label for="url">Link al post</label>
+      <fieldset>
+        <legend>Link al post</legend>
         <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
-      </event-entry>
+      </fieldset>
       <em>✔️ El post debe ser público.</em>
       <em>❌ Videos no soportados.</em>
       <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
     </form>
 
     <style>
-      event-entry {
-        em {
-          font-size: 0.875rem;
-          color: var(--color-red);
-        }
+      input {
+        width: 100%;
+        padding: 0.5rem;
+        background: none;
+      }
+      em {
+        font-size: 0.875rem;
+        color: var(--color-red);
       }
     </style>
     <script type="module">
