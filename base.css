@@ -22,7 +22,6 @@ details summary > * {
 
 /* Global styles */
 
-/* <theme> */
 [data-theme="🌑"] {
   --color-scheme: dark;
   color-scheme: dark;
@@ -34,8 +33,12 @@ details summary > * {
 }
 
 :root {
-  --font-family-primary: "Sometype Mono";
-  --font-family-secondary: "DM Sans";
+  --font-family-mono: "Sometype Mono";
+  --font-family-sans-serif: "DM Sans";
+  --font-family-branding: "Poster Cut Neue";
+
+  --font-family-body: var(--font-family-sans-serif);
+  --font-family-heading: var(--font-family-mono);
   --color-red: #a53e1a;
   --color-green: #3d3f20;
   --color-yellow: #d18630;
@@ -43,7 +46,7 @@ details summary > * {
   --color-dark: #222222;
   --color: var(--color-dark);
   --background-color: var(--color-light);
-  --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color));
+  --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color, currentcolor));
   --border-radius: 10px;
   --animation-time-short: 0.25s;
   color-scheme: var(--color-scheme, light);
@@ -56,7 +59,6 @@ details summary > * {
     --background-color: var(--color-dark);
   }
 }
-/* </theme> */
 
 @font-face {
   font-family: "DM Sans";
@@ -88,12 +90,16 @@ details summary > * {
 }
 
 body {
-  font-family: var(--font-family-primary), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--font-family-body), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   background-color: var(--background-color);
   color: var(--color);
 
   transition: all ease-in-out 0.2s;
+}
+
+footer {
+  font-family: var(--font-family-mono);
 }
 
 section:not(#hero) {
@@ -118,8 +124,9 @@ button,
 
 input,
 select,
-button {
-  background-color: color-mix(in srgb, var(--color, currentcolor) 7%, var(--background-color, currentcolor));
+button,
+textarea {
+  background-color: var(--background-color-darker);
   border: none;
 }
 
@@ -140,4 +147,5 @@ h2,
 h3,
 h4 {
   font-weight: 500;
+  font-family: var(--font-family-heading);
 }

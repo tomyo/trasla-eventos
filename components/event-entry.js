@@ -131,9 +131,9 @@ customElements.define(
         }
 
 
-        <p part="where-and-when">
+        <h4 part="where-and-when">
           ${this.dataset.locality} - ${formatEventDate(this.startDate, { onlyTime: true })}
-        </p>
+        </h4>
         
         <div class="badges">
           ${this.renderBadges()}
