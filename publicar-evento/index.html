@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Publicar evento</title>
+    <link rel="stylesheet" href="/base.css" />
+    <link rel="stylesheet" href="publicar-evento.css" />
+  </head>
+  <body>
+    <h1>Publicar evento ⚡</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+      <event-entry>
+        <div id="imagesPreview">
+          <label for="files" title="Agregar fotos">
+            ➕<br />Agregar fotos
+            <input id="files" type="file" accept="image/*" multiple hidden />
+          </label>
+        </div>
+        <label for="description">Información</label>
+        <textarea
+          id="description"
+          name="description"
+          title="Descripción del evento"
+          rows="10"
+          placeholder="ej:
+*Título*
+
+Descripción...
+Donde / Cuando.
+
+Teléfono, instagram, link a la página tickets, etc.
+
+(Formato de Whatsapp soportado)"
+        ></textarea>
+      </event-entry>
+      <button type="submit">Publicar</button>
+    </form>
+    <style>
+      #imagesPreview {
+        display: flex;
+        overflow-x: scroll;
+        width: 100%;
+        min-height: 12rem;
+        scroll-behavior: auto;
+        scroll-snap-type: x mandatory;
+
+        > :last-child {
+          width: 100%;
+          min-width: 100%;
+          display: grid;
+          place-content: center;
+
+          background-color: var(--background-color-darker);
+        }
+
+        > * {
+          max-width: 100%;
+          object-fit: contain;
+          scroll-snap-align: center;
+        }
+      }
+    </style>
+    <script type="module">
+      const form = document.querySelector("form");
+      const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
+      const query = `?endpoint=uploadEvent`;
+      let action = `${api}${query}`;
+      const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
+
+      form.addEventListener("submit", handleFormSubmit);
+
+      const description = document.getElementById("description");
+      description.addEventListener("input", async () => {
+        const cache = await caches.open(SHARE_TARGET_ACTION);
+        await cache.put(`/description`, new Response(description.value, { headers: { "Content-Type": "text/plain" } }));
+
+        // Resize the textarea to fit the content
+        description.style.height = "auto"; // Reset height to auto to shrink if needed
+        description.style.height = `${description.scrollHeight}px`;
+      });
+
+      const files = document.getElementById("files");
+      files.addEventListener("change", async (event) => await proccessNewFiles(event.target.files));
+
+      async function proccessNewFiles(files) {
+        const cache = await caches.open(SHARE_TARGET_ACTION);
+        const filesList = await getCachedFilesList();
+
+        for (const file of files) {
+          const uuid = crypto.randomUUID();
+          const compressedFile = await compressImageBlob(file);
+          await cache.put(`/${uuid}`, new Response(compressedFile, { headers: { "Content-Type": "image/jpeg" } }));
+          filesList.push(uuid);
+          addPreviewImage(compressedFile);
+        }
+
+        await cache.put(
+          `/files-list`, // Store the list of file IDs in the cache so we can ensure to use the user's desired order.
+          new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
+        );
+      }
+
+      /**
+       * Retrieves cached file blobs from the SHARE_TARGET_ACTION cache.
+       * Filters out non-image files based on the content type.
+       * @returns {Promise<Blob[]>} - Promise resolving to an array of Blob objects representing image files.
+       */
+      async function getCachedFileBlobs() {
+        const cache = await caches.open(SHARE_TARGET_ACTION);
+        const fileBlobs = [];
+        // const keys = await cache.keys();
+        const filesList = await getCachedFilesList();
+
+        for (const fileId of filesList) {
+          const response = await cache.match(`/${fileId}`);
+          if (response && response.headers.get("content-type")?.startsWith("image/")) {
+            fileBlobs.push(await response.blob());
+          }
+        }
+        return fileBlobs;
+      }
+
+      async function getCachedFilesList() {
+        const cache = await caches.open(SHARE_TARGET_ACTION);
+        const filesListResponse = await cache.match(`/files-list`);
+        return filesListResponse ? await filesListResponse.json() : [];
+      }
+
+      async function handleFormSubmit(event) {
+        event.preventDefault();
+        const submitButton = document.querySelector("button[type=submit]");
+
+        const buttonText = submitButton.textContent;
+
+        const images = await getCachedFileBlobs();
+        if (images.length === 0) {
+          alert("Al menos una imagen requerida.");
+          return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Publicando...";
+
+        try {
+          const eventData = await postEvent();
+          submitButton.textContent = "Evento cargado! 👌";
+          console.log("response:", eventData);
+          console.log(`redirect to event page ${window.location.origin}/${eventData.slug}`);
+          form.reset();
+          // Event uploaded or found succesfully
+          const cache = await caches.open(SHARE_TARGET_ACTION);
+          for (const key of await cache.keys()) {
+            console.info(`Deleting cache entry: ${key.url}`);
+            await cache.delete(key);
+          }
+          // Redirect to the event page
+          window.location.href = `${window.location.origin}/${eventData.slug}`;
+        } catch (error) {
+          console.error("Error processing response:", error);
+          alert(`Error procesando el evento: ${error.message}`);
+          submitButton.disabled = false;
+          submitButton.textContent = buttonText;
+        }
+      }
+
+      async function postEvent() {
+        // Convert images to base64 format
+        const requestFiles = await convertBlobsToBase64(await getCachedFileBlobs());
+
+        const body = {
+          description: form.description.value,
+          files: requestFiles,
+        };
+
+        const response = await fetch(action, {
+          method: "POST",
+          redirect: "follow",
+          headers: {
+            "Content-Type": "text/plain;charset=UTF-8", // Use text/plain to avoid OPTION & CORS issues
+          },
+          body: JSON.stringify(body),
+        });
+
+        return await extractSuccessResponse(response);
+      }
+
+      /**
+       * Converts an array of Blob objects to an array of base64 encoded objects.
+       * Each object contains the file name, mime type, and base64 encoded content.
+       * @param {Blob[]} blobs - Array of Blob objects to convert.
+       * @returns {Promise<Object[]>} - Promise resolving to an array of objects with base64 encoded content.
+       */
+      async function convertBlobsToBase64(blobs) {
+        const promises = [];
+        for (const blob of blobs) {
+          if (!blob || !(blob instanceof Blob)) {
+            console.warn("Skipping non-blob input:", blob);
+            continue;
+          }
+          // No compression needed, use the original blob
+          const promise = new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const base64 = event.target.result.split(",")[1];
+              resolve({
+                name: new Date().toISOString(),
+                mimeType: blob.type,
+                base64,
+              });
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+          promises.push(promise);
+        }
+        return await Promise.all(promises);
+      }
+
+      /**
+       * Compresses an image file to a specified maximum width and quality.
+       * @param {File} file - The image file to compress.
+       * @param {number} maxWidth - The maximum width of the compressed image.
+       * @param {number} quality - The quality of the compressed image (0 to 1).
+       * @returns {Promise<File>} - A promise that resolves to the compressed image file.
+       */
+      function compressFileImage(file, maxWidth = 1000, quality = 0.7) {
+        // reuse compressImageBlob to handle File objects
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = async () => {
+            // Revoke the object URL to free memory
+            URL.revokeObjectURL(img.src);
+            try {
+              const compressedBlob = await compressImageBlob(file, maxWidth, quality);
+              const compressedFile = new File([compressedBlob], file.name, { type: "" });
+              resolve(compressedFile);
+            } catch (error) {
+              reject(error);
+            }
+          };
+          img.onerror = reject;
+          img.src = URL.createObjectURL(file);
+        });
+      }
+
+      function compressImageBlob(blob, maxWidth = 1000, quality = 0.7) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            // Revoke the object URL to free memory
+            URL.revokeObjectURL(img.src);
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Calculate the new dimensions
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Convert the canvas to a Blob
+            canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
+          };
+          img.onerror = reject;
+          img.src = URL.createObjectURL(blob);
+        });
+      }
+
+      async function extractSuccessResponse(response) {
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const jsonResponse = await response.json();
+        if (!jsonResponse.success) throw new Error(`${jsonResponse.message}\n${JSON.stringify(jsonResponse.metadata)}`);
+        return jsonResponse.data;
+      }
+
+      // Cache hydration handling
+      async function hydrateWithCachedData() {
+        const cache = await caches.open(SHARE_TARGET_ACTION);
+        console.info("Hydrating form with cached data...");
+
+        // Hydrate description
+        const description = document.getElementById("description");
+        const descriptionResponse = await cache.match(`/description`);
+        if (descriptionResponse && descriptionResponse.ok) {
+          const descriptionText = await descriptionResponse.text();
+          console.info("Hydrating description from cache.");
+          description.value = descriptionText;
+          // Resize the textarea to fit the content
+          description.style.height = "auto"; // Reset height to auto to shrink if needed
+          description.style.height = `${description.scrollHeight}px`;
+        } else {
+          console.info("No cached description found.");
+        }
+
+        // Hydrate files
+        const blobs = await getCachedFileBlobs();
+        if (!blobs.length) {
+          console.info("No cached files found.");
+          return;
+        }
+        for (const blob of blobs) {
+          console.info(`Hydrating file from cache.`);
+          addPreviewImage(blob);
+        }
+      }
+
+      async function fileToDataURI(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const dataURI = reader.result;
+            resolve(dataURI);
+          };
+          reader.onerror = (error) => reject(error);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      /**
+       * Adds a preview image to the imagesPreview container.
+       * @param {File} file - The file to preview.
+       */
+      function addPreviewImage(file) {
+        const imagesPreview = document.getElementById("imagesPreview");
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        imagesPreview.insertBefore(img, imagesPreview.lastElementChild);
+      }
+
+      hydrateWithCachedData();
+    </script>
+  </body>
+</html>

@@ -43,7 +43,8 @@ async function handleShareTarget(request) {
       key = `/file-${filesCount}`;
       filesCount += 1;
     } else if ((key == "description" || key == "text") && URL.canParse(value)) {
-      key = "url"; // Fix url arriving in `description` instead of `url`, using "text" as fallback for buggy browsers that don't respect manifest config.
+      // Using "text" as fallback for buggy browsers that don't respect manifest config.
+      key = "url"; // Fix url arriving in `description` instead of `url`.
     }
     if (key == "url" && !!value) url = value;
 
@@ -54,10 +55,10 @@ async function handleShareTarget(request) {
   }
 
   if (url.toLowerCase().includes("instagram")) {
-    return Response.redirect(`/cargar-evento/instagram.html`, 303);
+    return Response.redirect(`/publicar-evento/instagram.html`, 303);
   }
   // Redirect to publish event page with form data in cache
-  return Response.redirect(`/cargar-evento/`, 303);
+  return Response.redirect(`/publicar-evento/`, 303);
 }
 
 // Push Notification handler

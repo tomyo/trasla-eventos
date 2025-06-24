@@ -5,24 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trasla Eventos: Carga rápida de eventos de Instagram</title>
     <script type="module" src="/components/event-entry.js"></script>
+    <link rel="stylesheet" href="/base.css" />
+    <link rel="stylesheet" href="publicar-evento.css" />
   </head>
   <body>
-    <h1>Carga rápida de evento en Instagram</h1>
+    <h1>Cargar evento de Instagram</h1>
     <form>
-      <label for="url">Link al post (solo posteos de imágenes soportadas)</label>
-      <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
+      <event-entry>
+        <label for="url">Link al post</label>
+        <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
 
-      <button type="submit" name="submit">Cargar evento</button>
+        <p>👀 El post debe ser público y no un video.</p>
 
-      <output name="output" style="white-space: pre">
-        <event-entry></event-entry>
-      </output>
+        <button type="submit" name="submit">Cargar evento</button>
+      </event-entry>
     </form>
 
     <style>
-      form {
-        display: grid;
-        gap: 1rem;
+      event-entry {
+        p {
+          font-size: 0.875rem;
+          color: var(--color-red);
+        }
       }
     </style>
     <script type="module">
