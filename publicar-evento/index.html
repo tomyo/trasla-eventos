@@ -335,11 +335,13 @@ Teléfono, instagram, link a la página tickets, etc.
         img.src = URL.createObjectURL(file);
         imagesPreview.insertBefore(img, imagesPreview.lastElementChild);
 
-        // Debounce scrollIntoView to run only for the last image after 250ms
-        clearTimeout(addPreviewImage.scrollTimeout);
-        addPreviewImage.scrollTimeout = setTimeout(() => {
-          img.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }, 250);
+        // Reverse debounce: scrollIntoView on the first image added within 250ms
+        if (!addPreviewImage.scrollTimeout) {
+          addPreviewImage.scrollTimeout = setTimeout(() => {
+            img.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            addPreviewImage.scrollTimeout = null;
+          }, 250);
+        }
       }
 
       hydrateWithCachedData();
