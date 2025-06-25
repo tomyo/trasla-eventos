@@ -13,8 +13,8 @@ class HeroSection extends HTMLElement {
             display: flex;
             flex-flow: column;
             text-align: center;
-            height: 63vh;
-            height: 63lvh;
+            height: 45vh;
+            height: 45lvh;
             justify-content: start;
             align-items: center;
             padding-top: 5rem;
