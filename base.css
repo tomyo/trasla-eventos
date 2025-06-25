@@ -102,8 +102,18 @@ footer {
   font-family: var(--font-family-mono);
 }
 
-section:not(#hero) {
-  background-color: var(--background-color);
+main {
+  display: flex;
+  flex-flow: column;
+
+  & section {
+    padding: 2rem;
+    background-color: var(--background-color);
+
+    & > p {
+      max-width: 60ch;
+    }
+  }
 }
 
 a {
