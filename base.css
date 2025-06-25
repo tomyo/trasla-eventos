@@ -98,10 +98,6 @@ body {
   transition: all ease-in-out 0.2s;
 }
 
-footer {
-  font-family: var(--font-family-mono);
-}
-
 main {
   display: flex;
   flex-flow: column;
@@ -109,6 +105,10 @@ main {
   & section {
     padding: 2rem;
     background-color: var(--background-color);
+
+    &:last-child {
+      padding-bottom: 4rem;
+    }
 
     & > p {
       max-width: 60ch;
