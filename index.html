@@ -38,6 +38,7 @@
     <script type="module" src="/components/events-filter.js"></script>
     <script type="module" src="/components/site-header.js"></script>
     <script type="module" src="/components/fixed-background.js"></script>
+    <script type="module" src="/components/hero-section.js"></script>
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/base.css" />
 
@@ -55,13 +56,7 @@
     <fixed-background></fixed-background>
     <site-header></site-header>
     <main>
-      <section id="hero">
-        <a class="logo-title" href="/" aria-label="Trasla Eventos">
-          <svg-mask style="--src: url('/assets/icons/trasla-eventos.svg'); --color: var(--color-red); height: 40px">
-          </svg-mask>
-        </a>
-        <h1 class="moto">La agenda cultural de Traslasierra</h1>
-      </section>
+      <hero-section></hero-section>
       <section id="eventos" class="mountains-top" aria-label="Eventos">
         <events-filter id="eventsFilter">
           <form>
@@ -413,41 +408,6 @@
 
           & > p {
             max-width: 60ch;
-          }
-        }
-
-        & section#hero {
-          display: flex;
-          flex-flow: column;
-          text-align: center;
-          height: 63vh;
-          height: 63lvh;
-          justify-content: start;
-          align-items: center;
-          padding-top: 5rem;
-          color: var(--color-light);
-
-          & .logo-title {
-            display: inline-block;
-            width: 9rem;
-            color: var(--color-red);
-          }
-
-          & .moto {
-            line-height: 1.3;
-            font-weight: 500;
-            font-size: calc(1.3rem + 1vw);
-            font-family: var(--font-family-branding);
-            min-height: 6ch;
-            letter-spacing: 1px;
-            margin-block: auto;
-          }
-
-          & #actions {
-            display: grid;
-            justify-content: center;
-            gap: 1rem;
-            text-align: center;
           }
         }
       }
