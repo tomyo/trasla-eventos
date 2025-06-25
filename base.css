@@ -149,3 +149,59 @@ h4 {
   font-weight: 500;
   font-family: var(--font-family-heading);
 }
+
+/* Utils */
+[hidden] {
+  display: none !important;
+}
+
+svg-mask {
+  display: inline-block;
+  width: 100%;
+  height: var(--height, 30px);
+  position: relative;
+  background-color: var(--color, currentColor);
+  mask: var(--src, url("/assets/images/trasla-eventos.svg")) no-repeat center;
+  mask-size: contain;
+}
+
+.bg-pattern {
+  position: absolute;
+  overflow: hidden;
+  inset: 0;
+  opacity: 0.2;
+
+  & .pattern-row {
+    --row-height: 50px;
+    --row-offset: 50px;
+    position: relative;
+    width: 100%;
+    height: calc(var(--row-height) * 3);
+    background-image: url("/assets/images/pattern.png");
+    background-size: 200px;
+    background-position: 0px 0px;
+    background-repeat: repeat-x;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: var(--row-height);
+      background-image: url("/assets/images/pattern.png");
+      background-size: 200px;
+      background-repeat: repeat-x;
+      left: 0;
+      top: var(--row-height);
+    }
+
+    &::before {
+      background-position: calc(2 * var(--row-offset)) 0;
+    }
+
+    &::after {
+      top: calc(2 * var(--row-height));
+      background-position: calc(5 * var(--row-offset)) 0;
+    }
+  }
+}
