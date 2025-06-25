@@ -603,14 +603,12 @@
           border-top: 0.25rem solid gray;
           margin-top: -0.1rem;
         }
-      }
 
-      select-styled {
-        & select {
+        & > select {
           /* Cross browser styling */
           appearance: none;
           border-radius: 0;
-          text-align: center;
+          text-align: center !important;
           width: 100%;
           color: currentColor;
         }
