@@ -1,3 +1,5 @@
+import "./install-button.js";
+
 class SiteHeader extends HTMLElement {
   constructor() {
     super();
@@ -43,13 +45,14 @@ class SiteHeader extends HTMLElement {
                 <img src="/assets/icons/upload.svg" width="20px" alt="" />
                 Cargar evento
               </a>
-              <button install data-nosnippet hidden>
-                <svg-mask
-                  style="--src: url('/assets/icons/loica.svg'); --color: var(--color-red); width: 20px; height: 18px"
-                >
-                </svg-mask>
-                Instalar
-              </button>
+              <install-button style="color: var(--color-red);">
+                <button data-nosnippet>
+                  <svg-mask
+                    style="--src: url('/assets/icons/loica.svg'); --color: var(--color-red); width: 20px; height: 18px"
+                  ></svg-mask>
+                  Instalar
+                </button>
+              </install-button>
             </nav>
           </nav-menu>
         </details>
@@ -98,9 +101,6 @@ class SiteHeader extends HTMLElement {
                 display: flex;
                 gap: 1rem;
                 align-items: start;
-              }
-              & [install] {
-                color: var(--color-red);
               }
             }
           }

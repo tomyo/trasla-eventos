@@ -231,3 +231,12 @@ svg-mask {
     mask: url("/assets/textures/mountain-shape.svg") repeat-x 77px bottom;
   }
 }
+
+install-button button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  padding: 1rem 0.5rem;
+}

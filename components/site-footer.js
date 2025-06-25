@@ -1,3 +1,5 @@
+import "./install-button.js";
+
 class SiteFooter extends HTMLElement {
   constructor() {
     super();
@@ -13,7 +15,14 @@ class SiteFooter extends HTMLElement {
         <a href="/" title="Ir a la página principal">
           <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')" alt="Trasla Eventos"> </svg-mask>
         </a>
-        <button install>Instalar</button>
+        <install-button style="color: var(--color-green);">
+          <button>
+            <svg-mask
+              style="--src: url('/assets/icons/loica.svg'); --color: var(--color-green); width: 20px; height: 18px"
+            ></svg-mask>
+            Instalar
+          </button>
+        </install-button>
         <a
           title="Publicar nuevo evento"
           href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
@@ -75,11 +84,6 @@ class SiteFooter extends HTMLElement {
             color: var(--color-light);
             text-align: center;
             text-transform: uppercase;
-          }
-          footer button[install] {
-            background: none;
-            font: inherit;
-            padding: 0;
           }
           footer > * {
             z-index: 1;

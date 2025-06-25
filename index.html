@@ -39,6 +39,7 @@
     <script type="module" src="/components/site-header.js"></script>
     <script type="module" src="/components/fixed-background.js"></script>
     <script type="module" src="/components/hero-section.js"></script>
+    <script type="module" src="/components/install-button.js"></script>
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/base.css" />
 
@@ -203,13 +204,14 @@
       </section>
       <section id="quick-actions">
         <div class="buttons" hidden>
-          <button install hidden data-nosnippet>
-            <svg-mask
-              style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 20px; height: 18px"
-            >
-            </svg-mask>
-            Instalar
-          </button>
+          <install-button>
+            <button>
+              <svg-mask
+                style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 20px; height: 18px"
+              ></svg-mask>
+              Instalar
+            </button>
+          </install-button>
           <a class="button" title="Ver eventos" href="/#eventos">
             <img src="/assets/icons/binocular.png" width="30px" alt="" style="aspect-ratio: 395/241" />
             Ver eventos
@@ -796,32 +798,6 @@
       }
 
       //
-    </script>
-
-    <script>
-      // PWA install
-      let deferredPrompt;
-
-      window.addEventListener("beforeinstallprompt", (e) => {
-        e.preventDefault();
-        // Stash the event so it can be triggered later
-        deferredPrompt = e;
-        // Show the install button
-        for (const installButton of document.querySelectorAll("[install]")) {
-          installButton.addEventListener("click", install);
-          installButton.removeAttribute("hidden");
-        }
-      });
-      async function install(event) {
-        // Show the install prompt
-        const result = await deferredPrompt.prompt();
-        console.info(`Install was: ${result.outcome}`);
-
-        // Hide the install button
-        for (const installButton of document.querySelectorAll("[install]")) {
-          installButton.toggleAttribute("hidden", true);
-        }
-      }
     </script>
 
     <script type="module" defer>
