@@ -15,9 +15,9 @@ class HeroSection extends HTMLElement {
             text-align: center;
             height: 45vh;
             height: 45lvh;
-            justify-content: start;
+            justify-content: space-around;
             align-items: center;
-            padding-top: 5rem;
+            padding-block: 2rem 1rem;
             color: var(--color-light);
 
             & .logo-title {
@@ -33,7 +33,6 @@ class HeroSection extends HTMLElement {
               font-family: var(--font-family-branding);
               min-height: 6ch;
               letter-spacing: 1px;
-              margin-block: auto;
             }
 
             & #actions {
