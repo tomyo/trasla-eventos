@@ -6,24 +6,32 @@
     <title>Publicar evento</title>
     <link rel="stylesheet" href="/base.css" />
     <link rel="stylesheet" href="publicar-evento.css" />
+    <script type="module" src="/components/site-header.js"></script>
+    <script type="module" src="/components/hero-section.js"></script>
+    <script type="module" src="/components/fixed-background.js"></script>
   </head>
   <body>
-    <h1>Publicar evento ⚡</h1>
-    <form action="" method="post" enctype="multipart/form-data">
-      <event-entry>
-        <div id="imagesPreview">
-          <label for="files" title="Agregar fotos">
-            ➕<br />Agregar fotos
-            <input id="files" type="file" accept="image/*" multiple hidden />
-          </label>
-        </div>
-        <label for="description">Información</label>
-        <textarea
-          id="description"
-          name="description"
-          title="Descripción del evento"
-          rows="10"
-          placeholder="ej:
+    <site-header></site-header>
+    <fixed-background></fixed-background>
+    <hero-section slim></hero-section>
+    <main>
+      <section class="mountains-top">
+        <h1>Publicar evento ⚡</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+          <div class="card">
+            <div id="imagesPreview">
+              <label for="files" title="Agregar fotos">
+                ➕<br />Agregar fotos
+                <input id="files" type="file" accept="image/*" multiple hidden />
+              </label>
+            </div>
+            <label for="description">Información</label>
+            <textarea
+              id="description"
+              name="description"
+              title="Descripción del evento"
+              rows="10"
+              placeholder="ej:
 *Título*
 
 Descripción...
@@ -32,11 +40,50 @@ Donde / Cuando.
 Teléfono, instagram, link a la página tickets, etc.
 
 (Formato de Whatsapp soportado)"
-        ></textarea>
-      </event-entry>
-      <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
-    </form>
+            ></textarea>
+          </div>
+          <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
+        </form>
+      </section>
+      <section class="other-options">
+        <h2>Otras opciones para publicar</h2>
+        <div class="upload-options">
+          <a class="button" href="/publicar-evento/instagram.html">
+            <svg-mask
+              style="
+                --src: url('/assets/icons/instagram.svg');
+                --color: var(--button-icon-color);
+                height: var(--button-icon-size);
+                width: var(--button-icon-size);
+              "
+            ></svg-mask>
+            <span>Publicar desde Instagram</span>
+          </a>
+          <a
+            class="button"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+            target="_blank"
+            rel="noopener"
+          >
+            <svg-mask
+              style="
+                --src: url('/assets/icons/form.svg');
+                --color: var(--button-icon-color);
+                height: var(--button-icon-size);
+                width: var(--button-icon-size);
+              "
+            ></svg-mask>
+            <span>Publicar desde Google Form</span>
+          </a>
+        </div>
+      </section>
+    </main>
+    <site-footer></site-footer>
+    <script type="module" src="/components/site-footer.js"></script>
     <style>
+      form textarea {
+        padding: 1ch;
+      }
       #imagesPreview {
         display: flex;
         overflow-x: scroll;
@@ -89,6 +136,45 @@ Teléfono, instagram, link a la página tickets, etc.
           display: grid;
           place-content: center;
           background-color: var(--background-color-darker);
+        }
+      }
+
+      .other-options {
+        text-align: center;
+        text-transform: uppercase;
+        padding-top: 0;
+
+        h2 {
+          margin-bottom: 2rem;
+        }
+
+        .upload-options {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: start;
+          gap: 2rem;
+          padding: 1rem;
+
+          .button {
+            display: grid;
+            grid-template-columns: 3rem auto;
+            align-items: center;
+            gap: 2rem;
+            font-weight: bold;
+            --button-icon-size: 40px;
+            min-width: 16rem;
+            width: 100%;
+            max-width: 23rem;
+            color: var(--color-light);
+
+            &:first-of-type {
+              background-color: var(--color-yellow);
+            }
+            &:last-of-type {
+              background-color: var(--color-red);
+            }
+          }
         }
       }
     </style>

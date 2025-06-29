@@ -7,20 +7,35 @@
     <script type="module" src="/components/event-entry.js"></script>
     <link rel="stylesheet" href="/base.css" />
     <link rel="stylesheet" href="publicar-evento.css" />
+    <script type="module" src="/components/site-header.js"></script>
+    <script type="module" src="/components/hero-section.js"></script>
+    <script type="module" src="/components/fixed-background.js"></script>
+    <script type="module" src="/components/site-footer.js"></script>
   </head>
   <body>
-    <h1>Cargar evento de Instagram</h1>
-    <form>
-      <fieldset>
-        <legend>Link al post</legend>
-        <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
-      </fieldset>
-      <em>✔️ El post debe ser público.</em>
-      <em>❌ Videos no soportados.</em>
-      <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
-    </form>
+    <site-header></site-header>
+    <fixed-background></fixed-background>
+    <hero-section slim></hero-section>
+    <main>
+      <section class="mountains-top">
+        <h1>Cargar evento de Instagram</h1>
+        <form>
+          <fieldset>
+            <legend>Link al post</legend>
+            <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
+          </fieldset>
+          <em>✔️ El post debe ser público.</em>
+          <em>❌ Videos no soportados.</em>
+          <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
+        </form>
+      </section>
+    </main>
+    <site-footer></site-footer>
 
     <style>
+      section {
+        background-color: var(--color-light);
+      }
       input {
         width: 100%;
         padding: 0.5rem;

@@ -38,12 +38,11 @@ class SiteHeader extends HTMLElement {
               <a
                 id="addEvent"
                 class="button"
-                target="_blank"
                 title="Publicar nuevo evento"
-                href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+                href="/publicar-evento/"
               >
                 <img src="/assets/icons/upload.svg" width="20px" alt="" />
-                Cargar evento
+                Publicar evento
               </a>
               <install-button style="color: var(--color-red);">
                 <button data-nosnippet>
