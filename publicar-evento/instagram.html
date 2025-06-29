@@ -26,7 +26,18 @@
           </fieldset>
           <em>✔️ El post debe ser público.</em>
           <em>❌ Videos no soportados.</em>
-          <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
+          <button type="submit" name="submit">
+            <svg-mask
+              style="
+                --src: url('/assets/icons/loica.svg');
+                --color: var(--button-icon-color);
+                height: var(--button-icon-size);
+                width: var(--button-icon-size);
+              "
+            ></svg-mask>
+            <span>Publicar</span>
+          </button>
+          <output></output>
         </form>
       </section>
     </main>
@@ -84,8 +95,13 @@
         event.preventDefault();
         const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
 
+        const submitButton = document.querySelector("button[type=submit]");
+        const submitButtonSpan = submitButton.querySelector("span");
+        const buttonText = submitButtonSpan.textContent;
+
         try {
           form.elements["submit"].disabled = true;
+          submitButtonSpan.textContent = "Publicando...";
           form.elements["output"].textContent = "Procesando y cargando el evento...\n";
 
           const getOrCreateQuery = `?endpoint=getOrCreateEventByInstagramPostURL&url=${form.elements.url.value}`;
@@ -127,6 +143,7 @@
           alert(`Hubo un error al cargar el evento: ${JSON.stringify(error)}`);
         } finally {
           form.elements["submit"].disabled = false;
+          submitButtonSpan.textContent = buttonText;
         }
       });
     </script>

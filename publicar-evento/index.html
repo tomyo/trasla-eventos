@@ -42,7 +42,18 @@ Teléfono, instagram, link a la página tickets, etc.
 (Formato de Whatsapp soportado)"
             ></textarea>
           </div>
-          <button type="submit" name="submit"><img src="/assets/icons/favicon-192x192.png" /> Publicar</button>
+          <button type="submit" name="submit">
+            <svg-mask
+              style="
+                --src: url('/assets/icons/loica.svg');
+                --color: var(--button-icon-color);
+                height: var(--button-icon-size);
+                width: var(--button-icon-size);
+              "
+            ></svg-mask>
+            <span>Publicar</span>
+          </button>
+          <output></output>
         </form>
       </section>
       <section class="other-options">
@@ -57,12 +68,15 @@ Teléfono, instagram, link a la página tickets, etc.
                 width: var(--button-icon-size);
               "
             ></svg-mask>
-            <span>Publicar desde Instagram</span>
+            <span>
+              Publicar desde
+              <br />
+              Instagram
+            </span>
           </a>
           <a
             class="button"
             href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-            target="_blank"
             rel="noopener"
           >
             <svg-mask
@@ -73,7 +87,10 @@ Teléfono, instagram, link a la página tickets, etc.
                 width: var(--button-icon-size);
               "
             ></svg-mask>
-            <span>Publicar desde Google Form</span>
+            <span
+              >Publicar desde<br />
+              Google Form
+            </span>
           </a>
         </div>
       </section>
@@ -84,6 +101,7 @@ Teléfono, instagram, link a la página tickets, etc.
       form textarea {
         padding: 1ch;
       }
+
       #imagesPreview {
         display: flex;
         overflow-x: scroll;
@@ -155,18 +173,23 @@ Teléfono, instagram, link a la página tickets, etc.
           text-align: start;
           gap: 2rem;
           padding: 1rem;
-
           .button {
             display: grid;
             grid-template-columns: 3rem auto;
             align-items: center;
-            gap: 2rem;
-            font-weight: bold;
-            --button-icon-size: 40px;
+
             min-width: 16rem;
             width: 100%;
             max-width: 23rem;
             color: var(--color-light);
+
+            span {
+              container-type: inline-size;
+            }
+
+            &[type="submit"] {
+              background-color: var(--color-green);
+            }
 
             &:first-of-type {
               background-color: var(--color-yellow);
@@ -175,6 +198,12 @@ Teléfono, instagram, link a la página tickets, etc.
               background-color: var(--color-red);
             }
           }
+        }
+      }
+
+      @container (min-width: 25ch) {
+        .button > span > br {
+          display: none;
         }
       }
     </style>
@@ -252,8 +281,8 @@ Teléfono, instagram, link a la página tickets, etc.
       async function handleFormSubmit(event) {
         event.preventDefault();
         const submitButton = document.querySelector("button[type=submit]");
-
-        const buttonText = submitButton.textContent;
+        const submitButtonSpan = submitButton.querySelector("span");
+        const buttonText = submitButtonSpan.textContent;
 
         const images = await getCachedFileBlobs();
         if (images.length === 0) {
@@ -262,11 +291,11 @@ Teléfono, instagram, link a la página tickets, etc.
         }
 
         submitButton.disabled = true;
-        submitButton.textContent = "Publicando...";
+        submitButtonSpan.textContent = "Publicando...";
 
         try {
           const eventData = await postEvent();
-          submitButton.textContent = "Evento cargado! 👌";
+          submitButtonSpan.textContent = "Evento cargado! 👌";
           console.log("response:", eventData);
           console.log(`redirect to event page ${window.location.origin}/${eventData.slug}`);
           form.reset();

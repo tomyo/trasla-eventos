@@ -1,3 +1,7 @@
+:root {
+  --button-icon-size: 1.5rem;
+}
+
 form {
   display: grid;
   gap: 1rem;
@@ -7,6 +11,8 @@ form {
 
   & button[type="submit"] {
     margin-block: 1rem;
+    background-color: var(--color-green);
+    color: var(--color-light);
   }
 }
 
@@ -31,7 +37,7 @@ event-entry:not([hidden]) {
 button[type="submit"] {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1.5rem;
   justify-content: center;
 
   img {
