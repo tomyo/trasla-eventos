@@ -1,7 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path stroke="#3D3F20" stroke-width="2" d="M4 7C4 5.11438 4 4.17157 4.58579 3.58579C5.17157 3 6.11438 3 8 3H16C17.8856 3 18.8284 3 19.4142 3.58579C20 4.17157 20 5.11438 20 7V15C20 17.8284 20 19.2426 19.1213 20.1213C18.2426 21 16.8284 21 14 21H10C7.17157 21 5.75736 21 4.87868 20.1213C4 19.2426 4 17.8284 4 15V7Z" />
-<path d="M15 18L15 21M9 18L9 21" stroke="#3D3F20" stroke-width="2" stroke-linecap="round"/>
-<path d="M9 8L15 8" stroke="#3D3F20" stroke-width="2" stroke-linecap="round"/>
-<path d="M9 12L15 12" stroke="#3D3F20" stroke-width="2" stroke-linecap="round"/>
-</svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   viewBox="0 0 4.7625566 5.2916989"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+     id="defs1" /><g
+     id="layer1"
+     transform="translate(-104.51039,-250.825)"><g
+       style="fill:none"
+       id="g1"
+       transform="matrix(0.26458333,0,0,0.26458333,103.71667,250.29584)"><path
+         stroke="#3d3f20"
+         stroke-width="2"
+         d="M 4,7 C 4,5.11438 4,4.17157 4.58579,3.58579 5.17157,3 6.11438,3 8,3 h 8 c 1.8856,0 2.8284,0 3.4142,0.58579 C 20,4.17157 20,5.11438 20,7 v 8 c 0,2.8284 0,4.2426 -0.8787,5.1213 C 18.2426,21 16.8284,21 14,21 H 10 C 7.17157,21 5.75736,21 4.87868,20.1213 4,19.2426 4,17.8284 4,15 Z"
+         id="path1" /><path
+         d="m 15,18 v 3 M 9,18 v 3"
+         stroke="#3d3f20"
+         stroke-width="2"
+         stroke-linecap="round"
+         id="path2" /><path
+         d="m 9,8 h 6"
+         stroke="#3d3f20"
+         stroke-width="2"
+         stroke-linecap="round"
+         id="path3" /><path
+         d="m 9,12 h 6"
+         stroke="#3d3f20"
+         stroke-width="2"
+         stroke-linecap="round"
+         id="path4" /></g></g></svg>
