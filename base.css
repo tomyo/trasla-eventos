@@ -103,11 +103,11 @@ main {
   flex-flow: column;
 
   & section {
-    padding: 2rem;
+    padding: 3rem 2rem 2rem;
     background-color: var(--background-color);
 
     &:last-child {
-      padding-bottom: 4rem;
+      padding-bottom: 6rem;
     }
 
     & > p {
@@ -232,6 +232,20 @@ svg-mask {
   }
 }
 
+.card,
+event-entry:not([hidden]) {
+  display: flex;
+  flex-flow: column;
+  gap: 0.66rem;
+  border-radius: var(--border-radius);
+  min-width: min-content;
+  text-align: center;
+  border: 1px solid;
+  padding: 1.5rem;
+}
+
+/* Components */
+
 install-button button {
   display: flex;
   align-items: center;
@@ -239,4 +253,35 @@ install-button button {
   letter-spacing: 0.15rem;
   text-transform: uppercase;
   padding: 1rem 0.5rem;
+}
+
+hero-section {
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  height: 45vh;
+  height: 45lvh;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 5rem;
+  color: var(--color-light);
+
+  &[slim] {
+    height: min-content;
+  }
+}
+
+hero-section [slot="logo"] {
+  display: inline-block;
+  width: 9rem;
+  color: var(--color-logo, var(--color-red));
+}
+
+hero-section [slot="title"],
+h1.title {
+  line-height: 1.3;
+  font-weight: 500;
+  font-size: calc(1.3rem + 1vw);
+  font-family: var(--font-family-branding);
+  letter-spacing: 1px;
 }

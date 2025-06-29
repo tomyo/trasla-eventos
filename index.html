@@ -56,7 +56,9 @@
     <script src="/components/today-date-picker.js" type="module"></script>
     <fixed-background></fixed-background>
     <site-header></site-header>
-    <hero-section></hero-section>
+    <hero-section>
+      <h1 slot="title">La agenda cultural de Traslasierra</h1>
+    </hero-section>
     <main>
       <section id="eventos" class="mountains-top" aria-label="Eventos">
         <events-filter id="eventsFilter">
@@ -202,73 +204,6 @@
         </style>
         <img src="/assets/images/mountain.svg" height="100" alt="" />
       </section>
-      <section id="quick-actions">
-        <div class="buttons" hidden>
-          <install-button>
-            <button>
-              <svg-mask
-                style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 20px; height: 18px"
-              ></svg-mask>
-              Instalar
-            </button>
-          </install-button>
-          <a class="button" title="Ver eventos" href="/#eventos">
-            <img src="/assets/icons/binocular.png" width="30px" alt="" style="aspect-ratio: 395/241" />
-            Ver eventos
-          </a>
-          <a
-            id="addEvent"
-            class="button"
-            target="_blank"
-            title="Publicar nuevo evento"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-          >
-            <img src="/assets/icons/upload.svg" width="20px" alt="" style="aspect-ratio: 51/43" />
-            Cargar evento
-          </a>
-        </div>
-        <style>
-          #quick-actions {
-            padding-block: 3rem;
-
-            .buttons {
-              display: flex;
-              flex-flow: row wrap;
-              justify-content: center;
-              gap: 1rem;
-
-              & > *:not([hidden]) {
-                /* button */
-                display: flex;
-                flex-flow: row nowrap;
-                background-color: var(--color-yellow);
-                align-items: center;
-                justify-content: initial;
-                color: var(--color-light);
-                gap: 1rem;
-                font-size: 0.7rem;
-                font-weight: 500;
-                letter-spacing: 0.1rem;
-                width: 13rem;
-                height: 3rem;
-                min-width: max-content;
-              }
-
-              & > :nth-child(1) {
-                background-color: var(--color-green);
-              }
-
-              & > :nth-child(2) {
-                background-color: var(--color-yellow);
-              }
-
-              & > :nth-child(3) {
-                background-color: var(--color-red);
-              }
-            }
-          }
-        </style>
-      </section>
     </main>
     <script type="module" src="/components/site-footer.js"></script>
     <site-footer></site-footer>
@@ -278,7 +213,7 @@
         & events-filter {
           display: flex;
           flex-flow: column;
-          gap: 2rem;
+          gap: 3rem;
           text-wrap: balance;
           max-width: 60ch;
           margin-inline: auto;
@@ -363,15 +298,6 @@
         }
 
         & event-entry:not([hidden]) {
-          display: flex;
-          flex-flow: column;
-          gap: 0.66rem;
-          border-radius: var(--border-radius);
-          min-width: min-content;
-          text-align: center;
-          border: 1px solid;
-          padding: 1.5rem;
-
           &[excluded] {
             display: none;
           }
