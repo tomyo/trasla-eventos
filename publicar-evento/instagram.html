@@ -37,7 +37,7 @@
             ></svg-mask>
             <span>Publicar</span>
           </button>
-          <output></output>
+          <output name="output"></output>
         </form>
       </section>
     </main>
@@ -109,9 +109,9 @@
 
           if (eventData.alreadyCreated) {
             alert(`El evento ya existe con ID ${eventData.id}`);
-            form.elements["output"].textContent += "Evento existente encontrado ...✔️\n";
+            form.elements["output"].textContent += "✔️ Evento existente encontrado ...\n";
           } else {
-            form.elements["output"].textContent += "Nuevo evento creando...✔️\n";
+            form.elements["output"].textContent += "✔️ Nuevo evento creando...\n";
           }
 
           const getEventByIdQuery = `?endpoint=getEventById&id=${eventData.id}`;
@@ -140,7 +140,9 @@
           window.location.href = `${window.location.origin}/${eventData.slug}`;
         } catch (error) {
           console.error(error);
-          alert(`Hubo un error al cargar el evento: ${JSON.stringify(error)}`);
+          alert(
+            `Hubo un error al cargar el evento: ${error.name}: ${error.message}\n\nPor favor intente nuevamente o contáctenos si el problema persiste.`
+          );
         } finally {
           form.elements["submit"].disabled = false;
           submitButtonSpan.textContent = buttonText;
