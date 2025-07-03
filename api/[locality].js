@@ -98,6 +98,15 @@ export default async function handler(req) {
     $<closeTag>`
   );
 
+  // Reaplace seo-block with the locality name
+  html = html.replace(
+    /(?<openTag><seo-block>).*?(?<closeTag><\/seo-block>)/is,
+    `$<openTag>
+      <h2>¿Qué hacer en ${locality}?</h2>
+      <p>Información actualizada de todos los eventos de ${locality} de hoy y de la semana.</p>
+    $<closeTag>`
+  );
+
   return new Response(html, {
     headers: { "Content-Type": "text/html" },
   });

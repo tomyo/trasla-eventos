@@ -68,50 +68,10 @@ events-filter[all-shown] #viewMoreEvents {
   display: flex;
 }
 
-#quick-actions {
-  padding-block-start: 3rem;
-  padding-block-end: 3rem;
-}
-
-#quick-actions .buttons {
-  flex-flow: wrap;
-  justify-content: center;
-  gap: 1rem;
-  display: flex;
-}
-
-#quick-actions .buttons > :not([hidden]) {
-  background-color: var(--color-yellow);
-  align-items: center;
-  justify-content: initial;
-  color: var(--color-light);
-  letter-spacing: .1rem;
-  flex-flow: row;
-  gap: 1rem;
-  width: 13rem;
-  min-width: max-content;
-  height: 3rem;
-  font-size: .7rem;
-  font-weight: 500;
-  display: flex;
-}
-
-#quick-actions .buttons > :first-child {
-  background-color: var(--color-green);
-}
-
-#quick-actions .buttons > :nth-child(2) {
-  background-color: var(--color-yellow);
-}
-
-#quick-actions .buttons > :nth-child(3) {
-  background-color: var(--color-red);
-}
-
 section#eventos events-filter {
   text-wrap: balance;
   flex-flow: column;
-  gap: 2rem;
+  gap: 3rem;
   max-width: 60ch;
   margin-inline-start: auto;
   margin-inline-end: auto;
@@ -198,17 +158,6 @@ section#eventos event-entries time:before {
   bottom: 0;
   left: 0;
   right: 0;
-}
-
-section#eventos event-entry:not([hidden]) {
-  border-radius: var(--border-radius);
-  text-align: center;
-  border: 1px solid;
-  flex-flow: column;
-  gap: .66rem;
-  min-width: min-content;
-  padding: 1.5rem;
-  display: flex;
 }
 
 section#eventos event-entry:not([hidden])[excluded] {
@@ -549,11 +498,11 @@ main {
 
 main section {
   background-color: var(--background-color);
-  padding: 2rem;
+  padding: 3rem 2rem 2rem;
 }
 
 main section:last-child {
-  padding-bottom: 4rem;
+  padding-bottom: 6rem;
 }
 
 main section > p {
@@ -673,6 +622,17 @@ svg-mask {
   mask: url("/assets/textures/mountain-shape.svg") 77px bottom repeat-x;
 }
 
+.card, event-entry:not([hidden]) {
+  border-radius: var(--border-radius);
+  text-align: center;
+  border: 1px solid;
+  flex-flow: column;
+  gap: .66rem;
+  min-width: min-content;
+  padding: 1.5rem;
+  display: flex;
+}
+
 install-button button {
   letter-spacing: .15rem;
   text-transform: uppercase;
@@ -680,4 +640,47 @@ install-button button {
   gap: .5rem;
   padding: 1rem .5rem;
   display: flex;
+}
+
+hero-section {
+  text-align: center;
+  height: 45vh;
+  height: 45lvh;
+  color: var(--color-light);
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-block-start: 5rem;
+  padding-block-end: 5rem;
+  display: flex;
+}
+
+hero-section[slim] {
+  height: min-content;
+}
+
+hero-section [slot="logo"] {
+  width: 9rem;
+  color: var(--color-logo, var(--color-red));
+  display: inline-block;
+}
+
+hero-section [slot="title"], h1.title {
+  font-size: calc(1.3rem + 1vw);
+  font-weight: 500;
+  line-height: 1.3;
+  font-family: var(--font-family-branding);
+  letter-spacing: 1px;
+}
+
+seo-block {
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  position: absolute;
+  overflow: hidden;
 }
