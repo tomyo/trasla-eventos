@@ -1,5 +1,5 @@
 import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
-import { escapeHtml, getGoogleDriveImagesPreview } from "../shared/lib/utils.js";
+import { eventToSchemaEventItem } from "../shared/lib/utils.js";
 const OG_IMAGE_WIDTH = 1200;
 
 export default async function handler(req) {
@@ -11,22 +11,7 @@ export default async function handler(req) {
     itemListElement: events.map((event, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      item: {
-        "@type": "Event",
-        name: escapeHtml(event.title),
-        url: `${url.origin}/${event.slug}`,
-        startDate: event.startsAt,
-        endDate: event.endsAt,
-        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-        location: {
-          "@type": "Place",
-          ...(event.place && { name: event.place }),
-          address: `${event.locality}, Córdoba, Argentina`,
-          url: event.location,
-        },
-        description: escapeHtml(event.description),
-        image: getGoogleDriveImagesPreview(event.images, OG_IMAGE_WIDTH),
-      },
+      item: eventToSchemaEventItem(event, url.origin),
     })),
   };
 

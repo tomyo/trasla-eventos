@@ -361,23 +361,75 @@ export function eventsToSchemaOrgItemList(events, origin = "https://eventos.tras
  * @returns {Object} A Schema.org ItemList object representing the event.
  */
 export function eventToSchemaEventItem(event, origin = "https://eventos.trasla.com.ar") {
+  let eventAttendanceMode = "https://schema.org/OfflineEventAttendanceMode";
+  if (event.locality?.toLowerCase() === "virtual") {
+    eventAttendanceMode = "https://schema.org/OnlineEventAttendanceMode";
+  }
+
   const schema = {
     "@type": "Event",
+    "@id": `${origin}/${event.slug}`,
+    url: `${origin}/${event.slug}`,
     name: escapeHtml(event.title),
-    description: escapeHtml(event.description),
-    image: getGoogleDriveImagesPreview(event.images, OG_IMAGE_WIDTH),
+    description: escapeHtml(event.description || "Más detalles en el sitio web del evento"),
     startDate: event.startsAt,
     endDate: event.endsAt || addHoursOffsetToDate(new Date(event.startsAt), 2).toISOString(),
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    eventStatus: "https://schema.org/EventScheduled", // EventPostponed / EventRescheduled
+    eventAttendanceMode: eventAttendanceMode,
     location: {
       "@type": "Place",
       ...(event.place && { name: event.place }),
-      address: event.address || `${event.locality}, Córdoba, Argentina`,
-      url: event.location,
+      address: event.address || `${event.place}, ${event.locality}, Córdoba, Argentina`,
+      url: event.location || "",
     },
-    eventStatus: "https://schema.org/EventScheduled", // EventPostponed / EventRescheduled
-    url: `${origin}/${event.slug}`,
+    image: getGoogleDriveImagesPreview(event.images, OG_IMAGE_WIDTH),
+    organizer: getEventOrganizer(event),
+    performer: getEventPerformer(event),
+    offers: getEventOffers(event),
   };
 
   return schema;
+}
+
+function getEventPerformer(event) {
+  // Only include performer if we have a real performer (instagram, spotify, youtube)
+  const performerLinks = [
+    event.instagram ? `https://instagram.com/${event.instagram.replace("@", "")}` : "",
+    event.spotify || "",
+    event.youtube || "",
+  ].filter(Boolean);
+  if (performerLinks.length > 0) {
+    return [
+      {
+        "@type": "Person",
+        name: event.instagram || event.spotify || event.youtube,
+        sameAs: performerLinks,
+      },
+    ];
+  }
+  // Otherwise, omit performer
+  return "";
+}
+
+function getEventOffers(event) {
+  // Use tickets, form, or link as offers
+  if (event.tickets || event.form || event.link) {
+    return {
+      "@type": "Offer",
+      url: event.tickets || event.form || event.link,
+      availability: "https://schema.org/InStock",
+      price: "0",
+      priceCurrency: "ARS",
+    };
+  }
+  return "";
+}
+
+function getEventOrganizer(event) {
+  // Use phone or default name
+  return {
+    "@type": "Organization",
+    name: "Trasla Eventos",
+    telephone: event.phone || "",
+  };
 }
