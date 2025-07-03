@@ -95,7 +95,6 @@ export default async function handler(req) {
     /(?<openTag><hero-section>).*?(?<closeTag><\/hero-section>)/is,
     `$<openTag>
       <h1 slot="title">Agenda de eventos de <br><span style="font-size:larger;font-weight:bold">${locality}</span></h1>
-      <p slot="seo-extra">¿Qué hacer en ${locality} esta semana?</p>
     $<closeTag>`
   );
 
