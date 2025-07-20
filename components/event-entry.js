@@ -210,7 +210,7 @@ customElements.define(
 
         htmlString += /*html*/ `
           <a part="button" target="_blank" href=${href} title="¿Cómo llegar?">
-            <img src="/assets/icons/maps.svg" height="23" alt=""/>
+            <img src="/assets/icons/maps.svg" height="25" alt=""/>
           </a>
         `;
       }
@@ -255,7 +255,7 @@ customElements.define(
       if (this.dataset.link) {
         htmlString += /*html*/ `
         <a part="button" target="_blank" title="Link externo" href="${this.dataset.link}">
-          <img src="/assets/icons/link.svg" height="28" alt=""/>
+          <img src="/assets/icons/link.svg" height="21" alt=""/>
         </a>
       `;
       }
