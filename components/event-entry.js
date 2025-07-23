@@ -104,6 +104,7 @@ customElements.define(
      * @param {Object} event
      */
     render() {
+      const eventTime = formatEventDate(this.startDate, { onlyTime: true, skipZeroTime: true });
       this.innerHTML = /*html*/ `
         <h3 part="title">${this.dataset.title}</h3>
         <div class="carousel">
@@ -132,7 +133,7 @@ customElements.define(
 
 
         <h4 part="where-and-when">
-          ${this.dataset.locality} - ${formatEventDate(this.startDate, { onlyTime: true })}
+          ${this.dataset.locality} ${eventTime ? ` - ${eventTime}` : ""}
         </h4>
         
         <div class="badges">
@@ -287,14 +288,19 @@ customElements.define(
  * @param {Date} date
  * @returns {String}
  */
-function formatEventDate(date, { onlyTime = false } = {}) {
+function formatEventDate(date, { onlyTime = false, skipZeroTime = true } = {}) {
   const dayNames = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
 
   const day = date.getDate().toString().padStart(2, "0");
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const hour = date.getHours().toString().padStart(2, "0");
   const minute = date.getMinutes().toString().padStart(2, "0");
-  if (onlyTime) return `${hour}:${minute}h`;
+  if (onlyTime) {
+    if (skipZeroTime && hour == "00" && minute === "00") {
+      return "";
+    }
+    return `${hour}:${minute}h`;
+  }
 
   return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
 }
