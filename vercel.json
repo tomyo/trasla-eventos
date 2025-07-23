@@ -16,7 +16,7 @@
       "destination": "/api/[locality].js"
     },
     {
-      "source": "/:slug([a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-.+h)",
+      "source": "/:slug([a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?)",
       "destination": "/api/events/[slug].js"
     }
   ],
