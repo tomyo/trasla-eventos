@@ -6,7 +6,6 @@ import {
   parseDate,
   formatDescription,
   formatLocalDate,
-  getGoogleDriveImagesPreview,
   getGoogleDriveImagesPreviews,
   createGoogleCalendarUrl,
 } from "../lib/utils.js";
@@ -45,8 +44,8 @@ customElements.define(
     processData() {
       this.startDate = parseDate(this.dataset.startsAt);
       if (this.dataset.endsAt) this.endDate = parseDate(this.dataset.endsAt);
-      this.previewImage = getGoogleDriveImagesPreview(this.dataset.images);
-      this.previewImages = getGoogleDriveImagesPreviews(this.dataset.images);
+      const previewWidth = 600; // Event cards are at most around 600px wide
+      this.previewImages = getGoogleDriveImagesPreviews(this.dataset.images, previewWidth);
       this.setAttribute("date", formatLocalDate(new Date(this.dataset.startsAt)));
     }
 
