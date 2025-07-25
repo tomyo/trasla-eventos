@@ -420,6 +420,7 @@ function getEventOffers(event) {
       availability: "https://schema.org/InStock",
       price: "0",
       priceCurrency: "ARS",
+      validFrom: event.startsAt,
     };
   }
   return "";
@@ -431,5 +432,6 @@ function getEventOrganizer(event) {
     "@type": "Organization",
     name: "Trasla Eventos",
     telephone: event.phone || "",
+    url: "https://eventos.trasla.com.ar/",
   };
 }
