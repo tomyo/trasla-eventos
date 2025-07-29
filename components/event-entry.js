@@ -176,7 +176,7 @@ customElements.define(
       // Add WhatsApp button
       if (this.dataset.phone) {
         const shareUrl = `${location.origin}/${this.dataset.slug}`;
-        let helloMsg = `${shareUrl}\n\nHola! 😃\nTe escribo desde por el ${this.dataset.activity?.toLowerCase()} ${
+        let helloMsg = `${shareUrl}\n\nHola! 😃\nTe escribo por el ${this.dataset.activity?.toLowerCase()} ${
           this.dataset.title
         }:\n\n`;
         htmlString += /*html*/ `
