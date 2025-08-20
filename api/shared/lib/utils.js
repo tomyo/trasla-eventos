@@ -373,7 +373,7 @@ export function eventToSchemaEventItem(event, origin = "https://eventos.trasla.c
     name: escapeHtml(event.title),
     description: escapeHtml(event.description || "Más detalles en el sitio web del evento"),
     startDate: event.startsAt,
-    endDate: event.endsAt || addHoursOffsetToDate(new Date(event.startsAt), 2).toISOString(),
+    endDate: event.endsAt || (event.startsAt && addHoursOffsetToDate(new Date(event.startsAt), 2).toISOString()),
     eventStatus: "https://schema.org/EventScheduled", // EventPostponed / EventRescheduled
     eventAttendanceMode: eventAttendanceMode,
     location: {

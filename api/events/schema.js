@@ -1,6 +1,5 @@
 import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
 import { eventToSchemaEventItem } from "../shared/lib/utils.js";
-const OG_IMAGE_WIDTH = 1200;
 
 export default async function handler(req) {
   const url = new URL(req.url);
