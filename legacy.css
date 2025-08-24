@@ -644,8 +644,8 @@ install-button button {
 
 hero-section {
   text-align: center;
-  height: 45vh;
-  height: 45lvh;
+  height: 54vh;
+  height: 54lvh;
   color: var(--color-light);
   flex-flow: column;
   justify-content: space-between;

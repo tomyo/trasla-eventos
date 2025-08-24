@@ -259,8 +259,8 @@ hero-section {
   display: flex;
   flex-flow: column;
   text-align: center;
-  height: 45vh;
-  height: 45lvh;
+  height: 54vh;
+  height: 54lvh;
   justify-content: space-between;
   align-items: center;
   padding-block: 5rem;
