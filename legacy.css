@@ -631,7 +631,7 @@ svg-mask {
   flex-flow: column;
   gap: .66rem;
   min-width: min-content;
-  max-width: 50ch;
+  max-width: 45ch;
   height: fit-content;
   padding: 1.5rem;
   display: flex;
