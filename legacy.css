@@ -71,10 +71,8 @@ events-filter[all-shown] #viewMoreEvents {
 section#eventos events-filter {
   text-wrap: balance;
   flex-flow: column;
+  align-items: center;
   gap: 3rem;
-  max-width: 60ch;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
   display: flex;
 }
 
@@ -85,8 +83,6 @@ section#eventos events-filter form {
   align-items: stretch;
   gap: .66rem;
   width: 13rem;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
 }
 
 section#eventos events-filter form .form-filters-as-heading {
@@ -123,11 +119,19 @@ section#eventos:not(:has(events-filter)) {
 
 section#eventos event-entries {
   flex-flow: column;
+  align-items: center;
   gap: 2rem;
-  width: 100%;
-  max-width: 90ch;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
+  display: flex;
+}
+
+section#eventos event-entries > div {
+  flex-flow: wrap;
+  justify-content: center;
+  gap: 2rem;
+  display: none;
+}
+
+section#eventos event-entries > div:has(event-entry:not([excluded]):not([hidden])) {
   display: flex;
 }
 
@@ -137,8 +141,6 @@ section#eventos event-entries time {
   width: 17ch;
   color: var(--color-light);
   z-index: 1;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
   padding: .3rem;
   font-size: 1rem;
   font-weight: 500;
@@ -251,7 +253,7 @@ section#eventos event-entry:not([hidden]) .carousel img {
   scroll-snap-stop: always;
   object-fit: contain;
   flex-shrink: 0;
-  width: 100%;
+  max-width: 100%;
 }
 
 section#eventos event-entry:not([hidden]) .carousel img::scroll-marker {
@@ -622,13 +624,15 @@ svg-mask {
   mask: url("/assets/textures/mountain-shape.svg") 77px bottom repeat-x;
 }
 
-.card, event-entry:not([hidden]) {
+.card:not([hidden]) {
   border-radius: var(--border-radius);
   text-align: center;
   border: 1px solid;
   flex-flow: column;
   gap: .66rem;
   min-width: min-content;
+  max-width: 50ch;
+  height: fit-content;
   padding: 1.5rem;
   display: flex;
 }

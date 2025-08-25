@@ -232,8 +232,7 @@ svg-mask {
   }
 }
 
-.card,
-event-entry:not([hidden]) {
+.card:not([hidden]) {
   display: flex;
   flex-flow: column;
   gap: 0.66rem;
@@ -242,6 +241,8 @@ event-entry:not([hidden]) {
   text-align: center;
   border: 1px solid;
   padding: 1.5rem;
+  max-width: 50ch;
+  height: fit-content;
 }
 
 /* Components */

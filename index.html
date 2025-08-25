@@ -226,8 +226,7 @@
           flex-flow: column;
           gap: 3rem;
           text-wrap: balance;
-          max-width: 60ch;
-          margin-inline: auto;
+          align-items: center;
 
           & form {
             display: var(--form-display, flex);
@@ -236,7 +235,6 @@
             text-align: center;
             gap: 0.66rem;
             width: 13rem;
-            margin-inline: auto;
 
             & .form-filters-as-heading {
               margin: 0;
@@ -277,10 +275,19 @@
         & event-entries {
           display: flex;
           flex-flow: column nowrap;
-          max-width: 90ch;
-          margin-inline: auto;
           gap: 2rem;
-          width: 100%;
+          align-items: center;
+
+          > div {
+            display: none;
+            flex-flow: row wrap;
+            gap: 2rem;
+            justify-content: center;
+
+            &:has(event-entry:not([excluded]):not([hidden])) {
+              display: flex;
+            }
+          }
 
           & time {
             display: none; /* Shown per [date] via js custom css */
@@ -289,7 +296,6 @@
             position: sticky;
             top: 1rem;
             width: 17ch;
-            margin-inline: auto;
             color: var(--color-light);
             font-size: 1rem;
             font-weight: 500;
@@ -399,7 +405,7 @@
               scroll-snap-align: center;
               scroll-snap-stop: always;
               object-fit: contain;
-              width: 100%;
+              max-width: 100%;
               flex-shrink: 0;
 
               &::scroll-marker {
@@ -576,8 +582,9 @@
       /**
        * @param {EventResponse} event
        */
-      function appendEvent(eventData, { open } = {}) {
+      function appendEvent(eventData, { open, containerSelector = "event-entries" } = {}) {
         const eventElement = document.createElement("event-entry");
+        const container = document.querySelector(containerSelector);
 
         for (const [key, value] of Object.entries(eventData)) {
           // if (!Object.hasOwnProperty.call(eventData, key)) continue;
@@ -586,11 +593,12 @@
         }
         // Add date attribute to handle <time> title hidden logic
         eventElement.setAttribute("date", formatLocalDate(new Date(eventElement.dataset.startsAt)));
+        eventElement.classList.add("card");
 
         if (open) {
           eventElement.open = true;
         }
-        eventsElement.appendChild(eventElement);
+        container.appendChild(eventElement);
       }
 
       async function showAllFutureEvents() {
@@ -615,7 +623,8 @@
           .toUpperCase();
       }
 
-      function addTimeEntry(eventDate, { prepend } = {}) {
+      function addTimeEntry(eventDate, { prepend, containerSelector = "event-entries" } = {}) {
+        const container = document.querySelector(containerSelector);
         const dateTitle = document.createElement("time");
         const dateString = formatLocalDate(eventDate);
         dateTitle.setAttribute("date", dateString);
@@ -623,10 +632,10 @@
 
         if (prepend) {
           dateTitle.style = "display: revert;"; // improve by adding css in SSR
-          eventsElement.prepend(dateTitle);
+          container.prepend(dateTitle);
           return dateTitle;
         }
-        return eventsElement.appendChild(dateTitle);
+        return container.appendChild(dateTitle);
       }
 
       async function renderEvents(events) {
@@ -663,15 +672,18 @@
             dates.push(formatLocalDate(eventDate));
             lastDate = eventDate;
             shouldAddTime = false;
+            // Add div wrapper for events of the same date
+            const div = document.createElement("div");
+            eventsElement.appendChild(div);
           }
-          appendEvent(event);
+          appendEvent(event, { containerSelector: "event-entries>div:last-of-type" });
         }
 
         const style = document.createElement("style");
         style.textContent = dates
           .map(
             (date) => /*css*/ `
-              time[date="${date}"]:has(~ event-entry[date="${date}"]:not([excluded]):not([hidden])) {
+              time[date="${date}"]:has(~ div>event-entry[date="${date}"]:not([excluded]):not([hidden])) {
                 display: revert !important;
               }
             `
