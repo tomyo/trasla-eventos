@@ -2,7 +2,6 @@ import "./share-url.js";
 import {
   formatPhoneNumber,
   isValidUrl,
-  formatDate,
   parseDate,
   formatDescription,
   formatLocalDate,
@@ -10,14 +9,12 @@ import {
   createGoogleCalendarUrl,
 } from "../lib/utils.js";
 
+const IMAGE_PREVIEW_WIDTH = 600; // Event cards are at most around 600px wide
+
 customElements.define(
   "event-entry",
   class extends HTMLElement {
     static requiredDatasetAttributes = ["title", "starts-at", "images", "locality", "slug"];
-
-    constructor() {
-      super();
-    }
 
     connectedCallback() {
       if (!this.isDatasetValid()) return;
@@ -44,8 +41,7 @@ customElements.define(
     processData() {
       this.startDate = parseDate(this.dataset.startsAt);
       if (this.dataset.endsAt) this.endDate = parseDate(this.dataset.endsAt);
-      const previewWidth = 600; // Event cards are at most around 600px wide
-      this.previewImages = getGoogleDriveImagesPreviews(this.dataset.images, previewWidth);
+      this.previewImages = getGoogleDriveImagesPreviews(this.dataset.images, IMAGE_PREVIEW_WIDTH);
       this.setAttribute("date", formatLocalDate(new Date(this.dataset.startsAt)));
     }
 
