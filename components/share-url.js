@@ -1,10 +1,8 @@
 customElements.define(
   "share-url",
   class extends HTMLElement {
-    constructor() {
-      super();
-
-      if (navigator[this.dataset.action]) {
+    connectedCallback() {
+      if (navigator[this.dataset.action] || navigator[this.dataset.fallbackAction]) {
         this.addEventListener("click", this);
       }
     }
