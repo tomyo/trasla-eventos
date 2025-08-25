@@ -49,6 +49,7 @@ export default async function handler(req) {
 
     let eventEntry = /*html*/ `
       <event-entry
+        class="card"
         open=""
         data-title="${escapeHtml(eventData.title)}"
         data-description="${escapeHtml(eventData.description)}"
