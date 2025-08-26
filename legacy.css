@@ -171,6 +171,7 @@ section#eventos event-entry:not([hidden]) .carousel {
   cursor: pointer;
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
   scroll-marker-group: after;
   scrollbar-width: none;
   counter-increment: carousel-counter;
@@ -201,7 +202,6 @@ section#eventos event-entry:not([hidden]) .carousel::scroll-button(*) {
   border: none;
   height: 15rem;
   padding: 1rem;
-  font-family: monospace;
   line-height: 1;
   position: absolute;
 }
@@ -254,6 +254,8 @@ section#eventos event-entry:not([hidden]) .carousel img {
   object-fit: contain;
   flex-shrink: 0;
   max-width: 100%;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
 }
 
 section#eventos event-entry:not([hidden]) .carousel img::scroll-marker {
