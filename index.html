@@ -332,6 +332,7 @@
             border-radius: 10px;
             scroll-snap-type: x mandatory;
             overscroll-behavior-x: contain;
+            scroll-behavior: smooth;
             scroll-marker-group: after;
             scrollbar-width: none;
             counter-increment: carousel-counter;
@@ -407,6 +408,7 @@
               object-fit: contain;
               max-width: 100%;
               flex-shrink: 0;
+              margin-inline: auto;
 
               &::scroll-marker {
                 content: "●";
