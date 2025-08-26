@@ -51,6 +51,7 @@ customElements.define(
       this.summary = this.querySelector("summary");
       this.details?.addEventListener("toggle", this);
       this.images.addEventListener("click", (event) => {
+        if (event.target.tagName.toLowerCase() !== "img") return; // Avoid clicks opening <details> on the carousel container
         this.summary?.click();
       });
     }
