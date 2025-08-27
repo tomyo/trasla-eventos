@@ -52,6 +52,7 @@ export default async function handler(req) {
   for (const eventData of events) {
     eventsHtml += /*html*/ `
       <event-entry
+        class="card"
         open=""
         data-title="${escapeHtml(eventData.title)}"
         data-description="${escapeHtml(eventData.description)}"
@@ -75,6 +76,7 @@ export default async function handler(req) {
   if (!events.length) {
     eventsHtml += /*html*/ `
     <event-entry
+      class="card"
       data-starts-at="${new Date().toISOString()}"
       data-locality="${locality}"
     >
