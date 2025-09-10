@@ -141,7 +141,7 @@
         } catch (error) {
           console.error(error);
           alert(
-            `Hubo un error al cargar el evento: ${error.name}: ${error.message}\n\nPor favor intente nuevamente o contáctenos si el problema persiste.`
+            `Hubo un error al intentar cargar el evento.\n ${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
           );
         } finally {
           form.elements["submit"].disabled = false;
