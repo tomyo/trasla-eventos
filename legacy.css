@@ -24,6 +24,10 @@ today-date-picker:not(:focus-within)[today]:before {
   right: 0;
 }
 
+today-date-picker:not(:focus-within)[today]:hover:before {
+  content: none;
+}
+
 today-date-picker:not(:focus-within)[today]:after {
   content: "";
   z-index: 1;
@@ -78,6 +82,7 @@ section#eventos events-filter {
 }
 
 section#eventos events-filter form {
+  --input-height: 2.3rem;
   display: var(--form-display, flex);
   text-align: center;
   flex-flow: column;
@@ -103,10 +108,62 @@ section#eventos events-filter form .form-filters-as-heading :not(span) {
 
 section#eventos events-filter form button, section#eventos events-filter form select, section#eventos events-filter form input {
   text-align: inherit;
-  height: 2.3rem;
+  height: var(--input-height);
   min-height: max-content;
   font: inherit;
   padding: .5rem;
+}
+
+section#eventos events-filter select-locality {
+  --down-arrow-content: "";
+  --options-to-show: 1;
+  position: relative;
+}
+
+@media (hover: hover) {
+  section#eventos events-filter select-locality {
+    --options-to-show: 4;
+    --down-arrow-content: none;
+  }
+}
+
+@supports ((-moz-appearance: none)) {
+  section#eventos events-filter select-locality {
+    --options-to-show: 4;
+    --down-arrow-content: none;
+  }
+}
+
+section#eventos events-filter select-locality select {
+  height: calc(var(--input-height) * var(--options-to-show));
+  padding: 0;
+}
+
+section#eventos events-filter select-locality select option {
+  height: var(--input-height);
+  align-content: center;
+}
+
+section#eventos events-filter select-locality:after {
+  content: var(--down-arrow-content);
+  border-top: .25rem solid gray;
+  border-left: .25rem solid #0000;
+  border-right: .25rem solid #0000;
+  width: 0;
+  height: 0;
+  margin-top: -.1rem;
+  position: absolute;
+  top: 50%;
+  right: .5rem;
+}
+
+section#eventos events-filter select-locality > select {
+  -webkit-appearance: none;
+  appearance: none;
+  color: currentColor;
+  border-radius: 0;
+  width: 100%;
+  text-align: center !important;
 }
 
 section#eventos events-filter > :not(event-entries) {
@@ -373,32 +430,6 @@ section#eventos event-entry:not([hidden]) [part="button"] {
 
 section#eventos event-entry:not([hidden]) [part="button"]:hover, section#eventos event-entry:not([hidden]) [part="button"]:focus {
   background-color: color-mix(in srgb, var(--color, currentColor) 10%, transparent);
-}
-
-select-styled {
-  position: relative;
-}
-
-select-styled:after {
-  content: "";
-  border-top: .25rem solid gray;
-  border-left: .25rem solid #0000;
-  border-right: .25rem solid #0000;
-  width: 0;
-  height: 0;
-  margin-top: -.1rem;
-  position: absolute;
-  top: 50%;
-  right: .5rem;
-}
-
-select-styled > select {
-  -webkit-appearance: none;
-  appearance: none;
-  color: currentColor;
-  border-radius: 0;
-  width: 100%;
-  text-align: center !important;
 }
 
 * {

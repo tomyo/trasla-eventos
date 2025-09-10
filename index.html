@@ -76,9 +76,10 @@
           <form>
             <h2 class="form-filters-as-heading">
               <span>Eventos en</span>
-              <select-styled>
-                <select name="locality" aria-label="Localidad">
-                  <option value="" default>TRASLASIERRA</option>
+
+              <select-locality>
+                <select name="locality" aria-label="Localidad" multiple>
+                  <option value="" selected>TRASLASIERRA</option>
                   <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
                   <option value="Boca del Rio">BOCA DEL RIO</option>
                   <option value="Dique de La Viña">DIQUE DE LA VIÑA</option>
@@ -109,10 +110,24 @@
                   <option value="Yacanto">YACANTO</option>
                   <option value="Virtual">VIRTUAL</option>
                 </select>
-              </select-styled>
+
+                <script>
+                  // Scroll to first option (Traslasierra) when no options are selected.
+
+                  const select = document.querySelector("select-locality select");
+                  function scrollSelectToTopIfNoOptionSelected() {
+                    if (select.selectedOptions.length == 0) {
+                      select.scrollTo(0, 0);
+                    }
+                  }
+                  select.addEventListener("blur", (event) => {
+                    scrollSelectToTopIfNoOptionSelected();
+                  });
+                </script>
+              </select-locality>
               <span data-nosnippet>A Partir de<span id="hideOnToday">l</span></span>
-              <today-date-picker onclick="dateFrom.showPicker()">
-                <input id="dateFrom" type="date" name="startDate" aria-label="Fecha de inicio" />
+              <today-date-picker>
+                <input type="date" name="startDate" aria-label="Fecha de inicio" />
 
                 <style>
                   form:has(today-date-picker[today]) #hideOnToday {
@@ -137,6 +152,9 @@
                         z-index: 1;
                         pointer-events: none; /* Allow clicks through */
                       }
+
+                      &:hover::before {
+                        content: none;
                       }
 
                       &::after {
@@ -157,6 +175,7 @@
                 </style>
               </today-date-picker>
             </h2>
+
             <input name="endDate" type="date" hidden />
             <label hidden>
               <input checked type="checkbox" name="activities[]" value="Evento" />
@@ -231,6 +250,7 @@
           align-items: center;
 
           & form {
+            --input-height: 2.3rem;
             display: var(--form-display, flex);
             flex-flow: column nowrap;
             align-items: stretch;
@@ -258,9 +278,61 @@
             & input {
               padding: 0.5rem;
               text-align: inherit;
-              height: 2.3rem;
+              height: var(--input-height);
               min-height: max-content;
               font: inherit;
+            }
+          }
+
+          select-locality {
+            position: relative;
+            --down-arrow-content: "";
+            --options-to-show: 1;
+
+            @media (hover: hover) {
+              --options-to-show: 4;
+              --down-arrow-content: none;
+            }
+
+            @supports (-moz-appearance: none) {
+              --options-to-show: 4; /* Firefox on mobile shows a scrollable <select> */
+              --down-arrow-content: none;
+            }
+
+            select {
+              padding: 0;
+              height: calc(var(--input-height) * var(--options-to-show));
+
+              /* &[multiple]:has(option:checked ~ option:checked) {
+                height: calc(var(--input-height) * var(--options-to-show));
+              } */
+
+              option {
+                height: var(--input-height);
+                align-content: center;
+              }
+            }
+
+            &::after {
+              content: var(--down-arrow-content);
+              position: absolute;
+              top: 50%;
+              right: 0.5rem;
+              width: 0;
+              height: 0;
+              border-left: 0.25rem solid transparent;
+              border-right: 0.25rem solid transparent;
+              border-top: 0.25rem solid gray;
+              margin-top: -0.1rem;
+            }
+
+            & > select {
+              /* Cross browser styling */
+              appearance: none;
+              border-radius: 0;
+              text-align: center !important;
+              width: 100%;
+              color: currentColor;
             }
           }
 
@@ -533,32 +605,6 @@
               background-color: color-mix(in srgb, var(--color, currentColor) 10%, transparent);
             }
           }
-        }
-      }
-
-      select-styled {
-        position: relative;
-
-        &::after {
-          content: "";
-          position: absolute;
-          top: 50%;
-          right: 0.5rem;
-          width: 0;
-          height: 0;
-          border-left: 0.25rem solid transparent;
-          border-right: 0.25rem solid transparent;
-          border-top: 0.25rem solid gray;
-          margin-top: -0.1rem;
-        }
-
-        & > select {
-          /* Cross browser styling */
-          appearance: none;
-          border-radius: 0;
-          text-align: center !important;
-          width: 100%;
-          color: currentColor;
         }
       }
     </style>

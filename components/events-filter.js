@@ -7,7 +7,7 @@ customElements.define(
       this.form = this.querySelector("form");
       this.paginateAt = 10; // Minimum number of events to display at once
 
-      if (!this.form["dateFrom"].value) {
+      if (!this.form["startDate"].value) {
         this.setStartDateToToday();
       }
 
@@ -144,51 +144,52 @@ customElements.define(
 
 /**
  *
- * @param {eventEntry} element
+ * @param {eventEntry} event
  * @param {FormData} filters
  * @param {Object} options
- * @returns true if the element should be ex, false otherwise.
+ * @returns `true` if the event should be excluded, `false` otherwise.
  */
-function shouldExcludeEvent(element, filters, { keysToOmit = [] } = {}) {
-  let shouldExclude = false;
-  for (const [key, value] of filters) {
-    if (keysToOmit.includes(key) || !value) continue;
-
-    // Filter by locality
-    if (key === "locality") {
-      if (!element.dataset.locality.includes(value)) {
-        shouldExclude = true;
-      }
+function shouldExcludeEvent(event, filters, { keysToOmit = [] } = {}) {
+  const localities = filters.getAll("locality");
+  if (localities.length > 0 && !keysToOmit.includes("locality")) {
+    // if a locality=="" is selected, it means "all localities", so we don't exclude anything
+    const hasMatchingLocality = localities.some((locality) => event.dataset.locality.includes(locality));
+    if (!hasMatchingLocality) {
+      return true;
     }
+  }
+
+  for (const [key, value] of filters) {
+    if (keysToOmit.includes(key) || !value || key === "locality") continue;
     // Filter out events starting before given date
     if (key == "startDate") {
       const minDate = new Date(value + "T00:00:00");
-      if (new Date(element.dataset.startsAt) < minDate) {
-        shouldExclude = true;
+      if (new Date(event.dataset.startsAt) < minDate) {
+        return true;
       }
     }
 
     // Filter out events starting after given date
     if (key == "endDate") {
       const maxDate = new Date(value + "T23:59:59");
-      if (maxDate < new Date(element.dataset.startsAt)) {
-        shouldExclude = true;
+      if (maxDate < new Date(event.dataset.startsAt)) {
+        return true;
       }
     }
     // Filter by search term
     if (key == "search") {
       for (const word of value.toLowerCase().trim().split(" ")) {
-        if (!element.dataset.title?.toLowerCase().includes(word)) {
-          shouldExclude = true;
+        if (!event.dataset.title?.toLowerCase().includes(word)) {
+          return true;
         }
       }
     }
   }
 
   const activities = filters.getAll("activities[]");
-  if (!activities.includes(element.dataset.activity)) {
-    shouldExclude = true;
+  if (!activities.includes(event.dataset.activity)) {
+    return true;
   }
 
-  return shouldExclude;
+  return false;
 }
