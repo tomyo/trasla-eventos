@@ -722,3 +722,119 @@ seo-block {
   position: absolute;
   overflow: hidden;
 }
+
+header {
+  z-index: 2;
+  --nav-button-color: var(--color-red);
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  display: flex;
+  position: fixed;
+  top: 0;
+  bottom: auto;
+  left: 0;
+  right: 0;
+}
+
+header.hide {
+  transform: translateY(-100%);
+}
+
+header nav-menu {
+  opacity: 0;
+  background-color: var(--color-red);
+  padding: 5rem 3rem;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+header nav-menu {
+  transition: all var(--animation-time-short) ease-in-out;
+  transition-behavior: allow-discrete;
+}
+
+details:has( > header nav-menu)::details-content {
+  transition: all var(--animation-time-short) ease-in-out;
+  transition-behavior: allow-discrete;
+}
+
+details[open] :is(header nav-menu) {
+  opacity: 1;
+}
+
+body:has(details[open] :is(header nav-menu)) {
+  overflow: hidden;
+}
+
+header .bg-pattern {
+  z-index: -1;
+}
+
+header nav {
+  color: var(--color-light);
+  flex-flow: column;
+  justify-content: start;
+  align-items: center;
+  gap: 3rem;
+  display: flex;
+}
+
+header nav > * {
+  align-items: start;
+  gap: 1rem;
+  display: flex;
+}
+
+header .summary-hamburger-button {
+  --line-color: var(--color-red);
+  cursor: pointer;
+  z-index: 1;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  flex-direction: column;
+  gap: 4px;
+  width: 2rem;
+  list-style: none;
+  display: flex;
+  position: relative;
+}
+
+header .summary-hamburger-button::-webkit-details-marker {
+  display: none;
+}
+
+header .summary-hamburger-button::marker {
+  content: none;
+}
+
+details[open] :is(header .summary-hamburger-button) {
+  --line-color: var(--color-light);
+}
+
+header .summary-hamburger-button .line {
+  background: var(--line-color);
+  height: 3px;
+  transition: all var(--animation-time-short) ease-out;
+  border-radius: 2px;
+}
+
+header details[open] .line:first-of-type {
+  transform: translateY(225%)rotate(-45deg);
+}
+
+header details[open] .line:nth-of-type(2) {
+  opacity: 0;
+}
+
+header details[open] .line:nth-of-type(3) {
+  transform: translateY(-225%)rotate(45deg);
+}
