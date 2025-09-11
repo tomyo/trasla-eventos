@@ -791,8 +791,12 @@
             option.selected = true;
             break;
           }
+          option.selected = false;
+          option.hidden = true;
         }
-        document.querySelector("[name='locality']").disabled = true;
+        const select = document.querySelector("[name='locality']");
+        select.disabled = true;
+        select.style.setProperty("--options-to-show", "1");
       }
 
       //
