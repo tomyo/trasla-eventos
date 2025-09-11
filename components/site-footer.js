@@ -64,7 +64,7 @@ class SiteFooter extends HTMLElement {
           <a href="mailto:hola@trasla.com.ar" title="Email">
             <svg-mask style="--src: url('/assets/icons/email.svg')"></svg-mask>
           </a>
-          <a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=+5493544643473">
+          <a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=+5493544632482">
             <svg-mask style="--src: url('/assets/icons/whatsapp.svg')"></svg-mask>
           </a>
           <a href="https://www.instagram.com/traslaeventos/" target="_blank" title="Instagram">
