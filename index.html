@@ -75,9 +75,9 @@
         <events-filter id="eventsFilter">
           <form>
             <h2 class="form-filters-as-heading">
-              <span>Eventos en</span>
+              <span class="hide-when-no-events">Eventos en</span>
 
-              <select-locality>
+              <select-locality class="hide-when-no-events">
                 <select name="locality" aria-label="Localidad" multiple>
                   <option value="" selected>TRASLASIERRA</option>
                   <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
@@ -248,6 +248,11 @@
           gap: 3rem;
           text-wrap: balance;
           align-items: center;
+
+          &:not(:has(event-entries event-entry)) .hide-when-no-events {
+            /* This is for /lugar/<locality-slug> pages when no events are found, so we dont show the locality select empty */
+            display: none;
+          }
 
           & form {
             --input-height: 2.3rem;
@@ -611,11 +616,29 @@
 
     <script type="module">
       import { getGoogleSheetEvents } from "/lib/get-events.js";
-      import { escapeHtml, slugify, isDateToday, formatLocalDate } from "/lib/utils.js";
+      import { escapeHtml, slugify, isDateToday, formatLocalDate, eventsToSchemaOrgItemList } from "/lib/utils.js";
 
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const eventsElement = document.querySelector("event-entries");
+
+      /**
+       * Injects a JSON-LD script tag with schema.org data for the given events.
+       * @property {EventResponse[]} events
+       */
+      async function injectSchemaOrgScript(events) {
+        const SCRIPT_ID = "events-schema-org";
+        try {
+          const schemaString = await (await fetch("/events/schema.jsonld")).text();
+          const script = document.getElementById(SCRIPT_ID) || document.createElement("script");
+          script.id = SCRIPT_ID;
+          script.type = "application/ld+json";
+          script.textContent = JSON.stringify(eventsToSchemaOrgItemList(events, location.origin));
+          document.head.appendChild(script);
+        } catch (err) {
+          console.warn(err);
+        }
+      }
 
       /**
        *
@@ -650,12 +673,20 @@
         container.appendChild(eventElement);
       }
 
-      async function showAllFutureEvents() {
-        const upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
+      async function fetchAndShowEvents() {
+        let upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
           return getSortOrder(a) - getSortOrder(b);
         });
+
+        // Check if we are in /lugar/locality-slug path to only include events on that locality
+        if (location.pathname.includes("/lugar/")) {
+          const localitySlug = location.pathname.replace(/\/lugar\/(.*)\//, "$1");
+          upcomingEvents = upcomingEvents.filter((event) => slugify(event.locality) == localitySlug);
+        }
         renderEvents(upcomingEvents);
         eventsFilter.updateUI();
+
+        injectSchemaOrgScript(upcomingEvents);
       }
 
       /**
@@ -764,9 +795,9 @@
 
       if (!document.querySelector("event-entry")) {
         // Normal flow when requesting /index.html
-        showAllFutureEvents();
+        fetchAndShowEvents();
       } else {
-        // SSR prerendered <event-entry> elements into the dom (vía [slug|locality].js)
+        // SSR prerendered <event-entry> elements into the dom (vía [slug].js)
 
         // Add missing sticky <time> entry before first event, since that's how we show the event's date now.
         addTimeEntry(new Date(document.querySelector("event-entry").dataset.startsAt), { prepend: true });
@@ -800,24 +831,6 @@
       }
 
       //
-    </script>
-
-    <script type="module" defer>
-      // Events list schema org script for rich results in google (hopefully)
-      async function injectSchemaOrgScript() {
-        try {
-          const schemaString = await (await fetch("/events/schema.jsonld")).text();
-          const script = document.createElement("script");
-          script.type = "application/ld+json";
-          script.textContent = schemaString;
-          document.head.appendChild(script);
-        } catch (err) {
-          console.warn(err);
-        }
-      }
-
-      const url = new URL(location);
-      if (url.pathname == "/") await injectSchemaOrgScript();
     </script>
 
     <!-- Google Tag Manager -->
