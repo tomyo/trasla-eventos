@@ -17,7 +17,10 @@ export default async function handler(req) {
   const html = JSON.stringify(schema);
 
   return new Response(html, {
-    headers: { "Content-Type": "application/ld+json" },
+    headers: {
+      "Content-Type": "application/ld+json",
+      "Cache-Control": "public, s-maxage=300, stale-while-revalidate=30",
+    },
   });
 }
 

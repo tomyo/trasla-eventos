@@ -77,7 +77,7 @@ export default async function handler(req) {
   }
 
   return new Response(html, {
-    headers: { "Content-Type": "text/html" },
+    headers: { "Content-Type": "text/html", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=30" },
   });
 }
 
