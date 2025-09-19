@@ -3,7 +3,7 @@ const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for t
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  if (event.request.method === "POST" && url.pathname === SHARE_TARGET_ACTION) {
+  if (event.request.method === "POST" && url.pathname === SHARE_TARGET_ACTION && url.origin === self.location.origin) {
     console.info("Handling share target:", event.request);
     event.respondWith(handleShareTarget(event.request));
   }
@@ -27,7 +27,7 @@ function readAsDataURL(file) {
  * @returns {Promise<void>}
  */
 async function showServiceWorkerNotification(title, options = {}) {
-  await self.registration.showNotification(title, {
+  return await self.registration.showNotification(title, {
     icon: "/assets/icons/favicon-192x192.png",
     vibrate: [200, 100, 200],
     ...options,
@@ -41,7 +41,7 @@ async function showServiceWorkerNotification(title, options = {}) {
  * @returns {Promise<void>}
  */
 async function showSuccessServiceWorkerNotification(message, data = {}) {
-  await showServiceWorkerNotification("¡Éxito! 🎉", {
+  return await showServiceWorkerNotification("¡Éxito! 🎉", {
     body: message,
     tag: "trasla-success",
     requireInteraction: true,
@@ -56,7 +56,7 @@ async function showSuccessServiceWorkerNotification(message, data = {}) {
  * @returns {Promise<void>}
  */
 async function showErrorServiceWorkerNotification(message, data = {}) {
-  await showServiceWorkerNotification("Error", {
+  return await showServiceWorkerNotification("Error", {
     body: message,
     vibrate: [200, 100, 200, 100, 200],
     tag: "trasla-error",
@@ -125,7 +125,22 @@ self.addEventListener("message", (event) => {
 
   if (event.data.type === "POST_EVENT") {
     console.info("Handling event posting request from client");
-    event.waitUntil(handlePostEvent(event));
+    // Keep service worker alive during the entire operation
+    event.waitUntil(
+      handlePostEvent(event).catch((error) => {
+        console.error("Critical error in handlePostEvent:", error);
+        // Ensure client gets a response even if something goes wrong
+        if (event.ports?.[0]) {
+          event.ports[0].postMessage({
+            success: false,
+            error: `Service worker error: ${error.message}`,
+          });
+        }
+        return showErrorServiceWorkerNotification(`Error crítico: ${error.message}`, {
+          type: "sw-error",
+        });
+      })
+    );
   } else {
     console.warn("Unknown message type:", event.data?.type);
     console.info("Full event data:", event.data);
@@ -137,11 +152,14 @@ self.addEventListener("message", (event) => {
  * @param {MessageEvent} messageEvent - The message event from the client
  */
 async function handlePostEvent(messageEvent) {
+  // Immediately respond to client with acknowledgment to prevent timeout
+  const responsePort = messageEvent.ports?.[0];
+
   try {
     if (!messageEvent.data?.payload) {
       throw new Error("No payload found in message event");
     }
-    if (!messageEvent.ports?.[0]) {
+    if (!responsePort) {
       throw new Error("No response port found in message event");
     }
 
@@ -181,16 +199,32 @@ async function handlePostEvent(messageEvent) {
           },
         }
       );
+      await new Promise((resolve) => setTimeout(resolve, 4000));
     } else {
-      // Make actual fetch request for production
-      response = await fetch(action, {
-        method: "POST",
-        redirect: "follow",
-        headers: {
-          "Content-Type": "text/plain;charset=UTF-8",
-        },
-        body: JSON.stringify(body),
-      });
+      // Make actual fetch request for production with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, 30000); // 30-second timeout
+
+      try {
+        response = await fetch(action, {
+          method: "POST",
+          redirect: "follow",
+          headers: {
+            "Content-Type": "text/plain;charset=UTF-8",
+          },
+          body: JSON.stringify(body),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === "AbortError") {
+          throw new Error("Request timeout after 30 seconds");
+        }
+        throw fetchError;
+      }
     }
 
     console.info("Fetch response received:", response.status);
@@ -212,32 +246,35 @@ async function handlePostEvent(messageEvent) {
       throw parseError;
     }
 
-    // wait 3 seconds before doing anything
-    await new Promise((resolve) => setTimeout(resolve, isTestEnvironment ? 4000 : 0));
-
-    // Send success result back to client
-    messageEvent.ports[0].postMessage({
+    // Send success result back to client IMMEDIATELY
+    responsePort.postMessage({
       success: true,
       data: result,
     });
 
-    // Show success notification
-    await showSuccessServiceWorkerNotification("Tu evento ha sido cargado, está listo para ver!.", {
+    // Show success notification (non-blocking)
+    return showSuccessServiceWorkerNotification("Tu evento ha sido cargado, está listo para ver!.", {
       type: "event-posted",
-      clientId: messageEvent.source.id,
+      clientId: messageEvent.source?.id,
       url: `${self.location.origin}/${result.slug}`,
     });
   } catch (error) {
     console.error("Error posting event in service worker:", error);
 
-    // Show error notification
-    await showErrorServiceWorkerNotification(`Hubo un problema: ${error.message}`, { type: "event-error" });
+    // Always try to send error back to client
+    if (responsePort) {
+      try {
+        responsePort.postMessage({
+          success: false,
+          error: error.message,
+        });
+      } catch (portError) {
+        console.error("Failed to send error message through port:", portError);
+      }
+    }
 
-    // Send error back to client
-    messageEvent.ports[0].postMessage({
-      success: false,
-      error: error.message,
-    });
+    // Show error notification
+    return showErrorServiceWorkerNotification(`Hubo un problema: ${error.message}`, { type: "event-error" });
   }
 }
 
@@ -276,6 +313,7 @@ self.addEventListener("notificationclick", (event) => {
     if (event.data.url) {
       event.waitUntil(clients.openWindow(event.data.url));
     }
+    console.warn("Unrecognized notification click event", event);
     return;
   }
 
