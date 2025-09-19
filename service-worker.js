@@ -212,22 +212,21 @@ async function handlePostEvent(messageEvent) {
       throw parseError;
     }
 
-    setTimeout(
-      async () => {
-        // Send success result back to client
-        messageEvent.ports[0].postMessage({
-          success: true,
-          data: result,
-        });
-        // Show success notification
-        await showSuccessServiceWorkerNotification("Tu evento ha sido cargado, está listo para ver!.", {
-          type: "event-posted",
-          clientId: messageEvent.source.id,
-          url: `${self.location.origin}/${result.slug}`,
-        });
-      },
-      isTestEnvironment ? 4000 : 0
-    );
+    // wait 3 seconds before doing anything
+    await new Promise((resolve) => setTimeout(resolve, isTestEnvironment ? 4000 : 0));
+
+    // Send success result back to client
+    messageEvent.ports[0].postMessage({
+      success: true,
+      data: result,
+    });
+
+    // Show success notification
+    await showSuccessServiceWorkerNotification("Tu evento ha sido cargado, está listo para ver!.", {
+      type: "event-posted",
+      clientId: messageEvent.source.id,
+      url: `${self.location.origin}/${result.slug}`,
+    });
   } catch (error) {
     console.error("Error posting event in service worker:", error);
 
@@ -235,16 +234,10 @@ async function handlePostEvent(messageEvent) {
     await showErrorServiceWorkerNotification(`Hubo un problema: ${error.message}`, { type: "event-error" });
 
     // Send error back to client
-    try {
-      messageEvent.ports[0].postMessage({
-        success: false,
-        error: error.message,
-      });
-    } catch (portError) {
-      console.error("Could not send error response to client:", portError);
-    }
-  } finally {
-    console.info("Finished handlePostEvent");
+    messageEvent.ports[0].postMessage({
+      success: false,
+      error: error.message,
+    });
   }
 }
 
@@ -276,38 +269,42 @@ self.addEventListener("push", (event) => {
 });
 
 // Notification click handler
-self.addEventListener("notificationclick", async (event) => {
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  if (event.notification.data?.type === "event-posted") {
-    const redirectTo = event.notification.data.url;
-    // check if a client with the given slug is opened
-    let client = await clients.get(event.notification.data.clientId);
-
-    if (!client) {
-      const clientList = await clients.matchAll({ type: "window" });
-      if (clientList.length > 0) {
-        client = clientList.find((client) => client.url.includes("/publicar-evento"));
-        if (!client) client = clientList[0];
-      }
+  if (event.notification.data?.type !== "event-posted") {
+    if (event.data.url) {
+      event.waitUntil(clients.openWindow(event.data.url));
     }
-
-    if (client) {
-      await client.focus();
-      if (!client.url.includes(redirectTo)) {
-        await client.navigate(redirectTo);
-      }
-      return;
-    }
-
-    // Navigate to the event page when success notification is clicked
-    return await clients.openWindow(`${self.location.origin}/${event.notification.data.slug}`);
+    return;
   }
 
-  if (event.data.url) {
-    // Open the link associated with the notification
-    await clients.openWindow(event.data.url);
-  }
+  event.waitUntil(
+    (async () => {
+      const redirectTo = event.notification.data.url;
+      // check if a client with the given slug is opened
+      let client = await clients.get(event.notification.data.clientId);
+
+      if (!client) {
+        const clientList = await clients.matchAll({ type: "window", includeUncontrolled: true });
+        if (clientList.length > 0) {
+          client = clientList.find((client) => client.url.includes("/publicar-evento"));
+          if (!client) client = clientList[0];
+        }
+      }
+
+      if (client) {
+        await client.focus();
+        if (!client.url.includes(redirectTo)) {
+          await client.navigate(redirectTo);
+        }
+        return;
+      }
+
+      // Navigate to the event page when success notification is clicked
+      return await clients.openWindow(`${self.location.origin}/${event.notification.data.slug}`);
+    })()
+  );
 });
 
 // PWA INSTALL/ACTIVATE handling
