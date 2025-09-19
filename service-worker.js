@@ -293,11 +293,11 @@ self.addEventListener("notificationclick", async (event) => {
     }
 
     if (client) {
+      await client.focus();
       if (!client.url.includes(redirectTo)) {
-        console.log("Existing client already on event page, no navigation needed.");
         await client.navigate(redirectTo);
       }
-      return await client.focus();
+      return;
     }
 
     // Navigate to the event page when success notification is clicked

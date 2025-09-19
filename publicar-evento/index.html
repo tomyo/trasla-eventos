@@ -383,14 +383,8 @@ Teléfono, instagram, link a la página tickets, etc.
         const messageChannel = new MessageChannel();
 
         return new Promise((resolve, reject) => {
-          // Set timeout for message response
-          const timeout = setTimeout(() => {
-            reject(new Error("Service worker response timeout after 30 seconds"));
-          }, 30000);
-
           // Set up response handler
           messageChannel.port1.onmessage = (event) => {
-            clearTimeout(timeout);
             console.log("Received response from service worker:", event.data);
             if (event.data.success) {
               resolve(event.data.data);
