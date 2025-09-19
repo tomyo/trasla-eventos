@@ -97,6 +97,22 @@ Teléfono, instagram, link a la página tickets, etc.
     </main>
     <site-footer></site-footer>
     <script type="module" src="/components/site-footer.js"></script>
+    <script type="module">
+      // START: Service Worker
+      /**
+       * @type {ServiceWorkerRegistration}
+       */
+      let swRegistration;
+
+      if ("serviceWorker" in navigator) {
+        try {
+          swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
+          console.log("Service Worker registered:", swRegistration);
+        } catch (error) {
+          console.error("Service Worker registration failed:", error);
+        }
+      }
+    </script>
     <style>
       form textarea {
         padding: 1ch;
@@ -208,6 +224,8 @@ Teléfono, instagram, link a la página tickets, etc.
       }
     </style>
     <script type="module">
+      import { requestNotificationPermission } from "/utils/notifications.js";
+
       const form = document.querySelector("form");
       const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
       const query = `?endpoint=uploadEvent`;
@@ -283,6 +301,7 @@ Teléfono, instagram, link a la página tickets, etc.
         const submitButton = document.querySelector("button[type=submit]");
         const submitButtonSpan = submitButton.querySelector("span");
         const buttonText = submitButtonSpan.textContent;
+        const output = document.querySelector("output[name=output]");
 
         const images = await getCachedFileBlobs();
         if (images.length === 0) {
@@ -290,28 +309,38 @@ Teléfono, instagram, link a la página tickets, etc.
           return;
         }
 
+        // Request notification permission before starting the operation
+        await requestNotificationPermission();
+
         submitButton.disabled = true;
         submitButtonSpan.textContent = "Publicando...";
 
         try {
           const eventData = await postEvent();
           submitButtonSpan.textContent = "Evento cargado! 👌";
+          output.textContent = "\nRedirigiendo a la página del evento...\n";
           console.log("response:", eventData);
-          console.log(`redirect to event page ${window.location.origin}/${eventData.slug}`);
-          form.reset();
+          console.log(`redirect to event page at ${window.location.origin}/${eventData.slug}`);
+
           // Event uploaded or found succesfully
           const cache = await caches.open(SHARE_TARGET_ACTION);
           for (const key of await cache.keys()) {
             console.info(`Deleting cache entry: ${key.url}`);
             await cache.delete(key);
           }
+          for (const preview of document.querySelectorAll("image-preview")) {
+            preview.remove();
+          }
+          // Clear the form (but not the description field)
+          form.reset();
           // Redirect to the event page
           window.location.href = `${window.location.origin}/${eventData.slug}`;
         } catch (error) {
           console.error("Error processing response:", error);
           alert(`Error procesando el evento: ${error.message}`);
+
           submitButton.disabled = false;
-          submitButton.textContent = buttonText;
+          submitButtonSpan.textContent = buttonText;
         }
       }
 
@@ -319,21 +348,73 @@ Teléfono, instagram, link a la página tickets, etc.
         // Convert images to base64 format
         const requestFiles = await convertBlobsToBase64(await getCachedFileBlobs());
 
-        const body = {
-          description: form.description.value,
-          files: requestFiles,
-        };
+        // Check if service worker is available and ready
+        if (!navigator.serviceWorker) {
+          throw new Error("Service worker no disponible. Intenta recargar la página.");
+        }
 
-        const response = await fetch(action, {
-          method: "POST",
-          redirect: "follow",
-          headers: {
-            "Content-Type": "text/plain;charset=UTF-8", // Use text/plain to avoid OPTION & CORS issues
-          },
-          body: JSON.stringify(body),
+        // Get service worker for message passing
+        let serviceWorker;
+        if (navigator.serviceWorker.controller) {
+          // Use the controller if available
+          serviceWorker = navigator.serviceWorker.controller;
+        } else {
+          // Fall back to using the registration's active service worker
+          console.log("Waiting for service worker to be ready...");
+          try {
+            // Add timeout to prevent hanging in test environments
+            const registrationPromise = navigator.serviceWorker.ready;
+            const timeoutPromise = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("Service worker ready timeout")), 3000)
+            );
+
+            const registration = await Promise.race([registrationPromise, timeoutPromise]);
+            serviceWorker = registration.active;
+
+            if (!serviceWorker) {
+              return alert("Service worker no disponible. Intenta recargar la página.");
+            }
+          } catch (error) {
+            return alert("Service worker no disponible. Intenta recargar la página. Error " + error.message);
+          }
+        }
+
+        // Create a MessageChannel for two-way communication
+        const messageChannel = new MessageChannel();
+
+        return new Promise((resolve, reject) => {
+          // Set timeout for message response
+          const timeout = setTimeout(() => {
+            reject(new Error("Service worker response timeout after 30 seconds"));
+          }, 30000);
+
+          // Set up response handler
+          messageChannel.port1.onmessage = (event) => {
+            clearTimeout(timeout);
+            console.log("Received response from service worker:", event.data);
+            if (event.data.success) {
+              resolve(event.data.data);
+            } else {
+              reject(new Error(event.data.error));
+            }
+          };
+
+          console.log("Sending message to service worker:", serviceWorker);
+          // Send message to service worker with the second port for response
+          serviceWorker.postMessage(
+            {
+              type: "POST_EVENT",
+              payload: {
+                api,
+                query,
+                description: form.description.value,
+                files: requestFiles,
+              },
+            },
+            [messageChannel.port2]
+          );
+          console.log("Message sent to service worker");
         });
-
-        return await extractSuccessResponse(response);
       }
 
       /**
@@ -424,13 +505,6 @@ Teléfono, instagram, link a la página tickets, etc.
           img.onerror = reject;
           img.src = URL.createObjectURL(blob);
         });
-      }
-
-      async function extractSuccessResponse(response) {
-        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-        const jsonResponse = await response.json();
-        if (!jsonResponse.success) throw new Error(`${jsonResponse.message}\n${JSON.stringify(jsonResponse.metadata)}`);
-        return jsonResponse.data;
       }
 
       // Cache hydration handling

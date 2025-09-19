@@ -81,6 +81,10 @@ section#eventos events-filter {
   display: flex;
 }
 
+section#eventos events-filter:not(:has(event-entries event-entry)) .hide-when-no-events {
+  display: none;
+}
+
 section#eventos events-filter form {
   --input-height: 2.3rem;
   display: var(--form-display, flex);
