@@ -318,6 +318,10 @@ Teléfono, instagram, link a la página tickets, etc.
         try {
           const eventData = await postEvent();
           submitButtonSpan.textContent = "Evento cargado! 👌";
+
+          const isTestEnvironment = location.hostname === "localhost" && form.description.value?.includes("test");
+          if (isTestEnvironment) return; // Force the SW do the redirection / open new page on notification click.
+
           output.textContent = "\nRedirigiendo a la página del evento...\n";
           console.log("response:", eventData);
           console.log(`redirect to event page at ${window.location.origin}/${eventData.slug}`);

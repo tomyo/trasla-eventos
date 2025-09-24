@@ -1,6 +1,17 @@
-// Firefox doesn't support import as es6 modules yet.
+// Firefox doesn't support import as es6 modules yet, so copy this value here.
 const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
 
+self.addEventListener("install", (e) => {
+  console.log("Service Worker installing...");
+  self.skipWaiting(); // Force activation
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker activated");
+  event.waitUntil(clients.claim()); // Take control immediately
+});
+
+// SHARE TARGET HANDLER
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method === "POST" && url.pathname === SHARE_TARGET_ACTION && url.origin === self.location.origin) {
@@ -8,61 +19,6 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(handleShareTarget(event.request));
   }
 });
-
-// UTILS
-
-function readAsDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
-
-/**
- * Shows a service worker notification with consistent styling
- * @param {string} title - Notification title
- * @param {Object} options - Notification options
- * @returns {Promise<void>}
- */
-async function showServiceWorkerNotification(title, options = {}) {
-  return await self.registration.showNotification(title, {
-    icon: "/assets/icons/favicon-192x192.png",
-    vibrate: [200, 100, 200],
-    ...options,
-  });
-}
-
-/**
- * Shows a success notification via service worker
- * @param {string} message - Success message
- * @param {Object} data - Data to attach to notification
- * @returns {Promise<void>}
- */
-async function showSuccessServiceWorkerNotification(message, data = {}) {
-  return await showServiceWorkerNotification("¡Éxito! 🎉", {
-    body: message,
-    tag: "trasla-success",
-    requireInteraction: true,
-    data,
-  });
-}
-
-/**
- * Shows an error notification via service worker
- * @param {string} message - Error message
- * @param {Object} data - Data to attach to notification
- * @returns {Promise<void>}
- */
-async function showErrorServiceWorkerNotification(message, data = {}) {
-  return await showServiceWorkerNotification("Error", {
-    body: message,
-    vibrate: [200, 100, 200, 100, 200],
-    tag: "trasla-error",
-    data,
-  });
-}
 
 /**
  * @param {Request} request - The incoming request containing form data to be processed.
@@ -111,40 +67,31 @@ async function handleShareTarget(request) {
   return Response.redirect(`/publicar-evento/`, 303);
 }
 
-// Message handler for event posting delegation
+// MESSAGE HANDLER FOR EVENT POSTING
 self.addEventListener("message", (event) => {
-  // Log everything about the message for debugging
-  console.info("Service worker received message:", {
-    type: event.data?.type,
-    hasData: !!event.data,
-    hasPorts: !!event.ports,
-    portsLength: event.ports?.length || 0,
-    origin: event.origin,
-    source: event.source,
-  });
-
-  if (event.data.type === "POST_EVENT") {
-    console.info("Handling event posting request from client");
-    // Keep service worker alive during the entire operation
-    event.waitUntil(
-      handlePostEvent(event).catch((error) => {
-        console.error("Critical error in handlePostEvent:", error);
-        // Ensure client gets a response even if something goes wrong
-        if (event.ports?.[0]) {
-          event.ports[0].postMessage({
-            success: false,
-            error: `Service worker error: ${error.message}`,
-          });
-        }
-        return showErrorServiceWorkerNotification(`Error crítico: ${error.message}`, {
-          type: "sw-error",
-        });
-      })
-    );
-  } else {
+  if (event.data.type !== "POST_EVENT") {
     console.warn("Unknown message type:", event.data?.type);
     console.info("Full event data:", event.data);
+    return;
   }
+
+  console.info("Handling event posting request from client", event.data);
+  // Keep service worker alive during the entire operation
+  event.waitUntil(
+    handlePostEvent(event).catch((error) => {
+      console.error("Critical error in handlePostEvent:", error);
+      // Ensure client gets a response even if something goes wrong
+      if (event.ports?.[0]) {
+        event.ports[0].postMessage({
+          success: false,
+          error: `Service worker error: ${error.message}`,
+        });
+      }
+      return showErrorServiceWorkerNotification(`Error crítico en SW: ${error.message}`, {
+        type: "sw-error",
+      });
+    })
+  );
 });
 
 /**
@@ -163,17 +110,9 @@ async function handlePostEvent(messageEvent) {
       throw new Error("No response port found in message event");
     }
 
-    console.info("Extracting payload from message");
+    console.info("Extracting payload from messageEvent.data.payload", messageEvent.data.payload);
     const { api, query, description, files } = messageEvent.data.payload;
     const action = `${api}${query}`;
-    console.info("Request details:", {
-      action,
-      filesCount: files?.length || 0,
-      descriptionLength: description?.length || 0,
-    });
-
-    const body = { description, files };
-    console.info("Making fetch request to:", action);
 
     // Check if we're in a test environment (localhost with test patterns)
     const isTestEnvironment = self.location.hostname === "localhost" && description?.includes("test");
@@ -199,64 +138,41 @@ async function handlePostEvent(messageEvent) {
           },
         }
       );
-      await new Promise((resolve) => setTimeout(resolve, 4000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
     } else {
-      // Make actual fetch request for production with timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => {
-        controller.abort();
-      }, 30000); // 30-second timeout
-
-      try {
-        response = await fetch(action, {
-          method: "POST",
-          redirect: "follow",
-          headers: {
-            "Content-Type": "text/plain;charset=UTF-8",
-          },
-          body: JSON.stringify(body),
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-      } catch (fetchError) {
-        clearTimeout(timeoutId);
-        if (fetchError.name === "AbortError") {
-          throw new Error("Request timeout after 30 seconds");
-        }
-        throw fetchError;
-      }
+      response = await fetch(action, {
+        method: "POST",
+        redirect: "follow",
+        headers: {
+          "Content-Type": "text/plain;charset=UTF-8",
+        },
+        body: JSON.stringify({ description, files }),
+      });
     }
 
-    console.info("Fetch response received:", response.status);
-    console.info("Response headers:", [...response.headers.entries()]);
+    const jsonResponse = await response.json();
+    console.info("Parsed JSON response:", jsonResponse);
 
-    const responseText = await response.text();
-    console.info("Response body:", responseText);
+    if (!jsonResponse.success) throw new Error(`${jsonResponse.message}\n${JSON.stringify(jsonResponse.metadata)}`);
 
-    let result;
+    // Send success event data result back to client IMMEDIATELY
+    const eventData = jsonResponse.data;
     try {
-      const jsonResponse = JSON.parse(responseText);
-      console.info("Parsed JSON response:", jsonResponse);
-
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      if (!jsonResponse.success) throw new Error(`${jsonResponse.message}\n${JSON.stringify(jsonResponse.metadata)}`);
-      result = jsonResponse.data;
-    } catch (parseError) {
-      console.error("Error parsing response:", parseError);
-      throw parseError;
+      responsePort.postMessage({
+        success: true,
+        data: eventData,
+      });
+      console.info("Success response sent to client");
+    } catch (portError) {
+      console.error("Failed to send success message through port:", portError);
+      // Even if we can't send through the port, we'll still show the notification
     }
-
-    // Send success result back to client IMMEDIATELY
-    responsePort.postMessage({
-      success: true,
-      data: result,
-    });
 
     // Show success notification (non-blocking)
     return showSuccessServiceWorkerNotification("Tu evento ha sido cargado, está listo para ver!.", {
       type: "event-posted",
       clientId: messageEvent.source?.id,
-      url: `${self.location.origin}/${result.slug}`,
+      url: `${self.location.origin}/${eventData.slug}`,
     });
   } catch (error) {
     console.error("Error posting event in service worker:", error);
@@ -278,6 +194,106 @@ async function handlePostEvent(messageEvent) {
   }
 }
 
+// Push Notification handler
+self.addEventListener("push", (event) => {
+  const data = event.data.json();
+  console.log("Push received", data);
+
+  const options = {
+    body: data.body,
+    vibrate: [200, 100, 200],
+  };
+
+  event.waitUntil(showServiceWorkerNotification(data.title, options));
+});
+
+// Notification click handler
+self.addEventListener("notificationclick", (event) => {
+  const notification = event.notification;
+  notification.close();
+
+  // Navigate to the event page when success notification is clicked
+  event.waitUntil(
+    (async () => {
+      // Check if a client with the given id exists, this was the client that initiated the comunication
+      let client = await clients.get(notification.data.clientId);
+      if (!client) {
+        const clientList = await clients.matchAll({ type: "window", includeUncontrolled: true });
+        if (clientList.length > 0) {
+          client = clientList.find((client) => client.url.includes(notification.data.url));
+          if (!client) client = clientList.find((client) => client.url.includes("/publicar-evento"));
+          if (!client) client = clientList[0];
+        }
+      }
+      if (client) {
+        await client.focus();
+        if (!client.url.includes(notification.data.url)) {
+          return client.navigate(notification.data.url);
+        } else {
+          return;
+        }
+      }
+
+      return clients.openWindow(notification.data.url);
+    })()
+  );
+});
+
+// UTILS
+
+function readAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Shows a service worker notification with consistent styling
+ * @param {string} title - Notification title
+ * @param {Object} options - Notification options
+ * @returns {Promise<void>}
+ */
+async function showServiceWorkerNotification(title, options = {}) {
+  return self.registration.showNotification(title, {
+    icon: "/assets/icons/favicon-192x192.png",
+    vibrate: [200, 100, 200],
+    ...options,
+  });
+}
+
+/**
+ * Shows a success notification via service worker
+ * @param {string} message - Success message
+ * @param {Object} data - Data to attach to notification
+ * @returns {Promise<void>}
+ */
+async function showSuccessServiceWorkerNotification(message, data = {}) {
+  return showServiceWorkerNotification("¡Éxito! 🎉", {
+    body: message,
+    tag: "trasla-success",
+    requireInteraction: true,
+    data,
+  });
+}
+
+/**
+ * Shows an error notification via service worker
+ * @param {string} message - Error message
+ * @param {Object} data - Data to attach to notification
+ * @returns {Promise<void>}
+ */
+async function showErrorServiceWorkerNotification(message, data = {}) {
+  return showServiceWorkerNotification("Error", {
+    body: message,
+    vibrate: [200, 100, 200, 100, 200],
+    tag: "trasla-error",
+    data,
+  });
+}
+
 /**
  * Extracts success response from fetch result
  * @param {Response} response - The fetch response
@@ -289,70 +305,3 @@ async function extractSuccessResponse(response) {
   if (!jsonResponse.success) throw new Error(`${jsonResponse.message}\n${JSON.stringify(jsonResponse.metadata)}`);
   return jsonResponse.data;
 }
-
-// Push Notification handler
-self.addEventListener("push", (event) => {
-  const data = event.data.json();
-  console.log("Push received", data);
-
-  const options = {
-    body: data.body,
-    // icon: data.icon,
-    // data: data.url,
-    vibrate: [200, 100, 200],
-  };
-
-  event.waitUntil(self.registration.sendNotification(data.title ?? "Recordatorio de evento", options));
-});
-
-// Notification click handler
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-
-  if (event.notification.data?.type !== "event-posted") {
-    if (event.data.url) {
-      event.waitUntil(clients.openWindow(event.data.url));
-    }
-    console.warn("Unrecognized notification click event", event);
-    return;
-  }
-
-  event.waitUntil(
-    (async () => {
-      const redirectTo = event.notification.data.url;
-      // check if a client with the given slug is opened
-      let client = await clients.get(event.notification.data.clientId);
-
-      if (!client) {
-        const clientList = await clients.matchAll({ type: "window", includeUncontrolled: true });
-        if (clientList.length > 0) {
-          client = clientList.find((client) => client.url.includes("/publicar-evento"));
-          if (!client) client = clientList[0];
-        }
-      }
-
-      if (client) {
-        await client.focus();
-        if (!client.url.includes(redirectTo)) {
-          await client.navigate(redirectTo);
-        }
-        return;
-      }
-
-      // Navigate to the event page when success notification is clicked
-      return await clients.openWindow(`${self.location.origin}/${event.notification.data.slug}`);
-    })()
-  );
-});
-
-// PWA INSTALL/ACTIVATE handling
-
-self.addEventListener("install", (e) => {
-  console.log("Service Worker installing...");
-  self.skipWaiting(); // Force activation
-});
-
-self.addEventListener("activate", (event) => {
-  console.log("Service Worker activated");
-  event.waitUntil(clients.claim()); // Take control immediately
-});
