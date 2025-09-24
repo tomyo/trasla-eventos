@@ -47,6 +47,7 @@ class SiteFooter extends HTMLElement {
             <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero/">Mina Clavero</a> ·
             <a title="Ver eventos en Nono" href="/lugar/nono/">Nono</a> ·
             <a title="Ver eventos en Panaholma" href="/lugar/panaholma/">Panaholma</a> ·
+            <a title="Ver eventos en Quebracho Ladeado" href="/lugar/quebracho-ladeado/">Quebracho Ladeado</a> ·
             <a title="Ver eventos en San Huberto" href="/lugar/san-huberto/">San Huberto</a> ·
             <a title="Ver eventos en San Javier" href="/lugar/san-javier/">San Javier</a> ·
             <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo/">San Lorenzo</a> ·
