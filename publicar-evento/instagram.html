@@ -108,7 +108,6 @@
           let eventData = await extractSuccessResponse(await fetch(api + getOrCreateQuery));
 
           if (eventData.alreadyCreated) {
-            alert(`El evento ya existe con ID ${eventData.id}`);
             form.elements["output"].textContent += "✔️ Evento existente encontrado ...\n";
           } else {
             form.elements["output"].textContent += "✔️ Nuevo evento creando...\n";
