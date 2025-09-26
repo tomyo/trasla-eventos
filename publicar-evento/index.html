@@ -319,20 +319,35 @@ Teléfono, instagram, link a la página tickets, etc.
         // Request notification permission before starting the operation
         await requestNotificationPermission();
 
-        submitButton.disabled = true;
+        submitButton.disabled = true; // We use submitButton.value to store the event ID if already created, as a retry mechanism.
         submitButtonSpan.textContent = "Publicando...";
 
         try {
-          let eventData = await postEvent();
-          output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
-          output.textContent += "\nProcesando la información del evento...\n";
+          let eventData;
+          let eventId;
+          if (!submitButton.value) {
+            eventData = await postEvent();
+            submitButton.value = eventData.id;
+            eventId = eventData.id;
+            output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
+            output.textContent += "\nProcesando la información del evento...\n";
+          } else {
+            // Retry attempt for existing event
+            eventId = submitButton.value;
+            eventData = { id: eventId };
+            output.textContent += "\nReintentando la carga...\n";
+          }
 
           let retries = 0;
-          const maxRetries = 15;
-          while (!eventData.slug) {
-            const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventData.id}`;
-            eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
-            if (eventData.slug) break;
+          const maxRetries = submitButton.value ? 5 : 35; // Less retries if re-trying an existing event
+          while (!eventData?.slug) {
+            const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventId}`;
+            try {
+              eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
+            } catch (error) {
+              console.error("Error fetching event", eventData, error);
+            }
+            if (eventData?.slug) break;
 
             retries++;
             if (retries >= maxRetries) {
@@ -340,7 +355,7 @@ Teléfono, instagram, link a la página tickets, etc.
                 `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
               );
             }
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            await new Promise((resolve) => setTimeout(resolve, 3000));
           }
 
           if (document.visibilityState !== "visible") {
@@ -353,7 +368,12 @@ Teléfono, instagram, link a la página tickets, etc.
 
           submitButtonSpan.textContent = "Evento cargado! 👌";
           const isTestEnvironment = location.hostname === "localhost" && form.description.value?.includes("test");
-          if (isTestEnvironment) return; // Force the SW do the redirection / open new page on notification click.
+          if (isTestEnvironment) {
+            if (form.description.value?.includes("fail")) {
+              throw new Error("Failing as requested in test mode.");
+            }
+            return; // Force the SW do the redirection / open new page on notification click.
+          }
 
           output.textContent += "\nRedirigiendo a la página del evento...\n";
           console.log("response:", eventData);
@@ -377,7 +397,7 @@ Teléfono, instagram, link a la página tickets, etc.
           alert(`Error procesando el evento: ${error.message}`);
 
           submitButton.disabled = false;
-          submitButtonSpan.textContent = buttonText;
+          submitButtonSpan.textContent = buttonText + " (Reintentar)";
         }
       }
 
