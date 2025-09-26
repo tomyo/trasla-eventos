@@ -296,6 +296,13 @@ Teléfono, instagram, link a la página tickets, etc.
         return filesListResponse ? await filesListResponse.json() : [];
       }
 
+      async function extractSuccessResponse(response) {
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        const jsonResponse = await response.json();
+        if (!jsonResponse.success) throw new Error(jsonResponse.message);
+        return jsonResponse.data;
+      }
+
       async function handleFormSubmit(event) {
         event.preventDefault();
         const submitButton = document.querySelector("button[type=submit]");
@@ -316,13 +323,31 @@ Teléfono, instagram, link a la página tickets, etc.
         submitButtonSpan.textContent = "Publicando...";
 
         try {
-          const eventData = await postEvent();
-          submitButtonSpan.textContent = "Evento cargado! 👌";
+          let eventData = await postEvent();
+          output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
+          output.textContent += "\nProcesando la información del evento...\n";
 
+          let retries = 0;
+          const maxRetries = 15;
+          while (!eventData.slug) {
+            const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventData.id}`;
+            eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
+            if (eventData.slug) break;
+
+            retries++;
+            if (retries >= maxRetries) {
+              throw new Error(
+                `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
+              );
+            }
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+          }
+
+          submitButtonSpan.textContent = "Evento cargado! 👌";
           const isTestEnvironment = location.hostname === "localhost" && form.description.value?.includes("test");
           if (isTestEnvironment) return; // Force the SW do the redirection / open new page on notification click.
 
-          output.textContent = "\nRedirigiendo a la página del evento...\n";
+          output.textContent += "\nRedirigiendo a la página del evento...\n";
           console.log("response:", eventData);
           console.log(`redirect to event page at ${window.location.origin}/${eventData.slug}`);
 

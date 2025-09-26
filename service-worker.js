@@ -146,7 +146,7 @@ async function handlePostEvent(messageEvent) {
         headers: {
           "Content-Type": "text/plain;charset=UTF-8",
         },
-        body: JSON.stringify({ description, files }),
+        body: JSON.stringify({ description, files, fast: true }),
       });
     }
 
@@ -167,6 +167,8 @@ async function handlePostEvent(messageEvent) {
       console.error("Failed to send success message through port:", portError);
       // Even if we can't send through the port, we'll still show the notification
     }
+
+    if (!eventData.slug) return;
 
     // Show success notification (non-blocking)
     return showSuccessServiceWorkerNotification("Tu evento ha sido cargado, está listo para ver!.", {
