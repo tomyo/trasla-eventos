@@ -224,7 +224,7 @@ Teléfono, instagram, link a la página tickets, etc.
       }
     </style>
     <script type="module">
-      import { requestNotificationPermission } from "/utils/notifications.js";
+      import { requestNotificationPermission, showNotification } from "/utils/notifications.js";
 
       const form = document.querySelector("form");
       const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
@@ -341,6 +341,14 @@ Teléfono, instagram, link a la página tickets, etc.
               );
             }
             await new Promise((resolve) => setTimeout(resolve, 2000));
+          }
+
+          if (document.visibilityState !== "visible") {
+            const notification = await showNotification("Evento cargado!", {
+              body: "Tu evento ya está listo para ver.",
+              requireInteraction: true,
+              data: { type: "event-posted", url: `${window.location.origin}/${eventData.slug}` },
+            });
           }
 
           submitButtonSpan.textContent = "Evento cargado! 👌";
