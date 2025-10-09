@@ -117,5 +117,29 @@
         document.querySelector("main").appendChild(img);
       }
     }
+
+    setTimeout(() => {
+      document.body.classList.add("ready");
+    }, 1000);
   </script>
 </html>
+
+<!--USAGE EXAMPLE VIA -->
+<!--
+
+curl -X POST   https://production-sfo.browserless.io/screenshot?token=TOKEN   -H 'Cache-Control: no-cache'   -H 'Content-Type: application/json'   -d '{
+  "url": "https://eventos.trasla.com.ar/poster-eventos-de-hoy.html",
+  "options": {
+    "type": "png"
+  },
+  "viewport": {
+    "width": 1080, 
+    "height": 1350,
+    "isMobile": true
+  },
+  "waitForSelector": {
+    "selector": "body.ready"
+  }
+}' --output "screenshot.png"
+
+-->
