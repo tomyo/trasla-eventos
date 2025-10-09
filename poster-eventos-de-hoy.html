@@ -104,12 +104,10 @@
 
     // Fill today's event images
     const todayEvents = await getGoogleSheetEvents("18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog", "39399790");
-    for (const event of todayEvents) {
-      if (event.image_download_url) {
-        const img = document.createElement("img");
-        img.src = event.image_download_url;
-        document.querySelector("main").appendChild(img);
-      }
+    for (const event of todayEvents.filter((e) => !e.hidden && e.image_download_url)) {
+      const img = document.createElement("img");
+      img.src = event.image_download_url;
+      document.querySelector("main").appendChild(img);
     }
 
     // Wait for all images to load before marking the body as ready (to be used as a waitForSelector in screenshot)
