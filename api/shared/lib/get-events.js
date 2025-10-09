@@ -59,6 +59,11 @@ async function getSheetData(id, gid = 0) {
           value = createSheetDate(...dateRegexp.exec(cel.v)[1].split(","), SHEET_TIMEZONE_OFFSET).toISOString();
         } else {
           value = cel.v || cel.f;
+
+          if (typeof value == "string") {
+            if (value.toLowerCase() == "true") value = true;
+            if (value.toLowerCase() == "false") value = false;
+          }
         }
       }
       row.push(typeof value == "string" ? value.trim() : value);
