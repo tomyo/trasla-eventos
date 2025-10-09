@@ -112,9 +112,16 @@
       }
     }
 
-    setTimeout(() => {
-      document.body.classList.add("ready");
-    }, 1000);
+    // Wait for all images to load before marking the body as ready (to be used as a waitForSelector in screenshot)
+    const images = document.querySelectorAll("main img");
+    const promises = Array.from(images).map((img) => {
+      return new Promise((resolve) => {
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+    });
+    await Promise.all(promises);
+    document.body.classList.add("ready");
   </script>
 </html>
 
