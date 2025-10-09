@@ -13,11 +13,8 @@
     }
 
     :root {
-      --item-width: 50%;
-      --item-height: 33.33%;
-      --color-light: #e6deca;
       --bg-color: var(--color-light);
-      --flex-gap: 1rem;
+      --color-light: #e6deca;
       --font-family-body: "Sometype Mono";
     }
     * {
@@ -30,6 +27,10 @@
       margin: 0;
     }
     main {
+      --item-width: 100%;
+      --item-height: 33.33%;
+      --flex-gap: 1rem;
+
       background-color: var(--bg-color);
       width: 100vw;
       height: 100vh;
@@ -38,26 +39,17 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      gap: var(--flex-gap);
       padding: 1rem;
+      gap: var(--flex-gap);
 
       &:has(> * ~ * ~ * ~ *) {
-        [slot="title"] {
-          --item-width: 50%;
-        }
+        --item-width: 50%;
       }
 
-      &:has(> * ~ * ~ * ~ * ~ *) {
-        --item-width: 33.33%;
-
-        [slot="title"] {
-          --item-width: 50%;
-        }
-      }
-
-      &:has(> * ~ * ~ * ~ * ~ * ~ *) :first-child {
+      &:has(> * ~ * ~ * ~ * ~ * ~ * ~ *) {
         --item-width: 33.33%;
       }
+
       &:has(> * ~ * ~ * ~ * ~ * ~ * ~ * ~ * ~ * ~ *) {
         --item-width: 25%;
       }
@@ -66,6 +58,7 @@
         flex: 1 1 calc(var(--item-width) - var(--flex-gap));
         height: calc(var(--item-height) - var(--flex-gap));
         object-fit: contain;
+        width: 100%;
       }
     }
 
@@ -73,26 +66,27 @@
       display: grid;
       place-content: center;
       font-size: 4rem;
-      --item-width: 100%;
     }
   </style>
 
   <main>
     <h1 slot="title">HOY</h1>
+    <!-- 
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-original.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-original.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-original.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" />
+    <img src="/assets/images/portada-720w-1280h.jpg" /> 
+    -->
   </main>
-  <!-- <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-original.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-original.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-original.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" />
-  <img src="/assets/images/portada-720w-1280h.jpg" /> -->
 
   <script type="module">
     import { getGoogleSheetEvents } from "/lib/get-events.js";
