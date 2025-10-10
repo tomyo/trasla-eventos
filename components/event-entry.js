@@ -15,6 +15,16 @@ customElements.define(
   "event-entry",
   class extends HTMLElement {
     static requiredDatasetAttributes = ["title", "starts-at", "images", "locality", "slug"];
+    constructor() {
+      super();
+      if (!document.getElementById("event-entry-style")) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.id = "event-entry-style";
+        link.href = new URL("./event-entry.css", import.meta.url).href;
+        document.head.appendChild(link);
+      }
+    }
 
     connectedCallback() {
       if (!this.isDatasetValid()) return;
