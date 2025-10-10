@@ -51,7 +51,9 @@ customElements.define(
     processData() {
       this.startDate = parseDate(this.dataset.startsAt);
       if (this.dataset.endsAt) this.endDate = parseDate(this.dataset.endsAt);
-      this.previewImages = getGoogleDriveImagesPreviews(this.dataset.images, IMAGE_PREVIEW_WIDTH);
+      this.previewImages = this.dataset.images.includes("google.com")
+        ? getGoogleDriveImagesPreviews(this.dataset.images, IMAGE_PREVIEW_WIDTH)
+        : this.dataset.images.split(",").map((url) => url.trim());
       this.setAttribute("date", formatLocalDate(new Date(this.dataset.startsAt)));
     }
 
