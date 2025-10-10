@@ -100,7 +100,7 @@
       const today = new Date();
       const options = { day: "2-digit", month: "short" };
       const [day, month] = today.toLocaleDateString("es-AR", options).split("-");
-      document.querySelector('[slot="title"]').textContent = `${day} ${month.toUpperCase()}`;
+      document.querySelector('[slot="title"]').innerHTML = `${day} <br /> ${month.toUpperCase()}`;
     }
 
     // Fill today's event images
