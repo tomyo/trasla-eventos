@@ -8,6 +8,7 @@ import {
   getGoogleDriveImagesPreviews,
   createGoogleCalendarUrl,
 } from "../lib/utils.js";
+import "./horizontal-carousel.js";
 
 const IMAGE_PREVIEW_WIDTH = 600; // Event cards are at most around 600px wide
 
@@ -59,7 +60,7 @@ customElements.define(
 
     addEventListeners() {
       this.details = this.querySelector("details");
-      this.images = this.querySelector(".carousel");
+      this.images = this.querySelector("horizontal-carousel");
       this.summary = this.querySelector("summary");
       this.details?.addEventListener("toggle", this);
       this.images.addEventListener("click", (event) => {
@@ -115,30 +116,10 @@ customElements.define(
       const eventTime = formatEventDate(this.startDate, { onlyTime: true, skipZeroTime: true });
       this.innerHTML = /*html*/ `
         <h3 part="title">${this.dataset.title}</h3>
-        <div class="carousel">
+        <horizontal-carousel>
           ${this.previewImages.map((url) => `<img src="${url}" loading="lazy" alt="${this.dataset.title}">`).join("\n")}
-        </div>
-        ${
-          // Add carousel dots fallback for browsers without scroll marker support
-          !CSS.supports("scroll-marker-group", "after") && this.previewImages.length > 1
-            ? `
-        <div part="carousel-dots" >
-          ${this.previewImages.map((url) => `<button type="button">●</button type="button">`).join(" ")}
-        </div>
-        `
-            : `
-        <style>
-          [data-slug="${this.dataset.slug}"] .carousel {
-            anchor-name: --${this.dataset.slug};
-
-            &::scroll-button(*) {
-              position-anchor: --${this.dataset.slug};
-            }
-          
-          }
-        </style>`
-        }
-
+        </horizontal-carousel>
+       
 
         <h4 part="where-and-when">
           ${this.dataset.locality} ${eventTime ? ` - ${eventTime}` : ""}
