@@ -78,7 +78,7 @@ customElements.define(
         return;
       }
 
-      if (oldValue !== newValue) {
+      if (oldValue && oldValue !== newValue) {
         // Re-validate and possibly re-render when attributes change
         if (this.isDatasetValid()) {
           this.processData();
