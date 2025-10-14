@@ -25,7 +25,7 @@ async function getGoogleSheetEvents(id = SHEET_ID_FUTURE_EVENTS, gid = SHEET_GID
  * @param {number} timezone = The sheet's offset from UTC in hours (e.g., for UTC−7, pass -7)
  * @returns {Date} A Date object that represents the that moment in time
  */
-function createSheetDate(year, month, day, hour, minute, second = 0, timezone = SHEET_TIMEZONE_OFFSET) {
+function createSheetDate(year, month, day, hour = 0, minute = 0, second = 0, timezone = SHEET_TIMEZONE_OFFSET) {
   // Construct a date using Date.UTC so that we start with a known UTC base.
   const utcDate = new Date(Date.UTC(year, month, day, hour, minute, second));
 
@@ -56,7 +56,8 @@ async function getSheetData(id, gid = 0) {
         // cel.v is the actual value, cel.f is the formatted value.
         // i.e. { v: "Date(2025,2,30,21,1,11)", f: "30/3/2025 21:01:12" }
         if (cel.f && cel.v && typeof cel.v == "string" && cel.v.startsWith("Date(")) {
-          value = createSheetDate(...dateRegexp.exec(cel.v)[1].split(","), SHEET_TIMEZONE_OFFSET).toISOString();
+          const [year, month, day, hour, minute, second] = dateRegexp.exec(cel.v)[1].split(",").map(Number);
+          value = createSheetDate(year, month, day, hour, minute, second, SHEET_TIMEZONE_OFFSET).toISOString();
         } else {
           value = cel.v || cel.f;
 
