@@ -8,7 +8,11 @@ const OUTFILE = "legacy.css";
 
 async function main() {
   // 1. Find all HTML and CSS files
-  const files = [...glob.sync("index.html"), ...glob.sync("*.css", { ignore: [OUTFILE] })];
+  const files = [
+    ...glob.sync("index.html"),
+    ...glob.sync("*.css", { ignore: [OUTFILE] }),
+    ...glob.sync("components/**/*.css"),
+  ];
 
   // 2. Extract CSS from <style>…</style> and include all CSS file content
   let combined = "";

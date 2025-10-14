@@ -224,218 +224,6 @@ section#eventos event-entries time:before {
   right: 0;
 }
 
-section#eventos event-entry:not([hidden])[excluded] {
-  display: none;
-}
-
-section#eventos event-entry:not([hidden]) .carousel {
-  object-fit: contain;
-  cursor: pointer;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-  scroll-behavior: smooth;
-  scroll-marker-group: after;
-  scrollbar-width: none;
-  counter-increment: carousel-counter;
-  border-radius: 10px;
-  width: 100%;
-  height: auto;
-  min-height: 15rem;
-  max-height: 80vh;
-  display: flex;
-  position: relative;
-  overflow-x: auto;
-}
-
-section#eventos event-entry:not([hidden]) .carousel::scroll-button(left) {
-  content: "◄" / "Imagen anterior";
-  left: calc(anchor(left)  - 2.2rem);
-}
-
-section#eventos event-entry:not([hidden]) .carousel::scroll-button(right) {
-  content: "►" / "Imagen siguiente";
-  right: calc(anchor(right)  - 2.2rem);
-}
-
-section#eventos event-entry:not([hidden]) .carousel::scroll-button(*) {
-  align-self: anchor-center;
-  cursor: pointer;
-  background: none;
-  border: none;
-  height: 15rem;
-  padding: 1rem;
-  line-height: 1;
-  position: absolute;
-}
-
-section#eventos event-entry:not([hidden]) .carousel:has(img:only-child)::scroll-button(*) {
-  display: none;
-}
-
-section#eventos event-entry:not([hidden]) .carousel::scroll-button(*):focus-visible {
-  outline-offset: .5rem;
-}
-
-section#eventos event-entry:not([hidden]) .carousel + [part="carousel-dots"] {
-  z-index: 1;
-  justify-content: center;
-  width: min-content;
-  margin-block-start: -.5rem;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-  font-size: .5rem;
-  display: flex;
-}
-
-section#eventos event-entry:not([hidden]) .carousel + [part="carousel-dots"] > * {
-  -webkit-appearance: none;
-  appearance: none;
-  background: none;
-  place-content: center;
-  padding: .5rem;
-  display: grid;
-}
-
-section#eventos event-entry:not([hidden]) .carousel::scroll-marker-group {
-  justify-content: center;
-  width: min-content;
-  margin-block-start: -.5rem;
-  margin-block-end: 1rem;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-  display: flex;
-}
-
-section#eventos event-entry:not([hidden]) .carousel:has(img:only-child)::scroll-marker-group {
-  display: none;
-}
-
-section#eventos event-entry:not([hidden]) .carousel img {
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  object-fit: contain;
-  flex-shrink: 0;
-  max-width: 100%;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-}
-
-section#eventos event-entry:not([hidden]) .carousel img::scroll-marker {
-  content: "●";
-  width: 1em;
-  height: 1em;
-  color: var(--color-green);
-  padding: .3rem;
-  text-decoration: none;
-}
-
-section#eventos event-entry:not([hidden]) .carousel img::scroll-marker:target-current {
-  color: var(--color-yellow);
-}
-
-section#eventos event-entry:not([hidden]) .event-image {
-  object-fit: contain;
-  cursor: pointer;
-  border-radius: 10px;
-  width: 100%;
-  height: auto;
-  min-height: 15rem;
-  max-height: 80vh;
-}
-
-section#eventos event-entry:not([hidden]) .badges {
-  text-transform: uppercase;
-  letter-spacing: .1rem;
-  justify-content: center;
-  gap: .5rem;
-  font-weight: bold;
-  display: flex;
-}
-
-section#eventos event-entry:not([hidden]) .badges > * {
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  border-radius: calc(var(--border-radius) / 2);
-  padding: .5rem 1rem;
-  font-size: .66rem;
-  font-weight: 400;
-  line-height: 1;
-  display: inline-block;
-}
-
-section#eventos event-entry:not([hidden]) .badges > *[data-type="Taller"] {
-  background-color: var(--color-yellow);
-}
-
-section#eventos event-entry:not([hidden]) .badges > *[data-type="Evento"] {
-  background-color: var(--color-green);
-}
-
-section#eventos event-entry:not([hidden]) [part="where-and-when"] {
-  align-self: center;
-  width: max-content;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-  font-weight: normal;
-}
-
-section#eventos event-entry:not([hidden]) [part="title"], section#eventos event-entry:not([hidden]) [part="where-and-when"] {
-  text-transform: uppercase;
-  margin: 0;
-}
-
-:is(section#eventos event-entry:not([hidden]) [part="title"], section#eventos event-entry:not([hidden]) [part="where-and-when"]):after {
-  content: "";
-  border-block-end: 1px solid var(--color);
-  margin-block-start: .5rem;
-  margin-block-end: .5rem;
-  display: block;
-}
-
-section#eventos event-entry:not([hidden]) [part="title"]:after {
-  margin-block-end: .25rem;
-}
-
-section#eventos event-entry:not([hidden]) [part="buttons"] {
-  justify-content: space-evenly;
-  align-items: center;
-  display: flex;
-}
-
-section#eventos event-entry:not([hidden]) details summary {
-  display: var(--summary-display, revert);
-  cursor: pointer;
-  position: relative;
-}
-
-section#eventos event-entry:not([hidden]) details summary::-webkit-details-marker {
-  display: none;
-}
-
-section#eventos event-entry:not([hidden]) [part="description"] {
-  word-break: break-word;
-  text-wrap: balance;
-  text-align: start;
-  margin-block-start: .5rem;
-  margin-block-end: 0;
-}
-
-section#eventos event-entry:not([hidden]) [part="button"] {
-  cursor: pointer;
-  background: none;
-  border: none;
-  border-radius: 2px;
-  outline: none;
-  padding: .5rem .5rem 0;
-  text-decoration: none;
-  transition-duration: .2s;
-}
-
-section#eventos event-entry:not([hidden]) [part="button"]:hover, section#eventos event-entry:not([hidden]) [part="button"]:focus {
-  background-color: color-mix(in srgb, var(--color, currentColor) 10%, transparent);
-}
-
 * {
   box-sizing: border-box;
 }
@@ -841,4 +629,220 @@ header details[open] .line:nth-of-type(2) {
 
 header details[open] .line:nth-of-type(3) {
   transform: translateY(-225%)rotate(45deg);
+}
+
+horizontal-carousel {
+  object-fit: contain;
+  cursor: pointer;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-marker-group: after;
+  scrollbar-width: none;
+  counter-increment: carousel-counter;
+  anchor-name: var(--anchor-name, --carousel);
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 15rem;
+  max-height: 80vh;
+  display: flex;
+  position: relative;
+  overflow-x: auto;
+}
+
+horizontal-carousel::scroll-button(left) {
+  content: "◄" / "Imagen anterior";
+  left: calc(anchor(left)  - 2.2rem);
+}
+
+horizontal-carousel::scroll-button(right) {
+  content: "►" / "Imagen siguiente";
+  right: calc(anchor(right)  - 2.2rem);
+}
+
+horizontal-carousel::scroll-button(*) {
+  position-anchor: var(--anchor-name, --carousel);
+  align-self: anchor-center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  height: 15rem;
+  padding: 1rem;
+  line-height: 1;
+  position: absolute;
+}
+
+horizontal-carousel:has(img:only-child)::scroll-button(*) {
+  display: none;
+}
+
+horizontal-carousel::scroll-button(*):focus-visible {
+  outline-offset: .5rem;
+}
+
+horizontal-carousel::scroll-marker-group {
+  justify-content: center;
+  width: min-content;
+  margin-block-start: -.5rem;
+  margin-block-end: 1rem;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  display: flex;
+}
+
+horizontal-carousel:has(img:only-child)::scroll-marker-group {
+  display: none;
+}
+
+horizontal-carousel img {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  object-fit: contain;
+  flex-shrink: 0;
+  max-width: 100%;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  scroll-margin-top: 5rem;
+}
+
+horizontal-carousel img::scroll-marker {
+  content: "●";
+  width: 1em;
+  height: 1em;
+  color: var(--color-green);
+  padding: .3rem;
+  text-decoration: none;
+}
+
+horizontal-carousel img::scroll-marker:target-current {
+  color: var(--color-yellow);
+}
+
+carousel-dots {
+  z-index: 1;
+  justify-content: center;
+  width: min-content;
+  margin-block-start: -.5rem;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  font-size: .5rem;
+  display: flex;
+}
+
+carousel-dots > * {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  place-content: center;
+  padding: .5rem;
+  text-decoration: none;
+  display: grid;
+}
+
+event-entry:not([hidden])[excluded] {
+  display: none;
+}
+
+event-entry:not([hidden]) .event-image {
+  object-fit: contain;
+  cursor: pointer;
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 15rem;
+  max-height: 80vh;
+}
+
+event-entry:not([hidden]) .badges {
+  text-transform: uppercase;
+  letter-spacing: .1rem;
+  justify-content: center;
+  gap: .5rem;
+  font-weight: bold;
+  display: flex;
+}
+
+event-entry:not([hidden]) .badges > * {
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: calc(var(--border-radius) / 2);
+  padding: .5rem 1rem;
+  font-size: .66rem;
+  font-weight: 400;
+  line-height: 1;
+  display: inline-block;
+}
+
+event-entry:not([hidden]) .badges > *[data-type="Taller"] {
+  background-color: var(--color-yellow);
+}
+
+event-entry:not([hidden]) .badges > *[data-type="Evento"] {
+  background-color: var(--color-green);
+}
+
+event-entry:not([hidden]) [part="where-and-when"] {
+  align-self: center;
+  width: max-content;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  font-weight: normal;
+}
+
+event-entry:not([hidden]) [part="title"], event-entry:not([hidden]) [part="where-and-when"] {
+  text-transform: uppercase;
+  margin: 0;
+}
+
+:is(event-entry:not([hidden]) [part="title"], event-entry:not([hidden]) [part="where-and-when"]):after {
+  content: "";
+  border-block-end: 1px solid var(--color);
+  margin-block-start: .5rem;
+  margin-block-end: .5rem;
+  display: block;
+}
+
+event-entry:not([hidden]) [part="title"]:after {
+  margin-block-end: .25rem;
+}
+
+event-entry:not([hidden]) [part="buttons"] {
+  justify-content: space-evenly;
+  align-items: center;
+  display: flex;
+}
+
+event-entry:not([hidden]) details summary {
+  display: var(--summary-display, revert);
+  cursor: pointer;
+  position: relative;
+}
+
+event-entry:not([hidden]) details summary::-webkit-details-marker {
+  display: none;
+}
+
+event-entry:not([hidden]) [part="description"] {
+  word-break: break-word;
+  text-wrap: balance;
+  text-align: start;
+  margin-block-start: .5rem;
+  margin-block-end: 0;
+}
+
+event-entry:not([hidden]) [part="button"] {
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  padding: .5rem .5rem 0;
+  text-decoration: none;
+  transition-duration: .2s;
+}
+
+event-entry:not([hidden]) [part="button"]:hover, event-entry:not([hidden]) [part="button"]:focus {
+  background-color: color-mix(in srgb, var(--color, currentColor) 10%, transparent);
 }
