@@ -22,6 +22,24 @@ class SiteFooter extends HTMLElement {
             ></svg-mask>
             Instalar
           </button>
+          <dialog closedby="any" id="installInstructions">
+            <h2>¿Cómo instalar?</h2>
+            <ul>
+              <li>En Android: Clickeá en el menú de opciones (tres puntos)</li>
+              <li>En iOS (Safari): Clickeá en el ícono de compartir</li>
+              <li>
+                En escritorio (Chrome/Edge): Clickeá en el ícono de instalar en la
+                barra de direcciones
+              </li>
+            </ul>
+
+            <img
+              src="/assets/images/instalar-pwa-instructions.png"
+              alt="Instrucciones para instalar PWA"
+              width="200"
+            />
+            <button onclick="this.closest('dialog').close()">Cerrar</button>
+          </dialog>
         </install-button>
         <a
           title="Publicar nuevo evento"

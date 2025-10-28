@@ -253,7 +253,27 @@ install-button button {
   gap: 0.5rem;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
-  padding: 1rem 0.5rem;
+  padding: 1rem 2rem;
+}
+
+#installInstructions {
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  max-width: min(40ch, 80%);
+  border: none;
+  text-transform: none;
+  font-family: var(--font-family-body);
+
+  button {
+    margin: 1rem auto;
+  }
+  ul {
+    text-align: start;
+  }
+
+  body:has(&[open]) {
+    overflow-y: hidden;
+  }
 }
 
 hero-section {

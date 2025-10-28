@@ -1,38 +1,55 @@
 class InstallButton extends HTMLElement {
   constructor() {
     super();
-    this.toggleAttribute("hidden", true); // Initially hidden until the beforeinstallprompt event
-    this.deferredPrompt = null; // Store the deferred prompt event
+    this.deferredPrompt = null; // Will hold the beforeinstallprompt event
   }
 
   connectedCallback() {
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      // Hide the install button if app is already installed
+      return this.hideContentAfterInstall();
+    }
+
     this.addEventListener("click", this);
     window.addEventListener("beforeinstallprompt", this);
-  }
-
-  disconnectedCallback() {
-    this.removeEventListener("click", this);
-    window.removeEventListener("beforeinstallprompt", this);
   }
 
   handleEvent(e) {
     if (e.type === "beforeinstallprompt") {
       e.preventDefault();
       this.deferredPrompt = e;
-      // Show the install button
-      this.toggleAttribute("hidden", false);
     } else if (e.type === "click") {
+      if (this.contains(e.target.closest("dialog"))) return; // Ignore clicks inside the dialog
+
       this.install();
     }
   }
 
+  hideContentAfterInstall() {
+    this.toggleAttribute("hidden", true);
+
+    if (this.dataset.afterInstallHideSelector) {
+      document.querySelector(this.dataset.afterInstallHideSelector)?.toggleAttribute("hidden", true);
+    }
+  }
+
+  showInstallInstructions() {
+    // Show a dialog indicating manual installation instructions
+    const dialog = document.querySelector(this.dataset.installInstructionsDialogSelector || "#installInstructions");
+    if (dialog) dialog.showModal();
+    else console.warn("No dialog found for install instructions");
+  }
+
   async install() {
-    if (!this.deferredPrompt) return;
+    if (!this.deferredPrompt) {
+      // No install prompt available, show manual instructions
+      return this.showInstallInstructions();
+    }
     const result = await this.deferredPrompt.prompt();
     console.info(`Install was: ${result.outcome}`);
-    // Hide the install button
-    this.toggleAttribute("hidden", true);
-    this.deferredPrompt = null;
+    if (result.outcome === "accepted") {
+      this.hideContentAfterInstall();
+    }
   }
 }
 

@@ -468,8 +468,29 @@ install-button button {
   text-transform: uppercase;
   align-items: center;
   gap: .5rem;
-  padding: 1rem .5rem;
+  padding: 1rem 2rem;
   display: flex;
+}
+
+#installInstructions {
+  border-radius: var(--border-radius);
+  text-transform: none;
+  max-width: min(40ch, 80%);
+  font-family: var(--font-family-body);
+  border: none;
+  padding: 1rem;
+}
+
+#installInstructions button {
+  margin: 1rem auto;
+}
+
+#installInstructions ul {
+  text-align: start;
+}
+
+body:has(#installInstructions[open]) {
+  overflow-y: hidden;
 }
 
 hero-section {
