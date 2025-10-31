@@ -29,8 +29,10 @@ update-components:
 	@echo "🔄 Syncing files..."
 	mkdir -p $(DEST_DIR)
 	for c in $(COMPONENTS); do \
-		echo "→ $$c"; \
-		rsync -a --delete $(TEMP_DIR)/$(COMPONENTS_DIR)/$$c/* $(DEST_DIR)/$$c/; \
+			echo "→ $$c"; \
+			rm -rf $(DEST_DIR)/$$c/*; \
+			mkdir -p $(DEST_DIR)/$$c; \
+			cp -r $(TEMP_DIR)/$(COMPONENTS_DIR)/$$c/* $(DEST_DIR)/$$c/; \
 	done
 
 	@echo "🧹 Cleaning up..."
