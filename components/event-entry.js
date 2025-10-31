@@ -1,4 +1,4 @@
-import "./share-url.js";
+import "./share-url/share-url.js";
 import {
   formatPhoneNumber,
   isValidUrl,
@@ -8,7 +8,7 @@ import {
   getGoogleDriveImagesPreviews,
   createGoogleCalendarUrl,
 } from "../lib/utils.js";
-import "./horizontal-carousel.js";
+import "./horizontal-carousel/horizontal-carousel.js";
 
 const IMAGE_PREVIEW_WIDTH = 600; // Event cards are at most around 600px wide
 

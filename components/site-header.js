@@ -1,4 +1,4 @@
-import "./install-button.js";
+import "./install-button/install-button.js";
 
 class SiteHeader extends HTMLElement {
   constructor() {
