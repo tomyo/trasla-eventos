@@ -34,6 +34,57 @@
 
     <!-- END CONTENT_METADATA_BLOCK -->
 
+    <script>
+      (function getOutOfInAppBrowser() {
+        function isInAppBrowser() {
+          const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+          const isInstagram = /instagram/i.test(userAgent);
+          const isFacebook = /fban|fbav/i.test(userAgent);
+          const isWebView = /wv/i.test(userAgent);
+          return isInstagram || isFacebook || isWebView;
+        }
+
+        function redirectToExternalBrowser() {
+          const url = window.location.href;
+          const isAndroid = /android/i.test(navigator.userAgent);
+          const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+          // Try Chrome or fallback to new tab
+
+          if (isAndroid) {
+            const intentUri = `intent://${url.replace(
+              "https://",
+              ""
+            )}#Intent;scheme=https;package=com.android.chrome;end`;
+            window.location.href = intentUri;
+
+            // Fallback
+            setTimeout(() => {
+              if (document.visibilityState === "visible") {
+                window.open(url, "_blank");
+              }
+            }, 50);
+          } else if (isIOS) {
+            const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url)}`;
+            window.location.href = chromeUrl;
+
+            // Fallback
+            setTimeout(() => {
+              if (document.visibilityState === "visible") {
+                window.open(url, "_blank");
+              }
+            }, 500);
+          } else {
+            window.open(url, "_blank");
+          }
+        }
+
+        if (isInAppBrowser()) {
+          // Delay to make sure WebView has fully initialized before attempting redirect.
+          setTimeout(redirectToExternalBrowser, 100);
+        }
+      })();
+    </script>
+
     <script type="module" src="/components/event-entry.js"></script>
     <script type="module" src="/components/events-filter.js"></script>
     <script type="module" src="/components/site-header.js"></script>
