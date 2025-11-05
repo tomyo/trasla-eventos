@@ -22,6 +22,7 @@
       "type": "image/png"
     }
   ],
+  "url_handlers": [{ "origin": "https://eventos.trasla.com.ar" }],
   "share_target": {
     "action": "/share-target",
     "method": "POST",

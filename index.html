@@ -36,50 +36,70 @@
 
     <script>
       (function getOutOfInAppBrowser() {
+        // 1. In-App Browser Detection
         function isInAppBrowser() {
           const userAgent = navigator.userAgent || navigator.vendor || window.opera;
           const isInstagram = /instagram/i.test(userAgent);
           const isFacebook = /fban|fbav/i.test(userAgent);
-          const isWebView = /wv/i.test(userAgent);
+          const isWebView = /wv/i.test(userAgent); // General Android WebView
           return isInstagram || isFacebook || isWebView;
         }
 
+        // 2. Redirection Logic
         function redirectToExternalBrowser() {
           const url = window.location.href;
           const isAndroid = /android/i.test(navigator.userAgent);
           const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-          // Try Chrome or fallback to new tab
+
+          // Helper to append ?display=standalone to the URL
+          const getStandaloneUrl = (originalUrl) => {
+            return originalUrl.includes("?")
+              ? `${originalUrl}&display=standalone`
+              : `${originalUrl}?display=standalone`;
+          };
 
           if (isAndroid) {
-            const intentUri = `intent://${url.replace(
+            // --- Android Logic (Direct Chrome Intent with Standalone Force) ---
+
+            // 1. First attempt: Direct Chrome Intent with Standalone Force
+            // Usamos standaloneUrl para forzar el modo de visualización.
+            const standaloneUrl = getStandaloneUrl(url);
+            const chromeIntentUri = `intent://${standaloneUrl.replace(
               "https://",
               ""
             )}#Intent;scheme=https;package=com.android.chrome;end`;
-            window.location.href = intentUri;
+            window.location.href = chromeIntentUri;
 
-            // Fallback
+            // Fallback (50ms ): If the Chrome intent fails, use window.open as a last resort.
             setTimeout(() => {
               if (document.visibilityState === "visible") {
                 window.open(url, "_blank");
               }
             }, 50);
           } else if (isIOS) {
+            // --- iOS Logic (Chrome -> Safari/New Tab Fallback) ---
+
+            // 1. First attempt: Try to open in Chrome (if installed)
             const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url)}`;
             window.location.href = chromeUrl;
 
-            // Fallback
+            // Fallback (500ms): If Chrome fails, use window.open.
             setTimeout(() => {
               if (document.visibilityState === "visible") {
+                // This often triggers the "Open in Safari" dialog in the iOS WebView.
                 window.open(url, "_blank");
               }
             }, 500);
           } else {
+            // Default fallback for non-mobile or unknown environments
             window.open(url, "_blank");
           }
         }
 
+        // 3. Execution
         if (isInAppBrowser()) {
           // Delay to make sure WebView has fully initialized before attempting redirect.
+          // 100ms is a safe value for most WebViews.
           setTimeout(redirectToExternalBrowser, 100);
         }
       })();
