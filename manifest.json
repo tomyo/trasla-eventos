@@ -1,6 +1,6 @@
 {
   "name": "TRASLA",
-  "id": "eventos.trasla.com.ar",
+  "id": "https://eventos.trasla.com.ar/",
   "start_url": "/",
   "display": "standalone",
   "description": "La agenda cultural de Traslasierra.",
@@ -10,13 +10,6 @@
   "background_color": "#E6DECA",
   "orientation": "portrait",
   "scope": "/",
-  "protocol_handlers": [
-    {
-      "protocol": "https",
-      "url": "%s",
-      "handles": ["trasla.com.ar", "eventos.trasla.com.ar"]
-    }
-  ],
   "icons": [
     {
       "src": "/assets/icons/favicon-192x192.png",
