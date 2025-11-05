@@ -96,6 +96,8 @@ carousel-dots {
   margin-inline: auto;
   font-size: 0.5rem; /* Reduce size to match ::scroll-marker-group */
   z-index: 1;
+  max-width: 80vw; /* Prevent overflow on small screens */
+  overflow: hidden;
 
   > * {
     padding: 0.5rem;
