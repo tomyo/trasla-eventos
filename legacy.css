@@ -652,127 +652,8 @@ header details[open] .line:nth-of-type(3) {
   transform: translateY(-225%)rotate(45deg);
 }
 
-horizontal-carousel {
-  object-fit: contain;
-  cursor: pointer;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-  scroll-behavior: smooth;
-  scroll-marker-group: after;
-  scrollbar-width: none;
-  counter-increment: carousel-counter;
-  anchor-name: var(--anchor-name, --carousel);
-  border-radius: 10px;
-  width: 100%;
-  height: auto;
-  min-height: 15rem;
-  max-height: 80vh;
-  display: flex;
-  position: relative;
-  overflow-x: auto;
-}
-
-horizontal-carousel::scroll-button(left) {
-  content: "◄" / "Imagen anterior";
-  left: calc(anchor(left)  - 2.2rem);
-}
-
-horizontal-carousel::scroll-button(right) {
-  content: "►" / "Imagen siguiente";
-  right: calc(anchor(right)  - 2.2rem);
-}
-
-horizontal-carousel::scroll-button(*) {
-  position-anchor: var(--anchor-name, --carousel);
-  align-self: anchor-center;
-  cursor: pointer;
-  background: none;
-  border: none;
-  height: 15rem;
-  padding: 1rem;
-  line-height: 1;
-  position: absolute;
-}
-
-horizontal-carousel:has(img:only-child)::scroll-button(*) {
-  display: none;
-}
-
-horizontal-carousel::scroll-button(*):focus-visible {
-  outline-offset: .5rem;
-}
-
-horizontal-carousel::scroll-marker-group {
-  justify-content: center;
-  width: min-content;
-  margin-block-start: -.5rem;
-  margin-block-end: 1rem;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-  display: flex;
-}
-
-horizontal-carousel:has(img:only-child)::scroll-marker-group {
-  display: none;
-}
-
-horizontal-carousel img {
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  object-fit: contain;
-  flex-shrink: 0;
-  max-width: 100%;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-  scroll-margin-top: 5rem;
-}
-
-horizontal-carousel img::scroll-marker {
-  content: "●";
-  width: 1em;
-  height: 1em;
-  color: var(--color-green);
-  padding: .3rem;
-  text-decoration: none;
-}
-
-horizontal-carousel img::scroll-marker:target-current {
-  color: var(--color-yellow);
-}
-
-carousel-dots {
-  z-index: 1;
-  justify-content: center;
-  width: min-content;
-  margin-block-start: -.5rem;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-  font-size: .5rem;
-  display: flex;
-}
-
-carousel-dots > * {
-  -webkit-appearance: none;
-  appearance: none;
-  background: none;
-  place-content: center;
-  padding: .5rem;
-  text-decoration: none;
-  display: grid;
-}
-
 event-entry:not([hidden])[excluded] {
   display: none;
-}
-
-event-entry:not([hidden]) .event-image {
-  object-fit: contain;
-  cursor: pointer;
-  border-radius: 10px;
-  width: 100%;
-  height: auto;
-  min-height: 15rem;
-  max-height: 80vh;
 }
 
 event-entry:not([hidden]) .badges {
@@ -866,4 +747,115 @@ event-entry:not([hidden]) [part="button"] {
 
 event-entry:not([hidden]) [part="button"]:hover, event-entry:not([hidden]) [part="button"]:focus {
   background-color: color-mix(in srgb, var(--color, currentColor) 10%, transparent);
+}
+
+horizontal-carousel {
+  object-fit: contain;
+  cursor: pointer;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-marker-group: after;
+  scrollbar-width: none;
+  counter-increment: carousel-counter;
+  anchor-name: var(--anchor-name, --carousel);
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 15rem;
+  max-height: 80vh;
+  display: flex;
+  position: relative;
+  overflow-x: auto;
+}
+
+horizontal-carousel::scroll-button(left) {
+  content: "◄" / "Imagen anterior";
+  left: calc(anchor(left)  - 2.2rem);
+}
+
+horizontal-carousel::scroll-button(right) {
+  content: "►" / "Imagen siguiente";
+  right: calc(anchor(right)  - 2.2rem);
+}
+
+horizontal-carousel::scroll-button(*) {
+  position-anchor: var(--anchor-name, --carousel);
+  align-self: anchor-center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  height: 15rem;
+  padding: 1rem;
+  line-height: 1;
+  position: absolute;
+}
+
+horizontal-carousel:has(img:only-child)::scroll-button(*) {
+  display: none;
+}
+
+horizontal-carousel::scroll-button(*):focus-visible {
+  outline-offset: .5rem;
+}
+
+horizontal-carousel::scroll-marker-group {
+  justify-content: center;
+  width: min-content;
+  margin-block-start: -.5rem;
+  margin-block-end: 1rem;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  display: flex;
+}
+
+horizontal-carousel:has(img:only-child)::scroll-marker-group {
+  display: none;
+}
+
+horizontal-carousel img {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  object-fit: contain;
+  flex-shrink: 0;
+  max-width: 100%;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  scroll-margin-top: 5rem;
+}
+
+horizontal-carousel img::scroll-marker {
+  content: "●";
+  width: 1em;
+  height: 1em;
+  color: var(--color-green);
+  padding: .3rem;
+  text-decoration: none;
+}
+
+horizontal-carousel img::scroll-marker:target-current {
+  color: var(--color-yellow);
+}
+
+carousel-dots {
+  z-index: 1;
+  justify-content: center;
+  width: min-content;
+  max-width: 80vw;
+  margin-block-start: -.5rem;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  font-size: .5rem;
+  display: flex;
+  overflow: hidden;
+}
+
+carousel-dots > * {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  place-content: center;
+  padding: .5rem;
+  text-decoration: none;
+  display: grid;
 }

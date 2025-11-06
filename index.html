@@ -708,8 +708,9 @@
       }
     </script>
 
+    <!-- START LEGACY BROWSERS CSS SUPPORT -->
     <noscript>
-      <link rel="stylesheet" href="/legacy.css" />
+      <link rel="stylesheet" href="./legacy.css" />
     </noscript>
     <script>
       // Legacy browsers css support
@@ -717,9 +718,10 @@
       if (!CSS.supports("selector(&)") || !CSS.supports("selector(has)")) {
         const link = document.createElement("link");
         link.rel = "stylesheet";
-        link.href = "/legacy.css";
+        link.href = "./legacy.css";
         document.body.appendChild(link);
       }
     </script>
+    <!-- END LEGACY BROWSERS CSS SUPPORT -->
   </body>
 </html>

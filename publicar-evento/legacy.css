@@ -1,0 +1,154 @@
+form textarea {
+  padding: 1ch;
+}
+
+#imagesPreview {
+  scroll-behavior: auto;
+  scroll-snap-type: x mandatory;
+  width: 100%;
+  min-height: 12rem;
+  display: flex;
+  overflow-x: scroll;
+}
+
+#imagesPreview > * {
+  scroll-snap-align: center;
+  width: 100%;
+  min-width: 100%;
+  position: relative;
+}
+
+#imagesPreview > * button {
+  background-color: var(--color-red);
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  padding: .5rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+:is(#imagesPreview > *:hover, #imagesPreview > *:focus-within) button {
+  display: block;
+}
+
+@media (hover: none) {
+  #imagesPreview > * button {
+    display: block;
+  }
+}
+
+#imagesPreview img {
+  object-fit: contain;
+  width: 100%;
+}
+
+#imagesPreview > :last-child {
+  background-color: var(--background-color-darker);
+  place-content: center;
+  display: grid;
+}
+
+.other-options {
+  text-align: center;
+  text-transform: uppercase;
+  padding-top: 0;
+}
+
+.other-options h2 {
+  margin-bottom: 2rem;
+}
+
+.other-options .upload-options {
+  text-align: start;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  display: flex;
+}
+
+.other-options .upload-options .button {
+  width: 100%;
+  min-width: 16rem;
+  max-width: 23rem;
+  color: var(--color-light);
+  grid-template-columns: 3rem auto;
+  align-items: center;
+  display: grid;
+}
+
+.other-options .upload-options .button span {
+  container-type: inline-size;
+}
+
+.other-options .upload-options .button[type="submit"] {
+  background-color: var(--color-green);
+}
+
+.other-options .upload-options .button:first-of-type {
+  background-color: var(--color-yellow);
+}
+
+.other-options .upload-options .button:last-of-type {
+  background-color: var(--color-red);
+}
+
+@container (width >= 25ch) {
+  .button > span > br {
+    display: none;
+  }
+}
+
+:root {
+  --button-icon-size: 1.5rem;
+}
+
+form {
+  gap: 1rem;
+  max-width: 45ch;
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  padding: 1rem;
+  display: grid;
+}
+
+form button[type="submit"] {
+  background-color: var(--color-green);
+  color: var(--color-light);
+  margin-block-start: 1rem;
+  margin-block-end: 1rem;
+}
+
+h1 {
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+event-entry:not([hidden]) {
+  border-radius: var(--border-radius);
+  text-align: center;
+  border: 1px solid;
+  flex-flow: column;
+  gap: .66rem;
+  min-width: min-content;
+  padding: 1.5rem;
+  display: flex;
+}
+
+button[type="submit"] {
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  display: flex;
+}
+
+button[type="submit"] img {
+  height: 1rem;
+}
