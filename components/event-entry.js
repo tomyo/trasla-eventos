@@ -67,6 +67,8 @@ customElements.define(
         if (event.target.tagName.toLowerCase() !== "img") return; // Avoid clicks opening <details> on the carousel container
         this.summary?.click();
       });
+      this.buttons = this.querySelector("[part='buttons']");
+      this.buttons.addEventListener("click", this);
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -149,6 +151,30 @@ customElements.define(
     handleEvent(event) {
       if (event.type === "toggle") {
         if (event.target.open != this.open) this.open = event.target.open;
+        return;
+      }
+      if (event.type === "click") {
+        const button = event.target.closest("[part='button']");
+        if (!button || !Array.isArray(window.dataLayer)) return;
+
+        const label =
+          button.getAttribute("title") ||
+          button.dataset.action ||
+          button.dataset.fallbackAction ||
+          button.dataset.url ||
+          button.getAttribute("href") ||
+          "unknown";
+        const href = button.getAttribute("href") || button.dataset.url || null;
+
+        window.dataLayer.push({
+          event: "event_entry_button_click",
+          event_category: "event_entry",
+          event_action: "button_click",
+          event_label: `${label} | ${this.dataset.slug}`,
+          button_label: label,
+          button_href: href,
+          button_slug: this.dataset.slug,
+        });
       }
     }
 
@@ -208,10 +234,10 @@ customElements.define(
       // Add Youtube button
       if (this.dataset.youtube) {
         htmlString += /*html*/ `
-        <a part="button" target="_blank" title="YouTube" href="${this.dataset.youtube}">
-          <img height="21" src="/assets/icons/youtube.svg" alt=""/>
-        </a>
-      `;
+          <a part="button" target="_blank" title="YouTube" href="${this.dataset.youtube}">
+            <img height="21" src="/assets/icons/youtube.svg" alt=""/>
+          </a>
+        `;
       }
 
       // Add Spotify button
@@ -235,19 +261,19 @@ customElements.define(
       // Add Form button
       if (this.dataset.form) {
         htmlString += /*html*/ `
-        <a part="button" target="_blank" title="Formulario" href="${this.dataset.form}">
-          <img src="/assets/icons/form.svg" height="23" alt=""/>
-        </a>
-      `;
+          <a part="button" target="_blank" title="Formulario" href="${this.dataset.form}">
+            <img src="/assets/icons/form.svg" height="23" alt=""/>
+          </a>
+        `;
       }
 
       // Add Another link button
       if (this.dataset.link) {
         htmlString += /*html*/ `
-        <a part="button" target="_blank" title="Link externo" href="${this.dataset.link}">
-          <img src="/assets/icons/link.svg" height="21" alt=""/>
-        </a>
-      `;
+          <a part="button" target="_blank" title="Link externo" href="${this.dataset.link}">
+            <img src="/assets/icons/link.svg" height="21" alt=""/>
+          </a>
+        `;
       }
 
       // Add Google Calendar button
@@ -260,12 +286,12 @@ customElements.define(
 
       // Add Share button
       htmlString += /*html*/ `
-        
-      <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}">
-        <a href="${location.origin}/${this.dataset.slug}" title="Compartir este evento">
-          <img src="/assets/icons/share.svg" height="21" alt=""/>
-        </a>
-      </share-url>`;
+        <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}">
+          <a href="${location.origin}/${this.dataset.slug}" title="Compartir este evento">
+            <img src="/assets/icons/share.svg" height="21" alt=""/>
+          </a>
+        </share-url>
+      `;
 
       return htmlString;
     }
