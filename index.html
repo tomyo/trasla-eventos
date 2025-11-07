@@ -38,60 +38,65 @@
       (function getOutOfInAppBrowser() {
         // 1. In-App Browser Detection
         function isInAppBrowser() {
-          const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-          const isInstagram = /instagram/i.test(userAgent);
-          const isFacebook = /fban|fbav/i.test(userAgent);
-          const isWebView = /wv/i.test(userAgent); // General Android WebView
-          return isInstagram || isFacebook || isWebView;
+          const ua = navigator.userAgent || navigator.vendor || window.opera;
+          return /instagram/i.test(ua) || /fban|fbav/i.test(ua) || /wv/i.test(ua);
+        }
+
+        function getSourceFromReferrer(referrer) {
+          if (!referrer) return "direct";
+          if (referrer.includes("instagram.com")) return "instagram";
+          if (referrer.includes("facebook.com") || referrer.includes("fb.com")) return "facebook";
+          if (referrer.includes("whatsapp.com")) return "whatsapp";
+          if (referrer.includes("t.co") || referrer.includes("twitter.com") || referrer.includes("x.com"))
+            return "twitter";
+          return "unknown";
         }
 
         // 2. Redirection Logic
         function redirectToExternalBrowser() {
-          const url = window.location.href;
-          const isAndroid = /android/i.test(navigator.userAgent);
-          const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-          let utmParams = `${url.includes("?") ? "&" : "?"}utm_source=inapp_escape&utm_medium=${
-            isAndroid ? "android" : isIOS ? "ios" : "unknown"
-          }}&utm_campaign=external_browser`;
+          const url = new URL(location.href);
+          const ua = navigator.userAgent;
+          const isAndroid = /android/i.test(ua);
+          const isIOS = /iphone|ipad|ipod/i.test(ua);
 
-          // Helper to append ?display=standalone to the URL
-          const getStandaloneUrl = (originalUrl) => {
-            return originalUrl + utmParams;
-          };
+          url.searchParams.set("utm_referrer", document.referrer || "none");
+          url.searchParams.set("utm_source", getSourceFromReferrer(document.referrer));
+          url.searchParams.set("utm_medium", isAndroid ? "android" : isIOS ? "ios" : "unknown");
+          url.searchParams.set("utm_campaign", "external_browser");
+          url.searchParams.set("utm_content", "escape_in_app_browser");
 
           if (isAndroid) {
             // --- Android Logic (Direct Chrome Intent with Standalone Force) ---
 
             // 1. First attempt: Direct Chrome Intent with Standalone Force
-            const chromeIntentUri = `intent://${(url + utmParams).replace(
-              "https://",
-              ""
-            )}#Intent;scheme=https;package=com.android.chrome;end`;
+            const chromeIntentUri = `intent://${url
+              .toString()
+              .replace("https://", "")}#Intent;scheme=https;package=com.android.chrome;end`;
             window.location.href = chromeIntentUri;
 
-            // Fallback (50ms ): If the Chrome intent fails, use window.open as a last resort.
+            // Fallback: If the Chrome intent fails, use window.open as a last resort.
             setTimeout(() => {
               if (document.visibilityState === "visible") {
-                window.open(url, "_blank");
+                window.open(url, "_blank", "noopener,noreferrer");
               }
-            }, 50);
+            }, 150);
           } else if (isIOS) {
             // --- iOS Logic (Chrome -> Safari/New Tab Fallback) ---
 
             // 1. First attempt: Try to open in Chrome (if installed)
-            const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url + utmParams)}`;
+            const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url.toString())}`;
             window.location.href = chromeUrl;
 
             // Fallback (500ms): If Chrome fails, use window.open.
             setTimeout(() => {
               if (document.visibilityState === "visible") {
                 // This often triggers the "Open in Safari" dialog in the iOS WebView.
-                window.open(url, "_blank");
+                window.open(url, "_blank", "noopener,noreferrer");
               }
             }, 500);
           } else {
             // Default fallback for non-mobile or unknown environments
-            window.open(url, "_blank");
+            window.open(url, "_blank", "noopener,noreferrer");
           }
         }
 
