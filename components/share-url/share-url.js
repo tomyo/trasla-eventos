@@ -29,7 +29,8 @@ customElements.define(
     }
 
     async shareEvent() {
-      const url = this.dataset.url || this?.element?.href || document.location.href;
+      const originalUrl = this.dataset.url || this?.element?.href || document.location.href;
+      const url = this.addUtmParams(originalUrl);
       const shareData = {
         title: this.dataset.title || document.title,
         url,
@@ -49,6 +50,14 @@ customElements.define(
           this.fallbackShareSuccess();
         });
       }
+    }
+
+    addUtmParams(url) {
+      const urlObj = new URL(url);
+      urlObj.searchParams.set("utm_source", "share");
+      urlObj.searchParams.set("utm_medium", "button");
+      urlObj.searchParams.set("utm_campaign", "trasla-eventos");
+      return urlObj.toString();
     }
 
     fallbackShareSuccess = () => {
