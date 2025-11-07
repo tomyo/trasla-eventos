@@ -50,21 +50,20 @@
           const url = window.location.href;
           const isAndroid = /android/i.test(navigator.userAgent);
           const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+          let utmParams = `${url.includes("?") ? "&" : "?"}utm_source=inapp_escape&utm_medium=${
+            isAndroid ? "android" : isIOS ? "ios" : "unknown"
+          }}&utm_campaign=external_browser`;
 
           // Helper to append ?display=standalone to the URL
           const getStandaloneUrl = (originalUrl) => {
-            return originalUrl.includes("?")
-              ? `${originalUrl}&display=standalone`
-              : `${originalUrl}?display=standalone`;
+            return originalUrl + utmParams;
           };
 
           if (isAndroid) {
             // --- Android Logic (Direct Chrome Intent with Standalone Force) ---
 
             // 1. First attempt: Direct Chrome Intent with Standalone Force
-            // Usamos standaloneUrl para forzar el modo de visualización.
-            const standaloneUrl = getStandaloneUrl(url);
-            const chromeIntentUri = `intent://${standaloneUrl.replace(
+            const chromeIntentUri = `intent://${(url + utmParams).replace(
               "https://",
               ""
             )}#Intent;scheme=https;package=com.android.chrome;end`;
@@ -80,7 +79,7 @@
             // --- iOS Logic (Chrome -> Safari/New Tab Fallback) ---
 
             // 1. First attempt: Try to open in Chrome (if installed)
-            const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url)}`;
+            const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url + utmParams)}`;
             window.location.href = chromeUrl;
 
             // Fallback (500ms): If Chrome fails, use window.open.
