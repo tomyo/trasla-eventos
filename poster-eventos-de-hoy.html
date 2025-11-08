@@ -27,9 +27,10 @@
       margin: 0;
     }
     main {
-      --item-width: 100%;
-      --item-height: 33.33%;
+      --item-width: 42%;
+      --item-height: 42%;
       --flex-gap: 1rem;
+      --flex-base: calc(var(--item-width) - var(--flex-gap));
 
       background-color: var(--bg-color);
       width: 100vw;
@@ -42,31 +43,38 @@
       padding: 3rem;
       gap: var(--flex-gap);
 
-      &:has(> * ~ * ~ * ~ *) {
-        --item-width: 50%;
+      & > * {
+        flex: 1 1 var(--flex-base);
+        height: calc(var(--item-height) - var(--flex-gap));
+        object-fit: contain;
+        min-width: var(--flex-base); /* Enough for a 5 x 5 grid */
       }
 
-      &:has(> * ~ * ~ * ~ * ~ * ~ * ~ *) {
+      &:has(> :nth-child(5)) {
         --item-width: 33.33%;
       }
 
-      &:has(> * ~ * ~ * ~ * ~ * ~ * ~ * ~ * ~ * ~ *) {
+      &:has(> :nth-child(7)) {
         --item-width: 25%;
+        --item-height: 33.33%;
       }
 
-      & > * {
-        flex: 1 1 calc(var(--item-width) - var(--flex-gap));
-        height: calc(var(--item-height) - var(--flex-gap));
-        object-fit: contain;
-        min-width: 200px;
+      &:has(> :nth-child(13)) {
+        --item-height: 25%;
+      }
+
+      &:has(> :nth-child(17)) {
+        --item-height: 20%;
+      }
+      &:has(> :nth-child(21)) {
+        --item-width: 20%;
       }
     }
 
     [slot="title"] {
       display: grid;
       place-content: center;
-      font-size: 7rem;
-      padding: 1.5rem;
+      font-size: 5rem;
     }
   </style>
 
