@@ -91,7 +91,7 @@ class SiteFooter extends HTMLElement {
           </a>
         </div>
         <style>
-          footer {
+          site-footer footer {
             position: relative;
             display: flex;
             flex-flow: column;
@@ -104,15 +104,15 @@ class SiteFooter extends HTMLElement {
             text-align: center;
             text-transform: uppercase;
           }
-          footer > * {
+          site-footer footer > * {
             z-index: 1;
             text-decoration: none;
             min-width: 8rem;
           }
-          footer svg-mask {
+          site-footer footer svg-mask {
             --color: var(--color-light);
           }
-          footer fieldset {
+          site-footer footer fieldset {
             border-left-style: solid;
             border-width: 1px;
             border-color: var(--background-color);
@@ -122,19 +122,19 @@ class SiteFooter extends HTMLElement {
             line-height: 1rem;
             margin-block: 1rem;
           }
-          footer fieldset a {
+          site-footer footer fieldset a {
             text-decoration: none;
           }
-          footer fieldset legend {
+          site-footer footer fieldset legend {
             margin-inline: auto;
             padding-inline: 0.5rem;
           }
-          footer .contact-links {
+          site-footer footer .contact-links {
             display: flex;
             --icon-width: 22px;
             gap: 2rem;
           }
-          footer .contact-links svg-mask {
+          site-footer footer .contact-links svg-mask {
             width: var(--icon-width);
             height: var(--icon-width);
           }

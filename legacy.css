@@ -602,6 +602,29 @@ header nav > * {
   display: flex;
 }
 
+header nav footer {
+  text-align: center;
+  text-transform: uppercase;
+  flex-flow: column;
+  align-items: center;
+  gap: 1.5rem;
+  display: flex;
+  position: absolute;
+  bottom: 2rem;
+}
+
+header nav footer .contact-links {
+  --icon-width: 22px;
+  gap: 2rem;
+  display: flex;
+}
+
+header nav footer .contact-links svg-mask {
+  width: var(--icon-width);
+  height: var(--icon-width);
+  background-color: var(--color-light);
+}
+
 header .summary-hamburger-button {
   --line-color: var(--color-red);
   cursor: pointer;

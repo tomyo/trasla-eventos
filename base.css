@@ -329,9 +329,11 @@ header {
   inset: 0 0 auto;
   z-index: 2;
   --nav-button-color: var(--color-red);
+
   &.hide {
     transform: translateY(-100%);
   }
+
   nav-menu {
     opacity: 0;
     position: fixed;
@@ -350,10 +352,11 @@ header {
       }
     }
   }
-  & .bg-pattern {
+
+  .bg-pattern {
     z-index: -1;
   }
-  & nav {
+  nav {
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -364,6 +367,30 @@ header {
       display: flex;
       gap: 1rem;
       align-items: start;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 2rem;
+      text-align: center;
+      text-transform: uppercase;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      gap: 1.5rem;
+
+      .contact-links {
+        --icon-width: 22px;
+
+        display: flex;
+        gap: 2rem;
+
+        svg-mask {
+          width: var(--icon-width);
+          height: var(--icon-width);
+          background-color: var(--color-light);
+        }
+      }
     }
   }
 

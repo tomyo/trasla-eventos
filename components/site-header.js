@@ -52,6 +52,20 @@ class SiteHeader extends HTMLElement {
                   Instalar
                 </button>
               </install-button>
+              <footer class="font-body-2">
+                <h3 style="margin: 0">Contacto</h3>
+                <div class="contact-links">
+                  <a href="mailto:hola@trasla.com.ar" title="Email">
+                    <svg-mask style="--src: url('/assets/icons/email.svg')"></svg-mask>
+                  </a>
+                  <a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=+5493544632482">
+                    <svg-mask style="--src: url('/assets/icons/whatsapp.svg')"></svg-mask>
+                  </a>
+                  <a href="https://www.instagram.com/traslaeventos/" target="_blank" title="Instagram">
+                    <svg-mask style="--src: url('/assets/icons/instagram.svg')"></svg-mask>
+                  </a>
+                </div>
+              </footer>
             </nav>
           </nav-menu>
         </details>
