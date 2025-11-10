@@ -150,9 +150,8 @@
         <events-filter id="eventsFilter">
           <form>
             <h2 class="form-filters-as-heading">
-              <span class="hide-when-no-events">Eventos en</span>
-
-              <select-locality class="hide-when-no-events">
+              <span>Eventos en</span>
+              <select-locality>
                 <select name="locality" aria-label="Localidad" multiple>
                   <option value="" selected>TRASLASIERRA</option>
                   <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
@@ -324,11 +323,6 @@
           gap: 3rem;
           text-wrap: balance;
           align-items: center;
-
-          &:not(:has(event-entries event-entry)) .hide-when-no-events {
-            /* This is for /lugar/<locality-slug> pages when no events are found, so we dont show the locality select empty */
-            display: none;
-          }
 
           & form {
             --input-height: 2.3rem;

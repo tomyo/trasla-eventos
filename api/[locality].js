@@ -38,7 +38,16 @@ export default async function handler(req) {
 
       <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
+      <style>
+        /* hide locality selector */
+        events-filter form select-locality {
+            display: none;
+          }
 
+        events-filter form span:has(~ select-locality) {
+          display: none;
+        }
+      </style>
     `;
 
   const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
