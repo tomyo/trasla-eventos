@@ -19,7 +19,7 @@ export default async function handler(req) {
       <meta
         name="description"
         property="og:description"
-        content="¿Qué hacer en ${locality}? Información actualizada de todos los eventos de ${locality} de hoy y de la semana."
+        content="¿Qué hacer en ${locality}? Información actualizada de todos los eventos en ${locality} de hoy y de la semana."
       />
 
       <meta
