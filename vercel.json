@@ -11,6 +11,7 @@
     { "source": "/admin", "destination": "/admin/" },
     { "source": "/events/schema.jsonld", "destination": "/api/events/schema.js" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap.js" },
+    { "source": "/lugar/traslasierra/", "destination": "/" },
     {
       "source": "/lugar/:locality/",
       "destination": "/api/[locality].js"
