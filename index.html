@@ -268,16 +268,8 @@
             <!-- SSR (via [{slug|locality}].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
-          <button id="viewMoreEvents">
+          <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
             <style>
-              events-filter:not(:has(event-entry)) #viewMoreEvents {
-                display: none;
-              }
-
-              events-filter[all-shown] #viewMoreEvents {
-                display: none;
-              }
-
               #viewMoreEvents {
                 display: flex;
                 flex-flow: row nowrap;
@@ -291,6 +283,14 @@
                 width: 12rem;
                 height: 3rem;
                 margin-inline: auto;
+              }
+
+              events-filter:not(:has(event-entry)) #viewMoreEvents {
+                display: none;
+              }
+
+              events-filter[all-shown] #viewMoreEvents {
+                display: none;
               }
             </style>
             <svg-mask
