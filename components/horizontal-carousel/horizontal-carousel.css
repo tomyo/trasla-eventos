@@ -12,12 +12,11 @@ horizontal-carousel {
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
-  counter-increment: carousel-counter;
-  /* anchor-name: --carousel; SET VIA JS as it must be unique*/
-  anchor-name: var(--anchor-name, --carousel);
 
-  &:not([hide-controls]) {
-    /* Only promote css carousel when more than 1 image exists in carousel */
+  &[show-controls] {
+    counter-increment: carousel-counter;
+    /* anchor-name: --carousel; SET VIA JS as it must be unique*/
+    anchor-name: var(--anchor-name, --carousel);
     scroll-marker-group: after;
     scrollbar-width: none;
 
@@ -57,9 +56,19 @@ horizontal-carousel {
       margin-inline: auto;
     }
 
-    &:has(img:only-child)::scroll-marker-group {
-      /* Hide dots when only one img is available */
-      display: none;
+    img {
+      &::scroll-marker {
+        content: "●";
+        height: 1em;
+        width: 1em;
+        text-decoration: none;
+        color: var(--color-green);
+        padding: 0.3rem;
+      }
+
+      &::scroll-marker:target-current {
+        color: var(--color-yellow);
+      }
     }
   }
 
@@ -71,19 +80,6 @@ horizontal-carousel {
     flex-shrink: 0;
     margin-inline: auto;
     scroll-margin-top: 5rem; /* Ensure event card top is visible */
-
-    &::scroll-marker {
-      content: "●";
-      height: 1em;
-      width: 1em;
-      text-decoration: none;
-      color: var(--color-green);
-      padding: 0.3rem;
-    }
-
-    &::scroll-marker:target-current {
-      color: var(--color-yellow);
-    }
   }
 }
 
