@@ -16,7 +16,9 @@ customElements.define(
     }
 
     connectedCallback() {
-      if (this.children.length < 2) return;
+      if (this.children.length < 2) {
+        return this.toggleAttribute("hide-controls", true);
+      }
       for (const [index, item] of Object.entries([...this.children])) {
         if (!item.id) item.id = `carousel-${this.dataset.instance}-item-${index + 1}`;
         item.setAttribute("part", "carousel-image");

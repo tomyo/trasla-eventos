@@ -16,7 +16,7 @@ horizontal-carousel {
   /* anchor-name: --carousel; SET VIA JS as it must be unique*/
   anchor-name: var(--anchor-name, --carousel);
 
-  &:has(img:nth-child(2)) {
+  &:not([hide-controls]) {
     /* Only promote css carousel when more than 1 image exists in carousel */
     scroll-marker-group: after;
     scrollbar-width: none;

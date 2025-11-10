@@ -766,22 +766,22 @@ horizontal-carousel {
   overflow-x: auto;
 }
 
-horizontal-carousel:has(img:nth-child(2)) {
+horizontal-carousel:not([hide-controls]) {
   scroll-marker-group: after;
   scrollbar-width: none;
 }
 
-horizontal-carousel:has(img:nth-child(2))::scroll-button(left) {
+horizontal-carousel:not([hide-controls])::scroll-button(left) {
   content: "◄" / "Imagen anterior";
   left: calc(anchor(left)  - 2.2rem);
 }
 
-horizontal-carousel:has(img:nth-child(2))::scroll-button(right) {
+horizontal-carousel:not([hide-controls])::scroll-button(right) {
   content: "►" / "Imagen siguiente";
   right: calc(anchor(right)  - 2.2rem);
 }
 
-horizontal-carousel:has(img:nth-child(2))::scroll-button(*) {
+horizontal-carousel:not([hide-controls])::scroll-button(*) {
   position-anchor: var(--anchor-name, --carousel);
   align-self: anchor-center;
   cursor: pointer;
@@ -793,11 +793,11 @@ horizontal-carousel:has(img:nth-child(2))::scroll-button(*) {
   position: absolute;
 }
 
-horizontal-carousel:has(img:nth-child(2))::scroll-button(*):focus-visible {
+horizontal-carousel:not([hide-controls])::scroll-button(*):focus-visible {
   outline-offset: .5rem;
 }
 
-horizontal-carousel:has(img:nth-child(2))::scroll-marker-group {
+horizontal-carousel:not([hide-controls])::scroll-marker-group {
   justify-content: center;
   width: min-content;
   margin-block-start: -.5rem;
@@ -807,7 +807,7 @@ horizontal-carousel:has(img:nth-child(2))::scroll-marker-group {
   display: flex;
 }
 
-horizontal-carousel:has(img:nth-child(2)):has(img:only-child)::scroll-marker-group {
+horizontal-carousel:not([hide-controls]):has(img:only-child)::scroll-marker-group {
   display: none;
 }
 
