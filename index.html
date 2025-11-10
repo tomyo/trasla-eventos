@@ -483,7 +483,7 @@
        * Injects a JSON-LD script tag with schema.org data for the given events.
        * @property {EventResponse[]} events
        */
-      async function injectSchemaOrgScript(events) {
+      async function injectSchemaOrgJson(events) {
         const SCRIPT_ID = "events-schema-org";
         try {
           const schemaString = await (await fetch("/events/schema.jsonld")).text();
@@ -537,13 +537,13 @@
 
         // Check if we are in /lugar/locality-slug path to only include events on that locality
         if (location.pathname.includes("/lugar/")) {
-          const localitySlug = location.pathname.replace(/\/lugar\/(.*)\//, "$1");
+          const localitySlug = location.pathname.replace(/\/lugar\/(.*)\//, "$1").toLowerCase();
           upcomingEvents = upcomingEvents.filter((event) => slugify(event.locality) == localitySlug);
         }
         renderEvents(upcomingEvents);
         eventsFilter.updateUI();
 
-        injectSchemaOrgScript(upcomingEvents);
+        injectSchemaOrgJson(upcomingEvents);
       }
 
       /**
