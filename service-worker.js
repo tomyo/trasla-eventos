@@ -260,7 +260,7 @@ function readAsDataURL(file) {
  */
 async function showServiceWorkerNotification(title, options = {}) {
   return self.registration.showNotification(title, {
-    icon: "/assets/icons/favicon-192x192.png",
+    icon: "/assets/icons/icon-192x192.png",
     vibrate: [200, 100, 200],
     ...options,
   });

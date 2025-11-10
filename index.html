@@ -5,9 +5,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/favicon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/favicon-512x512.png" />
-    <link rel="apple-touch-icon" href="/assets/icons/apple-icon-180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512x512.png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
 
     <!-- START CONTENT_METADATA_BLOCK -->
     <title>La Agenda de Eventos de Traslasierra | Trasla Eventos</title>
@@ -268,7 +268,7 @@
             <!-- SSR (via [{slug|locality}].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
-          <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
+          <button id="viewMoreEvents">
             <style>
               events-filter:not(:has(event-entry)) #viewMoreEvents {
                 display: none;

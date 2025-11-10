@@ -5,7 +5,7 @@ class SiteHeader extends HTMLElement {
     super();
     this.innerHTML = /*html*/ `
       <header>
-        <a href="/" style="opacity: 0"><img src="/assets/icons/favicon-192x192.png" height="20" alt="logo" /></a>
+        <a href="/" style="opacity: 0"><img src="/assets/icons/icon-192x192.png" height="20" alt="logo" /></a>
         <details>
           <summary class="summary-hamburger-button">
             <span class="line"></span>

@@ -45,8 +45,8 @@ export async function showNotification(title, options = {}) {
   }
 
   const defaultOptions = {
-    icon: "/assets/icons/favicon-192x192.png",
-    badge: "/assets/icons/favicon-192x192.png",
+    icon: "/assets/icons/icon-192x192.png",
+    badge: "/assets/icons/icon-192x192.png",
     vibrate: [200, 100, 200],
     ...options,
   };
