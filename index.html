@@ -70,6 +70,9 @@
           url.searchParams.set("utm_campaign", "external_browser");
           url.searchParams.set("utm_content", "escape_in_app_browser");
 
+          window.open(url, "_blank", "noopener,noreferrer");
+          return; // Test what happens with normal tab opener mechanism
+
           if (isAndroid) {
             // --- Android Logic (Direct Chrome Intent with Standalone Force) ---
 
