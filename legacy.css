@@ -42,14 +42,6 @@ today-date-picker:not(:focus-within)[today]:after {
   right: .5rem;
 }
 
-events-filter:not(:has(event-entry)) #viewMoreEvents {
-  display: none;
-}
-
-events-filter[all-shown] #viewMoreEvents {
-  display: none;
-}
-
 #viewMoreEvents {
   align-items: center;
   justify-content: initial;
@@ -64,6 +56,14 @@ events-filter[all-shown] #viewMoreEvents {
   font-weight: 600;
   display: flex;
   background-color: var(--color-green) !important;
+}
+
+events-filter:not(:has(event-entry)) #viewMoreEvents {
+  display: none;
+}
+
+events-filter[all-shown] #viewMoreEvents {
+  display: none;
 }
 
 #about {
@@ -256,6 +256,10 @@ details summary > * {
   --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color, currentcolor));
   --border-radius: 10px;
   --animation-time-short: .25s;
+  --lightningcss-light: initial;
+  --lightningcss-dark: ;
+  color-scheme: light only;
+  accent-color: var(--color-green);
 }
 
 @font-face {
@@ -750,8 +754,6 @@ horizontal-carousel {
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
-  scroll-marker-group: after;
-  scrollbar-width: none;
   counter-increment: carousel-counter;
   anchor-name: var(--anchor-name, --carousel);
   border-radius: 10px;
@@ -764,17 +766,22 @@ horizontal-carousel {
   overflow-x: auto;
 }
 
-horizontal-carousel::scroll-button(left) {
+horizontal-carousel:has(img:nth-child(2)) {
+  scroll-marker-group: after;
+  scrollbar-width: none;
+}
+
+horizontal-carousel:has(img:nth-child(2))::scroll-button(left) {
   content: "◄" / "Imagen anterior";
   left: calc(anchor(left)  - 2.2rem);
 }
 
-horizontal-carousel::scroll-button(right) {
+horizontal-carousel:has(img:nth-child(2))::scroll-button(right) {
   content: "►" / "Imagen siguiente";
   right: calc(anchor(right)  - 2.2rem);
 }
 
-horizontal-carousel::scroll-button(*) {
+horizontal-carousel:has(img:nth-child(2))::scroll-button(*) {
   position-anchor: var(--anchor-name, --carousel);
   align-self: anchor-center;
   cursor: pointer;
@@ -786,15 +793,11 @@ horizontal-carousel::scroll-button(*) {
   position: absolute;
 }
 
-horizontal-carousel:has(img:only-child)::scroll-button(*) {
-  display: none;
-}
-
-horizontal-carousel::scroll-button(*):focus-visible {
+horizontal-carousel:has(img:nth-child(2))::scroll-button(*):focus-visible {
   outline-offset: .5rem;
 }
 
-horizontal-carousel::scroll-marker-group {
+horizontal-carousel:has(img:nth-child(2))::scroll-marker-group {
   justify-content: center;
   width: min-content;
   margin-block-start: -.5rem;
@@ -804,7 +807,7 @@ horizontal-carousel::scroll-marker-group {
   display: flex;
 }
 
-horizontal-carousel:has(img:only-child)::scroll-marker-group {
+horizontal-carousel:has(img:nth-child(2)):has(img:only-child)::scroll-marker-group {
   display: none;
 }
 

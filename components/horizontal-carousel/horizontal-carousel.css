@@ -12,55 +12,55 @@ horizontal-carousel {
   scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
-  scroll-marker-group: after;
-  scrollbar-width: none;
   counter-increment: carousel-counter;
   /* anchor-name: --carousel; SET VIA JS as it must be unique*/
   anchor-name: var(--anchor-name, --carousel);
 
-  &::scroll-button(left) {
-    content: "◄" / "Imagen anterior";
-    left: calc(anchor(left) - 2.2rem);
-  }
+  &:has(img:nth-child(2)) {
+    /* Only promote css carousel when more than 1 image exists in carousel */
+    scroll-marker-group: after;
+    scrollbar-width: none;
 
-  &::scroll-button(right) {
-    content: "►" / "Imagen siguiente";
-    right: calc(anchor(right) - 2.2rem);
-  }
+    &::scroll-button(left) {
+      content: "◄" / "Imagen anterior";
+      left: calc(anchor(left) - 2.2rem);
+    }
 
-  &::scroll-button(*) {
-    /* position-anchor: --carousel;  SET VIA JS , as it must be unique*/
-    position-anchor: var(--anchor-name, --carousel);
-    position: absolute;
-    align-self: anchor-center;
-    background: none;
-    border: none;
-    padding: 1rem;
-    cursor: pointer;
-    height: 15rem;
-    line-height: 1;
-  }
+    &::scroll-button(right) {
+      content: "►" / "Imagen siguiente";
+      right: calc(anchor(right) - 2.2rem);
+    }
 
-  &:has(img:only-child)::scroll-button(*) {
-    display: none;
-  }
+    &::scroll-button(*) {
+      /* position-anchor: --carousel;  SET VIA JS , as it must be unique*/
+      position-anchor: var(--anchor-name, --carousel);
+      position: absolute;
+      align-self: anchor-center;
+      background: none;
+      border: none;
+      padding: 1rem;
+      cursor: pointer;
+      height: 15rem;
+      line-height: 1;
+    }
 
-  &::scroll-button(*):focus-visible {
-    outline-offset: 0.5rem;
-  }
+    &::scroll-button(*):focus-visible {
+      outline-offset: 0.5rem;
+    }
 
-  &::scroll-marker-group {
-    display: flex;
-    justify-content: center;
-    margin-block-start: -0.5rem;
-    margin-block-end: 1rem;
-    width: min-content;
-    margin-inline: auto;
-  }
+    &::scroll-marker-group {
+      display: flex;
+      justify-content: center;
+      margin-block-start: -0.5rem;
+      margin-block-end: 1rem;
+      width: min-content;
+      margin-inline: auto;
+    }
 
-  &:has(img:only-child)::scroll-marker-group {
-    /* Hide dots when only one img is available */
-    display: none;
+    &:has(img:only-child)::scroll-marker-group {
+      /* Hide dots when only one img is available */
+      display: none;
+    }
   }
 
   img {
