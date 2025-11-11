@@ -1,5 +1,6 @@
 {
   "name": "TRASLAEVENTOS",
+  "short_name": "EVENTOS",
   "id": "https://eventos.trasla.com.ar/",
   "start_url": "/?utm_source=pwa&utm_medium=installed_app&utm_campaign=app_launch",
   "display": "standalone",
@@ -46,5 +47,12 @@
         }
       ]
     }
-  }
+  },
+  "shortcuts": [
+    {
+      "name": "Publicar Evento",
+      "url": "https://eventos.trasla.com.ar/publicar-evento/",
+      "description": ""
+    }
+  ]
 }
