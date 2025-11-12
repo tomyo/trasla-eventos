@@ -54,9 +54,7 @@ customElements.define(
 
     addUtmParams(url) {
       const urlObj = new URL(url);
-      urlObj.searchParams.set("utm_source", "share");
-      urlObj.searchParams.set("utm_medium", "button");
-      urlObj.searchParams.set("utm_campaign", "trasla-eventos");
+      urlObj.searchParams.set("utm_medium", "share_button");
       return urlObj.toString();
     }
 
