@@ -2,7 +2,7 @@
   "name": "TRASLAEVENTOS",
   "short_name": "EVENTOS",
   "id": "https://eventos.trasla.com.ar/",
-  "start_url": "/?utm_source=pwa&utm_medium=installed_app&utm_campaign=app_launch",
+  "start_url": "/?utm_medium=pwa&utm_source=launcher",
   "display": "standalone",
   "description": "La agenda cultural de Traslasierra.",
   "lang": "es-AR",
