@@ -54,5 +54,25 @@
       "url": "https://eventos.trasla.com.ar/publicar-evento/",
       "description": ""
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/images/screenshot-landing-mobile.webp",
+      "type": "image/webp",
+      "sizes": "559x1142",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/assets/images/screenshot-footer-mobile.webp",
+      "type": "image/webp",
+      "sizes": "562x1211",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/assets/images/og-image-1200w-900h.jpg",
+      "type": "image/jpeg",
+      "sizes": "1200x900",
+      "form_factor": "wide"
+    }
   ]
 }
