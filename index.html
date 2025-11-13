@@ -71,44 +71,26 @@
           url.searchParams.set("utm_content", "escape_in_app_browser");
 
           if (isAndroid) {
-            // 1. First attempt: Generic Intent URI, hopefuly pwa will open
+            // Generic Intent URI, so hopefuly pwa will open if installed, or default browser otherwise.
             const intentUri = `intent://${url.toString().replace(/^https?:\/\//, "")}#Intent;scheme=https;end`;
             window.location.href = intentUri;
 
-            setTimeout(() => {
-              if (document.visibilityState === "visible") {
-                // 2. Second attempt: Direct Chrome Intent
-                const chromeIntentUri = `intent://${url
-                  .toString()
-                  .replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
-                window.location.href = chromeIntentUri;
-
-                // Fallback: If the Chrome intent fails, use window.open as a last resort.
-                setTimeout(() => {
-                  if (document.visibilityState === "visible") {
-                    window.open(url, "_blank", "noopener,noreferrer");
-                  }
-                }, 400);
-              }
-            }, 500);
+            // const chromeIntentUri = `intent://${url
+            //   .toString()
+            //   .replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
+            // window.location.href = chromeIntentUri;
           } else if (isIOS) {
-            // --- iOS Logic (Chrome -> Safari/New Tab Fallback) ---
-
-            // 1. First attempt: Try to open in Chrome (if installed)
+            // Try to open in Chrome (if installed)
             const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url.toString())}`;
             window.location.href = chromeUrl;
-
-            // Fallback (500ms): If Chrome fails, use window.open.
-            setTimeout(() => {
-              if (document.visibilityState === "visible") {
-                // This often triggers the "Open in Safari" dialog in the iOS WebView.
-                window.open(url, "_blank", "noopener,noreferrer");
-              }
-            }, 500);
-          } else {
-            // Default fallback for non-mobile or unknown environments
-            window.open(url, "_blank", "noopener,noreferrer");
           }
+
+          // Fallback when we are still stuck in the in-app browser after 2 seconds
+          setTimeout(() => {
+            if (document.visibilityState === "visible") {
+              window.open(url, "_blank", "noopener,noreferrer");
+            }
+          }, 2000);
         }
 
         // 3. Execution
