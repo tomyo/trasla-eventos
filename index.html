@@ -101,6 +101,26 @@
         }
       })();
     </script>
+
+    <!-- Google Tag Manager -->
+    <!-- Speed up GTM -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <script>
+      (function (w, d, s, l, i) {
+        // Your localhost check is good, keep it.
+        if (location.origin.includes("localhost")) return;
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-MZ99GDSV");
+    </script>
+    <!-- End Google Tag Manager -->
+
     <link rel="modulepreload" href="/lib/utils.js" />
     <link rel="modulepreload" href="/components/fixed-background.js" />
     <link rel="modulepreload" href="/components/share-url/share-url.js" />
@@ -677,21 +697,6 @@
       }
 
       //
-    </script>
-
-    <!-- Google Tag Manager -->
-    <script defer>
-      (function (w, d, s, l, i) {
-        if (location.origin.includes("localhost")) return;
-        w[l] = w[l] || [];
-        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != "dataLayer" ? "&l=" + l : "";
-        j.async = true;
-        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, "script", "dataLayer", "GTM-MZ99GDSV");
     </script>
 
     <!-- START LEGACY BROWSERS CSS SUPPORT -->
