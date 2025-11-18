@@ -8,14 +8,24 @@
     <link rel="stylesheet" href="/base.css" />
     <link rel="stylesheet" href="./publicar-evento.css" />
     <script type="module" src="/components/site-header.js"></script>
-    <script type="module" src="/components/hero-section.js"></script>
     <script type="module" src="/components/fixed-background.js"></script>
     <script type="module" src="/components/site-footer.js"></script>
   </head>
   <body>
     <site-header></site-header>
     <fixed-background></fixed-background>
-    <hero-section slim></hero-section>
+    <hero-section slim>
+      <a slot="logo" href="/" aria-label="Trasla Eventos">
+        <svg-mask
+          style="
+            --src: url('/assets/icons/trasla-eventos.svg');
+            --color: var(--hero-logo-color, var(--color-red));
+            height: 40px;
+          "
+        >
+        </svg-mask>
+      </a>
+    </hero-section>
     <main>
       <section class="mountains-top">
         <h1>Cargar evento de Instagram</h1>

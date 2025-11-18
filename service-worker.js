@@ -22,7 +22,6 @@ const CORE_ASSETS = [
   "/components/site-header.js",
   "/components/site-footer.js",
   "/components/fixed-background.js",
-  "/components/hero-section.js",
   "/components/install-button/install-button.js",
   "/components/horizontal-carousel/horizontal-carousel.js",
   "/components/share-url/share-url.js",

@@ -138,7 +138,6 @@
     <script type="module" src="/components/events-filter.js"></script>
     <script type="module" src="/components/site-header.js"></script>
     <script type="module" src="/components/fixed-background.js"></script>
-    <script type="module" src="/components/hero-section.js"></script>
     <script type="module" src="/components/install-button/install-button.js"></script>
 
     <link rel="manifest" href="/manifest.json" />
@@ -149,7 +148,16 @@
     <fixed-background></fixed-background>
     <site-header></site-header>
     <hero-section>
-      <!-- <h1 slot="title">La agenda de eventos de Traslasierra</h1> -->
+      <a slot="logo" href="/" aria-label="Trasla Eventos">
+        <svg-mask
+          style="
+            --src: url('/assets/icons/trasla-eventos.svg');
+            --color: var(--hero-logo-color, var(--color-red));
+            height: 40px;
+          "
+        >
+        </svg-mask>
+      </a>
       <h1 slot="title">
         La Agenda de eventos de <br /><span style="font-size: larger; font-weight: bold">Traslasierra</span>
       </h1>
