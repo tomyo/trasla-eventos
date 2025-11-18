@@ -281,7 +281,7 @@ customElements.define(
       htmlString += /*html*/ `
         <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}" title="Compartir este evento">
           <a href="${location.origin}/${this.dataset.slug}">
-            <img src="/assets/icons/share.svg" height="21" alt=""/>
+            <img src="/assets/icons/share.svg" height="21" alt="Compartir evento"/>
           </a>
         </share-url>
       `;
