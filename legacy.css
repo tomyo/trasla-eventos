@@ -429,6 +429,7 @@ svg-mask {
 .card:not([hidden]) {
   border-radius: var(--border-radius);
   text-align: center;
+  background-color: #00000008;
   border: 1px solid;
   flex-flow: column;
   gap: .66rem;

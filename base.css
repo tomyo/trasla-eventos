@@ -226,6 +226,7 @@ svg-mask {
   padding: 1.5rem;
   max-width: 45ch;
   height: fit-content;
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 /* Components */
