@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#e6deca" />
     <meta name="color-scheme" content="light only" />
+    <base href="/" />
 
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512x512.png" />
     <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
     <link rel="preload" href="/base.css" as="style" />
+
+    <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="TRASLA EVENTOS" />
 
     <!-- START CONTENT_METADATA_BLOCK -->
     <title>La Agenda de Eventos de Traslasierra | Trasla Eventos</title>
@@ -653,25 +658,6 @@
         eventsElement.appendChild(style);
       }
 
-      // RUN
-
-      // START: Service Worker
-      /**
-       * @type {ServiceWorkerRegistration}
-       */
-      let swRegistration;
-
-      if ("serviceWorker" in navigator) {
-        try {
-          swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
-          console.log("Service Worker registered:", swRegistration);
-        } catch (error) {
-          console.log("Service Worker registration failed:", error);
-        }
-      }
-
-      // END: Service Worker
-
       // Get events
 
       if (!document.querySelector("event-entry")) {
@@ -712,6 +698,26 @@
       }
 
       //
+    </script>
+    <script type="module">
+      // RUN
+
+      // START: Service Worker
+      /**
+       * @type {ServiceWorkerRegistration}
+       */
+      let swRegistration;
+
+      if ("serviceWorker" in navigator) {
+        try {
+          swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
+          console.log("Service Worker registered:", swRegistration);
+        } catch (error) {
+          console.log("Service Worker registration failed:", error);
+        }
+      }
+
+      // END: Service Worker
     </script>
 
     <!-- START LEGACY BROWSERS CSS SUPPORT -->
