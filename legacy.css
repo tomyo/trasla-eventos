@@ -204,13 +204,13 @@ section#eventos event-entries time {
   font-weight: 500;
   display: none;
   position: sticky;
-  top: 1rem;
+  top: 1.3rem;
 }
 
 section#eventos event-entries time:before {
   content: "";
   z-index: -1;
-  background-color: var(--color-red);
+  background-color: var(--color-green);
   border-radius: calc(var(--border-radius) / 2);
   width: 100%;
   position: absolute;
