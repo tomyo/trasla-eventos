@@ -322,14 +322,19 @@ a {
 }
 
 button, .button {
+  letter-spacing: .15rem;
   text-transform: uppercase;
   cursor: pointer;
   font: inherit;
   color: inherit;
   background: none;
-  border: none;
+  border: 1px solid;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
   padding: 1rem 1.5rem;
   text-decoration: none;
+  display: flex;
 }
 
 input, select, button, textarea {
@@ -444,13 +449,12 @@ svg-mask {
   display: flex;
 }
 
-install-button button {
-  letter-spacing: .15rem;
-  text-transform: uppercase;
-  align-items: center;
-  gap: .5rem;
-  padding: 1rem 2rem;
-  display: flex;
+.logo-title {
+  margin-block-end: 1.5rem;
+}
+
+install-button > * {
+  width: 100%;
 }
 
 #installInstructions {
@@ -526,6 +530,7 @@ header {
   z-index: 2;
   --nav-button-color: var(--color-red);
   view-transition-name: site-header;
+  color: var(--color-light);
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
@@ -575,21 +580,18 @@ header .bg-pattern {
 }
 
 header nav {
-  color: var(--color-light);
   flex-flow: column;
   justify-content: start;
   align-items: center;
-  gap: 3rem;
+  gap: 1.5rem;
   display: flex;
 }
 
 header nav > * {
-  align-items: start;
-  gap: 1rem;
-  display: flex;
+  min-width: 15rem;
 }
 
-header nav footer {
+header footer {
   text-align: center;
   text-transform: uppercase;
   flex-flow: column;
@@ -600,13 +602,13 @@ header nav footer {
   bottom: 2rem;
 }
 
-header nav footer .contact-links {
+header footer .contact-links {
   --icon-width: 22px;
   gap: 2rem;
   display: flex;
 }
 
-header nav footer .contact-links svg-mask {
+header footer .contact-links svg-mask {
   width: var(--icon-width);
   height: var(--icon-width);
   background-color: var(--color-light);

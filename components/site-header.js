@@ -4,7 +4,7 @@ class SiteHeader extends HTMLElement {
   constructor() {
     super();
     this.innerHTML = /*html*/ `
-      <header>
+      <header class="font-body-2">
         <a href="/" style="opacity: 0"><img src="/assets/icons/icon-192x192.png" height="20" alt="logo" /></a>
         <details>
           <summary class="summary-hamburger-button">
@@ -35,6 +35,12 @@ class SiteHeader extends HTMLElement {
                 >
                 </svg-mask>
               </a>
+              <install-button style="color: var(--color-red);">
+                <button data-nosnippet>
+                  <svg-mask style="--src: url('/assets/icons/loica.svg'); --color: var(--color-red); width: 20px; height: 18px"></svg-mask>
+                  Instalar
+                </button>
+              </install-button>
               <a
                 id="addEvent"
                 class="button"
@@ -42,16 +48,8 @@ class SiteHeader extends HTMLElement {
                 href="/publicar-evento/"
               >
                 <img src="/assets/icons/upload.svg" width="20px" alt="" />
-                Publicar evento
+                Cargá tu evento
               </a>
-              <install-button style="color: var(--color-red);">
-                <button data-nosnippet>
-                  <svg-mask
-                    style="--src: url('/assets/icons/loica.svg'); --color: var(--color-red); width: 20px; height: 18px"
-                  ></svg-mask>
-                  Instalar
-                </button>
-              </install-button>
               <footer class="font-body-2">
                 <h3 style="margin: 0">Contacto</h3>
                 <div class="contact-links">

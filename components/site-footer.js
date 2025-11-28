@@ -11,8 +11,10 @@ class SiteFooter extends HTMLElement {
           <div class="pattern-row"></div>
           <div class="pattern-row"></div>
           <div class="pattern-row"></div>
+          <div class="pattern-row"></div>
+          <div class="pattern-row"></div>
         </div>
-        <a href="/" title="Ir a la página principal">
+        <a href="/" class="logo-title" title="Ir a la página principal">
           <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')" alt="Trasla Eventos"> </svg-mask>
         </a>
         <install-button style="color: var(--color-green);">
@@ -41,11 +43,9 @@ class SiteFooter extends HTMLElement {
             <button onclick="this.closest('dialog').close()">Cerrar</button>
           </dialog>
         </install-button>
-        <a
-          title="Publicar nuevo evento"
-          href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-        >
-          Cargar Evento
+        <a class="button" title="Publicar nuevo evento" href="/publicar-evento/">
+          <img src="/assets/icons/upload.svg" width="20px" alt="">
+          Cargá tu evento
         </a>
         <fieldset>
           <legend>Ver próximos eventos en</legend>
@@ -107,7 +107,8 @@ class SiteFooter extends HTMLElement {
           site-footer footer > * {
             z-index: 1;
             text-decoration: none;
-            min-width: 8rem;
+            min-width: 15rem;
+            justify-content: center;
           }
           site-footer footer svg-mask {
             --color: var(--color-light);

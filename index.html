@@ -166,10 +166,7 @@
       </a>
       <h1 slot="title" class="font-title">La Agenda de eventos de <br /><span part="location">Traslasierra</span></h1>
       <div slot="actions">
-        <a
-          class="button font-title"
-          href="/publicar-evento/"
-          style="background: transparent; outline: 2px solid; font-size: 1rem"
+        <a class="button font-title" href="/publicar-evento/" style="border-width: 2px; font-size: 1rem"
           >Cargá Tu Evento
         </a>
       </div>
@@ -307,37 +304,40 @@
             <!-- SSR (via [{slug|locality}].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
             <p style="text-align: center">· · ·</p>
           </event-entries>
-          <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
-            <style>
-              #viewMoreEvents {
-                display: flex;
-                flex-flow: row nowrap;
-                background-color: var(--color-green) !important;
-                align-items: center;
-                justify-content: initial;
-                color: var(--color-light);
-                gap: 1rem;
-                font-size: 0.66rem;
-                font-weight: 600;
-                width: 12rem;
-                height: 3rem;
-                margin-inline: auto;
-              }
+          <nav id="viewMore">
+            <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
+              <style>
+                #viewMoreEvents {
+                  display: flex;
+                  flex-flow: row nowrap;
+                  background-color: var(--color-green) !important;
+                  align-items: center;
+                  justify-content: initial;
+                  color: var(--color-light);
+                  gap: 1rem;
+                  font-size: 0.66rem;
+                  font-weight: 600;
+                  width: 12rem;
+                  height: 3rem;
+                  margin-inline: auto;
+                }
 
-              events-filter:not(:has(event-entry)) #viewMoreEvents {
-                display: none;
-              }
+                events-filter:not(:has(event-entry)) #viewMoreEvents {
+                  display: none;
+                }
 
-              events-filter[all-shown] #viewMoreEvents {
-                display: none;
-              }
-            </style>
-            <svg-mask
-              style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 30px; height: 18px"
-            >
-            </svg-mask>
-            Ver más eventos
-          </button>
+                events-filter[all-shown] #viewMoreEvents {
+                  display: none;
+                }
+              </style>
+              <svg-mask
+                style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 30px; height: 18px"
+              >
+              </svg-mask>
+              Ver más eventos
+            </button>
+            <a class="button" href="/eventos-de-hoy/">Ver eventos de hoy</a>
+          </nav>
         </events-filter>
       </section>
       <section id="about">
@@ -353,7 +353,39 @@
       </section>
     </main>
     <script type="module" src="/components/site-footer.js"></script>
-    <site-footer></site-footer>
+    <site-footer>
+      <fieldset>
+        <legend>Ver próximos eventos en</legend>
+        <nav>
+          <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos/">Arroyo de Los Patos</a> ·
+          <a title="Ver eventos en El Pueblito" href="/lugar/el-pueblito/">El Pueblito</a> ·
+          <a title="Ver eventos en La Paz" href="/lugar/la-paz/">La Paz</a> ·
+          <a title="Ver eventos en La Población" href="/lugar/la-poblacion/">La Población</a> ·
+          <a title="Ver eventos en Las Calles" href="/lugar/las-calles/">Las Calles</a> ·
+          <a title="Ver eventos en Las Chacras" href="/lugar/las-chacras/">Las Chacras</a> ·
+          <a title="Ver eventos en Las Rabonas" href="/lugar/las-rabonas/">Las Rabonas</a> ·
+          <a title="Ver eventos en Las Tapias" href="/lugar/las-tapias/">Las Tapias</a> ·
+          <a title="Ver eventos en Los Hornillos" href="/lugar/los-hornillos/">Los Hornillos</a> ·
+          <a title="Ver eventos en Los Molles" href="/lugar/los-molles/">Los Molles</a> ·
+          <a title="Ver eventos en Los Pozos" href="/lugar/los-pozos/">Los Pozos</a> ·
+          <a title="Ver eventos en Luyaba" href="/lugar/luyaba/">Luyaba</a> ·
+          <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero/">Mina Clavero</a> ·
+          <a title="Ver eventos en Nono" href="/lugar/nono/">Nono</a> ·
+          <a title="Ver eventos en Panaholma" href="/lugar/panaholma/">Panaholma</a> ·
+          <a title="Ver eventos en Quebracho Ladeado" href="/lugar/quebracho-ladeado/">Quebracho Ladeado</a> ·
+          <a title="Ver eventos en San Huberto" href="/lugar/san-huberto/">San Huberto</a> ·
+          <a title="Ver eventos en San Javier" href="/lugar/san-javier/">San Javier</a> ·
+          <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo/">San Lorenzo</a> ·
+          <a title="Ver eventos en San Pedro" href="/lugar/san-pedro/">San Pedro</a> ·
+          <a title="Ver eventos en Travesia" href="/lugar/travesia/">Travesia</a> ·
+          <a title="Ver eventos en Villa Cura Brochero" href="/lugar/villa-cura-brochero/">Villa Cura Brochero</a> ·
+          <a title="Ver eventos en Villa de Las Rosas" href="/lugar/villa-de-las-rosas/">Villa de Las Rosas</a> ·
+          <a title="Ver eventos en Villa de Merlo" href="/lugar/villa-de-merlo/">Villa de Merlo</a> ·
+          <a title="Ver eventos en Villa Dolores" href="/lugar/villa-dolores/">Villa Dolores</a> ·
+          <a title="Ver eventos en Yacanto" href="/lugar/yacanto/">Yacanto</a>
+        </nav>
+      </fieldset>
+    </site-footer>
 
     <style>
       section#eventos {

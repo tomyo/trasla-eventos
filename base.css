@@ -109,14 +109,19 @@ a {
 
 button,
 .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  letter-spacing: 0.15rem;
   text-decoration: none;
   padding: 1rem 1.5rem;
   text-transform: uppercase;
   background: none;
-  border: none;
   cursor: pointer;
   font: inherit;
   color: inherit;
+  border: 1px solid currentColor;
 }
 
 input,
@@ -233,15 +238,12 @@ svg-mask {
   background-color: rgba(0, 0, 0, 0.03);
 }
 
+.logo-title {
+  margin-block-end: 1.5rem;
+}
 /* Components */
-
-install-button button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  letter-spacing: 0.15rem;
-  text-transform: uppercase;
-  padding: 1rem 2rem;
+install-button > * {
+  width: 100%;
 }
 
 #installInstructions {
@@ -324,6 +326,7 @@ header {
   z-index: 2;
   --nav-button-color: var(--color-red);
   view-transition-name: site-header;
+  color: var(--color-light);
 
   &.hide {
     transform: translateY(-100%);
@@ -351,40 +354,39 @@ header {
   .bg-pattern {
     z-index: -1;
   }
+
   nav {
     display: flex;
     flex-flow: column;
     align-items: center;
     justify-content: start;
-    gap: 3rem;
-    color: var(--color-light);
-    & > * {
-      display: flex;
-      gap: 1rem;
-      align-items: start;
+    gap: 1.5rem;
+
+    > * {
+      min-width: 15rem;
     }
+  }
 
-    footer {
-      position: absolute;
-      bottom: 2rem;
-      text-align: center;
-      text-transform: uppercase;
+  footer {
+    position: absolute;
+    bottom: 2rem;
+    text-align: center;
+    text-transform: uppercase;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    gap: 1.5rem;
+
+    .contact-links {
+      --icon-width: 22px;
+
       display: flex;
-      flex-flow: column;
-      align-items: center;
-      gap: 1.5rem;
+      gap: 2rem;
 
-      .contact-links {
-        --icon-width: 22px;
-
-        display: flex;
-        gap: 2rem;
-
-        svg-mask {
-          width: var(--icon-width);
-          height: var(--icon-width);
-          background-color: var(--color-light);
-        }
+      svg-mask {
+        width: var(--icon-width);
+        height: var(--icon-width);
+        background-color: var(--color-light);
       }
     }
   }
