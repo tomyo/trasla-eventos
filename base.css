@@ -22,6 +22,10 @@ details summary > * {
 
 /* Global styles */
 
+@view-transition {
+  navigation: auto;
+}
+
 :root {
   --font-family-mono: "Sometype Mono";
   --font-family-sans-serif: "DM Sans";
@@ -313,6 +317,7 @@ header {
   inset: 0 0 auto;
   z-index: 2;
   --nav-button-color: var(--color-red);
+  view-transition-name: site-header;
 
   &.hide {
     transform: translateY(-100%);

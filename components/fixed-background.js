@@ -28,6 +28,7 @@ class FixedBackground extends HTMLElement {
             height: 100vhl;
             z-index: -1;
             object-fit: cover;
+            view-transition-name: fixed-background;
           }
         </style>
       </picture>
