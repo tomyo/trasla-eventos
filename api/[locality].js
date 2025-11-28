@@ -53,12 +53,8 @@ export default async function handler(req) {
   const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
   html = html.replace(contentMetaRegex, contentMeta);
 
-  html = html.replace(
-    /(?<openTag><hero-section>).*?(?<closeTag><\/hero-section>)/is,
-    `$<openTag>
-      <h1 slot="title">Agenda de eventos de <br><span style="font-size:larger;font-weight:bold">${locality}</span></h1>
-    $<closeTag>`
-  );
+  html = html.replace(/<span\s*part="location"\s*>[\s\S]*?<\/span>/i, `<span part="location">${locality}</span>`);
+  html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
 
   // Reaplace seo-block with the locality name
   html = html.replace(

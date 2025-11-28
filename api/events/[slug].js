@@ -74,6 +74,7 @@ export default async function handler(req) {
       // "$<openTag>" + eventEntry + "$<closeTag>"
       () => `<event-entries>${eventEntry}</event-entries>`
     );
+    html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
   }
 
   // Set cache headers based on event date

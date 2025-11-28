@@ -240,6 +240,10 @@ details summary > * {
   display: inline;
 }
 
+@view-transition {
+  navigation: auto;
+}
+
 :root {
   --font-family-mono: "Sometype Mono";
   --font-family-sans-serif: "DM Sans";
@@ -493,7 +497,12 @@ hero-section [slot="logo"] {
   display: inline-block;
 }
 
-hero-section [slot="title"], h1.title {
+hero-section [slot="title"] [part="location"] {
+  font-size: larger;
+  font-weight: bold;
+}
+
+.font-title {
   font-size: calc(1.3rem + 1vw);
   font-weight: 500;
   line-height: 1.3;
@@ -516,6 +525,7 @@ seo-block {
 header {
   z-index: 2;
   --nav-button-color: var(--color-red);
+  view-transition-name: site-header;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;

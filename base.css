@@ -278,16 +278,22 @@ hero-section {
   &[slim] {
     height: min-content;
   }
+
+  [slot="logo"] {
+    display: inline-block;
+    width: 9rem;
+    color: var(--color-logo, var(--color-red));
+  }
+
+  [slot="title"] {
+    [part="location"] {
+      font-size: larger;
+      font-weight: bold;
+    }
+  }
 }
 
-hero-section [slot="logo"] {
-  display: inline-block;
-  width: 9rem;
-  color: var(--color-logo, var(--color-red));
-}
-
-hero-section [slot="title"],
-h1.title {
+.font-title {
   line-height: 1.3;
   font-weight: 500;
   font-size: calc(1.3rem + 1vw);
