@@ -660,22 +660,26 @@
           return appendEvent(searchResults[0].item, { open: true });
         }
 
-        // Add date titles between events
+        // Store dates to add time entries
         const dates = [];
-        let lastDate = today;
-        let shouldAddTime = true;
-        for (const event of events) {
-          lastDate.setHours(23, 59, 59, 999);
-          const eventDate = new Date(event.startsAt);
+        let lastDateAdded = today;
+        let shouldAddTimeEntry = true;
 
-          if (lastDate < eventDate) {
-            shouldAddTime = true;
+        // Store localities to hide absents from footer
+        const localities = new Set();
+        for (const event of events) {
+          lastDateAdded.setHours(23, 59, 59, 999);
+          const eventDate = new Date(event.startsAt);
+          localities.add(event.locality);
+
+          if (lastDateAdded < eventDate) {
+            shouldAddTimeEntry = true;
           }
-          if (shouldAddTime) {
+          if (shouldAddTimeEntry) {
             addTimeEntry(eventDate);
             dates.push(formatLocalDate(eventDate));
-            lastDate = eventDate;
-            shouldAddTime = false;
+            lastDateAdded = eventDate;
+            shouldAddTimeEntry = false;
             // Add div wrapper for events of the same date
             const div = document.createElement("div");
             eventsElement.appendChild(div);
@@ -685,14 +689,25 @@
 
         const style = document.createElement("style");
         style.textContent = dates
-          .map(
-            (date) => /*css*/ `
+          .map((date) =>
+            /*css*/ `
               time[date="${date}"]:has(~ div>event-entry[date="${date}"]:not([excluded]):not([hidden])) {
                 display: revert !important;
               }
-            `
+            `.trim()
           )
           .join("\n");
+
+        // Hide localities that don't have events
+        const selectors = [...localities]
+          .map(slugify)
+          .map((slug) => `:not([href*="${slug}"])`)
+          .join("");
+        style.textContent += /*css*/ `
+          footer [part="places"] a${selectors} {
+            display: none;
+          }
+        `.trim();
         eventsElement.appendChild(style);
       }
 
