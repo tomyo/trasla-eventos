@@ -141,6 +141,7 @@
     <link rel="preconnect" href="https://docs.google.com" />
 
     <script type="module" src="/components/event-entry.js"></script>
+    <script type="module" src="/components/event-entries.js"></script>
     <script type="module" src="/components/events-filter.js"></script>
     <script type="module" src="/components/site-header.js"></script>
     <script type="module" src="/components/fixed-background.js"></script>
@@ -311,7 +312,6 @@
           </form>
           <event-entries>
             <!-- SSR (via [{slug|locality}].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
-            <p style="text-align: center">· · ·</p>
           </event-entries>
           <nav id="viewMore">
             <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
@@ -333,34 +333,34 @@
               viewAllEventsButton.hidden = true;
             }
           </script>
-              <style>
+          <style>
             #viewMore {
               display: grid;
               gap: 1.5rem;
 
               > * {
-                  display: flex;
-                  flex-flow: row nowrap;
+                display: flex;
+                flex-flow: row nowrap;
                 min-width: 15rem;
                 width: 100%;
-                  background-color: var(--color-green) !important;
-                  align-items: center;
-                  color: var(--color-light);
-                  gap: 1rem;
-                  font-size: 0.66rem;
-                  font-weight: 600;
-                  margin-inline: auto;
+                background-color: var(--color-green) !important;
+                align-items: center;
+                color: var(--color-light);
+                gap: 1rem;
+                font-size: 0.66rem;
+                font-weight: 600;
+                margin-inline: auto;
               }
-                }
+            }
 
-                events-filter:not(:has(event-entry)) #viewMoreEvents {
-                  display: none;
-                }
+            events-filter:not(:has(event-entry)) #viewMoreEvents {
+              display: none;
+            }
 
-                events-filter[all-shown] #viewMoreEvents {
-                  display: none;
-                }
-              </style>
+            events-filter[all-shown] #viewMoreEvents {
+              display: none;
+            }
+          </style>
         </events-filter>
       </section>
       <section id="about">
@@ -522,19 +522,16 @@
           gap: 2rem;
           align-items: center;
 
-          > div {
-            display: none;
+          &[part="date-group"],
+          &::part(date-group) {
+            display: flex;
             flex-flow: row wrap;
             gap: 2rem;
             justify-content: center;
-
-            &:has(event-entry:not([excluded]):not([hidden])) {
-              display: flex;
-            }
           }
 
-          & time {
-            display: none; /* Shown per [date] via js custom css */
+          &[part="date-label"],
+          &::part(date-label) {
             font-family: var(--font-family-heading);
             text-align: center;
             position: sticky;
@@ -545,16 +542,17 @@
             font-weight: 500;
             padding: 0.3rem;
             z-index: 1;
+          }
 
-            &::before {
-              content: "";
-              inset: 0;
-              width: 100%;
-              position: absolute;
-              z-index: -1;
-              background-color: var(--color-green);
-              border-radius: calc(var(--border-radius) / 2);
-            }
+          &[part="date-label"]::before,
+          &::part(date-label)::before {
+            content: "";
+            inset: 0;
+            width: 100%;
+            position: absolute;
+            z-index: -1;
+            background-color: var(--color-green);
+            border-radius: calc(var(--border-radius) / 2);
           }
         }
       }
@@ -562,7 +560,15 @@
 
     <script type="module">
       import { getGoogleSheetEvents } from "/lib/get-events.js";
-      import { escapeHtml, slugify, isDateToday, formatLocalDate, eventsToSchemaOrgItemList } from "/lib/utils.js";
+      import {
+        escapeHtml,
+        slugify,
+        isDateToday,
+        formatLocalDate,
+        eventsToSchemaOrgItemList,
+        getEventSortOrder,
+        renderEventEntry,
+      } from "/lib/utils.js";
 
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -588,52 +594,31 @@
         }
       }
 
-      /**
-       * @param {eventData} event
-       * @returns {number}
-       */
-      function getSortOrder(event) {
-        const date = new Date(event.startsAt);
-        const items = [date.getFullYear() - 2000, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()];
-        return Number(items.map((t) => t.toString().padStart(2, "0")).join(""));
-      }
-
-      /**
-       * @param {EventResponse} event
-       */
-      function appendEvent(eventData, { open, containerSelector = "event-entries" } = {}) {
-        const eventElement = document.createElement("event-entry");
-        const container = document.querySelector(containerSelector);
-
-        for (const [key, value] of Object.entries(eventData)) {
-          // if (!Object.hasOwnProperty.call(eventData, key)) continue;
-          if (!value) continue;
-          eventElement.dataset[key] = value;
-        }
-        // Add date attribute to handle <time> title hidden logic
-        eventElement.setAttribute("date", formatLocalDate(new Date(eventElement.dataset.startsAt)));
-        eventElement.classList.add("card");
-
-        if (open) {
-          eventElement.open = true;
-        }
-        container.appendChild(eventElement);
-      }
-
-      async function fetchAndShowEvents() {
-        let upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
-          return getSortOrder(a) - getSortOrder(b);
+      async function fetchAndRenderEvents() {
+        const upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
+          return getEventSortOrder(a) - getEventSortOrder(b);
         });
+        let eventsToRender = upcomingEvents;
 
-        // Check if we are in /lugar/locality-slug path to only include events on that locality
-        if (location.pathname.includes("/lugar/")) {
-          const localitySlug = location.pathname.replace(/\/lugar\/(.*)\//, "$1").toLowerCase();
-          upcomingEvents = upcomingEvents.filter((event) => slugify(event.locality) == localitySlug);
+        // Fuzzy search
+        const url = new URL(location);
+        const query = url.searchParams.get("q") || "";
+
+        if (query) {
+          const { fuzzySearch } = await import("/lib/fuzzy-search-events.js");
+
+          const searchResults = fuzzySearch(upcomingEvents, query);
+          if (!searchResults) {
+            eventsElement.innerHTML = /*html*/ `<p>No encontramos resultados con: ${query}</p>`; /* Clear loading message */
+            return;
+          }
+          eventsToRender = searchResults.map((result) => result.item);
         }
-        renderEvents(upcomingEvents);
+
+        renderEvents(eventsToRender);
         eventsFilter.updateUI();
 
-        injectSchemaOrgJson(upcomingEvents);
+        injectSchemaOrgJson(eventsToRender); // TODO: move to server side
       }
 
       /**
@@ -650,102 +635,45 @@
           .toUpperCase();
       }
 
-      function addTimeEntry(eventDate, { prepend, containerSelector = "event-entries" } = {}) {
-        const container = document.querySelector(containerSelector);
-        const dateTitle = document.createElement("time");
-        const dateString = formatLocalDate(eventDate);
-        dateTitle.setAttribute("date", dateString);
-        dateTitle.textContent = formatDateTitle(eventDate);
-
-        if (prepend) {
-          dateTitle.style = "display: revert;"; // improve by adding css in SSR
-          container.prepend(dateTitle);
-          return dateTitle;
-        }
-        return container.appendChild(dateTitle);
-      }
-
       async function renderEvents(events) {
-        // Fuzzy search
-        const url = new URL(location);
-        const query = url.searchParams.get("q") || "";
-        let eventsToAppend = [];
-        eventsElement.innerHTML = ""; /* Clear loading message */
-
-        if (query) {
-          const { fuzzySearch } = await import("/lib/fuzzy-search-events.js");
-
-          const searchResults = fuzzySearch(events, query);
-          if (!searchResults) {
-            eventsElement.innerHTML = /*html*/ `<p>No encontramos resultados con: ${query}</p>`; /* Clear loading message */
-            return;
-          }
-          return appendEvent(searchResults[0].item, { open: true });
-        }
-
-        // Store dates to add time entries
-        const dates = [];
-        let lastDateAdded = today;
-        let shouldAddTimeEntry = true;
+        eventsElement.innerHTML = "";
 
         // Store localities to hide absents from footer
-        const localities = new Set();
         for (const event of events) {
-          lastDateAdded.setHours(23, 59, 59, 999);
-          const eventDate = new Date(event.startsAt);
-          localities.add(event.locality);
-
-          if (lastDateAdded < eventDate) {
-            shouldAddTimeEntry = true;
-          }
-          if (shouldAddTimeEntry) {
-            addTimeEntry(eventDate);
-            dates.push(formatLocalDate(eventDate));
-            lastDateAdded = eventDate;
-            shouldAddTimeEntry = false;
-            // Add div wrapper for events of the same date
-            const div = document.createElement("div");
-            eventsElement.appendChild(div);
-          }
-          appendEvent(event, { containerSelector: "event-entries>div:last-of-type" });
+          eventsElement.insertAdjacentHTML("beforeend", renderEventEntry(event));
         }
 
+        hideAbsentLocalitiesFromFooter(events);
+      }
+
+      function hideAbsentLocalitiesFromFooter(events) {
+        if (document.getElementById("hide-absent-localities")) return;
         const style = document.createElement("style");
-        style.textContent = dates
-          .map((date) =>
-            /*css*/ `
-              time[date="${date}"]:has(~ div>event-entry[date="${date}"]:not([excluded]):not([hidden])) {
-                display: revert !important;
-              }
-            `.trim()
-          )
-          .join("\n");
+        style.id = "hide-absent-localities";
 
         // Hide localities that don't have events
-        const selectors = [...localities]
-          .map(slugify)
+        const selectors = events
+          .map((event) => slugify(event.locality))
           .map((slug) => `:not([href*="${slug}"])`)
           .join("");
+
         style.textContent += /*css*/ `
           footer [part="places"] a${selectors} {
             display: none;
           }
         `.trim();
-        eventsElement.appendChild(style);
+        document.head.appendChild(style);
       }
 
       // Get events
 
       if (!document.querySelector("event-entry")) {
         // Normal flow when requesting /index.html
-        fetchAndShowEvents();
-      } else {
-        // SSR prerendered <event-entry> elements into the dom (vía [slug].js)
+        fetchAndRenderEvents();
+      }
 
-        // Add missing sticky <time> entry before first event, since that's how we show the event's date now.
-        addTimeEntry(new Date(document.querySelector("event-entry").dataset.startsAt), { prepend: true });
-
-        // Scroll into event's section
+      if (location.pathname.match(/[a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?/)) {
+        // Scroll into event's section if we're on a event page
         const focusElement = () => document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
         if (document.readyState === "complete") {
           focusElement();
@@ -756,24 +684,10 @@
 
       // UX improvements when seeing a locality page (/lugar/locality-slug)
       if (location.pathname.includes("/lugar/")) {
-        const linkToHighlight = document.querySelector(`[href="${location.pathname}"]`);
+        // Highlight visiting locality on footer
+        const linkToHighlight = document.querySelector(`footer [href="${location.pathname}"]`);
         if (linkToHighlight) linkToHighlight.style.fontWeight = "bolder";
-        const localitySlug = location.pathname.replace(/\/lugar\/(.*)\//, "$1");
-        // Highlight selected locality on dropdown menu
-        for (const option of document.querySelectorAll("[name='locality'] option")) {
-          if (slugify(option.value) == localitySlug) {
-            option.selected = true;
-            break;
-          }
-          option.selected = false;
-          option.hidden = true;
-        }
-        const select = document.querySelector("[name='locality']");
-        select.disabled = true;
-        select.style.setProperty("--options-to-show", "1");
       }
-
-      //
     </script>
     <script type="module">
       // RUN

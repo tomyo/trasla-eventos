@@ -1,3 +1,9 @@
+import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
+import { escapeHtml, slugify, getEventSortOrder } from "./shared/lib/utils.js";
+
+let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
+let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
+
 export default async function handler(req) {
   const url = new URL(req.url);
   const localitySlug = url.pathname.replace(/\/lugar\/(.*)\//, "$1");
@@ -5,6 +11,10 @@ export default async function handler(req) {
     .split("-")
     .map((s) => s[0].toUpperCase() + s.slice(1))
     .join(" ");
+  const events = await getGoogleSheetEvents(sheetId, sheetGid);
+  const filteredEvents = events
+    .filter((event) => slugify(event.locality) === localitySlug)
+    .sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
 
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
@@ -54,7 +64,7 @@ export default async function handler(req) {
   html = html.replace(contentMetaRegex, contentMeta);
 
   html = html.replace(/<span\s*part="location"\s*>[\s\S]*?<\/span>/i, `<span part="location">${locality}</span>`);
-  html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
+  html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, ""); // Hide actions i.e load event button
 
   // Reaplace seo-block with the locality name
   html = html.replace(
@@ -63,6 +73,37 @@ export default async function handler(req) {
       <h2>¿Qué hacer en ${locality}?</h2>
       <p>Información actualizada de todos los eventos de ${locality} de hoy y de la semana.</p>
     $<closeTag>`
+  );
+
+  const eventEntries = filteredEvents
+    .map(
+      (eventData) => /*html*/ `
+        <event-entry
+          class="card"
+          data-title="${escapeHtml(eventData.title)}"
+          data-description="${escapeHtml(eventData.description)}"
+          data-starts-at="${eventData.startsAt}"
+          data-ends-at="${eventData.endsAt}"
+          data-locality="${eventData.locality}"
+          data-instagram="${eventData.instagram}"
+          data-location="${escapeHtml(eventData.location)}"
+          data-phone="${eventData.phone}"
+          data-images="${eventData.images}"
+          data-activity="${eventData.activity}"
+          data-spotify="${eventData.spotify}"
+          data-youtube="${eventData.youtube}"
+          data-slug="${eventData.slug}"
+          data-tickets="${eventData.tickets}"
+          data-form="${eventData.form}"
+          data-link="${eventData.link}"
+        ></event-entry>`
+    )
+    .join("");
+
+  html = html.replace(
+    /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
+    // "$<openTag>" + eventEntry + "$<closeTag>"
+    () => `<event-entries>${eventEntries}</event-entries>`
   );
 
   return new Response(html, {

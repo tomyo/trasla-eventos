@@ -70,9 +70,14 @@ export default async function handler(req) {
       ></event-entry>
     `;
     html = html.replace(
-      /(?<openTag><events-filter[^>]*>).*?(?<closeTag><\/events-filter>)/is,
+      /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
       // "$<openTag>" + eventEntry + "$<closeTag>"
       () => `<event-entries>${eventEntry}</event-entries>`
+    );
+    html = html.replace(
+      /(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is,
+      // "$<openTag>" + eventEntry + "$<closeTag>"
+      () => ``
     );
     html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
   }

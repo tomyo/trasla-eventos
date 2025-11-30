@@ -1,6 +1,39 @@
 export const OG_IMAGE_WIDTH = 1200;
 
 /**
+ * @param {eventData} event
+ * @returns {number}
+ */
+export function getEventSortOrder(event) {
+  const date = new Date(event.startsAt);
+  const items = [date.getFullYear() - 2000, date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()];
+  return Number(items.map((t) => t.toString().padStart(2, "0")).join(""));
+}
+
+export function renderEventEntry(eventData) {
+  return /*html*/ `
+        <event-entry
+          class="card"
+          data-title="${escapeHtml(eventData.title)}"
+          data-description="${escapeHtml(eventData.description)}"
+          data-starts-at="${eventData.startsAt}"
+          data-ends-at="${eventData.endsAt}"
+          data-locality="${eventData.locality}"
+          data-instagram="${eventData.instagram}"
+          data-location="${escapeHtml(eventData.location)}"
+          data-phone="${eventData.phone}"
+          data-images="${eventData.images}"
+          data-activity="${eventData.activity}"
+          data-spotify="${eventData.spotify}"
+          data-youtube="${eventData.youtube}"
+          data-slug="${eventData.slug}"
+          data-tickets="${eventData.tickets}"
+          data-form="${eventData.form}"
+          data-link="${eventData.link}"
+        ></event-entry>`;
+}
+
+/**
  *
  * @param {String} description - text to format, html scaped.
  * @returns {String} sanitized and formated description ready to be inserted in html

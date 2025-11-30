@@ -303,7 +303,8 @@ hero-section {
   letter-spacing: 1px;
 }
 
-seo-block {
+seo-block,
+.seo-only {
   position: absolute;
   width: 1px;
   height: 1px;
