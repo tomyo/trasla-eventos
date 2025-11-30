@@ -315,20 +315,42 @@
           </event-entries>
           <nav id="viewMore">
             <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
+              <svg-mask
+                style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 30px; height: 18px"
+              >
+              </svg-mask>
+              Ver más eventos
+            </button>
+            <a class="button" part="all-events" href="/">Ver todos los eventos</a>
+            <a class="button seo-only" part="today" href="/eventos-hoy/">Ver eventos de hoy</a>
+            <a class="button seo-only" part="this-week" href="/eventos-esta-semana/">Ver eventos de esta semana</a>
+            <a class="button seo-only" part="this-month" href="/eventos-este-mes/">Ver eventos de este mes</a>
+          </nav>
+          <script>
+            // Hide view all events button if on index page (that's all events page)
+            const viewAllEventsButton = document.querySelector('#viewMore [part~="all-events"]');
+            if (location.pathname == "/") {
+              viewAllEventsButton.hidden = true;
+            }
+          </script>
               <style>
-                #viewMoreEvents {
+            #viewMore {
+              display: grid;
+              gap: 1.5rem;
+
+              > * {
                   display: flex;
                   flex-flow: row nowrap;
+                min-width: 15rem;
+                width: 100%;
                   background-color: var(--color-green) !important;
                   align-items: center;
-                  justify-content: initial;
                   color: var(--color-light);
                   gap: 1rem;
                   font-size: 0.66rem;
                   font-weight: 600;
-                  width: 12rem;
-                  height: 3rem;
                   margin-inline: auto;
+              }
                 }
 
                 events-filter:not(:has(event-entry)) #viewMoreEvents {
@@ -339,13 +361,6 @@
                   display: none;
                 }
               </style>
-              <svg-mask
-                style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 30px; height: 18px"
-              >
-              </svg-mask>
-              Ver más eventos
-            </button>
-          </nav>
         </events-filter>
       </section>
       <section id="about">

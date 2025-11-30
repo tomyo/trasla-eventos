@@ -42,14 +42,18 @@ today-date-picker:not(:focus-within)[today]:after {
   right: .5rem;
 }
 
-#viewMoreEvents {
-  align-items: center;
-  justify-content: initial;
+#viewMore {
+  gap: 1.5rem;
+  display: grid;
+}
+
+#viewMore > * {
+  width: 100%;
+  min-width: 15rem;
   color: var(--color-light);
   flex-flow: row;
+  align-items: center;
   gap: 1rem;
-  width: 12rem;
-  height: 3rem;
   margin-inline-start: auto;
   margin-inline-end: auto;
   font-size: .66rem;
@@ -514,7 +518,7 @@ hero-section [slot="title"] [part="location"] {
   letter-spacing: 1px;
 }
 
-seo-block {
+seo-block, .seo-only {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;

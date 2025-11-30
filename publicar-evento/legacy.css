@@ -72,29 +72,30 @@ form textarea {
   display: flex;
 }
 
-.other-options .upload-options .button {
+.other-options .upload-options > * {
+  align-items: center;
+  justify-content: initial;
   width: 100%;
   min-width: 16rem;
   max-width: 23rem;
   color: var(--color-light);
   grid-template-columns: 3rem auto;
-  align-items: center;
   display: grid;
 }
 
-.other-options .upload-options .button span {
+.other-options .upload-options > * span {
   container-type: inline-size;
 }
 
-.other-options .upload-options .button[type="submit"] {
+.other-options .upload-options > *[type="submit"] {
   background-color: var(--color-green);
 }
 
-.other-options .upload-options .button:first-of-type {
+.other-options .upload-options > *:first-of-type {
   background-color: var(--color-yellow);
 }
 
-.other-options .upload-options .button:last-of-type {
+.other-options .upload-options > *:last-of-type {
   background-color: var(--color-red);
 }
 
