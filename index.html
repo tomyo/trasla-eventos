@@ -165,12 +165,21 @@
         </svg-mask>
       </a>
       <h1 slot="title" class="font-title">La Agenda de eventos de <br /><span part="location">Traslasierra</span></h1>
-      <div slot="actions">
-        <a class="button font-title" href="/publicar-evento/" style="border-width: 2px; font-size: 1rem"
-          >Cargá Tu Evento
-        </a>
-      </div>
+      <div slot="actions"></div>
     </hero-section>
+    <script>
+      const heroSection = document.querySelector("hero-section");
+      if (location.pathname == "/") {
+        const actions = heroSection.querySelector("[slot=actions]");
+        const uploadEventActionTemplate = document.createElement("template");
+        uploadEventActionTemplate.innerHTML = /*html*/ `
+          <a class="button font-title" href="/publicar-evento/" style="border-width: 2px; font-size: 1rem"
+            >Cargar Evento
+          </a>
+        `;
+        actions.appendChild(uploadEventActionTemplate.content.cloneNode(true));
+      }
+    </script>
     <seo-block>
       <h2>¿Qué hacer en Traslasierra?</h2>
       <p>

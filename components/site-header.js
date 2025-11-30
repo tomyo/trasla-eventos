@@ -48,7 +48,7 @@ class SiteHeader extends HTMLElement {
                 href="/publicar-evento/"
               >
                 <img src="/assets/icons/upload.svg" width="20px" alt="" />
-                Cargá tu evento
+                Cargar Evento
               </a>
               <footer class="font-body-2">
                 <h3 style="margin: 0">Contacto</h3>

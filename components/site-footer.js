@@ -44,10 +44,10 @@ class SiteFooter extends HTMLElement {
         </install-button>
         <a class="button" title="Publicar nuevo evento" href="/publicar-evento/">
           <img src="/assets/icons/upload.svg" width="20px" alt="">
-          Cargá tu evento
+          Cargar Evento
         </a>
         <fieldset>
-          <legend>Ver más eventos en</legend>
+          <legend>Ver eventos en</legend>
           <nav part="places">
             <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos/">Arroyo de Los Patos ·</a>
             <a title="Ver eventos en El Pueblito" href="/lugar/el-pueblito/">El Pueblito ·</a>
