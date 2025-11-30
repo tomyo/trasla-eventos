@@ -186,18 +186,14 @@ section#eventos event-entries {
   display: flex;
 }
 
-section#eventos event-entries > div {
+section#eventos event-entries[part="date-group"], section#eventos event-entries::part(date-group) {
   flex-flow: wrap;
   justify-content: center;
   gap: 2rem;
-  display: none;
-}
-
-section#eventos event-entries > div:has(event-entry:not([excluded]):not([hidden])) {
   display: flex;
 }
 
-section#eventos event-entries time {
+section#eventos event-entries[part="date-label"], section#eventos event-entries::part(date-label) {
   font-family: var(--font-family-heading);
   text-align: center;
   width: 17ch;
@@ -206,12 +202,11 @@ section#eventos event-entries time {
   padding: .3rem;
   font-size: 1rem;
   font-weight: 500;
-  display: none;
   position: sticky;
   top: 1.3rem;
 }
 
-section#eventos event-entries time:before {
+section#eventos event-entries[part="date-label"]:before, section#eventos event-entries::part(date-label):before {
   content: "";
   z-index: -1;
   background-color: var(--color-green);
@@ -519,15 +514,15 @@ hero-section [slot="title"] [part="location"] {
 }
 
 seo-block, .seo-only {
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  position: absolute;
-  overflow: hidden;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  position: absolute !important;
+  overflow: hidden !important;
 }
 
 header {
