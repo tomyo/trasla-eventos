@@ -47,7 +47,7 @@ today-date-picker:not(:focus-within)[today]:after {
   display: grid;
 }
 
-#viewMore > * {
+#viewMore > :not(.seo-only) {
   width: 100%;
   min-width: 15rem;
   color: var(--color-light);
