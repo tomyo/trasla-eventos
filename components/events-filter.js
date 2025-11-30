@@ -6,6 +6,9 @@ customElements.define(
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
       this.paginateAt = 10; // Minimum number of events to display at once
+      this._noop = !this.form || !this.events;
+
+      if (this._noop) return;
 
       if (!this.form["startDate"].value) {
         this.setStartDateToToday();
@@ -78,13 +81,15 @@ customElements.define(
 
     showMore(moreToShow = 10) {
       this.paginateAt += moreToShow;
+      if (this._noop) location.href = "/";
       this.toggleEventsPaginationVisibility();
     }
 
     updateUI() {
+      if (this._noop) return;
       this.filterEvents();
       this.toggleEventsPaginationVisibility();
-      this.updateLocalitiesOptions();
+      if (this.form.querySelector("[name=locality]")?.options.length > 0) this.updateLocalitiesOptions();
     }
 
     /**
