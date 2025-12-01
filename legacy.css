@@ -66,10 +66,6 @@ events-filter:not(:has(event-entry)) #viewMoreEvents {
   display: none;
 }
 
-events-filter[all-shown] #viewMoreEvents {
-  display: none;
-}
-
 #about {
   text-align: center;
   flex-flow: column;

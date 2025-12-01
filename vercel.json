@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/events/[slug].js": {
+    "api/events/*": {
       "maxDuration": 30
     },
     "api/web-push-subscribe.js": {
@@ -16,8 +16,12 @@
       "destination": "/api/[locality].js"
     },
     {
+      "source": "/eventos-(de-)?:when(hoy|esta-semana|este-mes)/",
+      "destination": "/api/events/by-time/[when].js"
+    },
+    {
       "source": "/:slug([a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?)",
-      "destination": "/api/events/[slug].js"
+      "destination": "/api/events/by-slug/[slug].js"
     }
   ],
   "redirects": [

@@ -139,6 +139,19 @@ export function isDateWithinWeek(dateToCheck, referenceDate = new Date()) {
   return diffDays >= 0 && diffDays <= 6;
 }
 
+export function isDateWithinMonth(dateToCheck, referenceDate = new Date()) {
+  dateToCheck = new Date(dateToCheck);
+  referenceDate = new Date(referenceDate);
+
+  dateToCheck.setHours(0, 0, 0, 0);
+  referenceDate.setHours(0, 0, 0, 0);
+
+  const diffTime = dateToCheck.getTime() - referenceDate.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays >= 0 && diffDays <= 30;
+}
+
 export function formatDateString(dateString) {
   if (!dateString) return "";
   return dateString

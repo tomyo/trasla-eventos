@@ -321,17 +321,20 @@
               </svg-mask>
               Ver más eventos
             </button>
-            <a class="button" part="all-events" href="/">Ver todos los eventos</a>
             <a class="button seo-only" part="today" href="/eventos-hoy/">Ver eventos de hoy</a>
             <a class="button seo-only" part="this-week" href="/eventos-esta-semana/">Ver eventos de esta semana</a>
             <a class="button seo-only" part="this-month" href="/eventos-este-mes/">Ver eventos de este mes</a>
           </nav>
           <script>
             // Hide view all events button if on index page (that's all events page)
-            const viewAllEventsButton = document.querySelector('#viewMore [part~="all-events"]');
-            if (location.pathname == "/") {
-              viewAllEventsButton.hidden = true;
-            }
+            const viewMoreEventsButton = document.querySelector("#viewMoreEvents");
+            viewMoreEventsButton.onclick = () => {
+              if (document.querySelector("events-filter").allShown) {
+                location.href = "/"; // Redirect to index page, usefull for slug based pages
+                return;
+              }
+              eventsFilter.showMore();
+            };
           </script>
           <style>
             #viewMore {
@@ -354,10 +357,6 @@
             }
 
             events-filter:not(:has(event-entry)) #viewMoreEvents {
-              display: none;
-            }
-
-            events-filter[all-shown] #viewMoreEvents {
               display: none;
             }
           </style>

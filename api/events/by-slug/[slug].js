@@ -1,6 +1,6 @@
-import { getGoogleSheetEvents } from "../shared/lib/get-events.js";
-import { fuzzySearch } from "../shared/lib/fuzzy-search-events.js";
-import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem } from "../shared/lib/utils.js";
+import { getGoogleSheetEvents } from "../../shared/lib/get-events.js";
+import { fuzzySearch } from "../../shared/lib/fuzzy-search-events.js";
+import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem } from "../../shared/lib/utils.js";
 
 const OG_IMAGE_WIDTH = 1200;
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
