@@ -29,6 +29,11 @@
       "source": "/lugar/traslasierra/",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/:query(.+%20.*)",
+      "destination": "/?q=:query",
+      "permanent": false
     }
   ],
   "headers": [
