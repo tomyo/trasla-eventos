@@ -18,8 +18,7 @@
 
     <!-- START CONTENT_METADATA_BLOCK -->
     <title>La Agenda de Eventos de Traslasierra | Trasla Eventos</title>
-    <link rel="alternate" type="application/ld+json" href="/events/schema.jsonld" />
-    <link rel="canonical" property="og:url" href="https://eventos.trasla.com.ar" />
+    <link rel="canonical" href="https://eventos.trasla.com.ar/" />
     <meta
       name="description"
       content="Descubrí eventos, ferias, talleres y conciertos en Traslasierra. La agenda cultural más completa del valle, actualizada cada día en Trasla Eventos."
@@ -38,7 +37,7 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="900" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://eventos.trasla.com.ar" />
+    <meta property="og:url" content="https://eventos.trasla.com.ar/" />
 
     <meta property="og:site_name" content="TRASLA EVENTOS" />
     <meta property="og:locale" content="es-AR" />
@@ -598,7 +597,7 @@
         renderEvents(eventsToRender);
         eventsFilter.updateUI();
 
-        injectSchemaOrgJson(eventsToRender); // TODO: move to server side
+        injectSchemaOrgJson(upcomingEvents);
       }
 
       /**
@@ -649,7 +648,7 @@
 
       if (!document.querySelector("event-entry")) {
         // Normal flow when requesting /index.html
-        console.info("Fetching fresh events data from server");
+        console.info("Fetching fresh events data to render on page...");
         fetchAndRenderEvents();
       }
 
