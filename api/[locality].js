@@ -68,7 +68,7 @@ export default async function handler(req) {
     /(?<openTag><seo-block>).*?(?<closeTag><\/seo-block>)/is,
     `$<openTag>
       <h2>¿Qué hacer en ${locality}?</h2>
-      <p>Información actualizada de todos los eventos de ${locality} de hoy y de la semana.</p>
+      <p>Información actualizada de todos los eventos de ${locality} de hoy, de la semana y de este mes.</p>
     $<closeTag>`
   );
 
@@ -99,8 +99,7 @@ export default async function handler(req) {
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-    // "$<openTag>" + eventEntry + "$<closeTag>"
-    () => `<event-entries>${eventEntries}</event-entries>`
+    `$<openTag>${eventEntries}$<closeTag>`
   );
 
   return new Response(html, {

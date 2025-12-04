@@ -13,7 +13,6 @@ let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_S
 export default async function handler(req) {
   const url = new URL(req.url);
   const when = url.searchParams.get("when");
-  console.log("when", when, url.pathname);
   const events = await getGoogleSheetEvents(sheetId, sheetGid);
   let filter = (event) => true;
   let title;
@@ -38,6 +37,8 @@ export default async function handler(req) {
     throw new Error("Invalid when parameter: " + when);
   }
 
+  const canonicalUrl = `${url.origin}/eventos-${when}/`; // Standardized canonical url
+
   const filteredEvents = events.filter(filter).sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
 
   let html = await (await fetch(`${url.origin}/index.html`)).text();
@@ -47,7 +48,7 @@ export default async function handler(req) {
       <link
         rel="canonical"
         property="og:url"
-        href="${url.origin}/eventos-${when}/"
+        href="${canonicalUrl}"
       />
       <meta property="og:title" content="${title}" />
       <meta
@@ -68,7 +69,7 @@ export default async function handler(req) {
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="${url.origin}/eventos-${when}/" />
+      <meta property="og:url" content="${canonicalUrl}" />
 
       <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
@@ -83,7 +84,7 @@ export default async function handler(req) {
 
   // Reaplace seo-block with the locality name
   html = html.replace(
-    /(?<openTag><seo-block>).*?(?<closeTag><\/seo-block>)/is,
+    /(?<openTag><seo-block>).*?(?<closeTag><\/seo-block>)/gs,
     `$<openTag>
       <h2>¿Qué hacer en Traslasierra ${timeText}?</h2>
       <p>Información actualizada de todos los eventos de Traslasierra de ${timeText}.</p>
@@ -116,15 +117,13 @@ export default async function handler(req) {
     .join("");
 
   html = html.replace(
-    /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-    // "$<openTag>" + eventEntry + "$<closeTag>"
-    () => `<event-entries>${eventEntries}</event-entries>`
+    /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/gs,
+    `$<openTag>${eventEntries}$<closeTag>`
   );
 
   html = html.replace(
-    /(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is,
-    // "$<openTag>" + eventEntry + "$<closeTag>"
-    () => `<h1 style="text-align: center;">${title}</h1>`
+    /(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/gs,
+    `<h1 style="text-align: center;">${title}</h1>`
   );
 
   return new Response(html, {
