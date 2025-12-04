@@ -1,9 +1,6 @@
 import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
 import { escapeHtml, slugify, getEventSortOrder } from "./shared/lib/utils.js";
 
-let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
-let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
-
 export default async function handler(req) {
   const url = new URL(req.url);
   const localitySlug = url.pathname.replace(/\/lugar\/(.*)\//, "$1");
@@ -11,7 +8,7 @@ export default async function handler(req) {
     .split("-")
     .map((s) => s[0].toUpperCase() + s.slice(1))
     .join(" ");
-  const events = await getGoogleSheetEvents(sheetId, sheetGid);
+  const events = await getGoogleSheetEvents();
   const filteredEvents = events
     .filter((event) => slugify(event.locality) === localitySlug)
     .sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
