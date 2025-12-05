@@ -50,31 +50,31 @@ class SiteFooter extends HTMLElement {
         <fieldset>
           <legend>Ver eventos en</legend>
           <nav part="places">
-            <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos/">Arroyo de Los Patos ·</a>
-            <a title="Ver eventos en El Pueblito" href="/lugar/el-pueblito/">El Pueblito ·</a>
-            <a title="Ver eventos en La Paz" href="/lugar/la-paz/">La Paz ·</a>
-            <a title="Ver eventos en La Población" href="/lugar/la-poblacion/">La Población ·</a>
-            <a title="Ver eventos en Las Calles" href="/lugar/las-calles/">Las Calles ·</a>
-            <a title="Ver eventos en Las Chacras" href="/lugar/las-chacras/">Las Chacras ·</a>
-            <a title="Ver eventos en Las Rabonas" href="/lugar/las-rabonas/">Las Rabonas ·</a>
-            <a title="Ver eventos en Las Tapias" href="/lugar/las-tapias/">Las Tapias ·</a>
-            <a title="Ver eventos en Los Hornillos" href="/lugar/los-hornillos/">Los Hornillos ·</a>
-            <a title="Ver eventos en Los Molles" href="/lugar/los-molles/">Los Molles ·</a>
-            <a title="Ver eventos en Los Pozos" href="/lugar/los-pozos/">Los Pozos ·</a>
-            <a title="Ver eventos en Luyaba" href="/lugar/luyaba/">Luyaba ·</a>
-            <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero/">Mina Clavero ·</a>
-            <a title="Ver eventos en Nono" href="/lugar/nono/">Nono ·</a>
-            <a title="Ver eventos en Panaholma" href="/lugar/panaholma/">Panaholma ·</a>
-            <a title="Ver eventos en Quebracho Ladeado" href="/lugar/quebracho-ladeado/">Quebracho Ladeado ·</a>
-            <a title="Ver eventos en San Huberto" href="/lugar/san-huberto/">San Huberto ·</a>
-            <a title="Ver eventos en San Javier" href="/lugar/san-javier/">San Javier ·</a>
-            <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo/">San Lorenzo ·</a>
-            <a title="Ver eventos en San Pedro" href="/lugar/san-pedro/">San Pedro ·</a>
-            <a title="Ver eventos en Travesia" href="/lugar/travesia/">Travesia ·</a>
-            <a title="Ver eventos en Villa Cura Brochero" href="/lugar/villa-cura-brochero/">Villa Cura Brochero ·</a>
-            <a title="Ver eventos en Villa de Las Rosas" href="/lugar/villa-de-las-rosas/">Villa de Las Rosas ·</a>
-            <a title="Ver eventos en Villa de Merlo" href="/lugar/villa-de-merlo/">Villa de Merlo ·</a>
-            <a title="Ver eventos en Villa Dolores" href="/lugar/villa-dolores/">Villa Dolores ·</a>
+            <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos/">Arroyo de Los Patos</a><span> ·</span>
+            <a title="Ver eventos en El Pueblito" href="/lugar/el-pueblito/">El Pueblito</a><span> ·</span>
+            <a title="Ver eventos en La Paz" href="/lugar/la-paz/">La Paz</a><span> ·</span>
+            <a title="Ver eventos en La Población" href="/lugar/la-poblacion/">La Población</a><span> ·</span>
+            <a title="Ver eventos en Las Calles" href="/lugar/las-calles/">Las Calles</a><span> ·</span>
+            <a title="Ver eventos en Las Chacras" href="/lugar/las-chacras/">Las Chacras</a><span> ·</span>
+            <a title="Ver eventos en Las Rabonas" href="/lugar/las-rabonas/">Las Rabonas</a><span> ·</span>
+            <a title="Ver eventos en Las Tapias" href="/lugar/las-tapias/">Las Tapias</a><span> ·</span>
+            <a title="Ver eventos en Los Hornillos" href="/lugar/los-hornillos/">Los Hornillos</a><span> ·</span>
+            <a title="Ver eventos en Los Molles" href="/lugar/los-molles/">Los Molles</a><span> ·</span>
+            <a title="Ver eventos en Los Pozos" href="/lugar/los-pozos/">Los Pozos</a><span> ·</span>
+            <a title="Ver eventos en Luyaba" href="/lugar/luyaba/">Luyaba</a><span> ·</span>
+            <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero/">Mina Clavero</a><span> ·</span>
+            <a title="Ver eventos en Nono" href="/lugar/nono/">Nono</a><span> ·</span>
+            <a title="Ver eventos en Panaholma" href="/lugar/panaholma/">Panaholma</a><span> ·</span>
+            <a title="Ver eventos en Quebracho Ladeado" href="/lugar/quebracho-ladeado/">Quebracho Ladeado</a><span> ·</span>
+            <a title="Ver eventos en San Huberto" href="/lugar/san-huberto/">San Huberto</a><span> ·</span>
+            <a title="Ver eventos en San Javier" href="/lugar/san-javier/">San Javier</a><span> ·</span>
+            <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo/">San Lorenzo</a><span> ·</span>
+            <a title="Ver eventos en San Pedro" href="/lugar/san-pedro/">San Pedro</a><span> ·</span>
+            <a title="Ver eventos en Travesia" href="/lugar/travesia/">Travesia</a><span> ·</span>
+            <a title="Ver eventos en Villa Cura Brochero" href="/lugar/villa-cura-brochero/">Villa Cura Brochero</a><span> ·</span>
+            <a title="Ver eventos en Villa de Las Rosas" href="/lugar/villa-de-las-rosas/">Villa de Las Rosas</a><span> ·</span>
+            <a title="Ver eventos en Villa de Merlo" href="/lugar/villa-de-merlo/">Villa de Merlo</a><span> ·</span>
+            <a title="Ver eventos en Villa Dolores" href="/lugar/villa-dolores/">Villa Dolores</a><span> ·</span>
             <a title="Ver eventos en Yacanto" href="/lugar/yacanto/">Yacanto</a>
           </nav>
         </fieldset>

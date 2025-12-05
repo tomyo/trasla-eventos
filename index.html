@@ -674,6 +674,11 @@
           footer [part="places"] a${selectors} {
             display: none;
           }
+
+          footer [part="places"] a${selectors} + span {
+            /* Hide dot (·) after hidden locality */
+            display: none;
+          }
         `.trim();
         document.head.appendChild(style);
       }
