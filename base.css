@@ -240,7 +240,7 @@ svg-mask {
   content-visibility: auto;
   contain: paint layout style;
   subtree-visibility: auto;
-  contain-intrinsic-size: 55rem;
+  contain-intrinsic-height: 55rem;
 }
 
 .logo-title {
