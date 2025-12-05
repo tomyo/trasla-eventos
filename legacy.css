@@ -414,10 +414,12 @@ svg-mask {
 }
 
 .mountains-top {
+  view-transition-name: mountains-top;
   position: relative;
 }
 
 .mountains-top:before {
+  view-transition-name: mountains-peak;
   content: "";
   background-color: inherit;
   height: 40px;
@@ -508,6 +510,7 @@ hero-section[slim] {
 hero-section [slot="logo"] {
   width: 9rem;
   color: var(--color-logo, var(--color-red));
+  view-transition-name: logo;
   display: inline-block;
 }
 

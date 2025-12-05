@@ -210,8 +210,10 @@ svg-mask {
 
 .mountains-top {
   position: relative;
+  view-transition-name: mountains-top;
 
   &::before {
+    view-transition-name: mountains-peak;
     content: "";
     display: block;
     position: absolute;
@@ -303,6 +305,7 @@ hero-section {
     display: inline-block;
     width: 9rem;
     color: var(--color-logo, var(--color-red));
+    view-transition-name: logo;
   }
 
   [slot="title"] {
