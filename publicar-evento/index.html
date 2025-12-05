@@ -21,26 +21,26 @@
         s.src = src;
         document.head.appendChild(s);
       }
-      if (["localhost", "127.0.0.1"].includes(location.hostname)) return;
-
-      // Umami
-      loadScript("https://cloud.umami.is/script.js", {
-        "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
-        defer: true,
-      });
-
-      // Clarity
-      (function () {
-        window.clarity =
-          window.clarity ||
-          function () {
-            (window.clarity.q = window.clarity.q || []).push(arguments);
-          };
-
-        loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
-          async: true,
+      if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
+        // Umami
+        loadScript("https://cloud.umami.is/script.js", {
+          "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
+          defer: true,
         });
-      })();
+
+        // Clarity
+        (function () {
+          window.clarity =
+            window.clarity ||
+            function () {
+              (window.clarity.q = window.clarity.q || []).push(arguments);
+            };
+
+          loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
+            async: true,
+          });
+        })();
+      }
     </script>
     <!-- END Analytics -->
   </head>
