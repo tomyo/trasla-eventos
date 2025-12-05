@@ -38,6 +38,7 @@ class SiteFooter extends HTMLElement {
               src="/assets/images/instalar-pwa-instructions.png"
               alt="Instrucciones para instalar PWA"
               width="200"
+              style="aspect-ratio: 326/672; width: 90%;"
             />
             <button onclick="this.closest('dialog').close()">Cerrar</button>
           </dialog>
