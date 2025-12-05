@@ -452,6 +452,17 @@ svg-mask {
   margin-block-end: 1.5rem;
 }
 
+#fixed-background {
+  width: 100vw;
+  height: 100vh;
+  height: 100vhl;
+  z-index: -1;
+  object-fit: cover;
+  view-transition-name: fixed-background;
+  position: fixed;
+  top: 0;
+}
+
 install-button > * {
   width: 100%;
 }

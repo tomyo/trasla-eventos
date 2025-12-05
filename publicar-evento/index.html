@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/base.css" />
     <link rel="stylesheet" href="./publicar-evento.css" />
     <script type="module" src="/components/site-header.js"></script>
-    <script type="module" src="/components/fixed-background.js"></script>
 
     <!-- START Analytics -->
     <script>
@@ -46,7 +45,24 @@
   </head>
   <body>
     <site-header></site-header>
-    <fixed-background></fixed-background>
+    <picture>
+      <source
+        srcset="/assets/images/portada-1920w-1200h.avif 1x"
+        type="image/avif"
+        media="(orientation: landscape)"
+        width="1920"
+        height="1200"
+      />
+      <source
+        srcset="/assets/images/portada-1920w-1200h.jpg 1x"
+        type="image/jpeg"
+        media="(orientation: landscape)"
+        width="1920"
+        height="1200"
+      />
+      <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
+      <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
+    </picture>
     <hero-section slim>
       <a slot="logo" href="/" aria-label="Trasla Eventos">
         <svg-mask

@@ -109,7 +109,6 @@
 
     <link rel="modulepreload" href="/lib/utils.js" />
     <link rel="modulepreload" href="/lib/get-events.js" />
-    <link rel="modulepreload" href="/components/fixed-background.js" />
     <link rel="modulepreload" href="/components/share-url/share-url.js" />
     <link rel="modulepreload" href="/components/install-button/install-button.js" />
     <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
@@ -124,8 +123,8 @@
     <script type="module" src="/components/event-entries.js"></script>
     <script type="module" src="/components/events-filter.js"></script>
     <script type="module" src="/components/site-header.js"></script>
-    <script type="module" src="/components/fixed-background.js"></script>
     <script type="module" src="/components/install-button/install-button.js"></script>
+    <script src="/components/today-date-picker.js" type="module" defer></script>
 
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/base.css" />
@@ -165,8 +164,24 @@
     <!-- END Analytics -->
   </head>
   <body>
-    <script src="/components/today-date-picker.js" type="module"></script>
-    <fixed-background></fixed-background>
+    <picture>
+      <source
+        srcset="/assets/images/portada-1920w-1200h.avif 1x"
+        type="image/avif"
+        media="(orientation: landscape)"
+        width="1920"
+        height="1200"
+      />
+      <source
+        srcset="/assets/images/portada-1920w-1200h.jpg 1x"
+        type="image/jpeg"
+        media="(orientation: landscape)"
+        width="1920"
+        height="1200"
+      />
+      <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
+      <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
+    </picture>
     <site-header></site-header>
     <hero-section>
       <a slot="logo" href="/" aria-label="Trasla Eventos">

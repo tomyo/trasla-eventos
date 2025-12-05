@@ -8,7 +8,6 @@ const DRIVE_IMAGE_CACHE = `drive-images-${CACHE_VERSION}`;
 const CORE_ASSETS = [
   "/",
   "/index.html",
-  "/poster-eventos-de-hoy.html",
   "/manifest.json",
   "/base.css",
   "/legacy.css",
@@ -21,7 +20,6 @@ const CORE_ASSETS = [
   "/components/events-filter.js",
   "/components/site-header.js",
   "/components/site-footer.js",
-  "/components/fixed-background.js",
   "/components/install-button/install-button.js",
   "/components/horizontal-carousel/horizontal-carousel.js",
   "/components/share-url/share-url.js",
