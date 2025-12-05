@@ -430,9 +430,13 @@ svg-mask {
   mask: url("/assets/textures/mountain-shape.svg") 77px bottom repeat-x;
 }
 
-.card:not([hidden]) {
+.card {
   border-radius: var(--border-radius);
   text-align: center;
+  content-visibility: auto;
+  contain: paint layout style;
+  subtree-visibility: auto;
+  contain-intrinsic-size: 55rem;
   background-color: #00000008;
   border: 1px solid;
   flex-flow: column;

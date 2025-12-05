@@ -224,7 +224,7 @@ svg-mask {
   }
 }
 
-.card:not([hidden]) {
+.card {
   display: flex;
   flex-flow: column;
   gap: 0.66rem;
@@ -236,6 +236,11 @@ svg-mask {
   max-width: 45ch;
   height: fit-content;
   background-color: rgba(0, 0, 0, 0.03);
+
+  content-visibility: auto;
+  contain: paint layout style;
+  subtree-visibility: auto;
+  contain-intrinsic-size: 55rem;
 }
 
 .logo-title {
