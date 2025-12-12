@@ -366,6 +366,27 @@ Teléfono, instagram, link a la página tickets, etc.
         return jsonResponse.data;
       }
 
+      function showMissingFieldsError(missingFields) {
+        const output = document.querySelector("output[name=output]");
+        output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
+        for (const key of Object.keys(missingFields)) {
+          output.textContent += `❌ ${missingFields[key]}\n`;
+        }
+        output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
+      }
+
+      class MissingFieldsError extends Error {
+        constructor(missingFields) {
+          const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
+            missingFields
+          )
+            .map(([key, msg]) => `❌ ${msg}`)
+            .join("\n")}`;
+          super(message);
+          this.missingFields = missingFields;
+        }
+      }
+
       async function handleFormSubmit(event) {
         event.preventDefault();
         const submitButton = document.querySelector("button[type=submit]");
@@ -383,7 +404,7 @@ Teléfono, instagram, link a la página tickets, etc.
         await requestNotificationPermission();
 
         submitButton.disabled = true; // We use submitButton.value to store the event ID if already created, as a retry mechanism.
-        submitButtonSpan.textContent = "Publicando...";
+        submitButtonSpan.textContent = "Publicando...\n";
 
         try {
           let eventData;
@@ -393,7 +414,6 @@ Teléfono, instagram, link a la página tickets, etc.
             submitButton.value = eventData.id;
             eventId = eventData.id;
             output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
-            output.textContent += "\nProcesando la información del evento...\n";
           } else {
             // Retry attempt for existing event
             eventId = submitButton.value;
@@ -401,8 +421,13 @@ Teléfono, instagram, link a la página tickets, etc.
             output.textContent += "\nReintentando la carga...\n";
           }
 
+          if (!eventData.slug) {
+            output.textContent += "Procesando la información del evento...\n";
+          }
+
           let retries = 0;
-          const maxRetries = submitButton.value ? 5 : 35; // Less retries if re-trying an existing event
+          const maxRetries = submitButton.value ? 5 : 7; // Less retries if re-trying an existing event
+          const missingFields = {};
           while (!eventData?.slug) {
             const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventId}`;
             try {
@@ -412,13 +437,27 @@ Teléfono, instagram, link a la página tickets, etc.
             }
             if (eventData?.slug) break;
 
+            if (eventData.title) {
+              // That means it has been processed, but required fields are missing
+              for (const [key, msg] of [
+                ["startsAt", "Fecha y hora de inicio"],
+                ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
+              ]) {
+                if (!eventData[key]) {
+                  missingFields[key] = msg;
+                }
+              }
+              throw new MissingFieldsError(missingFields);
+            }
+
             retries++;
             if (retries >= maxRetries) {
               throw new Error(
                 `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
               );
             }
-            await new Promise((resolve) => setTimeout(resolve, 3000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            output.textContent += "Esperando que se procese el evento...\n";
           }
 
           if (document.visibilityState !== "visible") {
@@ -456,9 +495,14 @@ Teléfono, instagram, link a la página tickets, etc.
           // Redirect to the event page
           window.location.href = `${window.location.origin}/${eventData.slug}`;
         } catch (error) {
-          console.error("Error processing response:", error);
-          alert(`Error procesando el evento: ${error.message}`);
-
+          if (error instanceof MissingFieldsError) {
+            showMissingFieldsError(error.missingFields);
+          } else {
+            output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
+          }
+          alert(
+            `Hubo un error al intentar cargar el evento.\n${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
+          );
           submitButton.disabled = false;
           submitButtonSpan.textContent = buttonText + " (Reintentar)";
         }

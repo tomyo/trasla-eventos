@@ -151,6 +151,27 @@
         return jsonResponse.data;
       }
 
+      function showMissingFieldsError(missingFields) {
+        const output = document.querySelector("output[name=output]");
+        output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
+        for (const key of Object.keys(missingFields)) {
+          output.textContent += `❌ ${missingFields[key]}\n`;
+        }
+        output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
+      }
+
+      class MissingFieldsError extends Error {
+        constructor(missingFields) {
+          const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
+            missingFields
+          )
+            .map(([key, msg]) => `❌ ${msg}`)
+            .join("\n")}`;
+          super(message);
+          this.missingFields = missingFields;
+        }
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
@@ -158,53 +179,80 @@
         const submitButton = document.querySelector("button[type=submit]");
         const submitButtonSpan = submitButton.querySelector("span");
         const buttonText = submitButtonSpan.textContent;
+        const output = document.querySelector("output[name=output]");
 
         try {
-          form.elements["submit"].disabled = true;
-          submitButtonSpan.textContent = "Publicando...";
-          form.elements["output"].textContent = "Procesando y cargando el evento...\n";
+          submitButton.disabled = true;
+          submitButtonSpan.textContent = "Publicando...\n";
 
           const getOrCreateQuery = `?endpoint=getOrCreateEventByInstagramPostURL&url=${form.elements.url.value}`;
           let eventData = await extractSuccessResponse(await fetch(api + getOrCreateQuery));
 
           if (eventData.alreadyCreated) {
-            form.elements["output"].textContent += "✔️ Evento existente encontrado ...\n";
+            output.textContent += "✔️ Evento ya existe en sistema ...\n";
           } else {
-            form.elements["output"].textContent += "✔️ Nuevo evento creando...\n";
+            output.textContent += "✔️ Solicitud recibida con éxito...\n";
+          }
+          const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventData.id}`;
+          if (!eventData.slug) {
+            output.textContent += "Procesando la información del evento...\n";
           }
 
-          const getEventByIdQuery = `?endpoint=getEventById&id=${eventData.id}`;
           const maxRetries = 5;
           let retries = 0;
+          const missingFields = {};
           while (!eventData.slug) {
-            form.elements["output"].textContent += "Esperando que se cargue el evento...\n";
             eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
             console.log(`Event data received: `, eventData);
             // Add 1 second delay to refresh data
             if (eventData.slug) break;
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            if (eventData.title) {
+              // That means it has been processed, but required fields are missing
+              for (const [key, msg] of [
+                ["startsAt", "Fecha y hora de inicio"],
+                ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
+              ]) {
+                if (!eventData[key]) {
+                  missingFields[key] = msg;
+                }
+              }
+              throw new MissingFieldsError(missingFields);
+            }
+
             retries++;
             if (retries >= maxRetries) {
               throw new Error(
                 `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
               );
             }
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            output.textContent += "Esperando que se procese el evento...\n";
           }
+
           // Event uploaded or found succesfully
-          form.elements["output"].textContent += "\nRedirigiendo a la página del evento...\n";
-          cache.delete("/url");
-          form.reset();
+          submitButtonSpan.textContent = "Evento cargado! 👌\n";
+          output.textContent += "\nRedirigiendo a la página del evento...\n";
           console.log(`redirect to event page ${window.location.origin}/${eventData.slug}`);
           window.location.href = `${window.location.origin}/${eventData.slug}`;
+          setTimeout(() => {
+            cache.delete("/url");
+            form.reset();
+            submitButton.disabled = false;
+            submitButtonSpan.textContent = buttonText;
+          }, 2000); // Ensure going back to the form makes it fresh
         } catch (error) {
           console.error(error);
+          if (error instanceof MissingFieldsError) {
+            showMissingFieldsError(error.missingFields);
+          } else {
+            output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
+          }
           alert(
-            `Hubo un error al intentar cargar el evento.\n ${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
+            `Hubo un error al intentar cargar el evento.\n${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
           );
-        } finally {
-          form.elements["submit"].disabled = false;
-          submitButtonSpan.textContent = buttonText;
+          submitButton.disabled = false;
+          submitButtonSpan.textContent = buttonText + " (Reintentar)";
         }
       });
     </script>

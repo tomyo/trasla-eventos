@@ -152,6 +152,12 @@ h4 {
   font-family: var(--font-family-heading);
 }
 
+form {
+  output {
+    white-space: pre-line;
+  }
+}
+
 /* Utils */
 [hidden] {
   display: none !important;
