@@ -41,6 +41,7 @@ details summary > * {
   --color: var(--color-dark);
   --background-color: var(--color-light);
   --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color, currentcolor));
+  --background-color-selected: hsla(from var(--background-color-darker) h s calc(l * 0.9));
   --border-radius: 10px;
   --animation-time-short: 0.25s;
   color-scheme: light only;
@@ -155,6 +156,10 @@ h4 {
 form {
   output {
     white-space: pre-line;
+  }
+
+  option:checked {
+    background-color: var(--background-color-selected);
   }
 }
 

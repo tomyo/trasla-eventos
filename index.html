@@ -229,7 +229,7 @@
               <span>Eventos en</span>
               <select-locality>
                 <select name="locality" aria-label="Localidad" multiple>
-                  <option value="" selected>TRASLASIERRA</option>
+                  <option value="">TRASLASIERRA</option>
                   <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
                   <option value="Boca del Rio">BOCA DEL RIO</option>
                   <option value="Dique de La Viña">DIQUE DE LA VIÑA</option>
@@ -508,6 +508,10 @@
               option {
                 height: var(--input-height);
                 align-content: center;
+              }
+
+              &:not(:has(option:checked)) option:first-child {
+                background-color: var(--background-color-selected);
               }
             }
 
