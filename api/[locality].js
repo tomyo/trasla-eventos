@@ -1,5 +1,5 @@
 import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
-import { escapeHtml, slugify, getEventSortOrder } from "./shared/lib/utils.js";
+import { escapeHtml, slugify, getEventSortOrder, makeCssToHideAbsentLocalitiesInFooter } from "./shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
@@ -54,6 +54,9 @@ export default async function handler(req) {
         events-filter form span:has(~ select-locality) {
           display: none;
         }
+
+        /* Hide each locality link in footer when locality doesn't have events to show */
+        ${makeCssToHideAbsentLocalitiesInFooter(events)}
       </style>
     `;
 

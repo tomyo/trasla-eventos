@@ -481,3 +481,22 @@ function getEventOrganizer(event) {
     url: "https://eventos.trasla.com.ar/",
   };
 }
+
+export function makeCssToHideAbsentLocalitiesInFooter(events) {
+  // Hide localities that don't have events
+  const selectors = events
+    .map((event) => slugify(event.locality))
+    .map((slug) => `:not([href*="${slug}"])`)
+    .join("");
+
+  return /*css*/ `
+    footer [part="places"] a${selectors} {
+      display: none;
+    }
+
+    footer [part="places"] a${selectors} + span {
+      /* Hide dot (·) after hidden locality */
+      display: none;
+    }
+  `.trim();
+}

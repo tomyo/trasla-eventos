@@ -605,6 +605,7 @@
         eventsToSchemaOrgItemList,
         getEventSortOrder,
         renderEventEntry,
+        makeCssToHideAbsentLocalitiesInFooter,
       } from "/lib/utils.js";
 
       const now = new Date();
@@ -684,26 +685,12 @@
       }
 
       function hideAbsentLocalitiesFromFooter(events) {
+        const css = makeCssToHideAbsentLocalitiesInFooter(events);
         if (document.getElementById("hide-absent-localities")) return;
         const style = document.createElement("style");
         style.id = "hide-absent-localities";
+        style.textContent = css;
 
-        // Hide localities that don't have events
-        const selectors = events
-          .map((event) => slugify(event.locality))
-          .map((slug) => `:not([href*="${slug}"])`)
-          .join("");
-
-        style.textContent += /*css*/ `
-          footer [part="places"] a${selectors} {
-            display: none;
-          }
-
-          footer [part="places"] a${selectors} + span {
-            /* Hide dot (·) after hidden locality */
-            display: none;
-          }
-        `.trim();
         document.head.appendChild(style);
       }
 
