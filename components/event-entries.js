@@ -28,7 +28,7 @@ customElements.define(
             display: none !important;
           }
         </style>
-        <slot name="loading">
+        <slot name="loading" part="loading">
           <p part="loading" style="text-align: center">· · ·</p>
         </slot>
         <slot></slot>

@@ -554,6 +554,11 @@
           gap: 2rem;
           align-items: center;
 
+          &[part="loading"],
+          &::part(loading) {
+            text-align: center;
+          }
+
           &[part="date-group"],
           &::part(date-group) {
             display: flex;
@@ -706,10 +711,14 @@
 
       if (!document.querySelector("event-entry")) {
         // Normal flow when requesting /index.html
-        console.info("Fetching fresh events data to render on page...");
-        fetchAndRenderEvents();
+        if (location.pathname.includes("/lugar/")) {
+          const locality = document.querySelector('[part="location"]').textContent;
+          eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
+        } else {
+          console.info("Fetching fresh events data to render on page...");
+          fetchAndRenderEvents();
+        }
       }
-
       if (location.pathname.match(/[a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?/)) {
         // Scroll into event's section if we're on a event page
         const focusElement = () => document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
