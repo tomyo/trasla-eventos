@@ -144,6 +144,10 @@ section#eventos events-filter select-locality select option {
   align-content: center;
 }
 
+section#eventos events-filter select-locality select:not(:has(option:checked)) option:first-child {
+  background-color: var(--background-color-selected);
+}
+
 section#eventos events-filter select-locality:after {
   content: var(--down-arrow-content);
   border-top: .25rem solid gray;
@@ -180,6 +184,10 @@ section#eventos event-entries {
   align-items: center;
   gap: 2rem;
   display: flex;
+}
+
+section#eventos event-entries[part="loading"], section#eventos event-entries::part(loading) {
+  text-align: center;
 }
 
 section#eventos event-entries[part="date-group"], section#eventos event-entries::part(date-group) {
@@ -253,6 +261,7 @@ details summary > * {
   --color: var(--color-dark);
   --background-color: var(--color-light);
   --background-color-darker: color-mix(in srgb, var(--color) 7%, var(--background-color, currentcolor));
+  --background-color-selected: hsla(from var(--background-color-darker) h s calc(l * .9));
   --border-radius: 10px;
   --animation-time-short: .25s;
   --lightningcss-light: initial;
@@ -354,6 +363,14 @@ h1, h2, h3, h4 {
   font-family: var(--font-family-heading);
 }
 
+form output {
+  white-space: pre-line;
+}
+
+form option:checked {
+  background-color: var(--background-color-selected);
+}
+
 [hidden] {
   display: none !important;
 }
@@ -436,15 +453,12 @@ svg-mask {
   border-radius: var(--border-radius);
   text-align: center;
   content-visibility: auto;
-  contain: paint layout style;
-  subtree-visibility: auto;
-  contain-intrinsic-height: 55rem;
+  contain-intrinsic-size: 1px 40rem;
   background-color: #00000008;
   border: 1px solid;
   flex-flow: column;
   gap: .66rem;
-  min-width: min-content;
-  max-width: 45ch;
+  max-width: min(45ch, 90vw);
   height: fit-content;
   padding: 1.5rem;
   display: flex;

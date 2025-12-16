@@ -250,9 +250,7 @@ svg-mask {
   background-color: rgba(0, 0, 0, 0.03);
 
   content-visibility: auto;
-  contain: paint layout style;
-  subtree-visibility: auto;
-  contain-intrinsic-height: 55rem;
+  contain-intrinsic-size: 1px 40rem;
 }
 
 .logo-title {
