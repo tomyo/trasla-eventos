@@ -242,11 +242,10 @@ svg-mask {
   flex-flow: column;
   gap: 0.66rem;
   border-radius: var(--border-radius);
-  min-width: min-content;
   text-align: center;
   border: 1px solid;
   padding: 1.5rem;
-  max-width: 45ch;
+  max-width: min(45ch, 90vw);
   height: fit-content;
   background-color: rgba(0, 0, 0, 0.03);
 
