@@ -44,6 +44,7 @@ details summary > * {
   --background-color-selected: hsla(from var(--background-color-darker) h s calc(l * 0.9));
   --border-radius: 10px;
   --animation-time-short: 0.25s;
+  --prose-max-width: 60ch;
   color-scheme: light only;
   accent-color: var(--color-green);
 }
@@ -89,10 +90,10 @@ body {
 main {
   display: flex;
   flex-flow: column;
+  background-color: var(--background-color);
 
   & section {
     padding: 3rem 2rem 2rem;
-    background-color: var(--background-color);
 
     &:last-child {
       padding-bottom: 6rem;
@@ -142,7 +143,7 @@ textarea {
 h2 {
   font-size: 1.25rem;
   line-height: 1.28;
-  letter-spacing: 0.15rem;
+  letter-spacing: 0.1rem;
 }
 
 h1,
@@ -316,10 +317,11 @@ hero-section {
     view-transition-name: logo;
   }
 
-  [slot="title"] {
-    [part="location"] {
+  [part="title"] {
+    strong {
       font-size: larger;
-      font-weight: bold;
+      font-weight: bolder;
+      text-transform: uppercase;
     }
   }
 }

@@ -304,12 +304,12 @@ body {
 }
 
 main {
+  background-color: var(--background-color);
   flex-flow: column;
   display: flex;
 }
 
 main section {
-  background-color: var(--background-color);
   padding: 3rem 2rem 2rem;
 }
 
@@ -353,7 +353,7 @@ input, select, button, textarea {
 }
 
 h2 {
-  letter-spacing: .15rem;
+  letter-spacing: .1rem;
   font-size: 1.25rem;
   line-height: 1.28;
 }
@@ -369,6 +369,10 @@ form output {
 
 form option:checked {
   background-color: var(--background-color-selected);
+}
+
+.prose {
+  max-width: 60ch;
 }
 
 [hidden] {
@@ -528,9 +532,10 @@ hero-section [slot="logo"] {
   display: inline-block;
 }
 
-hero-section [slot="title"] [part="location"] {
+hero-section [part="title"] strong {
+  text-transform: uppercase;
   font-size: larger;
-  font-weight: bold;
+  font-weight: bolder;
 }
 
 .font-title {

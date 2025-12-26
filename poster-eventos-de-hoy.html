@@ -54,7 +54,7 @@
         min-width: var(--flex-base); /* Enough for a 5 x 5 grid */
       }
 
-      [slot="title"] {
+      [part="title"] {
         display: grid;
         place-content: center;
         font-size: var(--title-font-size);
@@ -84,7 +84,7 @@
   </style>
 
   <main>
-    <h1 slot="title">HOY</h1>
+    <h1 part="title">HOY</h1>
     <!-- 
     <img src="/assets/images/portada-720w-1280h.jpg" />
     <img src="/assets/images/portada-720w-1280h.jpg" />
@@ -107,13 +107,13 @@
     // Set title from URL param "title"
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.has("title")) {
-      document.querySelector('[slot="title"]').textContent = searchParams.get("title");
+      document.querySelector('[part="title"]').textContent = searchParams.get("title");
     } else {
       // Set title to today's date in format "DD MMM" in uppercase, e.g. "05 JUL"
       const today = new Date();
       const options = { day: "2-digit", month: "short" };
       const [day, month] = today.toLocaleDateString("es-AR", options).split("-");
-      document.querySelector('[slot="title"]').innerHTML = `${day} <br /> ${month.toUpperCase()}`;
+      document.querySelector('[part="title"]').innerHTML = `${day} <br /> ${month.toUpperCase()}`;
     }
 
     // Fill today's event images
