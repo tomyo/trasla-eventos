@@ -107,6 +107,11 @@ main {
 
 a {
   color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 button,
@@ -121,7 +126,6 @@ button,
   text-transform: uppercase;
   background: none;
   cursor: pointer;
-  font: inherit;
   color: inherit;
   border: 1px solid currentColor;
 }
@@ -143,7 +147,6 @@ textarea {
 h2 {
   font-size: 1.25rem;
   line-height: 1.28;
-  letter-spacing: 0.1rem;
 }
 
 h1,
@@ -393,6 +396,13 @@ header {
     align-items: center;
     justify-content: start;
     gap: 1.5rem;
+    text-align: center;
+
+    [part="nav-link"] {
+      text-transform: uppercase;
+      margin-block-start: 1rem;
+      font-size: 1rem;
+    }
 
     > * {
       min-width: 15rem;

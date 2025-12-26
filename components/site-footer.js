@@ -48,6 +48,7 @@ class SiteFooter extends HTMLElement {
           <img src="/assets/icons/upload.svg" width="20px" alt="">
           Cargar Evento
         </a>
+        <a href="/que-es-trasla-eventos.html" title="¿Qué es Trasla Eventos?">¿Qué es Trasla Eventos?</a>
         <fieldset>
           <legend>Ver eventos en</legend>
           <nav part="places">

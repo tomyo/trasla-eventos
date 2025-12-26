@@ -50,6 +50,7 @@ class SiteHeader extends HTMLElement {
                 <img src="/assets/icons/upload.svg" width="20px" alt="" />
                 Cargar Evento
               </a>
+              <a part="nav-link" href="/que-es-trasla-eventos.html" title="¿Qué es Trasla Eventos?" style="text-transform: uppercase;">¿Qué es Trasla Eventos?</a>
               <footer class="font-body-2">
                 <h3 style="margin: 0">Contacto</h3>
                 <div class="contact-links">

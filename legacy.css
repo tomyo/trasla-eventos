@@ -264,6 +264,7 @@ details summary > * {
   --background-color-selected: hsla(from var(--background-color-darker) h s calc(l * .9));
   --border-radius: 10px;
   --animation-time-short: .25s;
+  --prose-max-width: 60ch;
   --lightningcss-light: initial;
   --lightningcss-dark: ;
   color-scheme: light only;
@@ -323,13 +324,17 @@ main section > p {
 
 a {
   color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 button, .button {
   letter-spacing: .15rem;
   text-transform: uppercase;
   cursor: pointer;
-  font: inherit;
   color: inherit;
   background: none;
   border: 1px solid;
@@ -353,7 +358,6 @@ input, select, button, textarea {
 }
 
 h2 {
-  letter-spacing: .1rem;
   font-size: 1.25rem;
   line-height: 1.28;
 }
@@ -369,10 +373,6 @@ form output {
 
 form option:checked {
   background-color: var(--background-color-selected);
-}
-
-.prose {
-  max-width: 60ch;
 }
 
 [hidden] {
@@ -612,11 +612,18 @@ header .bg-pattern {
 }
 
 header nav {
+  text-align: center;
   flex-flow: column;
   justify-content: start;
   align-items: center;
   gap: 1.5rem;
   display: flex;
+}
+
+header nav [part="nav-link"] {
+  text-transform: uppercase;
+  margin-block-start: 1rem;
+  font-size: 1rem;
 }
 
 header nav > * {
