@@ -72,21 +72,35 @@
         margin-inline: auto;
         text-align: center;
 
-        img {
+        #qrImage {
           position: absolute;
           top: 50%;
           left: 50%;
           object-fit: cover;
           background-color: var(--bg-color, none);
-          transform: translate(-50%, -50%);
+        }
+
+        output {
+          display: block;
+          position: relative;
+          aspect-ratio: 1;
+          width: var(--qr-size);
+
+          #qrcode > * {
+            position: relative;
+            width: 100%;
+            height: 100%;
+          }
         }
       }
 
-      #qrcode table,
+      /* #qrcode table,
       #qrcode {
         position: relative;
         min-width: max-content;
-      }
+        width: 100%;
+        height: 100%;
+      } */
 
       #downloadButton {
         display: block;
@@ -144,7 +158,7 @@
         <label> <input id="noImage" type="checkbox" oninput="makeCode()" /> Sin imagen </label>
         <label>
           Tamaño
-          <input id="imageSize" type="range" min="100" max="500" value="250" oninput="adjustImage()" />
+          <input id="imageSize" type="range" min="50" max="1000" value="250" oninput="adjustImage()" />
         </label>
       </fieldset>
 
@@ -158,14 +172,14 @@
     </div>
 
     <article>
-      <input id="imageHorizontal" type="range" min="-2000" max="1000" value="-600" oninput="adjustImage()" />
+      <input id="imageHorizontal" type="range" min="0" max="850" value="370" oninput="adjustImage()" />
       <output>
-        <div id="qrcode" style="height: 500px; aspect-ratio: 1"></div>
+        <div id="qrcode"></div>
         <img id="qrImage" src="/assets/images/loica.png" alt="" />
       </output>
-      <input id="imageVertical" type="range" min="-1500" max="1000" value="-250" oninput="adjustImage()" />
+      <input id="imageVertical" type="range" min="0" max="850" value="400" oninput="adjustImage()" />
     </article>
-    <!-- <button id="downloadButton" onclick="downloadImage()">Descargar QR</button> -->
+    <button id="downloadButton" onclick="downloadImage()">Descargar QR</button>
 
     <script type="text/javascript">
       // Adjust image size and position based on the input values
@@ -174,18 +188,96 @@
         const imageVertical = parseInt(document.getElementById("imageVertical").value, 10);
         const imageSize = parseInt(document.getElementById("imageSize").value, 10);
 
-        // document.documentElement.style.setProperty("--image-horizontal", `${imageHorizontal}%`);
-        // document.documentElement.style.setProperty("--image-vertical", `${imageVertical}%`);
-        // document.documentElement.style.setProperty("--image-size", `${imageSize}%`);
         qrImage.style.width = `${imageSize / 10}%`;
-        qrImage.style.transform = `translate(${imageHorizontal / 10}%, ${imageVertical / 10}%)`;
+        qrImage.style.top = `${imageVertical / 10}%`;
+        qrImage.style.left = `${imageHorizontal / 10}%`;
       }
 
       async function downloadImage() {
-        // TODO
+        // 1. Get Source Canvas
+        const sourceCanvas = document.querySelector("#qrcode canvas");
+        if (!sourceCanvas) {
+          alert("No QR code available to download");
+          return;
+        }
+
+        const qrSize = sourceCanvas.width; // Should be 1000 based on options
+        const canvas = document.createElement("canvas");
+        canvas.width = qrSize;
+        canvas.height = qrSize;
+        const ctx = canvas.getContext("2d");
+
+        // Draw the QR code from the source canvas
+        ctx.drawImage(sourceCanvas, 0, 0);
+
+        // 2. Draw Logo Image
+        const imgElement = document.getElementById("qrImage");
+        const noImage = document.getElementById("noImage").checked;
+
+        if (imgElement && imgElement.src && !noImage && imgElement.src !== window.location.href) {
+          const imageHorizontal = parseInt(document.getElementById("imageHorizontal").value, 10);
+          const imageVertical = parseInt(document.getElementById("imageVertical").value, 10);
+          const imageSize = parseInt(document.getElementById("imageSize").value, 10);
+          const treatAsTransparent = document.getElementById("treatImageBgAsTransparent").checked;
+
+          // Calculations based on UI logic:
+          // UI Width: (imageSize / 10)% of container
+          // UI Top: (imageVertical / 10)%
+          // UI Left: (imageHorizontal / 10)%
+
+          // On Canvas (usually 1000x1000):
+          // Width
+          const drawWidth = qrSize * (imageSize / 1000);
+          // Aspect ratio preservation
+          const drawHeight = drawWidth * (imgElement.naturalHeight / imgElement.naturalWidth);
+
+          // Top-Left corner for drawImage (direct mapping matches UI CSS)
+          const dx = qrSize * (imageHorizontal / 1000);
+          const dy = qrSize * (imageVertical / 1000);
+
+          // Draw background if not transparent
+          if (!treatAsTransparent) {
+            const bgColor = document.getElementById("bgColor").value;
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(dx, dy, drawWidth, drawHeight);
+          }
+
+          const logoImage = new Image();
+          logoImage.crossOrigin = "Anonymous";
+          try {
+            await new Promise((resolve, reject) => {
+              logoImage.onload = resolve;
+              logoImage.onerror = reject;
+              logoImage.src = imgElement.src;
+            });
+            ctx.drawImage(logoImage, dx, dy, drawWidth, drawHeight);
+          } catch (e) {
+            console.error("Could not load logo for download", e);
+          }
+        }
+
+        // 3. Download
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.download = "qr-code.png";
+          link.href = url;
+          link.click();
+          URL.revokeObjectURL(url);
+        });
       }
 
+      let qrcode;
+      const qrcodeOptions = {
+        width: 1000,
+        height: 1000,
+        output: "canvas", // or "svg" / "canvas" / "table"
+        correctLevel: QRCode.CorrectLevel.H, // { L: 1, M: 0, Q: 3, H: 2 }
+        colorDark: fgColor.value,
+        colorLight: bgColor.value,
+      };
       function makeCode() {
+        const options = qrcodeOptions;
         if (treatImageBgAsTransparent.checked) {
           document.documentElement.style.setProperty("--bg-color", "transparent");
         } else {
@@ -216,17 +308,14 @@
           content = content.startsWith("https://wa.me/") ? content : `https://wa.me/${content}`;
         }
 
-        // Create the QR code
-        const options = {
-          width: 400,
-          height: 400,
-          output: "svg", // or "svg" / "canvas" / "table"
-          correctLevel: QRCode.CorrectLevel.H, // { L: 1, M: 0, Q: 3, H: 2 }
-          colorDark: fgColor.value,
-          colorLight: bgColor.value,
-        };
+        if (!qrcode) qrcode = new QRCode(document.getElementById("qrcode"), options);
 
-        var qrcode = new QRCode(document.getElementById("qrcode"), options);
+        if (options.colorDark !== fgColor.value || options.colorLight !== bgColor.value) {
+          options.colorDark = fgColor.value;
+          options.colorLight = bgColor.value;
+          qrcode.destruct();
+          qrcode = new QRCode(document.getElementById("qrcode"), options);
+        }
 
         qrcode.setCode(content);
       }
