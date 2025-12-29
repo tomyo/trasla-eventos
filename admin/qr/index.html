@@ -87,6 +87,12 @@
         position: relative;
         min-width: max-content;
       }
+
+      #downloadButton {
+        display: block;
+        margin: 2rem auto;
+        font-size: larger;
+      }
     </style>
   </head>
   <body>
@@ -152,11 +158,14 @@
     </div>
 
     <article>
-      <input id="imageHorizontal" type="range" min="-1500" max="1000" value="-500" oninput="adjustImage()" />
-      <div id="qrcode" style="height: 500px; margin-top: auto"></div>
-      <input id="imageVertical" type="range" min="-1500" max="1000" value="-500" oninput="adjustImage()" />
-      <img id="qrImage" src="/assets/images/loica.png" alt="" />
+      <input id="imageHorizontal" type="range" min="-2000" max="1000" value="-600" oninput="adjustImage()" />
+      <output>
+        <div id="qrcode" style="height: 500px; aspect-ratio: 1"></div>
+        <img id="qrImage" src="/assets/images/loica.png" alt="" />
+      </output>
+      <input id="imageVertical" type="range" min="-1500" max="1000" value="-250" oninput="adjustImage()" />
     </article>
+    <!-- <button id="downloadButton" onclick="downloadImage()">Descargar QR</button> -->
 
     <script type="text/javascript">
       // Adjust image size and position based on the input values
@@ -170,6 +179,10 @@
         // document.documentElement.style.setProperty("--image-size", `${imageSize}%`);
         qrImage.style.width = `${imageSize / 10}%`;
         qrImage.style.transform = `translate(${imageHorizontal / 10}%, ${imageVertical / 10}%)`;
+      }
+
+      async function downloadImage() {
+        // TODO
       }
 
       function makeCode() {
