@@ -48,7 +48,6 @@ class SiteFooter extends HTMLElement {
           <img src="/assets/icons/upload.svg" width="20px" alt="">
           Cargar Evento
         </a>
-        <a href="/que-es-trasla-eventos.html" title="¿Qué es Trasla Eventos?">¿Qué es Trasla Eventos?</a>
         <fieldset>
           <legend>Ver eventos en</legend>
           <nav part="places">
@@ -80,6 +79,7 @@ class SiteFooter extends HTMLElement {
             <a title="Ver eventos en Yacanto" href="/lugar/yacanto/">Yacanto</a>
           </nav>
         </fieldset>
+        <a href="/que-es-trasla-eventos.html" title="¿Qué es Trasla Eventos?">¿Qué es Trasla Eventos?</a>
         <h3 style="margin: 0">Contacto</h3>
         <div class="contact-links">
           <a href="mailto:hola@trasla.com.ar" title="Email">

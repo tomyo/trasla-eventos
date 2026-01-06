@@ -16,11 +16,17 @@ export default async function handler(req) {
   const lastModNow = new Date().toISOString();
 
   const mainPage = `<url>
-        <loc>${url.origin}</loc>
-        <lastmod>${lastModNow}</lastmod>
-        <changefreq>hourly</changefreq>
-        <priority>1.0</priority>
-      </url>`;
+    <loc>${url.origin}</loc>
+    <lastmod>${lastModNow}</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${url.origin}/que-es-trasla-eventos.html</loc>
+    <lastmod>2026-01-06T15:13:57.717Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`;
 
   const localitiesInEvents = [];
   let localitiesPagesXml = "";
