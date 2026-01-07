@@ -4,7 +4,7 @@ class SiteHeader extends HTMLElement {
   constructor() {
     super();
     this.innerHTML = /*html*/ `
-      <header class="font-body-2">
+      <header class="font-body-2" style="--color: var(--color-light)">
         <a href="/" style="opacity: 0"><img src="/assets/icons/icon-192x192.png" height="20" alt="logo" /></a>
         <details>
           <summary class="summary-hamburger-button">
@@ -49,6 +49,10 @@ class SiteHeader extends HTMLElement {
               >
                 <img src="/assets/icons/upload.svg" width="20px" alt="" />
                 Cargar Evento
+              </a>
+              <a class="button" href="https://www.instagram.com/traslaeventos/" title="Seguinos en Instagram" style="text-transform: uppercase;">
+                <svg-mask style="--src: url('/assets/icons/instagram.svg');width: 1.2rem; height: 1rem;"></svg-mask>
+                Seguinos en IG
               </a>
               <a part="nav-link" href="/que-es-trasla-eventos.html" title="¿Qué es Trasla Eventos?" style="text-transform: uppercase;">¿Qué es Trasla Eventos?</a>
               <footer class="font-body-2">
