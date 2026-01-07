@@ -50,7 +50,7 @@
   },
   "shortcuts": [
     {
-      "name": "Publicar Evento",
+      "name": "Cargar Evento",
       "url": "https://eventos.trasla.com.ar/publicar-evento/",
       "description": ""
     }
