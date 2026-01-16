@@ -1,5 +1,11 @@
 import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
-import { escapeHtml, slugify, getEventSortOrder, makeCssToHideAbsentLocalitiesInFooter } from "./shared/lib/utils.js";
+import {
+  escapeHtml,
+  slugify,
+  getEventSortOrder,
+  makeCssToHideAbsentLocalitiesInFooter,
+  eventsToSchemaOrgItemList,
+} from "./shared/lib/utils.js";
 
 export default async function handler(req) {
   const url = new URL(req.url);
@@ -58,6 +64,9 @@ export default async function handler(req) {
         /* Hide each locality link in footer when locality doesn't have events to show */
         ${makeCssToHideAbsentLocalitiesInFooter(events)}
       </style>
+      <script type="application/ld+json">
+        ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, url.origin))}
+      </script>
     `;
 
   const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;

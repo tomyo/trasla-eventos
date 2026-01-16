@@ -73,8 +73,10 @@ export default async function handler(req) {
 
       <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
-      <style>
-      </style>
+
+      <script type="application/ld+json">
+        ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, url.origin))}
+      </script>
     `;
 
   const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;

@@ -41,7 +41,7 @@ export default async function handler(req) {
           "@context": "https://schema.org",
           ...eventToSchemaEventItem(eventData, url.origin),
         })}
-        </script>
+      </script>
     `;
 
     const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
