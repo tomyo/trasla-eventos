@@ -63,7 +63,10 @@ export default async function handler(req) {
   const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
   html = html.replace(contentMetaRegex, contentMeta);
 
-  html = html.replace(/<span\s*part="location"\s*>[\s\S]*?<\/span>/i, `<span part="location">${locality}</span>`);
+  html = html.replace(
+    /<(?<tag>[a-z0-9-]+)\s*part="location"\s*>[\s\S]*?<\/.*?>/i,
+    `<$<tag> part="location">${locality}</$<tag>>`
+  );
   html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, ""); // Hide actions i.e load event button
 
   // Reaplace seo-block with the locality name
