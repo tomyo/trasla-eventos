@@ -3,6 +3,7 @@ export const OG_IMAGE_WIDTH = 1200;
 export const localitiesData = [
   {
     locality: "Arroyo de Los Patos",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.7689,
     lon: -65.0,
@@ -11,6 +12,7 @@ export const localitiesData = [
   },
   {
     locality: "Boca del Rio",
+    schemaType: "Place",
     province: "Córdoba",
     lat: -31.9333,
     lon: -64.85,
@@ -19,6 +21,7 @@ export const localitiesData = [
   },
   {
     locality: "Dique de La Viña",
+    schemaType: "TouristAttraction",
     province: "Córdoba",
     lat: -31.8711,
     lon: -65.035,
@@ -27,6 +30,7 @@ export const localitiesData = [
   },
   {
     locality: "El Pueblito",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.017,
     lon: -65.05,
@@ -35,6 +39,7 @@ export const localitiesData = [
   },
   {
     locality: "La Paz",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.2167,
     lon: -65.05,
@@ -43,6 +48,7 @@ export const localitiesData = [
   },
   {
     locality: "La Población",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.1833,
     lon: -65.0333,
@@ -51,6 +57,7 @@ export const localitiesData = [
   },
   {
     locality: "Las Calles",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.8,
     lon: -64.9833,
@@ -59,6 +66,7 @@ export const localitiesData = [
   },
   {
     locality: "Las Chacras",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.25,
     lon: -65.0167,
@@ -67,6 +75,7 @@ export const localitiesData = [
   },
   {
     locality: "Las Rabonas",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.8712,
     lon: -64.9803,
@@ -75,6 +84,7 @@ export const localitiesData = [
   },
   {
     locality: "Las Tapias",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.9595,
     lon: -65.0748,
@@ -83,6 +93,7 @@ export const localitiesData = [
   },
   {
     locality: "Los Hornillos",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.9,
     lon: -64.9833,
@@ -91,14 +102,16 @@ export const localitiesData = [
   },
   {
     locality: "Los Molles",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.4333,
     lon: -64.9833,
-    wikipedia: "https://es.wikipedia.org/wiki/Los_Molles_(San_Luis)",
-    googleMaps: "https://www.google.com/maps/place/Los+Molles,+San+Luis/",
+    wikipedia: "https://es.wikipedia.org/wiki/Los_Molles_(San_Javier)",
+    googleMaps: "https://www.google.com/maps/place/Los+Molles,+C%C3%B3rdoba+Province/",
   },
   {
     locality: "Los Pozos",
+    schemaType: "Place",
     province: "Córdoba",
     lat: -31.9333,
     lon: -65.05,
@@ -107,6 +120,7 @@ export const localitiesData = [
   },
   {
     locality: "Luyaba",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.15,
     lon: -65.0667,
@@ -115,6 +129,7 @@ export const localitiesData = [
   },
   {
     locality: "Mina Clavero",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.7167,
     lon: -65.0,
@@ -123,6 +138,7 @@ export const localitiesData = [
   },
   {
     locality: "Nono",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.7972,
     lon: -65.0026,
@@ -131,6 +147,7 @@ export const localitiesData = [
   },
   {
     locality: "Panaholma",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.6333,
     lon: -65.05,
@@ -139,6 +156,7 @@ export const localitiesData = [
   },
   {
     locality: "Piedra Pintada",
+    schemaType: "Place",
     province: "Córdoba",
     lat: -31.9167,
     lon: -65.15,
@@ -147,6 +165,7 @@ export const localitiesData = [
   },
   {
     locality: "Quebracho Ladeado",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.2581,
     lon: -65.0319,
@@ -155,6 +174,7 @@ export const localitiesData = [
   },
   {
     locality: "San Huberto",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.8167,
     lon: -64.9667,
@@ -163,6 +183,7 @@ export const localitiesData = [
   },
   {
     locality: "San Javier",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.0388,
     lon: -65.0379,
@@ -171,6 +192,7 @@ export const localitiesData = [
   },
   {
     locality: "San Lorenzo",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.67,
     lon: -65.0181,
@@ -179,6 +201,7 @@ export const localitiesData = [
   },
   {
     locality: "San Pedro",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.8667,
     lon: -65.1333,
@@ -187,6 +210,7 @@ export const localitiesData = [
   },
   {
     locality: "Travesia",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.1333,
     lon: -65.05,
@@ -195,6 +219,7 @@ export const localitiesData = [
   },
   {
     locality: "Villa Cura Brochero",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.6667,
     lon: -65.0167,
@@ -203,6 +228,7 @@ export const localitiesData = [
   },
   {
     locality: "Villa de Merlo",
+    schemaType: "City",
     province: "San Luis",
     lat: -32.3428,
     lon: -65.0131,
@@ -211,6 +237,7 @@ export const localitiesData = [
   },
   {
     locality: "Villa de Las Rosas",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.9471,
     lon: -65.0519,
@@ -219,6 +246,7 @@ export const localitiesData = [
   },
   {
     locality: "Villa Dolores",
+    schemaType: "City",
     province: "Córdoba",
     lat: -31.9333,
     lon: -65.2,
@@ -227,6 +255,7 @@ export const localitiesData = [
   },
   {
     locality: "Yacanto",
+    schemaType: "City",
     province: "Córdoba",
     lat: -32.05,
     lon: -65.05,
@@ -235,6 +264,7 @@ export const localitiesData = [
   },
   {
     locality: "Carpintería",
+    schemaType: "City",
     province: "San Luis",
     lat: -32.4101,
     lon: -65.01,
@@ -243,6 +273,7 @@ export const localitiesData = [
   },
   {
     locality: "Virtual",
+    schemaType: "VirtualLocation",
     province: "-",
     lat: null,
     lon: null,
@@ -637,15 +668,18 @@ export function getGoogleDriveImagesPreviews(imageUrls, width = OG_IMAGE_WIDTH) 
  */
 export function localityToSchemaOrgItem(locality, origin = "https://eventos.trasla.com.ar") {
   const data = localitiesData.find((l) => l.locality === locality);
+  const province = data?.province || "Córdoba";
+  const provinceSlug = slugify(province);
   return {
     "@context": "https://schema.org",
-    "@type": "City",
-    "@id": `${origin}/lugar/${slugify(locality)}/#city`,
+    "@type": data?.schemaType || "City",
+    "@id": `${origin}/lugar/${slugify(locality)}/${provinceSlug}#city`,
     name: locality,
     address: {
       "@type": "PostalAddress",
       addressLocality: locality,
-      addressRegion: data?.province || "Córdoba",
+      schemaType: "City",
+      addressRegion: province,
       addressCountry: "AR",
     },
     geo: {
@@ -658,7 +692,11 @@ export function localityToSchemaOrgItem(locality, origin = "https://eventos.tras
       "@type": "TouristDestination",
       "@id": "https://eventos.trasla.com.ar/#traslasierra",
     },
-    sameAs: [data?.wikipedia, data?.googleMaps].filter((url) => url),
+    subjectOf: {
+      "@type": "WebSite",
+      "@id": "https://eventos.trasla.com.ar/#website",
+    },
+    sameAs: [data?.wikidata, data?.wikipedia, data?.googleMaps].filter(Boolean),
   };
 }
 
