@@ -1,5 +1,256 @@
 export const OG_IMAGE_WIDTH = 1200;
 
+export const localitiesData = [
+  {
+    locality: "Arroyo de Los Patos",
+    province: "Córdoba",
+    lat: -31.7689,
+    lon: -65.0,
+    wikipedia: "https://es.wikipedia.org/wiki/Arroyo_de_los_Patos",
+    googleMaps: "https://www.google.com/maps/place/Arroyo+de+Los+Patos,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Boca del Rio",
+    province: "Córdoba",
+    lat: -31.9333,
+    lon: -64.85,
+    wikipedia: null,
+    googleMaps: "https://www.google.com/maps/place/Boca+del+R%C3%ADo,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Dique de La Viña",
+    province: "Córdoba",
+    lat: -31.8711,
+    lon: -65.035,
+    wikipedia: "https://es.wikipedia.org/wiki/Dique_La_Vi%C3%B1a",
+    googleMaps: "https://www.google.com/maps/place/Dique+La+Vi%C3%B1a,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "El Pueblito",
+    province: "Córdoba",
+    lat: -32.017,
+    lon: -65.05,
+    wikipedia: "https://es.wikipedia.org/wiki/El_Pueblito_(San_Javier)",
+    googleMaps: "https://www.google.com/maps/place/El+Pueblito,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "La Paz",
+    province: "Córdoba",
+    lat: -32.2167,
+    lon: -65.05,
+    wikipedia: "https://es.wikipedia.org/wiki/La_Paz_(C%C3%B3rdoba)",
+    googleMaps: "https://www.google.com/maps/place/La+Paz,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "La Población",
+    province: "Córdoba",
+    lat: -32.1833,
+    lon: -65.0333,
+    wikipedia: "https://es.wikipedia.org/wiki/La_Poblaci%C3%B3n_(C%C3%B3rdoba)",
+    googleMaps: "https://www.google.com/maps/place/La+Poblaci%C3%B3n,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Las Calles",
+    province: "Córdoba",
+    lat: -31.8,
+    lon: -64.9833,
+    wikipedia: "https://es.wikipedia.org/wiki/Las_Calles",
+    googleMaps: "https://www.google.com/maps/place/Las+Calles,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Las Chacras",
+    province: "Córdoba",
+    lat: -32.25,
+    lon: -65.0167,
+    wikipedia: null,
+    googleMaps: "https://www.google.com/maps/place/Las+Chacras,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Las Rabonas",
+    province: "Córdoba",
+    lat: -31.8712,
+    lon: -64.9803,
+    wikipedia: "https://es.wikipedia.org/wiki/Las_Rabonas",
+    googleMaps: "https://www.google.com/maps/place/Las+Rabonas,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Las Tapias",
+    province: "Córdoba",
+    lat: -31.9595,
+    lon: -65.0748,
+    wikipedia: "https://es.wikipedia.org/wiki/Las_Tapias_(C%C3%B3rdoba)",
+    googleMaps: "https://www.google.com/maps/place/Las+Tapias,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Los Hornillos",
+    province: "Córdoba",
+    lat: -31.9,
+    lon: -64.9833,
+    wikipedia: "https://es.wikipedia.org/wiki/Los_Hornillos",
+    googleMaps: "https://www.google.com/maps/place/Los+Hornillos,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Los Molles",
+    province: "Córdoba",
+    lat: -32.4333,
+    lon: -64.9833,
+    wikipedia: "https://es.wikipedia.org/wiki/Los_Molles_(San_Luis)",
+    googleMaps: "https://www.google.com/maps/place/Los+Molles,+San+Luis/",
+  },
+  {
+    locality: "Los Pozos",
+    province: "Córdoba",
+    lat: -31.9333,
+    lon: -65.05,
+    wikipedia: "https://es.wikipedia.org/wiki/Quebrada_de_los_Pozos",
+    googleMaps: "https://www.google.com/maps/place/Quebrada+de+los+Pozos,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Luyaba",
+    province: "Córdoba",
+    lat: -32.15,
+    lon: -65.0667,
+    wikipedia: "https://es.wikipedia.org/wiki/Luyaba",
+    googleMaps: "https://www.google.com/maps/place/Luyaba,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Mina Clavero",
+    province: "Córdoba",
+    lat: -31.7167,
+    lon: -65.0,
+    wikipedia: "https://es.wikipedia.org/wiki/Mina_Clavero",
+    googleMaps: "https://www.google.com/maps/place/Mina+Clavero,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Nono",
+    province: "Córdoba",
+    lat: -31.7972,
+    lon: -65.0026,
+    wikipedia: "https://es.wikipedia.org/wiki/Nono_(C%C3%B3rdoba)",
+    googleMaps: "https://www.google.com/maps/place/Nono,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Panaholma",
+    province: "Córdoba",
+    lat: -31.6333,
+    lon: -65.05,
+    wikipedia: "https://es.wikipedia.org/wiki/Panaholma",
+    googleMaps: "https://www.google.com/maps/place/Panaholma,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Piedra Pintada",
+    province: "Córdoba",
+    lat: -31.9167,
+    lon: -65.15,
+    wikipedia: null,
+    googleMaps: "https://www.google.com/maps/place/Piedra+Pintada,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Quebracho Ladeado",
+    province: "Córdoba",
+    lat: -32.2581,
+    lon: -65.0319,
+    wikipedia: "https://es.wikipedia.org/wiki/Quebracho_Ladeado",
+    googleMaps: "https://www.google.com/maps/place/Quebracho+Ladeado,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "San Huberto",
+    province: "Córdoba",
+    lat: -31.8167,
+    lon: -64.9667,
+    wikipedia: "https://es.wikipedia.org/wiki/San_Huberto_(Argentina)",
+    googleMaps: "https://www.google.com/maps/place/San+Huberto,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "San Javier",
+    province: "Córdoba",
+    lat: -32.0388,
+    lon: -65.0379,
+    wikipedia: "https://es.wikipedia.org/wiki/San_Javier_y_Yacanto",
+    googleMaps: "https://www.google.com/maps/place/San+Javier,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "San Lorenzo",
+    province: "Córdoba",
+    lat: -31.67,
+    lon: -65.0181,
+    wikipedia: "https://es.wikipedia.org/wiki/San_Lorenzo_(C%C3%B3rdoba,_Argentina)",
+    googleMaps: "https://www.google.com/maps/place/San+Lorenzo,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "San Pedro",
+    province: "Córdoba",
+    lat: -31.8667,
+    lon: -65.1333,
+    wikipedia: "https://es.wikipedia.org/wiki/San_Pedro_(C%C3%B3rdoba)",
+    googleMaps: "https://www.google.com/maps/place/San+Pedro,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Travesia",
+    province: "Córdoba",
+    lat: -32.1333,
+    lon: -65.05,
+    wikipedia: "https://es.wikipedia.org/wiki/La_Traves%C3%ADa",
+    googleMaps: "https://www.google.com/maps/place/La+Traves%C3%ADa,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Villa Cura Brochero",
+    province: "Córdoba",
+    lat: -31.6667,
+    lon: -65.0167,
+    wikipedia: "https://es.wikipedia.org/wiki/Villa_Cura_Brochero",
+    googleMaps: "https://www.google.com/maps/place/Villa+Cura+Brochero,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Villa de Merlo",
+    province: "San Luis",
+    lat: -32.3428,
+    lon: -65.0131,
+    wikipedia: "https://es.wikipedia.org/wiki/Villa_de_Merlo",
+    googleMaps: "https://www.google.com/maps/place/Villa+de+Merlo,+San+Luis/",
+  },
+  {
+    locality: "Villa de Las Rosas",
+    province: "Córdoba",
+    lat: -31.9471,
+    lon: -65.0519,
+    wikipedia: "https://es.wikipedia.org/wiki/Villa_de_Las_Rosas",
+    googleMaps: "https://www.google.com/maps/place/Villa+de+Las+Rosas,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Villa Dolores",
+    province: "Córdoba",
+    lat: -31.9333,
+    lon: -65.2,
+    wikipedia: "https://es.wikipedia.org/wiki/Villa_Dolores",
+    googleMaps: "https://www.google.com/maps/place/Villa+Dolores,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Yacanto",
+    province: "Córdoba",
+    lat: -32.05,
+    lon: -65.05,
+    wikipedia: "https://es.wikipedia.org/wiki/San_Javier_y_Yacanto",
+    googleMaps: "https://www.google.com/maps/place/Yacanto,+C%C3%B3rdoba/",
+  },
+  {
+    locality: "Carpintería",
+    province: "San Luis",
+    lat: -32.4101,
+    lon: -65.01,
+    wikipedia: "https://es.wikipedia.org/wiki/Carpinter%C3%ADa_(San_Luis)",
+    googleMaps: "https://www.google.com/maps/place/Carpinter%C3%ADa,+San+Luis/",
+  },
+  {
+    locality: "Virtual",
+    province: "-",
+    lat: null,
+    lon: null,
+    wikipedia: null,
+    googleMaps: null,
+  },
+];
+
 /**
  * @param {eventData} event
  * @returns {number}
@@ -376,6 +627,39 @@ export function getGoogleDriveImagesPreview(imageUrls, width = OG_IMAGE_WIDTH) {
  */
 export function getGoogleDriveImagesPreviews(imageUrls, width = OG_IMAGE_WIDTH) {
   return getFileIdsFromDriveUrls(imageUrls).map((id) => createGoogleDriveImageUrl(id, width));
+}
+
+/**
+ * Converts a locality name into a Schema.org City object.
+ * @param {String} locality
+ * @param {String} origin
+ * @returns {Object} Schema.org City object
+ */
+export function localityToSchemaOrgItem(locality, origin = "https://eventos.trasla.com.ar") {
+  const data = localitiesData.find((l) => l.locality === locality);
+  return {
+    "@context": "https://schema.org",
+    "@type": "City",
+    "@id": `${origin}/lugar/${slugify(locality)}/#city`,
+    name: locality,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: locality,
+      addressRegion: data?.province || "Córdoba",
+      addressCountry: "AR",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: data?.lat,
+      longitude: data?.lon,
+    },
+    url: `${origin}/lugar/${slugify(locality)}/`,
+    containedInPlace: {
+      "@type": "TouristDestination",
+      "@id": "https://eventos.trasla.com.ar/#traslasierra",
+    },
+    sameAs: [data?.wikipedia, data?.googleMaps].filter((url) => url),
+  };
 }
 
 /**

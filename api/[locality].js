@@ -5,6 +5,7 @@ import {
   getEventSortOrder,
   makeCssToHideAbsentLocalitiesInFooter,
   eventsToSchemaOrgItemList,
+  localityToSchemaOrgItem,
 } from "./shared/lib/utils.js";
 
 export default async function handler(req) {
@@ -64,6 +65,9 @@ export default async function handler(req) {
         /* Hide each locality link in footer when locality doesn't have events to show */
         ${makeCssToHideAbsentLocalitiesInFooter(events)}
       </style>
+      <script type="application/ld+json">
+        ${JSON.stringify(localityToSchemaOrgItem(locality, url.origin))}
+      </script>
       <script type="application/ld+json">
         ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, url.origin))}
       </script>
