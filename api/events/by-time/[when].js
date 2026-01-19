@@ -5,6 +5,7 @@ import {
   isDateWithinMonth,
   escapeHtml,
   getEventSortOrder,
+  eventsToSchemaOrgItemList,
 } from "../../shared/lib/utils.js";
 
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
