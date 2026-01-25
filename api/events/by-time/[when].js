@@ -90,7 +90,7 @@ export default async function handler(req) {
     /(?<openTag><seo-block>).*?(?<closeTag><\/seo-block>)/gs,
     `$<openTag>
       <h2>¿Qué hacer en Traslasierra ${timeText}?</h2>
-      <p>Información actualizada de todos los eventos de Traslasierra de ${timeText}.</p>
+      <p>Información actualizada de todos los eventos, talleres, festivales y actividades de Traslasierra de ${timeText}.</p>
     $<closeTag>`
   );
 
@@ -124,9 +124,10 @@ export default async function handler(req) {
     `$<openTag>${eventEntries}$<closeTag>`
   );
 
+  html = html.replace(/(?<openTag><events-filter[^>]*)>/g, `$<openTag> data-hide="when">`);
   html = html.replace(
-    /(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/gs,
-    `<h1 style="text-align: center;">${title}</h1>`
+    /(?<openTag><span[^>]*where.*title.*>).*?(?<closeTag><\/span>)/,
+    `<h1 style="text-align: center;">${title}<br>en</h1>`
   );
 
   return new Response(html, {

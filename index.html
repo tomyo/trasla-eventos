@@ -274,8 +274,8 @@
         <events-filter id="eventsFilter">
           <form>
             <h2 class="form-filters-as-heading">
-              <span>Eventos en</span>
-              <select-locality>
+              <span part="where title">Eventos en</span>
+              <select-locality part="where">
                 <select name="locality" aria-label="Localidad" multiple>
                   <option value="">TRASLASIERRA</option>
                   <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
@@ -324,8 +324,8 @@
                   });
                 </script>
               </select-locality>
-              <span data-nosnippet>A Partir de<span id="hideOnToday">l</span></span>
-              <today-date-picker>
+              <span part="when title" data-nosnippet>A Partir de<span id="hideOnToday">l</span></span>
+              <today-date-picker part="when">
                 <input type="date" name="startDate" aria-label="Fecha de inicio" />
 
                 <style>

@@ -1,8 +1,7 @@
 customElements.define(
   "events-filter",
   class extends HTMLElement {
-    constructor() {
-      super();
+    connectedCallback() {
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
       this.paginateAt = 10; // Minimum number of events to display at once
@@ -16,9 +15,14 @@ customElements.define(
 
       this.form.addEventListener("input", this);
       this.form.addEventListener("submit", this);
-    }
 
-    connectedCallback() {
+      if (this.dataset.hide === "when") {
+        this.form.querySelectorAll("[part~=when]").forEach((el) => el.remove());
+      }
+      if (this.dataset.hide === "where") {
+        this.form.querySelectorAll("[part~=where]").forEach((el) => el.remove());
+      }
+
       this.updateUI();
     }
 
