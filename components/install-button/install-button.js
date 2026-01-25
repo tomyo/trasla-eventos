@@ -1,3 +1,5 @@
+import { getUserId } from "../../lib/user.js";
+
 class InstallButton extends HTMLElement {
   constructor() {
     super();
@@ -16,6 +18,15 @@ class InstallButton extends HTMLElement {
 
   handleEvent(e) {
     if (e.type === "beforeinstallprompt") {
+      // Check for anonymous user ID to determine if it's a first visit
+      const userId = getUserId();
+
+      if (!userId) {
+        // First visit: allow browser to show its default install hint
+        return;
+      }
+
+      // Subsequent visits: prevent default and show our custom button
       e.preventDefault();
       this.deferredPrompt = e;
     } else if (e.type === "click") {

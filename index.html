@@ -153,6 +153,17 @@
       })();
     </script>
 
+    <script type="module">
+      // Create a anonymous user id after 2 seconds to avoid interfering with the first visit install hint
+      setTimeout(async () => {
+        const { getUserId, createUserId } = await import("/lib/user.js");
+        if (!getUserId()) {
+          createUserId();
+        }
+      }, 2000);
+    </script>
+
+    <link rel="modulepreload" href="/lib/user.js" />
     <link rel="modulepreload" href="/lib/utils.js" />
     <link rel="modulepreload" href="/lib/get-events.js" />
     <link rel="modulepreload" href="/components/share-url/share-url.js" />
