@@ -83,6 +83,10 @@ event-entry:not([hidden]) {
     text-wrap: balance;
     text-align: start;
     margin-block: 0.5rem 0;
+
+    a {
+      text-decoration: underline;
+    }
   }
 
   & [part="button"] {
