@@ -117,8 +117,8 @@
     }
 
     // Fill today's event images
-    const todayEvents = await getGoogleSheetEvents("18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog", "39399790");
-    for (const event of todayEvents.filter((e) => !e.hidden && e.image_download_url)) {
+    const todayEvents = await getGoogleSheetEvents(undefined, "1216930672");
+    for (const event of todayEvents.filter((e) => !e.hidden && e.image_download_url && e.id != "today")) {
       const img = document.createElement("img");
       img.src = event.image_download_url;
       document.querySelector("main").appendChild(img);
