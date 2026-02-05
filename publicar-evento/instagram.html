@@ -1,260 +1,258 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trasla Eventos: Carga rápida de eventos de Instagram</title>
-    <script type="module" src="/components/event-entry.js"></script>
-    <link rel="stylesheet" href="/base.css" />
-    <link rel="stylesheet" href="./publicar-evento.css" />
-    <script type="module" src="/components/site-header.js"></script>
-    <script type="module" src="/components/site-footer.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trasla Eventos: Carga rápida de eventos de Instagram</title>
+  <script type="module" src="/components/event-entry.js"></script>
+  <link rel="stylesheet" href="/base.css" />
+  <link rel="stylesheet" href="./publicar-evento.css" />
+  <script type="module" src="/components/site-header.js"></script>
+  <script type="module" src="/components/site-footer.js"></script>
 
-    <!-- START Analytics -->
-    <script>
-      function loadScript(src, attributes = {}) {
-        const s = document.createElement("script");
-        Object.entries(attributes).forEach(([k, v]) => {
-          if (v === true) s.toggleAttribute(k, true);
-          else s.setAttribute(k, v);
+  <!-- START Analytics -->
+  <script>
+    function loadScript(src, attributes = {}) {
+      const s = document.createElement("script");
+      Object.entries(attributes).forEach(([k, v]) => {
+        if (v === true) s.toggleAttribute(k, true);
+        else s.setAttribute(k, v);
+      });
+      s.src = src;
+      document.head.appendChild(s);
+    }
+    if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
+      // Umami
+      loadScript("https://cloud.umami.is/script.js", {
+        "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
+        defer: true,
+      });
+
+      // Clarity
+      (function () {
+        window.clarity =
+          window.clarity ||
+          function () {
+            (window.clarity.q = window.clarity.q || []).push(arguments);
+          };
+
+        loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
+          async: true,
         });
-        s.src = src;
-        document.head.appendChild(s);
-      }
-      if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
-        // Umami
-        loadScript("https://cloud.umami.is/script.js", {
-          "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
-          defer: true,
-        });
-
-        // Clarity
-        (function () {
-          window.clarity =
-            window.clarity ||
-            function () {
-              (window.clarity.q = window.clarity.q || []).push(arguments);
-            };
-
-          loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
-            async: true,
-          });
-        })();
-      }
-    </script>
-    <!-- END Analytics -->
-  </head>
-  <body>
-    <site-header></site-header>
-    <picture>
-      <source
-        srcset="/assets/images/portada-1920w-1200h.avif 1x"
-        type="image/avif"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source
-        srcset="/assets/images/portada-1920w-1200h.jpg 1x"
-        type="image/jpeg"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
-      <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
-    </picture>
-    <hero-section slim>
-      <a slot="logo" href="/" aria-label="Trasla Eventos">
-        <svg-mask
-          style="
+      })();
+    }
+  </script>
+  <!-- END Analytics -->
+</head>
+<body>
+  <site-header></site-header>
+  <picture>
+    <source
+      srcset="/assets/images/portada-1920w-1200h.avif 1x"
+      type="image/avif"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source
+      srcset="/assets/images/portada-1920w-1200h.jpg 1x"
+      type="image/jpeg"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
+    <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
+  </picture>
+  <hero-section slim>
+    <a slot="logo" href="/" aria-label="Trasla Eventos">
+      <svg-mask
+        style="
             --src: url('/assets/icons/trasla-eventos.svg');
             --color: var(--hero-logo-color, var(--color-red));
             height: 40px;
-          "
-        >
-        </svg-mask>
-      </a>
-    </hero-section>
-    <main class="mountains-top">
-      <section>
-        <h1>Cargar evento de Instagram</h1>
-        <form>
-          <fieldset>
-            <legend>Link al post</legend>
-            <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
-          </fieldset>
-          <em>✔️ El post debe ser público.</em>
-          <em>❌ Videos no soportados.</em>
-          <button type="submit" name="submit">
-            <svg-mask
-              style="
+          ">
+      </svg-mask>
+    </a>
+  </hero-section>
+  <main class="mountains-top">
+    <section>
+      <h1>Cargar evento de Instagram</h1>
+      <form>
+        <fieldset>
+          <legend>Link al post</legend>
+          <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
+        </fieldset>
+        <em>✔️ El post debe ser público.</em>
+        <em>❌ Videos no soportados.</em>
+        <button type="submit" name="submit">
+          <svg-mask
+            style="
                 --src: url('/assets/icons/loica.svg');
                 --color: var(--button-icon-color);
                 height: var(--button-icon-size);
                 width: var(--button-icon-size);
-              "
-            ></svg-mask>
-            <span>Publicar</span>
-          </button>
-          <output name="output"></output>
-        </form>
-      </section>
-    </main>
-    <site-footer></site-footer>
+              "></svg-mask>
+          <span>Publicar</span>
+        </button>
+        <output name="output"></output>
+      </form>
+    </section>
+  </main>
+  <site-footer></site-footer>
 
-    <style>
-      section {
-        background-color: var(--color-light);
-      }
-      input {
-        width: 100%;
-        padding: 0.5rem;
-        background: none;
-      }
-      em {
-        font-size: 0.875rem;
-        color: var(--color-red);
-      }
-    </style>
-    <script type="module">
-      const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
-      const form = document.querySelector("form");
-      const cache = await caches.open(SHARE_TARGET_ACTION);
+  <style>
+    section {
+      background-color: var(--color-light);
+    }
 
-      async function hydrateWithCachedData() {
-        // Hydrate texts
-        for (const input of document.querySelectorAll("input")) {
-          const key = input.name;
-          const response = await cache.match(`/${key}`);
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      background: none;
+    }
 
-          if (!response || !response.ok) {
-            console.info(`Cache miss for key ${key}`);
-            continue;
-          }
-          const contentType = response.headers.get("content-type");
-          if (!contentType?.includes("text")) {
-            console.warn(`Content type mismatch for key ${key}: expected text but got ${contentType}`);
-            continue;
-          }
-          console.info(`Hydrating ${key} from cache`);
-          input.value = await response.text();
+    em {
+      font-size: 0.875rem;
+      color: var(--color-red);
+    }
+  </style>
+  <script type="module">
+    const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
+    const form = document.querySelector("form");
+    const cache = await caches.open(SHARE_TARGET_ACTION);
+
+    async function hydrateWithCachedData() {
+      // Hydrate texts
+      for (const input of document.querySelectorAll("input")) {
+        const key = input.name;
+        const response = await cache.match(`/${key}`);
+
+        if (!response || !response.ok) {
+          console.info(`Cache miss for key ${key}`);
+          continue;
         }
-      }
-
-      hydrateWithCachedData();
-
-      async function extractSuccessResponse(response) {
-        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-        const jsonResponse = await response.json();
-        if (!jsonResponse.success) throw new Error(jsonResponse.message);
-        return jsonResponse.data;
-      }
-
-      function showMissingFieldsError(missingFields) {
-        const output = document.querySelector("output[name=output]");
-        output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
-        for (const key of Object.keys(missingFields)) {
-          output.textContent += `❌ ${missingFields[key]}\n`;
+        const contentType = response.headers.get("content-type");
+        if (!contentType?.includes("text")) {
+          console.warn(`Content type mismatch for key ${key}: expected text but got ${contentType}`);
+          continue;
         }
-        output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
+        console.info(`Hydrating ${key} from cache`);
+        input.value = await response.text();
       }
+    }
 
-      class MissingFieldsError extends Error {
-        constructor(missingFields) {
-          const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
-            missingFields
-          )
-            .map(([key, msg]) => `❌ ${msg}`)
-            .join("\n")}`;
-          super(message);
-          this.missingFields = missingFields;
+    hydrateWithCachedData();
+
+    async function extractSuccessResponse(response) {
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const jsonResponse = await response.json();
+      if (!jsonResponse.success) throw new Error(jsonResponse.message);
+      return jsonResponse.data;
+    }
+
+    function showMissingFieldsError(missingFields) {
+      const output = document.querySelector("output[name=output]");
+      output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
+      for (const key of Object.keys(missingFields)) {
+        output.textContent += `❌ ${missingFields[key]}\n`;
+      }
+      output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
+    }
+
+    class MissingFieldsError extends Error {
+      constructor(missingFields) {
+        const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
+          missingFields
+        )
+          .map(([key, msg]) => `❌ ${msg}`)
+          .join("\n")}`;
+        super(message);
+        this.missingFields = missingFields;
+      }
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
+
+      const submitButton = document.querySelector("button[type=submit]");
+      const submitButtonSpan = submitButton.querySelector("span");
+      const buttonText = submitButtonSpan.textContent;
+      const output = document.querySelector("output[name=output]");
+
+      try {
+        submitButton.disabled = true;
+        submitButtonSpan.textContent = "Publicando...\n";
+
+        const getOrCreateQuery = `?endpoint=getOrCreateEventByInstagramPostURL&url=${form.elements.url.value}`;
+        let eventData = await extractSuccessResponse(await fetch(api + getOrCreateQuery));
+
+        if (eventData.alreadyCreated) {
+          output.textContent += "✔️ Evento ya existe en sistema ...\n";
+        } else {
+          output.textContent += "✔️ Solicitud recibida con éxito...\n";
         }
-      }
+        const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventData.id}`;
+        if (!eventData.slug) {
+          output.textContent += "Procesando la información del evento...\n";
+        }
 
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
+        const maxRetries = 5;
+        let retries = 0;
+        const missingFields = {};
+        while (!eventData.slug) {
+          eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
+          console.log(`Event data received: `, eventData);
+          // Add 1 second delay to refresh data
+          if (eventData.slug) break;
 
-        const submitButton = document.querySelector("button[type=submit]");
-        const submitButtonSpan = submitButton.querySelector("span");
-        const buttonText = submitButtonSpan.textContent;
-        const output = document.querySelector("output[name=output]");
-
-        try {
-          submitButton.disabled = true;
-          submitButtonSpan.textContent = "Publicando...\n";
-
-          const getOrCreateQuery = `?endpoint=getOrCreateEventByInstagramPostURL&url=${form.elements.url.value}`;
-          let eventData = await extractSuccessResponse(await fetch(api + getOrCreateQuery));
-
-          if (eventData.alreadyCreated) {
-            output.textContent += "✔️ Evento ya existe en sistema ...\n";
-          } else {
-            output.textContent += "✔️ Solicitud recibida con éxito...\n";
-          }
-          const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventData.id}`;
-          if (!eventData.slug) {
-            output.textContent += "Procesando la información del evento...\n";
-          }
-
-          const maxRetries = 5;
-          let retries = 0;
-          const missingFields = {};
-          while (!eventData.slug) {
-            eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
-            console.log(`Event data received: `, eventData);
-            // Add 1 second delay to refresh data
-            if (eventData.slug) break;
-
-            if (eventData.title) {
-              // That means it has been processed, but required fields are missing
-              for (const [key, msg] of [
-                ["startsAt", "Fecha y hora de inicio"],
-                ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
-              ]) {
-                if (!eventData[key]) {
-                  missingFields[key] = msg;
-                }
+          if (eventData.title) {
+            // That means it has been processed, but required fields are missing
+            for (const [key, msg] of [
+              ["startsAt", "Fecha y hora de inicio"],
+              ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
+            ]) {
+              if (!eventData[key]) {
+                missingFields[key] = msg;
               }
-              throw new MissingFieldsError(missingFields);
             }
-
-            retries++;
-            if (retries >= maxRetries) {
-              throw new Error(
-                `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
-              );
-            }
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            output.textContent += "Esperando que se procese el evento...\n";
+            throw new MissingFieldsError(missingFields);
           }
 
-          // Event uploaded or found succesfully
-          submitButtonSpan.textContent = "Evento cargado! 👌\n";
-          output.textContent += "\nRedirigiendo a la página del evento...\n";
-          console.log(`redirect to event page ${window.location.origin}/${eventData.slug}`);
-          window.location.href = `${window.location.origin}/${eventData.slug}`;
-          setTimeout(() => {
-            cache.delete("/url");
-            form.reset();
-            submitButton.disabled = false;
-            submitButtonSpan.textContent = buttonText;
-          }, 2000); // Ensure going back to the form makes it fresh
-        } catch (error) {
-          console.error(error);
-          if (error instanceof MissingFieldsError) {
-            showMissingFieldsError(error.missingFields);
-          } else {
-            output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
+          retries++;
+          if (retries >= maxRetries) {
+            throw new Error(
+              `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
+            );
           }
-          alert(
-            `Hubo un error al intentar cargar el evento.\n${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
-          );
-          submitButton.disabled = false;
-          submitButtonSpan.textContent = buttonText + " (Reintentar)";
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          output.textContent += "Esperando que se procese el evento...\n";
         }
-      });
-    </script>
-  </body>
+
+        // Event uploaded or found succesfully
+        submitButtonSpan.textContent = "Evento cargado! 👌\n";
+        output.textContent += "\nRedirigiendo a la página del evento...\n";
+        console.log(`redirect to event page ${window.location.origin}/${eventData.slug}`);
+        window.location.href = `${window.location.origin}/${eventData.slug}`;
+        setTimeout(() => {
+          cache.delete("/url");
+          form.reset();
+          submitButton.disabled = false;
+          submitButtonSpan.textContent = buttonText;
+        }, 2000); // Ensure going back to the form makes it fresh
+      } catch (error) {
+        console.error(error);
+        if (error instanceof MissingFieldsError) {
+          showMissingFieldsError(error.missingFields);
+        } else {
+          output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
+        }
+        alert(
+          `Hubo un error al intentar cargar el evento.\n${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
+        );
+        submitButton.disabled = false;
+        submitButtonSpan.textContent = buttonText + " (Reintentar)";
+      }
+    });
+  </script>
+</body>
 </html>

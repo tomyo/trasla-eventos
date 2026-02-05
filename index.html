@@ -1,48 +1,46 @@
 <!DOCTYPE html>
 <html lang="es-AR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#e6deca" />
-    <meta name="color-scheme" content="light only" />
-    <base href="/" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#e6deca" />
+  <meta name="color-scheme" content="light only" />
+  <base href="/" />
 
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512x512.png" />
-    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
-    <link rel="preload" href="/base.css" as="style" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512x512.png" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+  <link rel="preload" href="/base.css" as="style" />
 
-    <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="TRASLA EVENTOS" />
+  <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="TRASLA EVENTOS" />
 
-    <!-- START CONTENT_METADATA_BLOCK -->
-    <title>La Agenda de Eventos de Traslasierra | Trasla Eventos</title>
-    <link rel="canonical" href="https://eventos.trasla.com.ar/" />
-    <meta
-      name="description"
-      content="Descubrí eventos, ferias, talleres y conciertos en Traslasierra. La agenda cultural más completa del valle, actualizada cada día en Trasla Eventos."
-    />
-    <meta property="og:title" content="La Agenda de Eventos de Traslasierra" />
-    <meta
-      property="og:description"
-      content="Encontrate con lo que pasa en Traslasierra: ferias, música, talleres y encuentros culturales. Entrá a Trasla Eventos y viví el movimiento del valle."
-    />
-    <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.avif" />
-    <meta property="og:image:type" content="image/avif" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="900" />
-    <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.jpg" />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="900" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://eventos.trasla.com.ar/" />
+  <!-- START CONTENT_METADATA_BLOCK -->
+  <title>La Agenda de Eventos de Traslasierra | Trasla Eventos</title>
+  <link rel="canonical" href="https://eventos.trasla.com.ar/" />
+  <meta
+    name="description"
+    content="Descubrí eventos, ferias, talleres y conciertos en Traslasierra. La agenda cultural más completa del valle, actualizada cada día en Trasla Eventos." />
+  <meta property="og:title" content="La Agenda de Eventos de Traslasierra" />
+  <meta
+    property="og:description"
+    content="Encontrate con lo que pasa en Traslasierra: ferias, música, talleres y encuentros culturales. Entrá a Trasla Eventos y viví el movimiento del valle." />
+  <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.avif" />
+  <meta property="og:image:type" content="image/avif" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="900" />
+  <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="900" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://eventos.trasla.com.ar/" />
 
-    <meta property="og:site_name" content="TRASLA EVENTOS" />
-    <meta property="og:locale" content="es-AR" />
+  <meta property="og:site_name" content="TRASLA EVENTOS" />
+  <meta property="og:locale" content="es-AR" />
 
-    <script type="application/ld+json">
+  <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
@@ -88,735 +86,730 @@
       }
     </script>
 
-    <!-- END CONTENT_METADATA_BLOCK -->
+  <!-- END CONTENT_METADATA_BLOCK -->
 
-    <script>
-      (function getOutOfInAppBrowser() {
-        // 1. In-App Browser Detection
-        function isInAppBrowser() {
-          const ua = navigator.userAgent || navigator.vendor || window.opera;
-          return /instagram/i.test(ua) || /fban|fbav/i.test(ua) || /wv/i.test(ua);
+  <script>
+    (function getOutOfInAppBrowser() {
+      // 1. In-App Browser Detection
+      function isInAppBrowser() {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        return /instagram/i.test(ua) || /fban|fbav/i.test(ua) || /wv/i.test(ua);
+      }
+
+      function getSourceFromReferrer(referrer) {
+        if (!referrer) return "direct";
+        if (referrer.includes("instagram.com")) return "instagram";
+        if (referrer.includes("facebook.com") || referrer.includes("fb.com")) return "facebook";
+        if (referrer.includes("whatsapp.com")) return "whatsapp";
+        if (referrer.includes("t.co") || referrer.includes("twitter.com") || referrer.includes("x.com"))
+          return "twitter";
+        return "unknown";
+      }
+
+      // 2. Redirection Logic
+      function redirectToExternalBrowser() {
+        const url = new URL(location.href);
+        const ua = navigator.userAgent;
+        const isAndroid = /android/i.test(ua);
+        const isIOS = /iphone|ipad|ipod/i.test(ua);
+
+        url.searchParams.set("utm_referrer", document.referrer || "none");
+        url.searchParams.set("utm_source", getSourceFromReferrer(document.referrer));
+        url.searchParams.set("utm_medium", isAndroid ? "android" : isIOS ? "ios" : "unknown");
+        url.searchParams.set("utm_campaign", "external_browser");
+        url.searchParams.set("utm_content", "escape_in_app_browser");
+
+        if (isAndroid) {
+          // Generic Intent URI, so hopefuly pwa will open if installed, or default browser otherwise.
+          const intentUri = `intent://${url.toString().replace(/^https?:\/\//, "")}#Intent;scheme=https;end`;
+          window.location.href = intentUri;
+
+          // const chromeIntentUri = `intent://${url
+          //   .toString()
+          //   .replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
+          // window.location.href = chromeIntentUri;
+        } else if (isIOS) {
+          // Try to open in Chrome (if installed)
+          const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url.toString())}`;
+          window.location.href = chromeUrl;
         }
 
-        function getSourceFromReferrer(referrer) {
-          if (!referrer) return "direct";
-          if (referrer.includes("instagram.com")) return "instagram";
-          if (referrer.includes("facebook.com") || referrer.includes("fb.com")) return "facebook";
-          if (referrer.includes("whatsapp.com")) return "whatsapp";
-          if (referrer.includes("t.co") || referrer.includes("twitter.com") || referrer.includes("x.com"))
-            return "twitter";
-          return "unknown";
-        }
-
-        // 2. Redirection Logic
-        function redirectToExternalBrowser() {
-          const url = new URL(location.href);
-          const ua = navigator.userAgent;
-          const isAndroid = /android/i.test(ua);
-          const isIOS = /iphone|ipad|ipod/i.test(ua);
-
-          url.searchParams.set("utm_referrer", document.referrer || "none");
-          url.searchParams.set("utm_source", getSourceFromReferrer(document.referrer));
-          url.searchParams.set("utm_medium", isAndroid ? "android" : isIOS ? "ios" : "unknown");
-          url.searchParams.set("utm_campaign", "external_browser");
-          url.searchParams.set("utm_content", "escape_in_app_browser");
-
-          if (isAndroid) {
-            // Generic Intent URI, so hopefuly pwa will open if installed, or default browser otherwise.
-            const intentUri = `intent://${url.toString().replace(/^https?:\/\//, "")}#Intent;scheme=https;end`;
-            window.location.href = intentUri;
-
-            // const chromeIntentUri = `intent://${url
-            //   .toString()
-            //   .replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
-            // window.location.href = chromeIntentUri;
-          } else if (isIOS) {
-            // Try to open in Chrome (if installed)
-            const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url.toString())}`;
-            window.location.href = chromeUrl;
+        // Fallback when we are still stuck in the in-app browser after 2 seconds
+        setTimeout(() => {
+          if (document.visibilityState === "visible") {
+            window.open(url, "_blank", "noopener,noreferrer");
           }
+        }, 2000);
+      }
 
-          // Fallback when we are still stuck in the in-app browser after 2 seconds
-          setTimeout(() => {
-            if (document.visibilityState === "visible") {
-              window.open(url, "_blank", "noopener,noreferrer");
-            }
-          }, 2000);
-        }
+      // 3. Execution
+      if (isInAppBrowser()) {
+        // Delay to make sure WebView has fully initialized before attempting redirect.
+        // 100ms is a safe value for most WebViews.
+        setTimeout(redirectToExternalBrowser, 100);
+      }
+    })();
+  </script>
 
-        // 3. Execution
-        if (isInAppBrowser()) {
-          // Delay to make sure WebView has fully initialized before attempting redirect.
-          // 100ms is a safe value for most WebViews.
-          setTimeout(redirectToExternalBrowser, 100);
-        }
+  <script type="module">
+    // Create a anonymous user id after 2 seconds to avoid interfering with the first visit install hint
+    setTimeout(async () => {
+      const { getUserId, createUserId } = await import("/lib/user.js");
+      if (!getUserId()) {
+        createUserId();
+      }
+    }, 2000);
+  </script>
+
+  <link rel="modulepreload" href="/lib/user.js" />
+  <link rel="modulepreload" href="/lib/utils.js" />
+  <link rel="modulepreload" href="/lib/get-events.js" />
+  <link rel="modulepreload" href="/components/share-url/share-url.js" />
+  <link rel="modulepreload" href="/components/install-button/install-button.js" />
+  <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
+  <link rel="preload" href="/components/horizontal-carousel/horizontal-carousel.css" as="style" />
+  <link rel="preload" href="/components/event-entry.css" as="style" />
+  <link rel="preload" href="/assets/icons/trasla-eventos.svg" as="image" />
+
+  <!-- Preconnect to Google Sheets for faster event data fetching -->
+  <link rel="preconnect" href="https://docs.google.com" />
+
+  <script type="module" src="/components/event-entry.js"></script>
+  <script type="module" src="/components/event-entries.js"></script>
+  <script type="module" src="/components/events-filter.js"></script>
+  <script type="module" src="/components/site-header.js"></script>
+  <script type="module" src="/components/install-button/install-button.js"></script>
+  <script src="/components/today-date-picker.js" type="module" defer></script>
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/base.css" />
+
+  <!-- START Analytics -->
+  <script>
+    function loadScript(src, attributes = {}) {
+      const s = document.createElement("script");
+      Object.entries(attributes).forEach(([k, v]) => {
+        if (v === true) s.toggleAttribute(k, true);
+        else s.setAttribute(k, v);
+      });
+      s.src = src;
+      document.head.appendChild(s);
+    }
+    if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
+      // Umami
+      loadScript("https://cloud.umami.is/script.js", {
+        "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
+        defer: true,
+      });
+
+      // Clarity
+      (function () {
+        window.clarity =
+          window.clarity ||
+          function () {
+            (window.clarity.q = window.clarity.q || []).push(arguments);
+          };
+
+        loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
+          async: true,
+        });
       })();
-    </script>
-
-    <script type="module">
-      // Create a anonymous user id after 2 seconds to avoid interfering with the first visit install hint
-      setTimeout(async () => {
-        const { getUserId, createUserId } = await import("/lib/user.js");
-        if (!getUserId()) {
-          createUserId();
-        }
-      }, 2000);
-    </script>
-
-    <link rel="modulepreload" href="/lib/user.js" />
-    <link rel="modulepreload" href="/lib/utils.js" />
-    <link rel="modulepreload" href="/lib/get-events.js" />
-    <link rel="modulepreload" href="/components/share-url/share-url.js" />
-    <link rel="modulepreload" href="/components/install-button/install-button.js" />
-    <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
-    <link rel="preload" href="/components/horizontal-carousel/horizontal-carousel.css" as="style" />
-    <link rel="preload" href="/components/event-entry.css" as="style" />
-    <link rel="preload" href="/assets/icons/trasla-eventos.svg" as="image" />
-
-    <!-- Preconnect to Google Sheets for faster event data fetching -->
-    <link rel="preconnect" href="https://docs.google.com" />
-
-    <script type="module" src="/components/event-entry.js"></script>
-    <script type="module" src="/components/event-entries.js"></script>
-    <script type="module" src="/components/events-filter.js"></script>
-    <script type="module" src="/components/site-header.js"></script>
-    <script type="module" src="/components/install-button/install-button.js"></script>
-    <script src="/components/today-date-picker.js" type="module" defer></script>
-
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="/base.css" />
-
-    <!-- START Analytics -->
-    <script>
-      function loadScript(src, attributes = {}) {
-        const s = document.createElement("script");
-        Object.entries(attributes).forEach(([k, v]) => {
-          if (v === true) s.toggleAttribute(k, true);
-          else s.setAttribute(k, v);
-        });
-        s.src = src;
-        document.head.appendChild(s);
-      }
-      if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
-        // Umami
-        loadScript("https://cloud.umami.is/script.js", {
-          "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
-          defer: true,
-        });
-
-        // Clarity
-        (function () {
-          window.clarity =
-            window.clarity ||
-            function () {
-              (window.clarity.q = window.clarity.q || []).push(arguments);
-            };
-
-          loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
-            async: true,
-          });
-        })();
-      }
-    </script>
-    <!-- END Analytics -->
-  </head>
-  <body>
-    <picture>
-      <source
-        srcset="/assets/images/portada-1920w-1200h.avif 1x"
-        type="image/avif"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source
-        srcset="/assets/images/portada-1920w-1200h.jpg 1x"
-        type="image/jpeg"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
-      <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
-    </picture>
-    <site-header></site-header>
-    <hero-section>
-      <a slot="logo" href="/" aria-label="Trasla Eventos">
-        <svg-mask
-          style="
+    }
+  </script>
+  <!-- END Analytics -->
+</head>
+<body>
+  <picture>
+    <source
+      srcset="/assets/images/portada-1920w-1200h.avif 1x"
+      type="image/avif"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source
+      srcset="/assets/images/portada-1920w-1200h.jpg 1x"
+      type="image/jpeg"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
+    <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
+  </picture>
+  <site-header></site-header>
+  <hero-section>
+    <a slot="logo" href="/" aria-label="Trasla Eventos">
+      <svg-mask
+        style="
             --src: url('/assets/icons/trasla-eventos.svg');
             --color: var(--hero-logo-color, var(--color-red));
             height: 40px;
-          "
-        >
-        </svg-mask>
-      </a>
-      <h1 part="title" class="font-title">
-        La Agenda de eventos de <br /><strong part="location">Traslasierra</strong>
-      </h1>
-      <div slot="actions"></div>
-    </hero-section>
-    <script>
-      const heroSection = document.querySelector("hero-section");
-      if (location.pathname == "/") {
-        const actions = heroSection.querySelector("[slot=actions]");
-        const uploadEventActionTemplate = document.createElement("template");
-        uploadEventActionTemplate.innerHTML = /*html*/ `
+          ">
+      </svg-mask>
+    </a>
+    <h1 part="title" class="font-title">
+      La Agenda de eventos de <br /><strong part="location">Traslasierra</strong>
+    </h1>
+    <div slot="actions"></div>
+  </hero-section>
+  <script>
+    const heroSection = document.querySelector("hero-section");
+    if (location.pathname == "/") {
+      const actions = heroSection.querySelector("[slot=actions]");
+      const uploadEventActionTemplate = document.createElement("template");
+      uploadEventActionTemplate.innerHTML = /*html*/ `
           <a class="button font-title" href="/publicar-evento/" style="border-width: 2px; font-size: 1rem"
             >Cargar Evento
           </a>
         `;
-        actions.appendChild(uploadEventActionTemplate.content.cloneNode(true));
-      }
-    </script>
-    <seo-block>
-      <h2>¿Qué hacer en Traslasierra?</h2>
-      <p>
-        Encontrá información de las ferias, conciertos, talleres, festivales y eventos culturales en Traslasierra.
-        Actualizado cada día con las mejores propuestas del Valle.
-      </p>
-      <p>
-        Encontrá qué hacer hoy, este fin de semana o en tu próxima visita. Eventos en Mina Clavero, Nono, Villa de Las
-        Rosas, Merlo y más localidades de Traslasierra y alrededores.
-      </p>
-    </seo-block>
-    <main class="mountains-top">
-      <section id="eventos" aria-label="Eventos">
-        <events-filter id="eventsFilter">
-          <form>
-            <h2 class="form-filters-as-heading">
-              <span part="where title">Eventos en</span>
-              <select-locality part="where">
-                <select name="locality" aria-label="Localidad" multiple>
-                  <option value="">TRASLASIERRA</option>
-                  <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
-                  <option value="Boca del Rio">BOCA DEL RIO</option>
-                  <option value="Dique de La Viña">DIQUE DE LA VIÑA</option>
-                  <option value="El Pueblito">EL PUEBLITO</option>
-                  <option value="La Paz">LA PAZ</option>
-                  <option value="La Población">LA POBLACIÓN</option>
-                  <option value="Las Calles">LAS CALLES</option>
-                  <option value="Las Chacras">LAS CHACRAS</option>
-                  <option value="Las Rabonas">LAS RABONAS</option>
-                  <option value="Las Tapias">LAS TAPIAS</option>
-                  <option value="Los Hornillos">LOS HORNILLOS</option>
-                  <option value="Los Molles">LOS MOLLES</option>
-                  <option value="Los Pozos">LOS POZOS</option>
-                  <option value="Luyaba">LUYABA</option>
-                  <option value="Mina Clavero">MINA CLAVERO</option>
-                  <option value="Nono">NONO</option>
-                  <option value="Panaholma">PANAHOLMA</option>
-                  <option value="Piedra Pintada">PIEDRA PINTADA</option>
-                  <option value="Quebracho Ladeado">QUEBRACHO LADEADO</option>
-                  <option value="San Huberto">SAN HUBERTO</option>
-                  <option value="San Javier">SAN JAVIER</option>
-                  <option value="San Lorenzo">SAN LORENZO</option>
-                  <option value="San Pedro">SAN PEDRO</option>
-                  <option value="Travesia">TRAVESIA</option>
-                  <option value="Villa Cura Brochero">VILLA CURA BROCHERO</option>
-                  <option value="Villa de Merlo">VILLA DE MERLO</option>
-                  <option value="Villa de Las Rosas">VILLA DE LAS ROSAS</option>
-                  <option value="Villa Dolores">VILLA DOLORES</option>
-                  <option value="Yacanto">YACANTO</option>
-                  <option value="Virtual">VIRTUAL</option>
-                </select>
+      actions.appendChild(uploadEventActionTemplate.content.cloneNode(true));
+    }
+  </script>
+  <seo-block>
+    <h2>¿Qué hacer en Traslasierra?</h2>
+    <p>
+      Encontrá información de las ferias, conciertos, talleres, festivales y eventos culturales en Traslasierra.
+      Actualizado cada día con las mejores propuestas del Valle.
+    </p>
+    <p>
+      Encontrá qué hacer hoy, este fin de semana o en tu próxima visita. Eventos en Mina Clavero, Nono, Villa de Las
+      Rosas, Merlo y más localidades de Traslasierra y alrededores.
+    </p>
+  </seo-block>
+  <main class="mountains-top">
+    <section id="eventos" aria-label="Eventos">
+      <events-filter id="eventsFilter">
+        <form>
+          <h2 class="form-filters-as-heading">
+            <span part="where title">Eventos en</span>
+            <select-locality part="where">
+              <select name="locality" aria-label="Localidad" multiple>
+                <option value="">TRASLASIERRA</option>
+                <option value="Arroyo de Los Patos">ARROYO DE LOS PATOS</option>
+                <option value="Boca del Rio">BOCA DEL RIO</option>
+                <option value="Dique de La Viña">DIQUE DE LA VIÑA</option>
+                <option value="El Pueblito">EL PUEBLITO</option>
+                <option value="La Paz">LA PAZ</option>
+                <option value="La Población">LA POBLACIÓN</option>
+                <option value="Las Calles">LAS CALLES</option>
+                <option value="Las Chacras">LAS CHACRAS</option>
+                <option value="Las Rabonas">LAS RABONAS</option>
+                <option value="Las Tapias">LAS TAPIAS</option>
+                <option value="Los Hornillos">LOS HORNILLOS</option>
+                <option value="Los Molles">LOS MOLLES</option>
+                <option value="Los Pozos">LOS POZOS</option>
+                <option value="Luyaba">LUYABA</option>
+                <option value="Mina Clavero">MINA CLAVERO</option>
+                <option value="Nono">NONO</option>
+                <option value="Panaholma">PANAHOLMA</option>
+                <option value="Piedra Pintada">PIEDRA PINTADA</option>
+                <option value="Quebracho Ladeado">QUEBRACHO LADEADO</option>
+                <option value="San Huberto">SAN HUBERTO</option>
+                <option value="San Javier">SAN JAVIER</option>
+                <option value="San Lorenzo">SAN LORENZO</option>
+                <option value="San Pedro">SAN PEDRO</option>
+                <option value="Travesia">TRAVESIA</option>
+                <option value="Villa Cura Brochero">VILLA CURA BROCHERO</option>
+                <option value="Villa de Merlo">VILLA DE MERLO</option>
+                <option value="Villa de Las Rosas">VILLA DE LAS ROSAS</option>
+                <option value="Villa Dolores">VILLA DOLORES</option>
+                <option value="Yacanto">YACANTO</option>
+                <option value="Virtual">VIRTUAL</option>
+              </select>
 
-                <script>
-                  // Scroll to first option (Traslasierra) when no options are selected.
+              <script>
+                // Scroll to first option (Traslasierra) when no options are selected.
 
-                  const select = document.querySelector("select-locality select");
-                  function scrollSelectToTopIfNoOptionSelected() {
-                    if (select.selectedOptions.length == 0) {
-                      select.scrollTo(0, 0);
+                const select = document.querySelector("select-locality select");
+                function scrollSelectToTopIfNoOptionSelected() {
+                  if (select.selectedOptions.length == 0) {
+                    select.scrollTo(0, 0);
+                  }
+                }
+                select.addEventListener("blur", (event) => {
+                  scrollSelectToTopIfNoOptionSelected();
+                });
+              </script>
+            </select-locality>
+            <span part="when title" data-nosnippet>A Partir de<span id="hideOnToday">l</span></span>
+            <today-date-picker part="when">
+              <input type="date" name="startDate" aria-label="Fecha de inicio" />
+
+              <style>
+                form:has(today-date-picker[today]) #hideOnToday {
+                  display: none;
+                }
+
+                today-date-picker {
+                  position: relative;
+
+                  >* {
+                    width: 100%;
+                  }
+
+                  &:not(:focus-within)[today] {
+                    &::before {
+                      content: "Hoy";
+                      position: absolute;
+                      inset: 0;
+                      display: grid;
+                      place-content: center;
+                      background-color: var(--background-color-darker);
+                      z-index: 1;
+                      pointer-events: none;
+                      /* Allow clicks through */
+                    }
+
+                    &:hover::before {
+                      content: none;
+                    }
+
+                    &::after {
+                      content: "";
+                      position: absolute;
+                      top: 50%;
+                      right: 0.5rem;
+                      width: 0;
+                      height: 0;
+                      border-left: 0.25rem solid transparent;
+                      border-right: 0.25rem solid transparent;
+                      border-top: 0.25rem solid gray;
+                      margin-top: -0.1rem;
+                      z-index: 1;
                     }
                   }
-                  select.addEventListener("blur", (event) => {
-                    scrollSelectToTopIfNoOptionSelected();
-                  });
-                </script>
-              </select-locality>
-              <span part="when title" data-nosnippet>A Partir de<span id="hideOnToday">l</span></span>
-              <today-date-picker part="when">
-                <input type="date" name="startDate" aria-label="Fecha de inicio" />
+                }
+              </style>
+            </today-date-picker>
+          </h2>
 
-                <style>
-                  form:has(today-date-picker[today]) #hideOnToday {
-                    display: none;
-                  }
-
-                  today-date-picker {
-                    position: relative;
-
-                    > * {
-                      width: 100%;
-                    }
-
-                    &:not(:focus-within)[today] {
-                      &::before {
-                        content: "Hoy";
-                        position: absolute;
-                        inset: 0;
-                        display: grid;
-                        place-content: center;
-                        background-color: var(--background-color-darker);
-                        z-index: 1;
-                        pointer-events: none; /* Allow clicks through */
-                      }
-
-                      &:hover::before {
-                        content: none;
-                      }
-
-                      &::after {
-                        content: "";
-                        position: absolute;
-                        top: 50%;
-                        right: 0.5rem;
-                        width: 0;
-                        height: 0;
-                        border-left: 0.25rem solid transparent;
-                        border-right: 0.25rem solid transparent;
-                        border-top: 0.25rem solid gray;
-                        margin-top: -0.1rem;
-                        z-index: 1;
-                      }
-                    }
-                  }
-                </style>
-              </today-date-picker>
-            </h2>
-
-            <input name="endDate" type="date" hidden />
-            <label hidden>
-              <input checked type="checkbox" name="activities[]" value="Evento" />
-              Eventos
-            </label>
-            <label hidden>
-              <input checked type="checkbox" name="activities[]" value="Taller" />
-              Talleres
-            </label>
-            <label hidden> 🔎 </label>
-            <input hidden type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
-          </form>
-          <event-entries>
-            <!-- SSR (via [{slug|locality}].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
-          </event-entries>
-          <nav id="viewMore">
-            <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
-              <svg-mask
-                style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 30px; height: 18px"
-              >
-              </svg-mask>
-              Ver más eventos
-            </button>
-            <a class="button seo-only" part="today" href="/eventos-hoy/">Ver eventos de hoy</a>
-            <a class="button seo-only" part="this-week" href="/eventos-esta-semana/">Ver eventos de esta semana</a>
-            <a class="button seo-only" part="this-month" href="/eventos-este-mes/">Ver eventos de este mes</a>
-          </nav>
-          <script>
-            // Hide view all events button if on index page (that's all events page)
-            const viewMoreEventsButton = document.querySelector("#viewMoreEvents");
-            viewMoreEventsButton.onclick = () => {
-              if (document.querySelector("events-filter").allShown) {
-                location.href = "/"; // Redirect to index page, usefull for slug based pages
-                return;
-              }
-              eventsFilter.showMore();
-            };
-          </script>
-          <style>
-            #viewMore {
-              display: grid;
-              gap: 1.5rem;
-
-              > *:not(.seo-only) {
-                display: flex;
-                flex-flow: row nowrap;
-                min-width: 15rem;
-                width: 100%;
-                background-color: var(--color-green) !important;
-                align-items: center;
-                color: var(--color-light);
-                gap: 1rem;
-                font-size: 0.66rem;
-                font-weight: 600;
-                margin-inline: auto;
-              }
+          <input name="endDate" type="date" hidden />
+          <label hidden>
+            <input checked type="checkbox" name="activities[]" value="Evento" />
+            Eventos
+          </label>
+          <label hidden>
+            <input checked type="checkbox" name="activities[]" value="Taller" />
+            Talleres
+          </label>
+          <label hidden> 🔎 </label>
+          <input hidden type="search" name="search" placeholder=" Palabras claves" style="width: 100%" />
+        </form>
+        <event-entries>
+          <!-- SSR (via [{slug|locality}].js) replaces this element (via regex 😱) with pre-filled <event-entry>'s -->
+        </event-entries>
+        <nav id="viewMore">
+          <button id="viewMoreEvents" onclick="eventsFilter.showMore();">
+            <svg-mask
+              style="--src: url('/assets/icons/loica.svg'); --color: var(--color-light); width: 30px; height: 18px">
+            </svg-mask>
+            Ver más eventos
+          </button>
+          <a class="button seo-only" part="today" href="/eventos-hoy/">Ver eventos de hoy</a>
+          <a class="button seo-only" part="this-week" href="/eventos-esta-semana/">Ver eventos de esta semana</a>
+          <a class="button seo-only" part="this-month" href="/eventos-este-mes/">Ver eventos de este mes</a>
+        </nav>
+        <script>
+          // Hide view all events button if on index page (that's all events page)
+          const viewMoreEventsButton = document.querySelector("#viewMoreEvents");
+          viewMoreEventsButton.onclick = () => {
+            if (document.querySelector("events-filter").allShown) {
+              location.href = "/"; // Redirect to index page, usefull for slug based pages
+              return;
             }
-
-            events-filter:not(:has(event-entry)) #viewMoreEvents {
-              display: none;
-            }
-          </style>
-        </events-filter>
-      </section>
-      <section id="about">
+            eventsFilter.showMore();
+          };
+        </script>
         <style>
-          #about {
-            display: flex;
-            flex-flow: column nowrap;
-            align-items: center;
-            text-align: center;
+          #viewMore {
+            display: grid;
+            gap: 1.5rem;
+
+            >*:not(.seo-only) {
+              display: flex;
+              flex-flow: row nowrap;
+              min-width: 15rem;
+              width: 100%;
+              background-color: var(--color-green) !important;
+              align-items: center;
+              color: var(--color-light);
+              gap: 1rem;
+              font-size: 0.66rem;
+              font-weight: 600;
+              margin-inline: auto;
+            }
+          }
+
+          events-filter:not(:has(event-entry)) #viewMoreEvents {
+            display: none;
           }
         </style>
-        <img src="/assets/images/mountain.svg" height="100" alt="" />
-      </section>
-    </main>
-    <script type="module" src="/components/site-footer.js"></script>
-    <site-footer>
-      <fieldset>
-        <legend>Ver próximos eventos en</legend>
-        <nav>
-          <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos/">Arroyo de Los Patos</a> ·
-          <a title="Ver eventos en El Pueblito" href="/lugar/el-pueblito/">El Pueblito</a> ·
-          <a title="Ver eventos en La Paz" href="/lugar/la-paz/">La Paz</a> ·
-          <a title="Ver eventos en La Población" href="/lugar/la-poblacion/">La Población</a> ·
-          <a title="Ver eventos en Las Calles" href="/lugar/las-calles/">Las Calles</a> ·
-          <a title="Ver eventos en Las Chacras" href="/lugar/las-chacras/">Las Chacras</a> ·
-          <a title="Ver eventos en Las Rabonas" href="/lugar/las-rabonas/">Las Rabonas</a> ·
-          <a title="Ver eventos en Las Tapias" href="/lugar/las-tapias/">Las Tapias</a> ·
-          <a title="Ver eventos en Los Hornillos" href="/lugar/los-hornillos/">Los Hornillos</a> ·
-          <a title="Ver eventos en Los Molles" href="/lugar/los-molles/">Los Molles</a> ·
-          <a title="Ver eventos en Los Pozos" href="/lugar/los-pozos/">Los Pozos</a> ·
-          <a title="Ver eventos en Luyaba" href="/lugar/luyaba/">Luyaba</a> ·
-          <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero/">Mina Clavero</a> ·
-          <a title="Ver eventos en Nono" href="/lugar/nono/">Nono</a> ·
-          <a title="Ver eventos en Panaholma" href="/lugar/panaholma/">Panaholma</a> ·
-          <a title="Ver eventos en Quebracho Ladeado" href="/lugar/quebracho-ladeado/">Quebracho Ladeado</a> ·
-          <a title="Ver eventos en San Huberto" href="/lugar/san-huberto/">San Huberto</a> ·
-          <a title="Ver eventos en San Javier" href="/lugar/san-javier/">San Javier</a> ·
-          <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo/">San Lorenzo</a> ·
-          <a title="Ver eventos en San Pedro" href="/lugar/san-pedro/">San Pedro</a> ·
-          <a title="Ver eventos en Travesia" href="/lugar/travesia/">Travesia</a> ·
-          <a title="Ver eventos en Villa Cura Brochero" href="/lugar/villa-cura-brochero/">Villa Cura Brochero</a> ·
-          <a title="Ver eventos en Villa de Las Rosas" href="/lugar/villa-de-las-rosas/">Villa de Las Rosas</a> ·
-          <a title="Ver eventos en Villa de Merlo" href="/lugar/villa-de-merlo/">Villa de Merlo</a> ·
-          <a title="Ver eventos en Villa Dolores" href="/lugar/villa-dolores/">Villa Dolores</a> ·
-          <a title="Ver eventos en Yacanto" href="/lugar/yacanto/">Yacanto</a>
-        </nav>
-      </fieldset>
-    </site-footer>
-
-    <style>
-      section#eventos {
-        & events-filter {
-          display: flex;
-          flex-flow: column;
-          gap: 3rem;
-          text-wrap: balance;
-          align-items: center;
-
-          & form {
-            --input-height: 2.3rem;
-            display: var(--form-display, flex);
-            flex-flow: column nowrap;
-            align-items: stretch;
-            text-align: center;
-            gap: 0.66rem;
-            width: 13rem;
-
-            & .form-filters-as-heading {
-              margin: 0;
-              display: inherit;
-              flex-flow: inherit;
-              align-items: inherit;
-              gap: inherit;
-              font-weight: 1.2rem;
-              letter-spacing: initial;
-
-              & :not(span) {
-                font-weight: normal;
-                font-size: initial;
-              }
-            }
-
-            & button,
-            & select,
-            & input {
-              padding: 0.5rem;
-              text-align: inherit;
-              height: var(--input-height);
-              min-height: max-content;
-              font: inherit;
-            }
-          }
-
-          select-locality {
-            position: relative;
-            --down-arrow-content: "";
-            --options-to-show: 1;
-
-            @media (hover: hover) {
-              --options-to-show: 4;
-              --down-arrow-content: none;
-            }
-
-            @supports (-moz-appearance: none) {
-              --options-to-show: 4; /* Firefox on mobile shows a scrollable <select> */
-              --down-arrow-content: none;
-            }
-
-            select {
-              padding: 0;
-              height: calc(var(--input-height) * var(--options-to-show));
-
-              /* &[multiple]:has(option:checked ~ option:checked) {
-                height: calc(var(--input-height) * var(--options-to-show));
-              } */
-
-              option {
-                height: var(--input-height);
-                align-content: center;
-              }
-
-              &:not(:has(option:checked)) option:first-child {
-                background-color: var(--background-color-selected);
-              }
-            }
-
-            &::after {
-              content: var(--down-arrow-content);
-              position: absolute;
-              top: 50%;
-              right: 0.5rem;
-              width: 0;
-              height: 0;
-              border-left: 0.25rem solid transparent;
-              border-right: 0.25rem solid transparent;
-              border-top: 0.25rem solid gray;
-              margin-top: -0.1rem;
-            }
-
-            & > select {
-              /* Cross browser styling */
-              appearance: none;
-              border-radius: 0;
-              text-align: center !important;
-              width: 100%;
-              color: currentColor;
-            }
-          }
-
-          & > *:not(event-entries) {
-            text-transform: uppercase;
-          }
-        }
-        &:not(:has(events-filter)) {
-          /* Only one event is shown */
-          --form-display: none;
-          --summary-display: none;
-        }
-
-        & event-entries {
+      </events-filter>
+    </section>
+    <section id="about">
+      <style>
+        #about {
           display: flex;
           flex-flow: column nowrap;
-          gap: 2rem;
           align-items: center;
+          text-align: center;
+        }
+      </style>
+      <img src="/assets/images/mountain.svg" height="100" alt="" />
+    </section>
+  </main>
+  <script type="module" src="/components/site-footer.js"></script>
+  <site-footer>
+    <fieldset>
+      <legend>Ver próximos eventos en</legend>
+      <nav>
+        <a title="Ver eventos en Arroyo de Los Patos" href="/lugar/arroyo-de-los-patos/">Arroyo de Los Patos</a> ·
+        <a title="Ver eventos en El Pueblito" href="/lugar/el-pueblito/">El Pueblito</a> ·
+        <a title="Ver eventos en La Paz" href="/lugar/la-paz/">La Paz</a> ·
+        <a title="Ver eventos en La Población" href="/lugar/la-poblacion/">La Población</a> ·
+        <a title="Ver eventos en Las Calles" href="/lugar/las-calles/">Las Calles</a> ·
+        <a title="Ver eventos en Las Chacras" href="/lugar/las-chacras/">Las Chacras</a> ·
+        <a title="Ver eventos en Las Rabonas" href="/lugar/las-rabonas/">Las Rabonas</a> ·
+        <a title="Ver eventos en Las Tapias" href="/lugar/las-tapias/">Las Tapias</a> ·
+        <a title="Ver eventos en Los Hornillos" href="/lugar/los-hornillos/">Los Hornillos</a> ·
+        <a title="Ver eventos en Los Molles" href="/lugar/los-molles/">Los Molles</a> ·
+        <a title="Ver eventos en Los Pozos" href="/lugar/los-pozos/">Los Pozos</a> ·
+        <a title="Ver eventos en Luyaba" href="/lugar/luyaba/">Luyaba</a> ·
+        <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero/">Mina Clavero</a> ·
+        <a title="Ver eventos en Nono" href="/lugar/nono/">Nono</a> ·
+        <a title="Ver eventos en Panaholma" href="/lugar/panaholma/">Panaholma</a> ·
+        <a title="Ver eventos en Quebracho Ladeado" href="/lugar/quebracho-ladeado/">Quebracho Ladeado</a> ·
+        <a title="Ver eventos en San Huberto" href="/lugar/san-huberto/">San Huberto</a> ·
+        <a title="Ver eventos en San Javier" href="/lugar/san-javier/">San Javier</a> ·
+        <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo/">San Lorenzo</a> ·
+        <a title="Ver eventos en San Pedro" href="/lugar/san-pedro/">San Pedro</a> ·
+        <a title="Ver eventos en Travesia" href="/lugar/travesia/">Travesia</a> ·
+        <a title="Ver eventos en Villa Cura Brochero" href="/lugar/villa-cura-brochero/">Villa Cura Brochero</a> ·
+        <a title="Ver eventos en Villa de Las Rosas" href="/lugar/villa-de-las-rosas/">Villa de Las Rosas</a> ·
+        <a title="Ver eventos en Villa de Merlo" href="/lugar/villa-de-merlo/">Villa de Merlo</a> ·
+        <a title="Ver eventos en Villa Dolores" href="/lugar/villa-dolores/">Villa Dolores</a> ·
+        <a title="Ver eventos en Yacanto" href="/lugar/yacanto/">Yacanto</a>
+      </nav>
+    </fieldset>
+  </site-footer>
 
-          &[part="loading"],
-          &::part(loading) {
-            text-align: center;
+  <style>
+    section#eventos {
+      & events-filter {
+        display: flex;
+        flex-flow: column;
+        gap: 3rem;
+        text-wrap: balance;
+        align-items: center;
+
+        & form {
+          --input-height: 2.3rem;
+          display: var(--form-display, flex);
+          flex-flow: column nowrap;
+          align-items: stretch;
+          text-align: center;
+          gap: 0.66rem;
+          width: 13rem;
+
+          & .form-filters-as-heading {
+            margin: 0;
+            display: inherit;
+            flex-flow: inherit;
+            align-items: inherit;
+            gap: inherit;
+            font-weight: 1.2rem;
+            letter-spacing: initial;
+
+            & :not(span) {
+              font-weight: normal;
+              font-size: initial;
+            }
           }
 
-          &[part="date-group"],
-          &::part(date-group) {
-            display: flex;
-            flex-flow: row wrap;
-            gap: 2rem;
-            justify-content: center;
+          & button,
+          & select,
+          & input {
+            padding: 0.5rem;
+            text-align: inherit;
+            height: var(--input-height);
+            min-height: max-content;
+            font: inherit;
+          }
+        }
+
+        select-locality {
+          position: relative;
+          --down-arrow-content: "";
+          --options-to-show: 1;
+
+          @media (hover: hover) {
+            --options-to-show: 4;
+            --down-arrow-content: none;
           }
 
-          &[part="date-label"],
-          &::part(date-label) {
-            font-family: var(--font-family-heading);
-            text-align: center;
-            position: sticky;
-            top: 1.3rem;
-            width: 17ch;
-            color: var(--color-light);
-            font-size: 1rem;
-            font-weight: 500;
-            padding: 0.3rem;
-            z-index: 1;
+          @supports (-moz-appearance: none) {
+            --options-to-show: 4;
+            /* Firefox on mobile shows a scrollable <select> */
+            --down-arrow-content: none;
           }
 
-          &[part="date-label"]::before,
-          &::part(date-label)::before {
-            content: "";
-            inset: 0;
-            width: 100%;
+          select {
+            padding: 0;
+            height: calc(var(--input-height) * var(--options-to-show));
+
+            option {
+              height: var(--input-height);
+              align-content: center;
+            }
+
+            &:not(:has(option:checked)) option:first-child {
+              background-color: var(--background-color-selected);
+            }
+          }
+
+          &::after {
+            content: var(--down-arrow-content);
             position: absolute;
-            z-index: -1;
-            background-color: var(--color-green);
-            border-radius: calc(var(--border-radius) / 2);
+            top: 50%;
+            right: 0.5rem;
+            width: 0;
+            height: 0;
+            border-left: 0.25rem solid transparent;
+            border-right: 0.25rem solid transparent;
+            border-top: 0.25rem solid gray;
+            margin-top: -0.1rem;
+          }
+
+          &>select {
+            /* Cross browser styling */
+            appearance: none;
+            border-radius: 0;
+            text-align: center !important;
+            width: 100%;
+            color: currentColor;
           }
         }
-      }
-    </style>
 
-    <script type="module">
-      import { getGoogleSheetEvents } from "/lib/get-events.js";
-      import {
-        escapeHtml,
-        slugify,
-        isDateToday,
-        formatLocalDate,
-        eventsToSchemaOrgItemList,
-        getEventSortOrder,
-        renderEventEntry,
-        makeCssToHideAbsentLocalitiesInFooter,
-      } from "/lib/utils.js";
-
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const eventsElement = document.querySelector("event-entries");
-
-      /**
-       * Injects a JSON-LD script tag with schema.org data for the given events.
-       * @property {EventResponse[]} events
-       */
-      async function injectSchemaOrgJson(events) {
-        const SCRIPT_ID = "events-schema-org";
-        try {
-          let script = document.getElementById(SCRIPT_ID);
-          if (!script) {
-            script = document.createElement("script");
-            script.id = SCRIPT_ID;
-            script.type = "application/ld+json";
-            document.head.appendChild(script);
-          }
-          script.textContent = JSON.stringify(eventsToSchemaOrgItemList(events, location.origin));
-        } catch (err) {
-          console.warn(err);
+        &>*:not(event-entries) {
+          text-transform: uppercase;
         }
       }
 
-      async function fetchAndRenderEvents() {
-        const upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
-          return getEventSortOrder(a) - getEventSortOrder(b);
-        });
-        let eventsToRender = upcomingEvents;
+      &:not(:has(events-filter)) {
+        /* Only one event is shown */
+        --form-display: none;
+        --summary-display: none;
+      }
 
-        // Fuzzy search
-        const url = new URL(location);
-        const query = url.searchParams.get("q") || "";
+      & event-entries {
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 2rem;
+        align-items: center;
 
-        if (query) {
-          const { fuzzySearch } = await import("/lib/fuzzy-search-events.js");
-
-          const searchResults = fuzzySearch(upcomingEvents, query);
-          if (!searchResults) {
-            eventsElement.innerHTML = /*html*/ `<p>No encontramos resultados con: ${query}</p>`; /* Clear loading message */
-            return;
-          }
-          eventsToRender = searchResults.map((result) => result.item);
+        &[part="loading"],
+        &::part(loading) {
+          text-align: center;
         }
 
-        renderEvents(eventsToRender);
-        eventsFilter.updateUI();
-
-        injectSchemaOrgJson(upcomingEvents);
-      }
-
-      /**
-       * @param {Date} date
-       * @returns {string}
-       */
-      function formatDateTitle(date) {
-        return date
-          .toLocaleDateString("es-AR", {
-            weekday: "long",
-            day: "2-digit",
-            month: "2-digit",
-          })
-          .toUpperCase();
-      }
-
-      async function renderEvents(events) {
-        eventsElement.innerHTML = "";
-
-        // Store localities to hide absents from footer
-        for (const event of events) {
-          eventsElement.insertAdjacentHTML("beforeend", renderEventEntry(event));
+        &[part="date-group"],
+        &::part(date-group) {
+          display: flex;
+          flex-flow: row wrap;
+          gap: 2rem;
+          justify-content: center;
         }
 
-        hideAbsentLocalitiesFromFooter(events);
-      }
+        &[part="date-label"],
+        &::part(date-label) {
+          font-family: var(--font-family-heading);
+          text-align: center;
+          position: sticky;
+          top: 1.3rem;
+          width: 17ch;
+          color: var(--color-light);
+          font-size: 1rem;
+          font-weight: 500;
+          padding: 0.3rem;
+          z-index: 1;
+        }
 
-      function hideAbsentLocalitiesFromFooter(events) {
-        const css = makeCssToHideAbsentLocalitiesInFooter(events);
-        if (document.getElementById("hide-absent-localities")) return;
-        const style = document.createElement("style");
-        style.id = "hide-absent-localities";
-        style.textContent = css;
-
-        document.head.appendChild(style);
-      }
-
-      // Get events
-
-      if (!document.querySelector("event-entry")) {
-        // Normal flow when requesting /index.html
-        if (location.pathname.includes("/lugar/")) {
-          const locality = document.querySelector('[part="location"]').textContent;
-          eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
-        } else {
-          console.info("Fetching fresh events data to render on page...");
-          fetchAndRenderEvents();
+        &[part="date-label"]::before,
+        &::part(date-label)::before {
+          content: "";
+          inset: 0;
+          width: 100%;
+          position: absolute;
+          z-index: -1;
+          background-color: var(--color-green);
+          border-radius: calc(var(--border-radius) / 2);
         }
       }
-      if (location.pathname.match(/[a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?/)) {
-        // Scroll into event's section if we're on a event page
-        const focusElement = () => document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
-        if (document.readyState === "complete") {
-          focusElement();
-        } else {
-          window.addEventListener("load", focusElement);
+    }
+  </style>
+
+  <script type="module">
+    import { getGoogleSheetEvents } from "/lib/get-events.js";
+    import {
+      escapeHtml,
+      slugify,
+      isDateToday,
+      formatLocalDate,
+      eventsToSchemaOrgItemList,
+      getEventSortOrder,
+      renderEventEntry,
+      makeCssToHideAbsentLocalitiesInFooter,
+    } from "/lib/utils.js";
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const eventsElement = document.querySelector("event-entries");
+
+    /**
+     * Injects a JSON-LD script tag with schema.org data for the given events.
+     * @property {EventResponse[]} events
+     */
+    async function injectSchemaOrgJson(events) {
+      const SCRIPT_ID = "events-schema-org";
+      try {
+        let script = document.getElementById(SCRIPT_ID);
+        if (!script) {
+          script = document.createElement("script");
+          script.id = SCRIPT_ID;
+          script.type = "application/ld+json";
+          document.head.appendChild(script);
         }
+        script.textContent = JSON.stringify(eventsToSchemaOrgItemList(events, location.origin));
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    async function fetchAndRenderEvents() {
+      const upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
+        return getEventSortOrder(a) - getEventSortOrder(b);
+      });
+      let eventsToRender = upcomingEvents;
+
+      // Fuzzy search
+      const url = new URL(location);
+      const query = url.searchParams.get("q") || "";
+
+      if (query) {
+        const { fuzzySearch } = await import("/lib/fuzzy-search-events.js");
+
+        const searchResults = fuzzySearch(upcomingEvents, query);
+        if (!searchResults) {
+          eventsElement.innerHTML = /*html*/ `<p>No encontramos resultados con: ${query}</p>`; /* Clear loading message */
+          return;
+        }
+        eventsToRender = searchResults.map((result) => result.item);
       }
 
-      // UX improvements when seeing a locality page (/lugar/locality-slug)
+      renderEvents(eventsToRender);
+      eventsFilter.updateUI();
+
+      injectSchemaOrgJson(upcomingEvents);
+    }
+
+    /**
+     * @param {Date} date
+     * @returns {string}
+     */
+    function formatDateTitle(date) {
+      return date
+        .toLocaleDateString("es-AR", {
+          weekday: "long",
+          day: "2-digit",
+          month: "2-digit",
+        })
+        .toUpperCase();
+    }
+
+    async function renderEvents(events) {
+      eventsElement.innerHTML = "";
+
+      // Store localities to hide absents from footer
+      for (const event of events) {
+        eventsElement.insertAdjacentHTML("beforeend", renderEventEntry(event));
+      }
+
+      hideAbsentLocalitiesFromFooter(events);
+    }
+
+    function hideAbsentLocalitiesFromFooter(events) {
+      const css = makeCssToHideAbsentLocalitiesInFooter(events);
+      if (document.getElementById("hide-absent-localities")) return;
+      const style = document.createElement("style");
+      style.id = "hide-absent-localities";
+      style.textContent = css;
+
+      document.head.appendChild(style);
+    }
+
+    // Get events
+
+    if (!document.querySelector("event-entry")) {
+      // Normal flow when requesting /index.html
       if (location.pathname.includes("/lugar/")) {
-        // Highlight visiting locality on footer
-        const linkToHighlight = document.querySelector(`footer [href="${location.pathname}"]`);
-        if (linkToHighlight) linkToHighlight.style.fontWeight = "bolder";
+        const locality = document.querySelector('[part="location"]').textContent;
+        eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
+      } else {
+        console.info("Fetching fresh events data to render on page...");
+        fetchAndRenderEvents();
       }
-    </script>
-    <script type="module">
-      // RUN
-
-      // START: Service Worker
-      /**
-       * @type {ServiceWorkerRegistration}
-       */
-      let swRegistration;
-
-      if ("serviceWorker" in navigator) {
-        try {
-          swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
-          console.log("Service Worker registered:", swRegistration);
-        } catch (error) {
-          console.log("Service Worker registration failed:", error);
-        }
+    }
+    if (location.pathname.match(/[a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?/)) {
+      // Scroll into event's section if we're on a event page
+      const focusElement = () => document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
+      if (document.readyState === "complete") {
+        focusElement();
+      } else {
+        window.addEventListener("load", focusElement);
       }
+    }
 
-      // END: Service Worker
-    </script>
+    // UX improvements when seeing a locality page (/lugar/locality-slug)
+    if (location.pathname.includes("/lugar/")) {
+      // Highlight visiting locality on footer
+      const linkToHighlight = document.querySelector(`footer [href="${location.pathname}"]`);
+      if (linkToHighlight) linkToHighlight.style.fontWeight = "bolder";
+    }
+  </script>
+  <script type="module">
+    // RUN
 
-    <!-- START LEGACY BROWSERS CSS SUPPORT -->
-    <noscript>
-      <link rel="stylesheet" href="./legacy.css" />
-    </noscript>
-    <script>
-      // Legacy browsers css support
-      // Generated by scripts/build-legacy-css.js on `make legacy-css` or 'npm run build:legacy-css'
-      if (!CSS.supports("selector(&)") || !CSS.supports("selector(has)")) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "./legacy.css";
-        document.body.appendChild(link);
+    // START: Service Worker
+    /**
+     * @type {ServiceWorkerRegistration}
+     */
+    let swRegistration;
+
+    if ("serviceWorker" in navigator) {
+      try {
+        swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
+        console.log("Service Worker registered:", swRegistration);
+      } catch (error) {
+        console.log("Service Worker registration failed:", error);
       }
-    </script>
-    <!-- END LEGACY BROWSERS CSS SUPPORT -->
-  </body>
+    }
+
+    // END: Service Worker
+  </script>
+
+  <!-- START LEGACY BROWSERS CSS SUPPORT -->
+  <noscript>
+    <link rel="stylesheet" href="./legacy.css" />
+  </noscript>
+  <script>
+    // Legacy browsers css support
+    // Generated by scripts/build-legacy-css.js on `make legacy-css` or 'npm run build:legacy-css'
+    if (!CSS.supports("selector(&)") || !CSS.supports("selector(has)")) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./legacy.css";
+      document.body.appendChild(link);
+    }
+  </script>
+  <!-- END LEGACY BROWSERS CSS SUPPORT -->
+</body>
 </html>

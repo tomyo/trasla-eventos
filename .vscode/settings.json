@@ -1,8 +1,7 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "html.format.enable": true,
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.html-language-features"
   },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"

@@ -1,98 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cargar evento</title>
-    <meta name="description" content="Publicá gratis tu evento o taller en Trasla Eventos" />
-    <link rel="stylesheet" href="/base.css" />
-    <link rel="stylesheet" href="./publicar-evento.css" />
-    <script type="module" src="/components/site-header.js"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cargar evento</title>
+  <meta name="description" content="Publicá gratis tu evento o taller en Trasla Eventos" />
+  <link rel="stylesheet" href="/base.css" />
+  <link rel="stylesheet" href="./publicar-evento.css" />
+  <script type="module" src="/components/site-header.js"></script>
 
-    <!-- START Analytics -->
-    <script>
-      function loadScript(src, attributes = {}) {
-        const s = document.createElement("script");
-        Object.entries(attributes).forEach(([k, v]) => {
-          if (v === true) s.toggleAttribute(k, true);
-          else s.setAttribute(k, v);
+  <!-- START Analytics -->
+  <script>
+    function loadScript(src, attributes = {}) {
+      const s = document.createElement("script");
+      Object.entries(attributes).forEach(([k, v]) => {
+        if (v === true) s.toggleAttribute(k, true);
+        else s.setAttribute(k, v);
+      });
+      s.src = src;
+      document.head.appendChild(s);
+    }
+    if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
+      // Umami
+      loadScript("https://cloud.umami.is/script.js", {
+        "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
+        defer: true,
+      });
+
+      // Clarity
+      (function () {
+        window.clarity =
+          window.clarity ||
+          function () {
+            (window.clarity.q = window.clarity.q || []).push(arguments);
+          };
+
+        loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
+          async: true,
         });
-        s.src = src;
-        document.head.appendChild(s);
-      }
-      if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
-        // Umami
-        loadScript("https://cloud.umami.is/script.js", {
-          "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
-          defer: true,
-        });
-
-        // Clarity
-        (function () {
-          window.clarity =
-            window.clarity ||
-            function () {
-              (window.clarity.q = window.clarity.q || []).push(arguments);
-            };
-
-          loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
-            async: true,
-          });
-        })();
-      }
-    </script>
-    <!-- END Analytics -->
-  </head>
-  <body>
-    <site-header></site-header>
-    <picture>
-      <source
-        srcset="/assets/images/portada-1920w-1200h.avif 1x"
-        type="image/avif"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source
-        srcset="/assets/images/portada-1920w-1200h.jpg 1x"
-        type="image/jpeg"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
-      <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
-    </picture>
-    <hero-section slim>
-      <a slot="logo" href="/" aria-label="Trasla Eventos">
-        <svg-mask
-          style="
+      })();
+    }
+  </script>
+  <!-- END Analytics -->
+</head>
+<body>
+  <site-header></site-header>
+  <picture>
+    <source
+      srcset="/assets/images/portada-1920w-1200h.avif 1x"
+      type="image/avif"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source
+      srcset="/assets/images/portada-1920w-1200h.jpg 1x"
+      type="image/jpeg"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
+    <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
+  </picture>
+  <hero-section slim>
+    <a slot="logo" href="/" aria-label="Trasla Eventos">
+      <svg-mask
+        style="
             --src: url('/assets/icons/trasla-eventos.svg');
             --color: var(--hero-logo-color, var(--color-red));
             height: 40px;
-          "
-        >
-        </svg-mask>
-      </a>
-    </hero-section>
-    <main class="mountains-top">
-      <section>
-        <h1>Cargar evento</h1>
-        <form action="" method="post" enctype="multipart/form-data">
-          <div class="card">
-            <div id="imagesPreview">
-              <label for="files" title="Agregar fotos">
-                ➕<br />Agregar fotos
-                <input id="files" type="file" accept="image/*" multiple hidden />
-              </label>
-            </div>
-            <label for="description">Información</label>
-            <textarea
-              id="description"
-              name="description"
-              title="Descripción del evento"
-              rows="11"
-              placeholder="ej:
+          ">
+      </svg-mask>
+    </a>
+  </hero-section>
+  <main class="mountains-top">
+    <section>
+      <h1>Cargar evento</h1>
+      <form action="" method="post" enctype="multipart/form-data">
+        <div class="card">
+          <div id="imagesPreview">
+            <label for="files" title="Agregar fotos">
+              ➕<br />Agregar fotos
+              <input id="files" type="file" accept="image/*" multiple hidden />
+            </label>
+          </div>
+          <label for="description">Información</label>
+          <textarea
+            id="description"
+            name="description"
+            title="Descripción del evento"
+            rows="11"
+            placeholder="ej:
 *Título*
 
 Descripción...
@@ -100,672 +97,668 @@ Donde / Cuando.
 
 Teléfono, instagram, link a la página tickets, etc.
 
-(Formato de Whatsapp soportado)"
-            ></textarea>
-          </div>
-          <button type="submit" name="submit">
-            <svg-mask
-              style="
+(Formato de Whatsapp soportado)"></textarea>
+        </div>
+        <button type="submit" name="submit">
+          <svg-mask
+            style="
                 --src: url('/assets/icons/loica.svg');
                 --color: var(--button-icon-color);
                 height: var(--button-icon-size);
                 width: var(--button-icon-size);
-              "
-            ></svg-mask>
-            <span>Publicar</span>
-          </button>
-          <output name="output"></output>
-        </form>
-      </section>
-      <section class="other-options">
-        <h2>Otras opciones para publicar</h2>
-        <div class="upload-options">
-          <a class="button" href="/publicar-evento/instagram.html">
-            <svg-mask
-              style="
+              "></svg-mask>
+          <span>Publicar</span>
+        </button>
+        <output name="output"></output>
+      </form>
+    </section>
+    <section class="other-options">
+      <h2>Otras opciones para publicar</h2>
+      <div class="upload-options">
+        <a class="button" href="/publicar-evento/instagram.html">
+          <svg-mask
+            style="
                 --src: url('/assets/icons/instagram.svg');
                 --color: var(--button-icon-color);
                 height: var(--button-icon-size);
                 width: var(--button-icon-size);
-              "
-            ></svg-mask>
-            <span>
-              Publicar desde
-              <br />
-              Instagram
-            </span>
-          </a>
-          <a
-            class="button"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
-            rel="noopener"
-          >
-            <svg-mask
-              style="
+              "></svg-mask>
+          <span>
+            Publicar desde
+            <br />
+            Instagram
+          </span>
+        </a>
+        <a
+          class="button"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSdxTx6-LxssWkFlbPqFF6u-QZrNpgC-RJpm9eNweFHXNY8bVA/viewform?usp=sf_link"
+          rel="noopener">
+          <svg-mask
+            style="
                 --src: url('/assets/icons/form.svg');
                 --color: var(--button-icon-color);
                 height: var(--button-icon-size);
                 width: var(--button-icon-size);
-              "
-            ></svg-mask>
-            <span
-              >Publicar desde<br />
-              Google Form
-            </span>
-          </a>
-        </div>
-      </section>
-    </main>
-    <site-footer></site-footer>
-    <script type="module" src="/components/site-footer.js"></script>
-    <script type="module">
-      // START: Service Worker
-      /**
-       * @type {ServiceWorkerRegistration}
-       */
-      let swRegistration;
+              "></svg-mask>
+          <span>Publicar desde<br />
+            Google Form
+          </span>
+        </a>
+      </div>
+    </section>
+  </main>
+  <site-footer></site-footer>
+  <script type="module" src="/components/site-footer.js"></script>
+  <script type="module">
+    // START: Service Worker
+    /**
+     * @type {ServiceWorkerRegistration}
+     */
+    let swRegistration;
 
-      if ("serviceWorker" in navigator) {
-        try {
-          swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
-          console.log("Service Worker registered:", swRegistration);
-        } catch (error) {
-          console.error("Service Worker registration failed:", error);
-        }
+    if ("serviceWorker" in navigator) {
+      try {
+        swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
+        console.log("Service Worker registered:", swRegistration);
+      } catch (error) {
+        console.error("Service Worker registration failed:", error);
       }
-    </script>
-    <style>
-      form textarea {
-        padding: 1ch;
-      }
+    }
+  </script>
+  <style>
+    form textarea {
+      padding: 1ch;
+    }
 
-      #imagesPreview {
-        display: flex;
-        overflow-x: scroll;
+    #imagesPreview {
+      display: flex;
+      overflow-x: scroll;
+      width: 100%;
+      min-height: 12rem;
+      scroll-behavior: auto;
+      scroll-snap-type: x mandatory;
+
+      >* {
+        scroll-snap-align: center;
+        position: relative;
+        min-width: 100%;
         width: 100%;
-        min-height: 12rem;
-        scroll-behavior: auto;
-        scroll-snap-type: x mandatory;
 
-        > * {
-          scroll-snap-align: center;
-          position: relative;
-          min-width: 100%;
-          width: 100%;
-
-          button {
-            display: none;
-            position: absolute;
-            top: 0;
-            right: 0;
-            background-color: var(--color-red);
-            color: white;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
-            font-size: 1.5rem;
-            line-height: 1;
-          }
-          &:hover,
-          &:focus-within {
-            button {
-              display: block;
-            }
-          }
-
-          /* Show the button on touch screens */
-          @media (hover: none) {
-            button {
-              display: block;
-            }
-          }
-        }
-
-        img {
-          width: 100%;
-          object-fit: contain;
-        }
-
-        > :last-child {
-          /* Add button */
-          display: grid;
-          place-content: center;
-          background-color: var(--background-color-darker);
-        }
-      }
-
-      .other-options {
-        text-align: center;
-        text-transform: uppercase;
-        padding-top: 0;
-
-        h2 {
-          margin-bottom: 2rem;
-        }
-
-        .upload-options {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: start;
-          gap: 2rem;
-          padding: 1rem;
-
-          > * {
-            display: grid;
-            grid-template-columns: 3rem auto;
-            align-items: center;
-            justify-content: initial;
-
-            min-width: 16rem;
-            width: 100%;
-            max-width: 23rem;
-            color: var(--color-light);
-
-            span {
-              container-type: inline-size;
-            }
-
-            &[type="submit"] {
-              background-color: var(--color-green);
-            }
-
-            &:first-of-type {
-              background-color: var(--color-yellow);
-            }
-            &:last-of-type {
-              background-color: var(--color-red);
-            }
-          }
-        }
-      }
-
-      @container (min-width: 25ch) {
-        .button > span > br {
+        button {
           display: none;
+          position: absolute;
+          top: 0;
+          right: 0;
+          background-color: var(--color-red);
+          color: white;
+          border: none;
+          padding: 0.5rem;
+          cursor: pointer;
+          font-size: 1.5rem;
+          line-height: 1;
+        }
+
+        &:hover,
+        &:focus-within {
+          button {
+            display: block;
+          }
+        }
+
+        /* Show the button on touch screens */
+        @media (hover: none) {
+          button {
+            display: block;
+          }
         }
       }
-    </style>
-    <script type="module">
-      import { requestNotificationPermission, showNotification } from "/utils/notifications.js";
 
-      const form = document.querySelector("form");
-      const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
-      const query = `?endpoint=uploadEvent`;
-      let action = `${api}${query}`;
-      const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
+      img {
+        width: 100%;
+        object-fit: contain;
+      }
 
-      form.addEventListener("submit", handleFormSubmit);
+      > :last-child {
+        /* Add button */
+        display: grid;
+        place-content: center;
+        background-color: var(--background-color-darker);
+      }
+    }
 
-      const description = document.getElementById("description");
-      description.addEventListener("input", async () => {
+    .other-options {
+      text-align: center;
+      text-transform: uppercase;
+      padding-top: 0;
+
+      h2 {
+        margin-bottom: 2rem;
+      }
+
+      .upload-options {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: start;
+        gap: 2rem;
+        padding: 1rem;
+
+        >* {
+          display: grid;
+          grid-template-columns: 3rem auto;
+          align-items: center;
+          justify-content: initial;
+
+          min-width: 16rem;
+          width: 100%;
+          max-width: 23rem;
+          color: var(--color-light);
+
+          span {
+            container-type: inline-size;
+          }
+
+          &[type="submit"] {
+            background-color: var(--color-green);
+          }
+
+          &:first-of-type {
+            background-color: var(--color-yellow);
+          }
+
+          &:last-of-type {
+            background-color: var(--color-red);
+          }
+        }
+      }
+    }
+
+    @container (min-width: 25ch) {
+      .button>span>br {
+        display: none;
+      }
+    }
+  </style>
+  <script type="module">
+    import { requestNotificationPermission, showNotification } from "/utils/notifications.js";
+
+    const form = document.querySelector("form");
+    const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
+    const query = `?endpoint=uploadEvent`;
+    let action = `${api}${query}`;
+    const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
+
+    form.addEventListener("submit", handleFormSubmit);
+
+    const description = document.getElementById("description");
+    description.addEventListener("input", async () => {
+      const cache = await caches.open(SHARE_TARGET_ACTION);
+      await cache.put(`/description`, new Response(description.value, { headers: { "Content-Type": "text/plain" } }));
+
+      // Resize the textarea to fit the content
+      description.style.height = "auto"; // Reset height to auto to shrink if needed
+      description.style.height = `${description.scrollHeight}px`;
+    });
+
+    const files = document.getElementById("files");
+    files.addEventListener("change", async (event) => await proccessNewFiles(event.target.files));
+
+    async function proccessNewFiles(files) {
+      const cache = await caches.open(SHARE_TARGET_ACTION);
+      const filesList = await getCachedFilesList();
+
+      for (const file of files) {
+        const uuid = crypto.randomUUID();
+        const compressedFile = await compressImageBlob(file);
+        await cache.put(`/${uuid}`, new Response(compressedFile, { headers: { "Content-Type": "image/jpeg" } }));
+        filesList.push(uuid);
+        addPreviewImage(compressedFile, uuid);
+      }
+
+      await cache.put(
+        `/files-list`, // Store the list of file IDs in the cache so we can ensure to use the user's desired order.
+        new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
+      );
+    }
+
+    /**
+     * Retrieves cached file blobs from the SHARE_TARGET_ACTION cache.
+     * Filters out non-image files based on the content type.
+     * @returns {Promise<Blob[]>} - Promise resolving to an array of Blob objects representing image files.
+     */
+    async function getCachedFileBlobs() {
+      const cache = await caches.open(SHARE_TARGET_ACTION);
+      const fileBlobs = [];
+      // const keys = await cache.keys();
+      const filesList = await getCachedFilesList();
+
+      for (const fileId of filesList) {
+        const response = await cache.match(`/${fileId}`);
+        if (response && response.headers.get("content-type")?.startsWith("image/")) {
+          const blob = await response.blob();
+          if (blob.size > 0) {
+            console.info(`Adding cached file: ${fileId}`);
+            blob.fileId = fileId; // Store the file ID in the blob for reference
+            fileBlobs.push(blob);
+          }
+        }
+      }
+      return fileBlobs;
+    }
+
+    async function getCachedFilesList() {
+      const cache = await caches.open(SHARE_TARGET_ACTION);
+      const filesListResponse = await cache.match(`/files-list`);
+      return filesListResponse ? await filesListResponse.json() : [];
+    }
+
+    async function extractSuccessResponse(response) {
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const jsonResponse = await response.json();
+      if (!jsonResponse.success) throw new Error(jsonResponse.message);
+      return jsonResponse.data;
+    }
+
+    function showMissingFieldsError(missingFields) {
+      const output = document.querySelector("output[name=output]");
+      output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
+      for (const key of Object.keys(missingFields)) {
+        output.textContent += `❌ ${missingFields[key]}\n`;
+      }
+      output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
+    }
+
+    class MissingFieldsError extends Error {
+      constructor(missingFields) {
+        const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
+          missingFields
+        )
+          .map(([key, msg]) => `❌ ${msg}`)
+          .join("\n")}`;
+        super(message);
+        this.missingFields = missingFields;
+      }
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      const submitButton = document.querySelector("button[type=submit]");
+      const submitButtonSpan = submitButton.querySelector("span");
+      const buttonText = submitButtonSpan.textContent;
+      const output = document.querySelector("output[name=output]");
+
+      const images = await getCachedFileBlobs();
+      if (images.length === 0) {
+        alert("Al menos una imagen requerida.");
+        return;
+      }
+
+      // Request notification permission before starting the operation
+      await requestNotificationPermission();
+
+      submitButton.disabled = true; // We use submitButton.value to store the event ID if already created, as a retry mechanism.
+      submitButtonSpan.textContent = "Publicando...\n";
+
+      try {
+        let eventData;
+        let eventId;
+        if (!submitButton.value) {
+          eventData = await postEvent();
+          submitButton.value = eventData.id;
+          eventId = eventData.id;
+          output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
+        } else {
+          // Retry attempt for existing event
+          eventId = submitButton.value;
+          eventData = { id: eventId };
+          output.textContent += "\nReintentando la carga...\n";
+        }
+
+        if (!eventData.slug) {
+          output.textContent += "Procesando la información del evento...\n";
+        }
+
+        let retries = 0;
+        const maxRetries = submitButton.value ? 5 : 7; // Less retries if re-trying an existing event
+        const missingFields = {};
+        while (!eventData?.slug) {
+          const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventId}`;
+          try {
+            eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
+          } catch (error) {
+            console.error("Error fetching event", eventData, error);
+          }
+          if (eventData?.slug) break;
+
+          if (eventData.title) {
+            // That means it has been processed, but required fields are missing
+            for (const [key, msg] of [
+              ["startsAt", "Fecha y hora de inicio"],
+              ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
+            ]) {
+              if (!eventData[key]) {
+                missingFields[key] = msg;
+              }
+            }
+            throw new MissingFieldsError(missingFields);
+          }
+
+          retries++;
+          if (retries >= maxRetries) {
+            throw new Error(
+              `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
+            );
+          }
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          output.textContent += "Esperando que se procese el evento...\n";
+        }
+
+        if (document.visibilityState !== "visible") {
+          const notification = await showNotification("Evento cargado!", {
+            body: "Tu evento ya está listo para ver.",
+            requireInteraction: true,
+            data: { type: "event-posted", url: `${window.location.origin}/${eventData.slug}` },
+          });
+        }
+
+        submitButtonSpan.textContent = "Evento cargado! 👌";
+        const isTestEnvironment = location.hostname === "localhost" && form.description.value?.includes("test");
+        if (isTestEnvironment) {
+          if (form.description.value?.includes("fail")) {
+            throw new Error("Failing as requested in test mode.");
+          }
+          return; // Force the SW do the redirection / open new page on notification click.
+        }
+
+        output.textContent += "\nRedirigiendo a la página del evento...\n";
+        console.log("response:", eventData);
+        console.log(`redirect to event page at ${window.location.origin}/${eventData.slug}`);
+
+        // Event uploaded or found succesfully
         const cache = await caches.open(SHARE_TARGET_ACTION);
-        await cache.put(`/description`, new Response(description.value, { headers: { "Content-Type": "text/plain" } }));
+        for (const key of await cache.keys()) {
+          console.info(`Deleting cache entry: ${key.url}`);
+          await cache.delete(key);
+        }
+        for (const preview of document.querySelectorAll("image-preview")) {
+          preview.remove();
+        }
+        // Clear the form (but not the description field)
+        form.reset();
+        // Redirect to the event page
+        window.location.href = `${window.location.origin}/${eventData.slug}`;
+      } catch (error) {
+        if (error instanceof MissingFieldsError) {
+          showMissingFieldsError(error.missingFields);
+        } else {
+          output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
+        }
+        alert(
+          `Hubo un error al intentar cargar el evento.\n${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
+        );
+        submitButton.disabled = false;
+        submitButtonSpan.textContent = buttonText + " (Reintentar)";
+      }
+    }
 
+    async function postEvent() {
+      // Convert images to base64 format
+      const requestFiles = await convertBlobsToBase64(await getCachedFileBlobs());
+
+      // Check if service worker is available and ready
+      if (!navigator.serviceWorker) {
+        throw new Error("Service worker no disponible. Intenta recargar la página.");
+      }
+
+      // Get service worker for message passing
+      let serviceWorker;
+      if (navigator.serviceWorker.controller) {
+        // Use the controller if available
+        serviceWorker = navigator.serviceWorker.controller;
+      } else {
+        // Fall back to using the registration's active service worker
+        console.log("Waiting for service worker to be ready...");
+        try {
+          // Add timeout to prevent hanging in test environments
+          const registrationPromise = navigator.serviceWorker.ready;
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Service worker ready timeout")), 3000)
+          );
+
+          const registration = await Promise.race([registrationPromise, timeoutPromise]);
+          serviceWorker = registration.active;
+
+          if (!serviceWorker) {
+            return alert("Service worker no disponible. Intenta recargar la página.");
+          }
+        } catch (error) {
+          return alert("Service worker no disponible. Intenta recargar la página. Error " + error.message);
+        }
+      }
+
+      // Create a MessageChannel for two-way communication
+      const messageChannel = new MessageChannel();
+
+      return new Promise((resolve, reject) => {
+        // Set up response handler
+        messageChannel.port1.onmessage = (event) => {
+          console.log("Received response from service worker:", event.data);
+          if (event.data.success) {
+            resolve(event.data.data);
+          } else {
+            reject(new Error(event.data.error));
+          }
+        };
+
+        console.log("Sending message to service worker:", serviceWorker);
+        // Send message to service worker with the second port for response
+        serviceWorker.postMessage(
+          {
+            type: "POST_EVENT",
+            payload: {
+              api,
+              query,
+              description: form.description.value,
+              files: requestFiles,
+            },
+          },
+          [messageChannel.port2]
+        );
+        console.log("Message sent to service worker");
+      });
+    }
+
+    /**
+     * Converts an array of Blob objects to an array of base64 encoded objects.
+     * Each object contains the file name, mime type, and base64 encoded content.
+     * @param {Blob[]} blobs - Array of Blob objects to convert.
+     * @returns {Promise<Object[]>} - Promise resolving to an array of objects with base64 encoded content.
+     */
+    async function convertBlobsToBase64(blobs) {
+      const promises = [];
+      for (const blob of blobs) {
+        if (!blob || !(blob instanceof Blob)) {
+          console.warn("Skipping non-blob input:", blob);
+          continue;
+        }
+        // No compression needed, use the original blob
+        const promise = new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const base64 = event.target.result.split(",")[1];
+            resolve({
+              name: new Date().toISOString(),
+              mimeType: blob.type,
+              base64,
+            });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+        promises.push(promise);
+      }
+      return await Promise.all(promises);
+    }
+
+    /**
+     * Compresses an image file to a specified maximum width and quality.
+     * @param {File} file - The image file to compress.
+     * @param {number} maxWidth - The maximum width of the compressed image.
+     * @param {number} quality - The quality of the compressed image (0 to 1).
+     * @returns {Promise<File>} - A promise that resolves to the compressed image file.
+     */
+    function compressFileImage(file, maxWidth = 1000, quality = 0.7) {
+      // reuse compressImageBlob to handle File objects
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = async () => {
+          // Revoke the object URL to free memory
+          URL.revokeObjectURL(img.src);
+          try {
+            const compressedBlob = await compressImageBlob(file, maxWidth, quality);
+            const compressedFile = new File([compressedBlob], file.name, { type: "" });
+            resolve(compressedFile);
+          } catch (error) {
+            reject(error);
+          }
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    function compressImageBlob(blob, maxWidth = 1000, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          // Revoke the object URL to free memory
+          URL.revokeObjectURL(img.src);
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          // Calculate the new dimensions
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          // Draw the image on the canvas
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert the canvas to a Blob
+          canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
+        };
+        img.onerror = reject;
+        img.src = URL.createObjectURL(blob);
+      });
+    }
+
+    // Cache hydration handling
+    async function hydrateWithCachedData() {
+      const cache = await caches.open(SHARE_TARGET_ACTION);
+      console.info("Hydrating form with cached data...");
+
+      // Hydrate description
+      const description = document.getElementById("description");
+      const descriptionResponse = await cache.match(`/description`);
+      if (descriptionResponse && descriptionResponse.ok) {
+        const descriptionText = await descriptionResponse.text();
+        console.info("Hydrating description from cache.");
+        description.value = descriptionText;
         // Resize the textarea to fit the content
         description.style.height = "auto"; // Reset height to auto to shrink if needed
         description.style.height = `${description.scrollHeight}px`;
+      } else {
+        console.info("No cached description found.");
+      }
+
+      // Hydrate files
+      const blobs = await getCachedFileBlobs();
+      if (!blobs.length) {
+        console.info("No cached files found.");
+        return;
+      }
+      for (const blob of blobs) {
+        console.info(`Hydrating file from cache.`);
+        addPreviewImage(blob, blob.fileId);
+      }
+    }
+
+    async function fileToDataURI(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataURI = reader.result;
+          resolve(dataURI);
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
       });
+    }
 
-      const files = document.getElementById("files");
-      files.addEventListener("change", async (event) => await proccessNewFiles(event.target.files));
-
-      async function proccessNewFiles(files) {
+    /**
+     * Adds a preview image to the imagesPreview container.
+     * @param {File} file - The file to preview.
+     */
+    function addPreviewImage(file, fileId) {
+      const imagesPreview = document.getElementById("imagesPreview");
+      const imagePreviewElement = document.createElement("image-preview");
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+      imagePreviewElement.appendChild(img);
+      const button = document.createElement("button");
+      button.textContent = "❌";
+      button.type = "button"; // Prevent form submission
+      button.title = "Eliminar imagen";
+      button.addEventListener("click", async () => {
         const cache = await caches.open(SHARE_TARGET_ACTION);
         const filesList = await getCachedFilesList();
-
-        for (const file of files) {
-          const uuid = crypto.randomUUID();
-          const compressedFile = await compressImageBlob(file);
-          await cache.put(`/${uuid}`, new Response(compressedFile, { headers: { "Content-Type": "image/jpeg" } }));
-          filesList.push(uuid);
-          addPreviewImage(compressedFile, uuid);
-        }
-
-        await cache.put(
-          `/files-list`, // Store the list of file IDs in the cache so we can ensure to use the user's desired order.
-          new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
-        );
-      }
-
-      /**
-       * Retrieves cached file blobs from the SHARE_TARGET_ACTION cache.
-       * Filters out non-image files based on the content type.
-       * @returns {Promise<Blob[]>} - Promise resolving to an array of Blob objects representing image files.
-       */
-      async function getCachedFileBlobs() {
-        const cache = await caches.open(SHARE_TARGET_ACTION);
-        const fileBlobs = [];
-        // const keys = await cache.keys();
-        const filesList = await getCachedFilesList();
-
-        for (const fileId of filesList) {
-          const response = await cache.match(`/${fileId}`);
-          if (response && response.headers.get("content-type")?.startsWith("image/")) {
-            const blob = await response.blob();
-            if (blob.size > 0) {
-              console.info(`Adding cached file: ${fileId}`);
-              blob.fileId = fileId; // Store the file ID in the blob for reference
-              fileBlobs.push(blob);
-            }
-          }
-        }
-        return fileBlobs;
-      }
-
-      async function getCachedFilesList() {
-        const cache = await caches.open(SHARE_TARGET_ACTION);
-        const filesListResponse = await cache.match(`/files-list`);
-        return filesListResponse ? await filesListResponse.json() : [];
-      }
-
-      async function extractSuccessResponse(response) {
-        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-        const jsonResponse = await response.json();
-        if (!jsonResponse.success) throw new Error(jsonResponse.message);
-        return jsonResponse.data;
-      }
-
-      function showMissingFieldsError(missingFields) {
-        const output = document.querySelector("output[name=output]");
-        output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
-        for (const key of Object.keys(missingFields)) {
-          output.textContent += `❌ ${missingFields[key]}\n`;
-        }
-        output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
-      }
-
-      class MissingFieldsError extends Error {
-        constructor(missingFields) {
-          const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
-            missingFields
-          )
-            .map(([key, msg]) => `❌ ${msg}`)
-            .join("\n")}`;
-          super(message);
-          this.missingFields = missingFields;
-        }
-      }
-
-      async function handleFormSubmit(event) {
-        event.preventDefault();
-        const submitButton = document.querySelector("button[type=submit]");
-        const submitButtonSpan = submitButton.querySelector("span");
-        const buttonText = submitButtonSpan.textContent;
-        const output = document.querySelector("output[name=output]");
-
-        const images = await getCachedFileBlobs();
-        if (images.length === 0) {
-          alert("Al menos una imagen requerida.");
-          return;
-        }
-
-        // Request notification permission before starting the operation
-        await requestNotificationPermission();
-
-        submitButton.disabled = true; // We use submitButton.value to store the event ID if already created, as a retry mechanism.
-        submitButtonSpan.textContent = "Publicando...\n";
-
-        try {
-          let eventData;
-          let eventId;
-          if (!submitButton.value) {
-            eventData = await postEvent();
-            submitButton.value = eventData.id;
-            eventId = eventData.id;
-            output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
-          } else {
-            // Retry attempt for existing event
-            eventId = submitButton.value;
-            eventData = { id: eventId };
-            output.textContent += "\nReintentando la carga...\n";
-          }
-
-          if (!eventData.slug) {
-            output.textContent += "Procesando la información del evento...\n";
-          }
-
-          let retries = 0;
-          const maxRetries = submitButton.value ? 5 : 7; // Less retries if re-trying an existing event
-          const missingFields = {};
-          while (!eventData?.slug) {
-            const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventId}`;
-            try {
-              eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
-            } catch (error) {
-              console.error("Error fetching event", eventData, error);
-            }
-            if (eventData?.slug) break;
-
-            if (eventData.title) {
-              // That means it has been processed, but required fields are missing
-              for (const [key, msg] of [
-                ["startsAt", "Fecha y hora de inicio"],
-                ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
-              ]) {
-                if (!eventData[key]) {
-                  missingFields[key] = msg;
-                }
-              }
-              throw new MissingFieldsError(missingFields);
-            }
-
-            retries++;
-            if (retries >= maxRetries) {
-              throw new Error(
-                `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
-              );
-            }
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            output.textContent += "Esperando que se procese el evento...\n";
-          }
-
-          if (document.visibilityState !== "visible") {
-            const notification = await showNotification("Evento cargado!", {
-              body: "Tu evento ya está listo para ver.",
-              requireInteraction: true,
-              data: { type: "event-posted", url: `${window.location.origin}/${eventData.slug}` },
-            });
-          }
-
-          submitButtonSpan.textContent = "Evento cargado! 👌";
-          const isTestEnvironment = location.hostname === "localhost" && form.description.value?.includes("test");
-          if (isTestEnvironment) {
-            if (form.description.value?.includes("fail")) {
-              throw new Error("Failing as requested in test mode.");
-            }
-            return; // Force the SW do the redirection / open new page on notification click.
-          }
-
-          output.textContent += "\nRedirigiendo a la página del evento...\n";
-          console.log("response:", eventData);
-          console.log(`redirect to event page at ${window.location.origin}/${eventData.slug}`);
-
-          // Event uploaded or found succesfully
-          const cache = await caches.open(SHARE_TARGET_ACTION);
-          for (const key of await cache.keys()) {
-            console.info(`Deleting cache entry: ${key.url}`);
-            await cache.delete(key);
-          }
-          for (const preview of document.querySelectorAll("image-preview")) {
-            preview.remove();
-          }
-          // Clear the form (but not the description field)
-          form.reset();
-          // Redirect to the event page
-          window.location.href = `${window.location.origin}/${eventData.slug}`;
-        } catch (error) {
-          if (error instanceof MissingFieldsError) {
-            showMissingFieldsError(error.missingFields);
-          } else {
-            output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
-          }
-          alert(
-            `Hubo un error al intentar cargar el evento.\n${error.name}: ${error.message}\n\nContáctenos si el problema persiste.`
+        const index = filesList.indexOf(fileId);
+        if (index !== -1) {
+          filesList.splice(index, 1); // Remove the file ID from the list
+          await cache.put(
+            `/files-list`,
+            new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
           );
-          submitButton.disabled = false;
-          submitButtonSpan.textContent = buttonText + " (Reintentar)";
+          await cache.delete(`/${fileId}`); // Delete the cached file
+          console.info(`Deleted cached file: ${fileId}`);
         }
+        imagePreviewElement.remove();
+      });
+      imagePreviewElement.appendChild(button);
+      imagesPreview.insertBefore(imagePreviewElement, imagesPreview.lastElementChild);
+
+      // Reverse debounce: scrollIntoView on the first image added within 250ms
+      if (!addPreviewImage.scrollTimeout) {
+        addPreviewImage.scrollTimeout = setTimeout(() => {
+          img.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          addPreviewImage.scrollTimeout = null;
+        }, 250);
       }
+    }
 
-      async function postEvent() {
-        // Convert images to base64 format
-        const requestFiles = await convertBlobsToBase64(await getCachedFileBlobs());
+    hydrateWithCachedData();
+  </script>
 
-        // Check if service worker is available and ready
-        if (!navigator.serviceWorker) {
-          throw new Error("Service worker no disponible. Intenta recargar la página.");
-        }
-
-        // Get service worker for message passing
-        let serviceWorker;
-        if (navigator.serviceWorker.controller) {
-          // Use the controller if available
-          serviceWorker = navigator.serviceWorker.controller;
-        } else {
-          // Fall back to using the registration's active service worker
-          console.log("Waiting for service worker to be ready...");
-          try {
-            // Add timeout to prevent hanging in test environments
-            const registrationPromise = navigator.serviceWorker.ready;
-            const timeoutPromise = new Promise((_, reject) =>
-              setTimeout(() => reject(new Error("Service worker ready timeout")), 3000)
-            );
-
-            const registration = await Promise.race([registrationPromise, timeoutPromise]);
-            serviceWorker = registration.active;
-
-            if (!serviceWorker) {
-              return alert("Service worker no disponible. Intenta recargar la página.");
-            }
-          } catch (error) {
-            return alert("Service worker no disponible. Intenta recargar la página. Error " + error.message);
-          }
-        }
-
-        // Create a MessageChannel for two-way communication
-        const messageChannel = new MessageChannel();
-
-        return new Promise((resolve, reject) => {
-          // Set up response handler
-          messageChannel.port1.onmessage = (event) => {
-            console.log("Received response from service worker:", event.data);
-            if (event.data.success) {
-              resolve(event.data.data);
-            } else {
-              reject(new Error(event.data.error));
-            }
-          };
-
-          console.log("Sending message to service worker:", serviceWorker);
-          // Send message to service worker with the second port for response
-          serviceWorker.postMessage(
-            {
-              type: "POST_EVENT",
-              payload: {
-                api,
-                query,
-                description: form.description.value,
-                files: requestFiles,
-              },
-            },
-            [messageChannel.port2]
-          );
-          console.log("Message sent to service worker");
-        });
-      }
-
-      /**
-       * Converts an array of Blob objects to an array of base64 encoded objects.
-       * Each object contains the file name, mime type, and base64 encoded content.
-       * @param {Blob[]} blobs - Array of Blob objects to convert.
-       * @returns {Promise<Object[]>} - Promise resolving to an array of objects with base64 encoded content.
-       */
-      async function convertBlobsToBase64(blobs) {
-        const promises = [];
-        for (const blob of blobs) {
-          if (!blob || !(blob instanceof Blob)) {
-            console.warn("Skipping non-blob input:", blob);
-            continue;
-          }
-          // No compression needed, use the original blob
-          const promise = new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-              const base64 = event.target.result.split(",")[1];
-              resolve({
-                name: new Date().toISOString(),
-                mimeType: blob.type,
-                base64,
-              });
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-          });
-          promises.push(promise);
-        }
-        return await Promise.all(promises);
-      }
-
-      /**
-       * Compresses an image file to a specified maximum width and quality.
-       * @param {File} file - The image file to compress.
-       * @param {number} maxWidth - The maximum width of the compressed image.
-       * @param {number} quality - The quality of the compressed image (0 to 1).
-       * @returns {Promise<File>} - A promise that resolves to the compressed image file.
-       */
-      function compressFileImage(file, maxWidth = 1000, quality = 0.7) {
-        // reuse compressImageBlob to handle File objects
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = async () => {
-            // Revoke the object URL to free memory
-            URL.revokeObjectURL(img.src);
-            try {
-              const compressedBlob = await compressImageBlob(file, maxWidth, quality);
-              const compressedFile = new File([compressedBlob], file.name, { type: "" });
-              resolve(compressedFile);
-            } catch (error) {
-              reject(error);
-            }
-          };
-          img.onerror = reject;
-          img.src = URL.createObjectURL(file);
-        });
-      }
-
-      function compressImageBlob(blob, maxWidth = 1000, quality = 0.7) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => {
-            // Revoke the object URL to free memory
-            URL.revokeObjectURL(img.src);
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-
-            // Calculate the new dimensions
-            let width = img.width;
-            let height = img.height;
-            if (width > maxWidth) {
-              height *= maxWidth / width;
-              width = maxWidth;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-
-            // Draw the image on the canvas
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Convert the canvas to a Blob
-            canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
-          };
-          img.onerror = reject;
-          img.src = URL.createObjectURL(blob);
-        });
-      }
-
-      // Cache hydration handling
-      async function hydrateWithCachedData() {
-        const cache = await caches.open(SHARE_TARGET_ACTION);
-        console.info("Hydrating form with cached data...");
-
-        // Hydrate description
-        const description = document.getElementById("description");
-        const descriptionResponse = await cache.match(`/description`);
-        if (descriptionResponse && descriptionResponse.ok) {
-          const descriptionText = await descriptionResponse.text();
-          console.info("Hydrating description from cache.");
-          description.value = descriptionText;
-          // Resize the textarea to fit the content
-          description.style.height = "auto"; // Reset height to auto to shrink if needed
-          description.style.height = `${description.scrollHeight}px`;
-        } else {
-          console.info("No cached description found.");
-        }
-
-        // Hydrate files
-        const blobs = await getCachedFileBlobs();
-        if (!blobs.length) {
-          console.info("No cached files found.");
-          return;
-        }
-        for (const blob of blobs) {
-          console.info(`Hydrating file from cache.`);
-          addPreviewImage(blob, blob.fileId);
-        }
-      }
-
-      async function fileToDataURI(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const dataURI = reader.result;
-            resolve(dataURI);
-          };
-          reader.onerror = (error) => reject(error);
-          reader.readAsDataURL(file);
-        });
-      }
-
-      /**
-       * Adds a preview image to the imagesPreview container.
-       * @param {File} file - The file to preview.
-       */
-      function addPreviewImage(file, fileId) {
-        const imagesPreview = document.getElementById("imagesPreview");
-        const imagePreviewElement = document.createElement("image-preview");
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        imagePreviewElement.appendChild(img);
-        const button = document.createElement("button");
-        button.textContent = "❌";
-        button.type = "button"; // Prevent form submission
-        button.title = "Eliminar imagen";
-        button.addEventListener("click", async () => {
-          const cache = await caches.open(SHARE_TARGET_ACTION);
-          const filesList = await getCachedFilesList();
-          const index = filesList.indexOf(fileId);
-          if (index !== -1) {
-            filesList.splice(index, 1); // Remove the file ID from the list
-            await cache.put(
-              `/files-list`,
-              new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
-            );
-            await cache.delete(`/${fileId}`); // Delete the cached file
-            console.info(`Deleted cached file: ${fileId}`);
-          }
-          imagePreviewElement.remove();
-        });
-        imagePreviewElement.appendChild(button);
-        imagesPreview.insertBefore(imagePreviewElement, imagesPreview.lastElementChild);
-
-        // Reverse debounce: scrollIntoView on the first image added within 250ms
-        if (!addPreviewImage.scrollTimeout) {
-          addPreviewImage.scrollTimeout = setTimeout(() => {
-            img.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            addPreviewImage.scrollTimeout = null;
-          }, 250);
-        }
-      }
-
-      hydrateWithCachedData();
-    </script>
-
-    <!-- START LEGACY BROWSERS CSS SUPPORT -->
-    <noscript>
-      <link rel="stylesheet" href="./legacy.css" />
-    </noscript>
-    <script>
-      // Legacy browsers css support
-      // Generated by scripts/build-legacy-css.js on `make legacy-css` or 'npm run build:legacy-css'
-      if (!CSS.supports("selector(&)") || !CSS.supports("selector(has)")) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "./legacy.css";
-        document.body.appendChild(link);
-      }
-    </script>
-    <!-- END LEGACY BROWSERS CSS SUPPORT -->
-  </body>
+  <!-- START LEGACY BROWSERS CSS SUPPORT -->
+  <noscript>
+    <link rel="stylesheet" href="./legacy.css" />
+  </noscript>
+  <script>
+    // Legacy browsers css support
+    // Generated by scripts/build-legacy-css.js on `make legacy-css` or 'npm run build:legacy-css'
+    if (!CSS.supports("selector(&)") || !CSS.supports("selector(has)")) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "./legacy.css";
+      document.body.appendChild(link);
+    }
+  </script>
+  <!-- END LEGACY BROWSERS CSS SUPPORT -->
+</body>
 </html>

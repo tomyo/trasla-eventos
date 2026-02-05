@@ -1,48 +1,46 @@
 <!DOCTYPE html>
 <html lang="es-AR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#e6deca" />
-    <meta name="color-scheme" content="light only" />
-    <base href="/" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#e6deca" />
+  <meta name="color-scheme" content="light only" />
+  <base href="/" />
 
-    <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512x512.png" />
-    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
-    <link rel="preload" href="/base.css" as="style" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512x512.png" />
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+  <link rel="preload" href="/base.css" as="style" />
 
-    <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="TRASLA EVENTOS" />
+  <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="TRASLA EVENTOS" />
 
-    <!-- START CONTENT_METADATA_BLOCK -->
-    <title>¿Qué es Trasla Eventos?</title>
-    <link rel="canonical" href="https://eventos.trasla.com.ar/" />
-    <meta
-      name="description"
-      content="¿Qué es Trasla Eventos? Descubre la agenda abierta de eventos sociales, culturales y comunitarios en la región de Traslasierra y zonas cercanas."
-    />
-    <meta property="og:title" content="¿Qué es Trasla Eventos?" />
-    <meta
-      property="og:description"
-      content="¿Qué es Trasla Eventos? Descubre la agenda abierta de eventos sociales, culturales y comunitarios en la región de Traslasierra y zonas cercanas."
-    />
-    <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.avif" />
-    <meta property="og:image:type" content="image/avif" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="900" />
-    <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.jpg" />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="900" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://eventos.trasla.com.ar/" />
+  <!-- START CONTENT_METADATA_BLOCK -->
+  <title>¿Qué es Trasla Eventos?</title>
+  <link rel="canonical" href="https://eventos.trasla.com.ar/" />
+  <meta
+    name="description"
+    content="¿Qué es Trasla Eventos? Descubre la agenda abierta de eventos sociales, culturales y comunitarios en la región de Traslasierra y zonas cercanas." />
+  <meta property="og:title" content="¿Qué es Trasla Eventos?" />
+  <meta
+    property="og:description"
+    content="¿Qué es Trasla Eventos? Descubre la agenda abierta de eventos sociales, culturales y comunitarios en la región de Traslasierra y zonas cercanas." />
+  <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.avif" />
+  <meta property="og:image:type" content="image/avif" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="900" />
+  <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="900" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://eventos.trasla.com.ar/" />
 
-    <meta property="og:site_name" content="TRASLA EVENTOS" />
-    <meta property="og:locale" content="es-AR" />
+  <meta property="og:site_name" content="TRASLA EVENTOS" />
+  <meta property="og:locale" content="es-AR" />
 
-    <script type="application/ld+json">
+  <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "AboutPage",
@@ -61,168 +59,166 @@
       }
     </script>
 
-    <!-- END CONTENT_METADATA_BLOCK -->
-    <link rel="modulepreload" href="/lib/utils.js" />
-    <link rel="modulepreload" href="/lib/get-events.js" />
-    <link rel="modulepreload" href="/components/share-url/share-url.js" />
-    <link rel="modulepreload" href="/components/install-button/install-button.js" />
-    <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
-    <link rel="preload" href="/components/horizontal-carousel/horizontal-carousel.css" as="style" />
-    <link rel="preload" href="/components/event-entry.css" as="style" />
-    <link rel="preload" href="/assets/icons/trasla-eventos.svg" as="image" />
+  <!-- END CONTENT_METADATA_BLOCK -->
+  <link rel="modulepreload" href="/lib/utils.js" />
+  <link rel="modulepreload" href="/lib/get-events.js" />
+  <link rel="modulepreload" href="/components/share-url/share-url.js" />
+  <link rel="modulepreload" href="/components/install-button/install-button.js" />
+  <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
+  <link rel="preload" href="/components/horizontal-carousel/horizontal-carousel.css" as="style" />
+  <link rel="preload" href="/components/event-entry.css" as="style" />
+  <link rel="preload" href="/assets/icons/trasla-eventos.svg" as="image" />
 
-    <!-- Preconnect to Google Sheets for faster event data fetching -->
-    <link rel="preconnect" href="https://docs.google.com" />
+  <!-- Preconnect to Google Sheets for faster event data fetching -->
+  <link rel="preconnect" href="https://docs.google.com" />
 
-    <script type="module" src="/components/event-entry.js"></script>
-    <script type="module" src="/components/event-entries.js"></script>
-    <script type="module" src="/components/events-filter.js"></script>
-    <script type="module" src="/components/site-header.js"></script>
-    <script type="module" src="/components/install-button/install-button.js"></script>
-    <script src="/components/today-date-picker.js" type="module" defer></script>
+  <script type="module" src="/components/event-entry.js"></script>
+  <script type="module" src="/components/event-entries.js"></script>
+  <script type="module" src="/components/events-filter.js"></script>
+  <script type="module" src="/components/site-header.js"></script>
+  <script type="module" src="/components/install-button/install-button.js"></script>
+  <script src="/components/today-date-picker.js" type="module" defer></script>
 
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="/base.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="/base.css" />
 
-    <!-- START Analytics -->
-    <script>
-      function loadScript(src, attributes = {}) {
-        const s = document.createElement("script");
-        Object.entries(attributes).forEach(([k, v]) => {
-          if (v === true) s.toggleAttribute(k, true);
-          else s.setAttribute(k, v);
+  <!-- START Analytics -->
+  <script>
+    function loadScript(src, attributes = {}) {
+      const s = document.createElement("script");
+      Object.entries(attributes).forEach(([k, v]) => {
+        if (v === true) s.toggleAttribute(k, true);
+        else s.setAttribute(k, v);
+      });
+      s.src = src;
+      document.head.appendChild(s);
+    }
+    if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
+      // Umami
+      loadScript("https://cloud.umami.is/script.js", {
+        "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
+        defer: true,
+      });
+
+      // Clarity
+      (function () {
+        window.clarity =
+          window.clarity ||
+          function () {
+            (window.clarity.q = window.clarity.q || []).push(arguments);
+          };
+
+        loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
+          async: true,
         });
-        s.src = src;
-        document.head.appendChild(s);
-      }
-      if (!["localhost", "127.0.0.1"].includes(location.hostname)) {
-        // Umami
-        loadScript("https://cloud.umami.is/script.js", {
-          "data-website-id": "5a2799cb-864b-424d-b131-2a081863e932",
-          defer: true,
-        });
+      })();
+    }
+  </script>
+  <!-- END Analytics -->
+  <style>
+    #que-es-trasla-eventos {
+      max-width: 60ch;
+      margin-inline: auto;
+    }
 
-        // Clarity
-        (function () {
-          window.clarity =
-            window.clarity ||
-            function () {
-              (window.clarity.q = window.clarity.q || []).push(arguments);
-            };
-
-          loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
-            async: true,
-          });
-        })();
-      }
-    </script>
-    <!-- END Analytics -->
-    <style>
-      #que-es-trasla-eventos {
-        max-width: 60ch;
-        margin-inline: auto;
-      }
-      a {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <picture>
-      <source
-        srcset="/assets/images/portada-1920w-1200h.avif 1x"
-        type="image/avif"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source
-        srcset="/assets/images/portada-1920w-1200h.jpg 1x"
-        type="image/jpeg"
-        media="(orientation: landscape)"
-        width="1920"
-        height="1200"
-      />
-      <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
-      <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
-    </picture>
-    <site-header></site-header>
-    <hero-section slim>
-      <a slot="logo" href="/" aria-label="Trasla Eventos">
-        <svg-mask
-          style="
+    a {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <picture>
+    <source
+      srcset="/assets/images/portada-1920w-1200h.avif 1x"
+      type="image/avif"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source
+      srcset="/assets/images/portada-1920w-1200h.jpg 1x"
+      type="image/jpeg"
+      media="(orientation: landscape)"
+      width="1920"
+      height="1200" />
+    <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
+    <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
+  </picture>
+  <site-header></site-header>
+  <hero-section slim>
+    <a slot="logo" href="/" aria-label="Trasla Eventos">
+      <svg-mask
+        style="
             --src: url('/assets/icons/trasla-eventos.svg');
             --color: var(--hero-logo-color, var(--color-red));
             height: 40px;
-          "
-        >
-        </svg-mask>
-      </a>
-      <div slot="actions"></div>
-    </hero-section>
+          ">
+      </svg-mask>
+    </a>
+    <div slot="actions"></div>
+  </hero-section>
 
-    <main class="mountains-top">
-      <section id="que-es-trasla-eventos">
-        <h2>¿Qué es TRASLA EVENTOS?</h2>
+  <main class="mountains-top">
+    <section id="que-es-trasla-eventos">
+      <h2>¿Qué es TRASLA EVENTOS?</h2>
 
-        <p>
-          TRASLA EVENTOS es una <strong>agenda abierta de eventos</strong> que funciona como
-          <strong>infraestructura digital pública</strong> para organizar y visibilizar la actividad social, cultural,
-          educativa y comunitaria de Traslasierra y zonas cercanas.
-        </p>
+      <p>
+        TRASLA EVENTOS es una <strong>agenda abierta de eventos</strong> que funciona como
+        <strong>infraestructura digital pública</strong> para organizar y visibilizar la actividad social, cultural,
+        educativa y comunitaria de Traslasierra y zonas cercanas.
+      </p>
 
-        <p>
-          No es un medio, ni una productora, ni una agenda editorial. Es un
-          <strong>sistema técnico de información</strong>, donde
-          <a href="/publicar-evento/">cualquier persona puede cargar un evento</a>
-          y la información se organiza con reglas claras, públicas y previsibles.
-        </p>
+      <p>
+        No es un medio, ni una productora, ni una agenda editorial. Es un
+        <strong>sistema técnico de información</strong>, donde
+        <a href="/publicar-evento/">cualquier persona puede cargar un evento</a>
+        y la información se organiza con reglas claras, públicas y previsibles.
+      </p>
 
-        <h3>¿Cómo funciona?</h3>
+      <h3>¿Cómo funciona?</h3>
 
-        <ul>
-          <li>
-            <strong>
-              <a href="https://docs.google.com/spreadsheets/d/18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog/">
-                Información abierta y reutilizable
-              </a>
-            </strong>
-          </li>
-          <li><strong>Sin curaduría editorial ni priorización ideológica</strong></li>
-          <li><strong>Organización por localidad, fecha y tipo de actividad</strong></li>
-          <li><strong>Carga distribuida, sin intermediarios centrales</strong></li>
-        </ul>
+      <ul>
+        <li>
+          <strong>
+            <a href="https://docs.google.com/spreadsheets/d/18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog/">
+              Información abierta y reutilizable
+            </a>
+          </strong>
+        </li>
+        <li><strong>Sin curaduría editorial ni priorización ideológica</strong></li>
+        <li><strong>Organización por localidad, fecha y tipo de actividad</strong></li>
+        <li><strong>Carga distribuida, sin intermediarios centrales</strong></li>
+      </ul>
 
-        <h3>¿Qué problema resuelve?</h3>
+      <h3>¿Qué problema resuelve?</h3>
 
-        <p>
-          La información sobre eventos suele estar fragmentada entre áreas, redes sociales y plataformas privadas, lo
-          que dificulta la planificación, la difusión y el acceso.
-        </p>
+      <p>
+        La información sobre eventos suele estar fragmentada entre áreas, redes sociales y plataformas privadas, lo
+        que dificulta la planificación, la difusión y el acceso.
+      </p>
 
-        <p>
-          TRASLA EVENTOS ofrece una <strong>agenda común y confiable</strong> que mejora la circulación de público y
-          facilita el trabajo de espacios culturales, organizaciones y áreas públicas.
-        </p>
+      <p>
+        TRASLA EVENTOS ofrece una <strong>agenda común y confiable</strong> que mejora la circulación de público y
+        facilita el trabajo de espacios culturales, organizaciones y áreas públicas.
+      </p>
 
-        <h3>Neutralidad y sostenibilidad</h3>
+      <h3>Neutralidad y sostenibilidad</h3>
 
-        <p>
-          La visualización de los eventos se define únicamente por criterios objetivos como fecha, localidad y tipo de
-          actividad. El financiamiento <strong>no influye en la visibilidad ni en el orden de la información</strong>.
-        </p>
+      <p>
+        La visualización de los eventos se define únicamente por criterios objetivos como fecha, localidad y tipo de
+        actividad. El financiamiento <strong>no influye en la visibilidad ni en el orden de la información</strong>.
+      </p>
 
-        <p>Los recursos se destinan al mantenimiento y mejora de la infraestructura.</p>
+      <p>Los recursos se destinan al mantenimiento y mejora de la infraestructura.</p>
 
-        <h3>Infraestructura</h3>
+      <h3>Infraestructura</h3>
 
-        <p>
-          La plataforma es desarrollada y mantenida por <strong>TRASLA</strong>, un proyecto tecnológico dedicado al
-          desarrollo de infraestructura digital reutilizable.
-        </p>
-      </section>
-    </main>
-    <script type="module" src="/components/site-footer.js"></script>
-    <site-footer> </site-footer>
-  </body>
+      <p>
+        La plataforma es desarrollada y mantenida por <strong>TRASLA</strong>, un proyecto tecnológico dedicado al
+        desarrollo de infraestructura digital reutilizable.
+      </p>
+    </section>
+  </main>
+  <script type="module" src="/components/site-footer.js"></script>
+  <site-footer> </site-footer>
+</body>
 </html>
