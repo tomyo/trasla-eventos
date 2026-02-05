@@ -72,12 +72,12 @@ export default async function handler(req) {
     html = html.replace(
       /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
       // "$<openTag>" + eventEntry + "$<closeTag>"
-      () => `<event-entries>${eventEntry}</event-entries>`
+      () => `<event-entries>${eventEntry}</event-entries>`,
     );
     html = html.replace(
       /(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is,
       // "$<openTag>" + eventEntry + "$<closeTag>"
-      () => ``
+      () => ``,
     );
     html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
   }
@@ -88,13 +88,13 @@ export default async function handler(req) {
   // stale-while-revalidate: time in seconds the CDN can serve a stale response while it revalidates it in the background
 
   // For past events: cache for a month (30 days) in CDN, 1 day in browser
-  let cacheControl = "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400";
+  let cacheControl = "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400, stale-if-error=86400";
   if (eventData) {
     const eventDate = new Date(eventData.date);
     const now = new Date();
     if (eventDate > now) {
       // For future events: cache for 1 day in CDN, 1 hour in browser
-      cacheControl = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600";
+      cacheControl = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600, stale-if-error=86400";
     }
   }
 

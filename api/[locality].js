@@ -130,7 +130,10 @@ export default async function handler(req) {
   );
 
   return new Response(html, {
-    headers: { "Content-Type": "text/html", "Cache-Control": "public, s-maxage=300, stale-while-revalidate=30" },
+    headers: {
+      "Content-Type": "text/html",
+      "Cache-Control": "public, max-age=3600, s-maxage=43200, stale-while-revalidate=3600, stale-if-error=86400",
+    },
   });
 }
 

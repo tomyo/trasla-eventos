@@ -91,7 +91,7 @@ export default async function handler(req) {
     `$<openTag>
       <h2>¿Qué hacer en Traslasierra ${timeText}?</h2>
       <p>Información actualizada de todos los eventos, talleres, festivales y actividades de Traslasierra de ${timeText}.</p>
-    $<closeTag>`
+    $<closeTag>`,
   );
 
   const eventEntries = filteredEvents
@@ -115,25 +115,25 @@ export default async function handler(req) {
           data-tickets="${eventData.tickets}"
           data-form="${eventData.form}"
           data-link="${eventData.link}"
-        ></event-entry>`
+        ></event-entry>`,
     )
     .join("");
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/gs,
-    `$<openTag>${eventEntries}$<closeTag>`
+    `$<openTag>${eventEntries}$<closeTag>`,
   );
 
   html = html.replace(/(?<openTag><events-filter[^>]*)>/g, `$<openTag> data-hide="when">`);
   html = html.replace(
     /(?<openTag><span[^>]*where.*title.*>).*?(?<closeTag><\/span>)/,
-    `<h1 style="text-align: center;">${title}<br>en</h1>`
+    `<h1 style="text-align: center;">${title}<br>en</h1>`,
   );
 
   return new Response(html, {
     headers: {
       "Content-Type": "text/html",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600, stale-if-error=86400",
+      "Cache-Control": "public, max-age=3600, s-maxage=43200, stale-while-revalidate=3600, stale-if-error=86400",
     },
   });
 }
