@@ -595,7 +595,7 @@ export function unescapeHtml(escapedText) {
 
   // Second pass: Handle numeric entities (decimal and hex)
   unescaped = unescaped.replace(/&#(x)?([0-9a-f]+);/gi, (_, isHex, code) =>
-    String.fromCodePoint(parseInt(code, isHex ? 16 : 10))
+    String.fromCodePoint(parseInt(code, isHex ? 16 : 10)),
   );
 
   return unescaped;
@@ -786,8 +786,8 @@ function getEventOffers(event) {
       "@type": "Offer",
       url: event.tickets || event.form || event.link,
       availability: "https://schema.org/InStock",
-      price: "0",
-      priceCurrency: "ARS",
+      // price: "0",
+      // priceCurrency: "ARS",
       validFrom: event.startsAt,
     };
   }
