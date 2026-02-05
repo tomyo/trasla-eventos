@@ -68,9 +68,15 @@ export default async function handler(req) {
       <script type="application/ld+json">
         ${JSON.stringify(localityToSchemaOrgItem(locality, url.origin))}
       </script>
-      <script type="application/ld+json">
-        ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, url.origin))}
-      </script>
+      ${
+        filteredEvents.length
+          ? /*html*/ `
+            <script type="application/ld+json">
+              ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, url.origin))}
+            </script>
+          `
+          : ""
+      }
     `;
 
   const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
@@ -78,7 +84,7 @@ export default async function handler(req) {
 
   html = html.replace(
     /<(?<tag>[a-z0-9-]+)\s*part="location"\s*>[\s\S]*?<\/.*?>/i,
-    `<$<tag> part="location">${locality}</$<tag>>`
+    `<$<tag> part="location">${locality}</$<tag>>`,
   );
   html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, ""); // Hide actions i.e load event button
 
@@ -88,7 +94,7 @@ export default async function handler(req) {
     `$<openTag>
       <h2>¿Qué hacer en ${locality}?</h2>
       <p>Información actualizada de todos los eventos de ${locality} de hoy, de la semana y de este mes.</p>
-    $<closeTag>`
+    $<closeTag>`,
   );
 
   const eventEntries = filteredEvents
@@ -112,13 +118,13 @@ export default async function handler(req) {
           data-tickets="${eventData.tickets}"
           data-form="${eventData.form}"
           data-link="${eventData.link}"
-        ></event-entry>`
+        ></event-entry>`,
     )
     .join("");
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-    `$<openTag>${eventEntries}$<closeTag>`
+    `$<openTag>${eventEntries}$<closeTag>`,
   );
 
   return new Response(html, {
