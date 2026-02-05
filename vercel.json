@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/events/*": {
+    "api/events/**/*.js": {
       "maxDuration": 30
     },
     "api/web-push-subscribe.js": {
