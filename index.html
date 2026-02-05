@@ -41,50 +41,91 @@
   <meta property="og:locale" content="es-AR" />
 
   <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "TouristDestination",
-            "@id": "https://eventos.trasla.com.ar/#traslasierra",
-            "name": "Valle de Traslasierra",
-            "description": "Región turística y cultural ubicada al oeste de las Sierras Grandes, en la provincia de Córdoba y el noroeste de San Luis, Argentina.",
-            "geo": {
-              "@type": "GeoShape",
-              "box": "-32.3 -66.3 -31.3 -64.6"
-            },
-            "url": "https://eventos.trasla.com.ar/",
-            "sameAs": ["https://es.wikipedia.org/wiki/Valle_de_Traslasierra"]
-          },
-          {
-            "@type": "Organization",
-            "@id": "https://eventos.trasla.com.ar/#organization",
-            "name": "Trasla Eventos",
-            "url": "https://eventos.trasla.com.ar/",
-            "description": "Plataforma comunitaria para la difusión de eventos culturales, artísticos y actividades locales en el Valle de Traslasierra.",
-            "areaServed": {
-              "@id": "https://eventos.trasla.com.ar/#traslasierra"
-            },
-            "about": {
-              "@id": "https://eventos.trasla.com.ar/#traslasierra"
-            },
-            "sameAs": ["https://www.wikidata.org/wiki/Q137801954"]
-          },
-          {
-            "@type": "WebSite",
-            "@id": "https://eventos.trasla.com.ar/#website",
-            "url": "https://eventos.trasla.com.ar/",
-            "name": "Eventos en Traslasierra",
-            "publisher": {
-              "@id": "https://eventos.trasla.com.ar/#organization"
-            },
-            "about": {
-              "@id": "https://eventos.trasla.com.ar/#traslasierra"
-            }
-          }
-        ]
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["TouristDestination", "Place"],
+          "@id": "https://eventos.trasla.com.ar/#traslasierra",
+      "name": "Valle de Traslasierra",
+      "description": "Región turística y cultural ubicada al oeste de las Sierras Grandes, en la provincia de Córdoba y el noroeste de San Luis, Argentina.",
+      "geo": {
+        "@type": "GeoShape",
+        "box": "-32.3 -66.3 -31.3 -64.6"
+      },
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": "Provincia de Córdoba",
+        "containedInPlace": {
+          "@type": "Country",
+          "name": "Argentina"
+        }
+      },
+      "url": "https://eventos.trasla.com.ar/",
+      "sameAs": [
+        "https://es.wikipedia.org/wiki/Valle_de_Traslasierra"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://eventos.trasla.com.ar/#organization",
+      "name": "Trasla Eventos",
+      "url": "https://eventos.trasla.com.ar/",
+      "logo": "https://eventos.trasla.com.ar/logo.png",
+      "description": "Plataforma comunitaria para la difusión de eventos culturales, artísticos y actividades locales en el Valle de Traslasierra.",
+      "foundingLocation": {
+        "@id": "https://eventos.trasla.com.ar/#traslasierra"
+      },
+      "areaServed": {
+        "@id": "https://eventos.trasla.com.ar/#traslasierra"
+      },
+      "knowsAbout": [
+        "agenda cultural de Traslasierra",
+        "eventos en el Valle de Traslasierra",
+        "música en vivo en Traslasierra",
+        "recitales y festivales",
+        "teatro y artes escénicas",
+        "cine independiente",
+        "ferias y mercados artesanales",
+        "talleres culturales",
+        "actividades holísticas",
+        "yoga, meditación y bienestar",
+        "eventos espirituales",
+        "actividades al aire libre",
+        "turismo cultural local",
+        "comunidad y cultura regional"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://eventos.trasla.com.ar/contacto"
+      },
+      "sameAs": [
+        "https://www.wikidata.org/wiki/Q137801954"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://eventos.trasla.com.ar/#website",
+      "url": "https://eventos.trasla.com.ar/",
+      "name": "Eventos en Traslasierra",
+      "inLanguage": "es-AR",
+      "publisher": {
+        "@id": "https://eventos.trasla.com.ar/#organization"
+      },
+      "about": {
+        "@id": "https://eventos.trasla.com.ar/#traslasierra"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://eventos.trasla.com.ar/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+        }
       }
-    </script>
+    ]
+  }
+  </script>
+
 
   <!-- END CONTENT_METADATA_BLOCK -->
 
