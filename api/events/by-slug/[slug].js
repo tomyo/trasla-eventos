@@ -87,14 +87,15 @@ export default async function handler(req) {
   // s-maxage: time in seconds the CDN can cache the response
   // stale-while-revalidate: time in seconds the CDN can serve a stale response while it revalidates it in the background
 
+  const day = 1000 * 60 * 60 * 24;
   // For past events: cache for a month (30 days) in CDN, 1 day in browser
-  let cacheControl = "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400, stale-if-error=86400";
+  let cacheControl = `public, max-age=${day}, s-maxage=${day * 30}, stale-while-revalidate=${day}, stale-if-error=${day}`;
   if (eventData) {
     const eventDate = new Date(eventData.date);
     const now = new Date();
     if (eventDate > now) {
-      // For future events: cache for 1 day in CDN, 1 hour in browser
-      cacheControl = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600, stale-if-error=86400";
+      // For future events: cache for 5 days in CDN, 1 day in browser
+      cacheControl = `public, max-age=${day}, s-maxage=${day * 5}, stale-while-revalidate=${day}, stale-if-error=${day}`;
     }
   }
 

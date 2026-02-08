@@ -10,6 +10,7 @@ import {
 
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
 let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
+const day = 1000 * 60 * 60 * 24;
 
 export default async function handler(req) {
   const url = new URL(req.url);
@@ -19,21 +20,25 @@ export default async function handler(req) {
   let title;
   let description;
   let timeText;
+  let sMaxage;
   if (when === "hoy") {
     filter = (event) => isDateToday(new Date(event.startsAt));
     title = "Eventos de hoy";
     timeText = "hoy";
     description = "Información actualizada de todos los eventos de hoy en Traslasierra.";
+    sMaxage = day / 4;
   } else if (when === "esta-semana") {
     filter = (event) => isDateWithinWeek(new Date(event.startsAt));
     title = "Eventos de esta semana";
     timeText = "esta semana";
     description = "Información actualizada de todos los eventos de esta semana en Traslasierra.";
+    sMaxage = day * 2;
   } else if (when === "este-mes") {
     filter = (event) => isDateWithinMonth(new Date(event.startsAt));
     title = "Eventos de este mes";
     timeText = "este mes";
     description = "Información actualizada de todos los eventos de este mes en Traslasierra.";
+    sMaxage = day * 5;
   } else {
     throw new Error("Invalid when parameter: " + when);
   }
@@ -133,7 +138,7 @@ export default async function handler(req) {
   return new Response(html, {
     headers: {
       "Content-Type": "text/html",
-      "Cache-Control": "public, max-age=3600, s-maxage=43200, stale-while-revalidate=3600, stale-if-error=86400",
+      "Cache-Control": `public, max-age=${day}, s-maxage=${sMaxage}, stale-while-revalidate=${day}, stale-if-error=${day}`,
     },
   });
 }

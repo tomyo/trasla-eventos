@@ -8,6 +8,8 @@ import {
   localityToSchemaOrgItem,
 } from "./shared/lib/utils.js";
 
+const day = 1000 * 60 * 60 * 24;
+
 export default async function handler(req) {
   const url = new URL(req.url);
   const localitySlug = url.pathname.replace(/\/lugar\/(.*)\//, "$1");
@@ -132,7 +134,7 @@ export default async function handler(req) {
   return new Response(html, {
     headers: {
       "Content-Type": "text/html",
-      "Cache-Control": "public, max-age=3600, s-maxage=43200, stale-while-revalidate=3600, stale-if-error=86400",
+      "Cache-Control": `public, max-age=${day / 2}, s-maxage=${day * 2}, stale-while-revalidate=${day / 2}, stale-if-error=${day}`,
     },
   });
 }
