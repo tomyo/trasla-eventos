@@ -295,7 +295,7 @@ Teléfono, instagram, link a la página tickets, etc.
       const cache = await caches.open(SHARE_TARGET_ACTION);
       await cache.put(`/description`, new Response(description.value, { headers: { "Content-Type": "text/plain" } }));
 
-      // Resize the textarea to fit the content
+      // Resize the textarea to fit the content as user types
       description.style.height = "auto"; // Reset height to auto to shrink if needed
       description.style.height = `${description.scrollHeight}px`;
     });
@@ -309,8 +309,8 @@ Teléfono, instagram, link a la página tickets, etc.
 
       for (const file of files) {
         const uuid = crypto.randomUUID();
-        const compressedFile = await compressImageBlob(file);
-        await cache.put(`/${uuid}`, new Response(compressedFile, { headers: { "Content-Type": "image/jpeg" } }));
+        const [compressedFile, contentType] = await compressImageBlob(file);
+        await cache.put(`/${uuid}`, new Response(compressedFile, { headers: { "Content-Type": contentType } }));
         filesList.push(uuid);
         addPreviewImage(compressedFile, uuid);
       }
@@ -615,8 +615,8 @@ Teléfono, instagram, link a la página tickets, etc.
           // Revoke the object URL to free memory
           URL.revokeObjectURL(img.src);
           try {
-            const compressedBlob = await compressImageBlob(file, maxWidth, quality);
-            const compressedFile = new File([compressedBlob], file.name, { type: "" });
+            const [compressedBlob, contentType] = await compressImageBlob(file, maxWidth, quality);
+            const compressedFile = new File([compressedBlob], file.name, { type: contentType });
             resolve(compressedFile);
           } catch (error) {
             reject(error);
@@ -627,7 +627,10 @@ Teléfono, instagram, link a la página tickets, etc.
       });
     }
 
-    function compressImageBlob(blob, maxWidth = 1000, quality = 0.7) {
+    /**
+     * Returns [blob, contentType] 
+     */
+    function compressImageBlob(blob, maxWidth = 1000, quality = 0.7, contentType = "image/jpeg") {
       return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
@@ -651,7 +654,7 @@ Teléfono, instagram, link a la página tickets, etc.
           ctx.drawImage(img, 0, 0, width, height);
 
           // Convert the canvas to a Blob
-          canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
+          canvas.toBlob((blob) => resolve([blob, contentType]), contentType, quality);
         };
         img.onerror = reject;
         img.src = URL.createObjectURL(blob);
