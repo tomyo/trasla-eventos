@@ -286,11 +286,17 @@ Teléfono, instagram, link a la página tickets, etc.
       compressFileImage,
       compressImageBlob
     } from "/utils/images.js"
+    import {
+      API_URL,
+      extractSuccessResponse,
+      MissingFieldsError,
+      showMissingFieldsError,
+      pollForEventProcessing
+    } from "./utils.js";
 
     const form = document.querySelector("form");
-    const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
     const query = `?endpoint=uploadEvent`;
-    let action = `${api}${query}`;
+    let action = `${API_URL}${query}`;
     const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
 
     form.addEventListener("submit", handleFormSubmit);
@@ -357,33 +363,7 @@ Teléfono, instagram, link a la página tickets, etc.
       return filesListResponse ? await filesListResponse.json() : [];
     }
 
-    async function extractSuccessResponse(response) {
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      const jsonResponse = await response.json();
-      if (!jsonResponse.success) throw new Error(jsonResponse.message);
-      return jsonResponse.data;
-    }
 
-    function showMissingFieldsError(missingFields) {
-      const output = document.querySelector("output[name=output]");
-      output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
-      for (const key of Object.keys(missingFields)) {
-        output.textContent += `❌ ${missingFields[key]}\n`;
-      }
-      output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
-    }
-
-    class MissingFieldsError extends Error {
-      constructor(missingFields) {
-        const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
-          missingFields
-        )
-          .map(([key, msg]) => `❌ ${msg}`)
-          .join("\n")}`;
-        super(message);
-        this.missingFields = missingFields;
-      }
-    }
 
     async function handleFormSubmit(event) {
       event.preventDefault();
@@ -420,40 +400,9 @@ Teléfono, instagram, link a la página tickets, etc.
         let retries = 0;
         let error = null;
         const maxRetries = pendingEventId ? 5 : 7; // Less retries if re-trying an existing event
-        const missingFields = {};
-        while (!eventData?.slug) {
-          output.textContent += "Procesando la información del evento...\n";
-          const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventData.id}`;
-          try {
-            eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
-          } catch (e) {
-            console.error("Error fetching event", eventData, e);
-            error = e;
-          }
-          const eventUploadCompleted = eventData?.slug;
-          if (eventUploadCompleted) break;
 
-          if (eventData.title) {
-            // It has been enriched, but no slug means some required fields are missing
-            for (const [key, msg] of [
-              ["startsAt", "Fecha y hora de inicio"],
-              ["locality", "Localidad (No se reconoce la localidad de Traslasierra y alrededores)"],
-            ]) {
-              if (!eventData[key]) {
-                missingFields[key] = msg;
-              }
-            }
-            throw new MissingFieldsError(missingFields);
-          }
-
-          retries++;
-          if (retries >= maxRetries) {
-            throw new Error(
-              `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.\n\nError: ${error.name}: ${error.message}`
-            );
-          }
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-        }
+        // Poll for event processing
+        eventData = await pollForEventProcessing(API_URL, eventData.id, output, maxRetries);
 
         if (document.visibilityState !== "visible") {
           const notification = await showNotification("Evento cargado!", {
@@ -489,7 +438,7 @@ Teléfono, instagram, link a la página tickets, etc.
         window.location.href = `${window.location.origin}/${eventData.slug}`;
       } catch (error) {
         if (error instanceof MissingFieldsError) {
-          showMissingFieldsError(error.missingFields);
+          showMissingFieldsError(error.missingFields, output);
         } else {
           output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
         }

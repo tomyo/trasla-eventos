@@ -115,6 +115,14 @@
     }
   </style>
   <script type="module">
+    import {
+      API_URL,
+      extractSuccessResponse,
+      MissingFieldsError,
+      showMissingFieldsError,
+      pollForEventProcessing
+    } from "./utils.js";
+
     const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
     const form = document.querySelector("form");
     const cache = await caches.open(SHARE_TARGET_ACTION);
@@ -141,37 +149,11 @@
 
     hydrateWithCachedData();
 
-    async function extractSuccessResponse(response) {
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      const jsonResponse = await response.json();
-      if (!jsonResponse.success) throw new Error(jsonResponse.message);
-      return jsonResponse.data;
-    }
 
-    function showMissingFieldsError(missingFields) {
-      const output = document.querySelector("output[name=output]");
-      output.textContent += "Evento incompleto... No se reconocen los siguientes campos:\n\n";
-      for (const key of Object.keys(missingFields)) {
-        output.textContent += `❌ ${missingFields[key]}\n`;
-      }
-      // output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
-    }
-
-    class MissingFieldsError extends Error {
-      constructor(missingFields) {
-        const message = `Evento incompleto... No se reconocen los siguientes campos:\n\n${Object.entries(
-          missingFields
-        )
-          .map(([key, msg]) => `❌ ${msg}`)
-          .join("\n")}`;
-        super(message);
-        this.missingFields = missingFields;
-      }
-    }
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
+      const api = API_URL;
 
       const url = form.elements.url.value;
       const videoNotSupportedError = document.querySelector("[part=video-not-supported-error]");
@@ -203,36 +185,8 @@
         }
 
         const maxRetries = 5;
-        let retries = 0;
-        const missingFields = {};
-        while (!eventData.slug) {
-          eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
-          console.log(`Event data received: `, eventData);
-          // Add 1 second delay to refresh data
-          if (eventData.slug) break;
 
-          if (eventData.title) {
-            // That means it has been processed, but required fields are missing
-            for (const [key, msg] of [
-              ["startsAt", "Fecha y hora de inicio"],
-              ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
-            ]) {
-              if (!eventData[key]) {
-                missingFields[key] = msg;
-              }
-            }
-            throw new MissingFieldsError(missingFields);
-          }
-
-          retries++;
-          if (retries >= maxRetries) {
-            throw new Error(
-              `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
-            );
-          }
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          output.textContent += "Esperando que se procese el evento...\n";
-        }
+        eventData = await pollForEventProcessing(API_URL, eventData.id, output, maxRetries);
 
         // Event uploaded or found succesfully
         submitButtonSpan.textContent = "Evento cargado! 👌\n";
@@ -248,7 +202,7 @@
       } catch (error) {
         console.error(error);
         if (error instanceof MissingFieldsError) {
-          showMissingFieldsError(error.missingFields);
+          showMissingFieldsError(error.missingFields, output);
         } else {
           output.textContent += `Error al cargar el evento 👎\n${error.name}: ${error.message}\n`;
         }
