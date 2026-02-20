@@ -400,41 +400,39 @@ Teléfono, instagram, link a la página tickets, etc.
       submitButtonSpan.textContent = "Publicando...\n";
 
       try {
-        let eventData;
-        let eventId;
-        if (!submitButton.value) {
-          eventData = await postEvent();
-          submitButton.value = eventData.id;
-          eventId = eventData.id;
-          output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
-        } else {
-          // Retry attempt for existing event
-          eventId = submitButton.value;
-          eventData = { id: eventId };
-          output.textContent += "\nReintentando la carga...\n";
-        }
+        let pendingEventId = submitButton.value;
+        let eventData = { id: pendingEventId };
 
-        if (!eventData.slug) {
-          output.textContent += "Procesando la información del evento...\n";
+        if (pendingEventId) {
+          output.textContent += "\nReintentando la carga...\n";
+        } else {
+          eventData = await postEvent();
+          pendingEventId = eventData.id;
+          submitButton.value = pendingEventId;
+          output.textContent += "\n✔️ Solicitud recibida con éxito...\n";
         }
 
         let retries = 0;
-        const maxRetries = submitButton.value ? 5 : 7; // Less retries if re-trying an existing event
+        let error = null;
+        const maxRetries = pendingEventId ? 5 : 7; // Less retries if re-trying an existing event
         const missingFields = {};
         while (!eventData?.slug) {
-          const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventId}`;
+          output.textContent += "Procesando la información del evento...\n";
+          const getEventByIdQuery = `?endpoint=getEventByIdAndProcessItIfNeeded&id=${eventData.id}`;
           try {
             eventData = await extractSuccessResponse(await fetch(api + getEventByIdQuery));
-          } catch (error) {
-            console.error("Error fetching event", eventData, error);
+          } catch (e) {
+            console.error("Error fetching event", eventData, e);
+            error = e;
           }
-          if (eventData?.slug) break;
+          const eventUploadCompleted = eventData?.slug;
+          if (eventUploadCompleted) break;
 
           if (eventData.title) {
-            // That means it has been processed, but required fields are missing
+            // It has been enriched, but no slug means some required fields are missing
             for (const [key, msg] of [
               ["startsAt", "Fecha y hora de inicio"],
-              ["locality", "Localidad (No se reconoce localidad en Traslasierra o Merlo)"],
+              ["locality", "Localidad (No se reconoce la localidad de Traslasierra y alrededores)"],
             ]) {
               if (!eventData[key]) {
                 missingFields[key] = msg;
@@ -446,11 +444,10 @@ Teléfono, instagram, link a la página tickets, etc.
           retries++;
           if (retries >= maxRetries) {
             throw new Error(
-              `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.`
+              `timeout: no se obtuvo link al evento en tiempo suficiente.\n\nPor favor intente nuevamente.\n\nError: ${error.name}: ${error.message}`
             );
           }
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          output.textContent += "Esperando que se procese el evento...\n";
+          await new Promise((resolve) => setTimeout(resolve, 2000));
         }
 
         if (document.visibilityState !== "visible") {
@@ -471,20 +468,18 @@ Teléfono, instagram, link a la página tickets, etc.
         }
 
         output.textContent += "\nRedirigiendo a la página del evento...\n";
-        console.log("response:", eventData);
-        console.log(`redirect to event page at ${window.location.origin}/${eventData.slug}`);
+        console.info(`redirecting to event page at ${window.location.origin}/${eventData.slug}`);
 
         // Event uploaded or found succesfully
         const cache = await caches.open(SHARE_TARGET_ACTION);
         for (const key of await cache.keys()) {
           console.info(`Deleting cache entry: ${key.url}`);
-          await cache.delete(key);
+          cache.delete(key);
         }
         for (const preview of document.querySelectorAll("image-preview")) {
           preview.remove();
         }
         // Clear the form (but not the description field)
-        form.reset();
         // Redirect to the event page
         window.location.href = `${window.location.origin}/${eventData.slug}`;
       } catch (error) {
