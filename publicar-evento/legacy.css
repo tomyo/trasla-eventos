@@ -19,9 +19,9 @@ form textarea {
 }
 
 #imagesPreview > * button {
-  background-color: var(--color-red);
   color: #fff;
   cursor: pointer;
+  background-color: #0000;
   border: none;
   padding: .5rem;
   font-size: 1.5rem;
