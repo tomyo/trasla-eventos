@@ -189,7 +189,7 @@ Teléfono, instagram, link a la página tickets, etc.
           position: absolute;
           top: 0;
           right: 0;
-          background-color: var(--color-red);
+          background-color: transparent;
           color: white;
           border: none;
           padding: 0.5rem;
@@ -598,7 +598,7 @@ Teléfono, instagram, link a la página tickets, etc.
       img.src = URL.createObjectURL(file);
       imagePreviewElement.appendChild(img);
       const button = document.createElement("button");
-      button.textContent = "❌";
+      button.textContent = "✖️";
       button.type = "button"; // Prevent form submission
       button.title = "Eliminar imagen";
       button.addEventListener("click", async () => {
