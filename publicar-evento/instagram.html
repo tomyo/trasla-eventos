@@ -82,7 +82,7 @@
           <input type="url" id="url" name="url" required placeholder="https://www.instagram.com/p/DIOnBf5RzAA/" />
         </fieldset>
         <em>✔️ El post debe ser público.</em>
-        <em>❌ Videos no soportados.</em>
+        <em part="video-not-supported-error" hidden style="color: var(--color-red)">❌ Reels no soportados aún :(.</em>
         <button type="submit" name="submit">
           <svg-mask
             style="
@@ -112,7 +112,6 @@
 
     em {
       font-size: 0.875rem;
-      color: var(--color-red);
     }
   </style>
   <script type="module">
@@ -155,7 +154,7 @@
       for (const key of Object.keys(missingFields)) {
         output.textContent += `❌ ${missingFields[key]}\n`;
       }
-      output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
+      // output.textContent += "\nPor favor agregá los datos faltantes en la descripción e intentá de nuevo.\n";
     }
 
     class MissingFieldsError extends Error {
@@ -174,6 +173,13 @@
       event.preventDefault();
       const api = `https://script.google.com/macros/s/AKfycbx-aF03sO-JizuijiMY1tu5v0GXhzH08GUtkUy0tegwzB8LLQ-VwzD7YEQ-vK1YEcK_/exec`;
 
+      const url = form.elements.url.value;
+      const videoNotSupportedError = document.querySelector("[part=video-not-supported-error]");
+      if (url.includes("reel")) {
+        videoNotSupportedError.hidden = false;
+        return;
+      }
+
       const submitButton = document.querySelector("button[type=submit]");
       const submitButtonSpan = submitButton.querySelector("span");
       const buttonText = submitButtonSpan.textContent;
@@ -183,7 +189,7 @@
         submitButton.disabled = true;
         submitButtonSpan.textContent = "Publicando...\n";
 
-        const getOrCreateQuery = `?endpoint=getOrCreateEventByInstagramPostURL&url=${form.elements.url.value}`;
+        const getOrCreateQuery = `?endpoint=getOrCreateEventByInstagramPostURL&url=${url}`;
         let eventData = await extractSuccessResponse(await fetch(api + getOrCreateQuery));
 
         if (eventData.alreadyCreated) {
