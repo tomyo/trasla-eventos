@@ -106,6 +106,7 @@
 
 <script type="module">
   import { getGoogleSheetEvents } from "/lib/get-events.js";
+  const SHEET_GID_TODAY_EVENTS = "731459943"; // From public sheet
   // Set title from URL param "title"
   const searchParams = new URLSearchParams(window.location.search);
   if (searchParams.has("title")) {
@@ -119,7 +120,7 @@
   }
 
   // Fill today's event images
-  const todayEvents = await getGoogleSheetEvents(undefined, "1216930672");
+  const todayEvents = await getGoogleSheetEvents(undefined, SHEET_GID_TODAY_EVENTS);
   for (const event of todayEvents.filter((e) => !e.hidden && e.image_download_url && e.id != "today")) {
     const img = document.createElement("img");
     img.src = event.image_download_url;
