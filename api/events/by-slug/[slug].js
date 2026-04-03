@@ -15,6 +15,7 @@ export default async function handler(req) {
 
   const idMatch = urlSlug.match(/([a-f0-9]{8})$/);
   let idPrefix;
+  let eventLegacyData;
   if (idMatch) {
     // slug v2: title-idPrefix
     idPrefix = idMatch[1];
@@ -22,11 +23,11 @@ export default async function handler(req) {
     // slug v1: title-locality-datetime fuzzy-search
     const eventsLegacy = await getGoogleSheetEvents(sheetIdLegacy, sheetGidLegacy);
     const searchResults = fuzzySearch(eventsLegacy, urlSlug);
-    const eventLegacyData = searchResults[0]?.item;
+    eventLegacyData = searchResults[0]?.item;
     console.log("Found legacy event", eventLegacyData.id, "with eventId:", eventLegacyData.eventId);
-    idPrefix = eventLegacyData.eventId; // Not a prefix, the full id, but still works as a prefix
+    if (eventLegacyData.eventId) idPrefix = eventLegacyData.eventId; // Will match anyway
   }
-  const eventData = events.find((event) => event.id.startsWith(idPrefix));
+  const eventData = idPrefix ? events.find((event) => event.id.startsWith(idPrefix)) : eventLegacyData;
 
   if (!eventData) {
     console.warn("No event found for slug", urlSlug, "with idPrefix", idPrefix);
