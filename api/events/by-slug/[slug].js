@@ -112,8 +112,8 @@ export default async function handler(req) {
   // stale-while-revalidate: time in seconds the CDN can serve a stale response while it revalidates it in the background
 
   const day = 1000 * 60 * 60 * 24;
-  // For past events: cache for a month (30 days) in CDN, 1 day in browser
-  let cacheControl = `public, max-age=${day}, s-maxage=${day * 30}, stale-while-revalidate=${day}, stale-if-error=${day}`;
+  // For past events: cache for two months (60 days) in CDN, 7 days in browser
+  let cacheControl = `public, max-age=${day * 7}, s-maxage=${day * 60}, stale-while-revalidate=${day}, stale-if-error=${day}`;
   if (eventData) {
     const eventDate = new Date(eventData.date);
     const now = new Date();
