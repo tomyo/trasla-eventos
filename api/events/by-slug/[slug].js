@@ -28,6 +28,10 @@ export default async function handler(req) {
   }
   const eventData = events.find((event) => event.id.startsWith(idPrefix));
 
+  if (!eventData) {
+    console.warn("No event found for slug", urlSlug, "with idPrefix", idPrefix);
+    return new Response(null, { status: 404 });
+  }
   if (urlSlug !== eventData.slug) {
     const canonicalUrl = `${url.origin}/${eventData.slug}`;
     return new Response(null, { status: 301, headers: { Location: canonicalUrl } });
