@@ -158,7 +158,7 @@ Teléfono, instagram, link a la página tickets, etc.
 
     if ("serviceWorker" in navigator) {
       try {
-        swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
+        swRegistration = await navigator.serviceWorker.register("/service-worker.js");
         console.log("Service Worker registered:", swRegistration);
       } catch (error) {
         console.error("Service Worker registration failed:", error);

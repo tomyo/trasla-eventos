@@ -828,7 +828,7 @@
 
     if ("serviceWorker" in navigator) {
       try {
-        swRegistration = await navigator.serviceWorker.register("/service-worker.js", { type: "module" });
+        swRegistration = await navigator.serviceWorker.register("/service-worker.js");
         console.log("Service Worker registered:", swRegistration);
       } catch (error) {
         console.log("Service Worker registration failed:", error);
