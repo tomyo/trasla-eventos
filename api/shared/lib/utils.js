@@ -505,22 +505,23 @@ export function isValidUrl(string) {
  * @returns {String} A google calendar url to create an event
  */
 export function createGoogleCalendarUrl(eventElement) {
-  const hook = `https://eventos.trasla.com.ar/${eventElement.slug}\n\n`;
-  let eventTitle = eventElement.dataset.title;
+  const eventData = eventElement.dataset;
+  const hook = `https://eventos.trasla.com.ar/${eventData.slug}\n\n`;
+  let eventTitle = eventData.title;
   if (!eventTitle) {
-    eventTitle = `Actividad en ${eventElement.dataset.locality}`;
+    eventTitle = `Actividad en ${eventData.locality}`;
   }
   const baseUrl = "https://www.google.com/calendar/render?action=TEMPLATE";
-  const encodedDetails = encodeURIComponent(hook + eventElement.dataset.description || "");
-  const encodedLocation = encodeURIComponent(eventElement.dataset.location || "");
+  const encodedDetails = encodeURIComponent(hook + eventData.description || "");
+  const encodedLocation = encodeURIComponent(eventData.location || "");
   const encodedSummary = encodeURIComponent(eventTitle);
 
   let url = `${baseUrl}&text=${encodedSummary}&details=${encodedDetails}&location=${encodedLocation}`;
-  const startDateString = eventElement.dataset.startsAt.replace(/-|:|\.\d\d\d/g, "");
-  let endDateString = eventElement.dataset.endsAt;
-  if (!endDateString && eventElement.dataset.startsAt) {
+  const startDateString = eventData.startsAt.replace(/-|:|\.\d\d\d/g, "");
+  let endDateString = eventData.endsAt;
+  if (!endDateString && eventData.startsAt) {
     // Default event duration is 2 hours if end time is not provided.
-    endDateString = addHoursOffsetToDate(new Date(eventElement.dataset.startsAt), 2).toISOString();
+    endDateString = addHoursOffsetToDate(new Date(eventData.startsAt), 2).toISOString();
   }
 
   endDateString = endDateString.replace(/-|:|\.\d\d\d/g, "");
