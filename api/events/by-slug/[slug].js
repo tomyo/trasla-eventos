@@ -5,13 +5,33 @@ import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem } from 
 const OG_IMAGE_WIDTH = 1200;
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
 let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
+let sheetIdLegacy = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID_LEGACY : undefined;
+let sheetGidLegacy = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID_LEGACY : undefined;
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const slug = url.pathname.split("/").pop();
+  const urlSlug = url.pathname.split("/").pop();
   const events = await getGoogleSheetEvents(sheetId, sheetGid);
-  const searchResults = fuzzySearch(events, slug);
-  const eventData = searchResults[0]?.item;
+
+  const idMatch = urlSlug.match(/([a-f0-9]{8})$/);
+  let idPrefix;
+  if (idMatch) {
+    // slug v2: title-idPrefix
+    idPrefix = idMatch[1];
+  } else {
+    // slug v1: title-locality-datetime fuzzy-search
+    const eventsLegacy = await getGoogleSheetEvents(sheetIdLegacy, sheetGidLegacy);
+    const searchResults = fuzzySearch(eventsLegacy, urlSlug);
+    const eventLegacyData = searchResults[0]?.item;
+    console.log("Found legacy event", eventLegacyData.id, "with eventId:", eventLegacyData.eventId);
+    idPrefix = eventLegacyData.eventId; // Not a prefix, the full id, but still works as a prefix
+  }
+  const eventData = events.find((event) => event.id.startsWith(idPrefix));
+
+  if (urlSlug !== eventData.slug) {
+    const canonicalUrl = `${url.origin}/${eventData.slug}`;
+    return new Response(null, { status: 301, headers: { Location: canonicalUrl } });
+  }
 
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 

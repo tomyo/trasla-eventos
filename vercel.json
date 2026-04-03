@@ -27,6 +27,10 @@
     {
       "source": "/:slug([a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?)",
       "destination": "/api/events/by-slug/[slug].js"
+    },
+    {
+      "source": "/:slug([a-z0-9-]+-[a-f0-9]{8})",
+      "destination": "/api/events/by-slug/[slug].js"
     }
   ],
   "redirects": [
