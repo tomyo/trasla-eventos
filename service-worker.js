@@ -1,10 +1,24 @@
-// Firefox doesn't support import as es6 modules yet, so copy this value here.
-const SHARE_TARGET_ACTION = "/share-target"; // Also used as the cache key for the shared data
-const CACHE_VERSION = "2024-10-08";
-const APP_SHELL_CACHE = `static-${CACHE_VERSION}`;
-const RUNTIME_CACHE = `runtime-${CACHE_VERSION}`;
-const SHEETS_CACHE = `sheets-${CACHE_VERSION}`;
-const DRIVE_IMAGE_CACHE = `drive-images-${CACHE_VERSION}`;
+const DEBUG = false;
+const log = (...args) => DEBUG && console.log(...args);
+
+const CONFIG = {
+  VERSION: "2024-10-08",
+  SHARE_TARGET: "/share-target",
+
+  CACHE: {
+    APP: "static-2024-10-08",
+    RUNTIME: "runtime-2024-10-08",
+    SHEETS: "sheets-2024-10-08",
+    DRIVE: "drive-images-2024-10-08",
+    SHARE_TARGET: "/share-target",
+  },
+
+  HOSTS: {
+    SHEETS: new Set(["docs.google.com", "docs.googleusercontent.com"]),
+    DRIVE: new Set(["drive.google.com", "lh3.googleusercontent.com"]),
+  },
+};
+
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -28,63 +42,62 @@ const CORE_ASSETS = [
   "/lib/utils.js",
   "/lib/fuzzy-search-events.js",
 ];
-const GOOGLE_SHEETS_HOSTNAMES = new Set(["docs.google.com", "docs.googleusercontent.com"]);
-const DRIVE_IMAGE_HOSTNAMES = new Set(["drive.google.com", "lh3.googleusercontent.com"]);
-const ALLOWED_CACHES = new Set([APP_SHELL_CACHE, RUNTIME_CACHE, SHEETS_CACHE, DRIVE_IMAGE_CACHE, SHARE_TARGET_ACTION]);
+
+const ALLOWED_CACHES = new Set(Object.values(CONFIG.CACHE));
 
 self.addEventListener("install", (event) => {
-  console.log("Service Worker installing...");
+  log("Service Worker installing...");
   event.waitUntil(
     (async () => {
       try {
-        const cache = await caches.open(APP_SHELL_CACHE);
+        const cache = await caches.open(CONFIG.CACHE.APP);
         await cache.addAll(CORE_ASSETS);
       } catch (error) {
         console.warn("Failed to precache app shell", error);
       }
-    })()
+    })(),
   );
   self.skipWaiting(); // Force activation
 });
 
 self.addEventListener("activate", (event) => {
-  console.log("Service Worker activated");
+  log("Service Worker activated");
   event.waitUntil(
     (async () => {
       const cacheNames = await caches.keys();
       const cachesToDelete = cacheNames.filter((cacheName) => !ALLOWED_CACHES.has(cacheName));
       await Promise.all(cachesToDelete.map((cacheName) => caches.delete(cacheName)));
       await clients.claim(); // Take control immediately
-    })()
+    })(),
   );
 });
 
-// SHARE TARGET HANDLER
 self.addEventListener("fetch", (event) => {
   const { request } = event;
+
   if (request.cache === "only-if-cached" && request.mode !== "same-origin") return;
 
   const url = new URL(request.url);
-  if (request.method === "POST" && url.pathname === SHARE_TARGET_ACTION && url.origin === self.location.origin) {
-    console.info("Handling share target:", request);
-    event.respondWith(handleShareTarget(request));
-    return;
+
+  // SHARE TARGET
+  if (request.method === "POST" && url.pathname === CONFIG.SHARE_TARGET && url.origin === self.location.origin) {
+    log("Handling share target:", request);
+    return event.respondWith(handleShareTarget(request));
   }
 
   if (request.method !== "GET") return;
 
-  if (GOOGLE_SHEETS_HOSTNAMES.has(url.hostname)) {
-    event.respondWith(networkFirst(request, SHEETS_CACHE));
-    return;
+  // ROUTING
+  if (CONFIG.HOSTS.SHEETS.has(url.hostname)) {
+    return event.respondWith(handleRequest(request, "network-first", CONFIG.CACHE.SHEETS));
   }
 
-  if (DRIVE_IMAGE_HOSTNAMES.has(url.hostname)) {
-    event.respondWith(cacheFirst(request, DRIVE_IMAGE_CACHE));
-    return;
+  if (CONFIG.HOSTS.DRIVE.has(url.hostname)) {
+    return event.respondWith(handleRequest(request, "cache-first", CONFIG.CACHE.DRIVE));
   }
 
   if (url.origin === self.location.origin) {
-    event.respondWith(staleWhileRevalidate(event, RUNTIME_CACHE, { fallbackUrl: "/index.html" }));
+    return event.respondWith(handleRequest(request, "stale-while-revalidate", CONFIG.CACHE.RUNTIME, "/index.html"));
   }
 });
 
@@ -94,9 +107,9 @@ self.addEventListener("fetch", (event) => {
  */
 async function handleShareTarget(request) {
   const formData = await request.formData();
-  console.info("[handleShareTarget] received formData: ", [...formData.entries()]);
+  log("[handleShareTarget] received formData: ", [...formData.entries()]);
 
-  const cache = await caches.open(SHARE_TARGET_ACTION);
+  const cache = await caches.open(CONFIG.CACHE.SHARE_TARGET);
   let url = "";
 
   // Clear previous cache entries
@@ -123,9 +136,9 @@ async function handleShareTarget(request) {
     await cache.put(`/${key}`, new Response(value));
     await cache.put(
       `/files-list`, // Store the list of file IDs in the cache so we can ensure to use the user's desired order.
-      new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } })
+      new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } }),
     );
-    console.log("caching", key, value);
+    log("caching", key, value);
   }
 
   if (url.toLowerCase().includes("instagram")) {
@@ -139,12 +152,11 @@ async function handleShareTarget(request) {
 self.addEventListener("message", (event) => {
   if (event.data.type !== "POST_EVENT") {
     console.warn("Unknown message type:", event.data?.type);
-    console.info("Full event data:", event.data);
+    log("Full event data:", event.data);
     return;
   }
 
-  console.info("Handling event posting request from client", event.data);
-  // Keep service worker alive during the entire operation
+  log("Handling event posting request from client", event.data);
   event.waitUntil(
     handlePostEvent(event).catch((error) => {
       console.error("Critical error in handlePostEvent:", error);
@@ -155,10 +167,8 @@ self.addEventListener("message", (event) => {
           error: `Service worker error: ${error.message}`,
         });
       }
-      return showErrorServiceWorkerNotification(`Error crítico en SW: ${error.message}`, {
-        type: "sw-error",
-      });
-    })
+      return notify(`Error crítico en SW: ${error.message}`, { type: "sw-error" }, "error");
+    }),
   );
 });
 
@@ -167,117 +177,90 @@ self.addEventListener("message", (event) => {
  * @param {MessageEvent} messageEvent - The message event from the client
  */
 async function handlePostEvent(messageEvent) {
-  // Immediately respond to client with acknowledgment to prevent timeout
   const responsePort = messageEvent.ports?.[0];
 
   try {
-    if (!messageEvent.data?.payload) {
-      throw new Error("No payload found in message event");
-    }
-    if (!responsePort) {
-      throw new Error("No response port found in message event");
-    }
+    if (!messageEvent.data?.payload) throw new Error("No payload found in message event");
+    if (!responsePort) throw new Error("No response port found in message event");
 
-    console.info("Extracting payload from messageEvent.data.payload", messageEvent.data.payload);
+    log("Extracting payload from messageEvent.data.payload", messageEvent.data.payload);
     const { api, query, description, files } = messageEvent.data.payload;
     const action = `${api}${query}`;
 
-    // Check if we're in a test environment (localhost with test patterns)
     const isTestEnvironment = self.location.hostname === "localhost" && description?.includes("test");
 
     let response;
     if (isTestEnvironment) {
-      console.info("Test environment detected, returning mocked response");
-      // Return a mocked successful response for tests
+      log("Test environment detected, returning mocked response");
       response = new Response(
         JSON.stringify({
           success: true,
-          data: {
-            slug: "test-event-slug-123",
-            id: "event-123",
-            title: "Test Event",
-          },
+          data: { slug: "test-event-slug-123", id: "event-123", title: "Test Event" },
         }),
-        {
-          status: 200,
-          statusText: "OK",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        { status: 200, statusText: "OK", headers: { "Content-Type": "application/json" } },
       );
       await new Promise((resolve) => setTimeout(resolve, 3000));
     } else {
       response = await fetch(action, {
         method: "POST",
         redirect: "follow",
-        headers: {
-          "Content-Type": "text/plain;charset=UTF-8",
-        },
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
         body: JSON.stringify({ description, files, fast: true }),
       });
     }
 
-    const jsonResponse = await response.json();
-    console.info("Parsed JSON response:", jsonResponse);
+    const eventData = await parseJSONResponse(response);
 
-    if (!jsonResponse.success) throw new Error(`${jsonResponse.message}\n${JSON.stringify(jsonResponse.metadata)}`);
-
-    // Send success event data result back to client IMMEDIATELY
-    const eventData = jsonResponse.data;
     try {
-      responsePort.postMessage({
-        success: true,
-        data: eventData,
-      });
-      console.info("Success response sent to client");
+      responsePort.postMessage({ success: true, data: eventData });
+      log("Success response sent to client");
     } catch (portError) {
       console.error("Failed to send success message through port:", portError);
-      // Even if we can't send through the port, we'll still show the notification
     }
 
     if (!eventData.slug) return;
 
-    // Show success notification (non-blocking)
-    return showSuccessServiceWorkerNotification("Tu evento ha sido cargado, está listo para ver!.", {
-      type: "event-posted",
-      clientId: messageEvent.source?.id,
-      url: `${self.location.origin}/${eventData.slug}`,
-    });
+    return notify(
+      "¡Éxito! 🎉",
+      {
+        body: "Tu evento ha sido cargado, está listo para ver!.",
+        data: {
+          type: "event-posted",
+          clientId: messageEvent.source?.id,
+          url: `${self.location.origin}/${eventData.slug}`,
+        },
+      },
+      "success",
+    );
   } catch (error) {
     console.error("Error posting event in service worker:", error);
 
-    // Always try to send error back to client
     if (responsePort) {
       try {
-        responsePort.postMessage({
-          success: false,
-          error: error.message,
-        });
+        responsePort.postMessage({ success: false, error: error.message });
       } catch (portError) {
         console.error("Failed to send error message through port:", portError);
       }
     }
 
-    // Show error notification
-    return showErrorServiceWorkerNotification(`Hubo un problema: ${error.message}`, { type: "event-error" });
+    return notify(
+      "Error",
+      {
+        body: `Hubo un problema: ${error.message}`,
+        data: { type: "event-error" },
+      },
+      "error",
+    );
   }
 }
 
 // Push Notification handler
 self.addEventListener("push", (event) => {
   const data = event.data.json();
-  console.log("Push received", data);
-
-  const options = {
-    body: data.body,
-    vibrate: [200, 100, 200],
-  };
-
-  event.waitUntil(showServiceWorkerNotification(data.title, options));
+  log("Push received", data);
+  event.waitUntil(notify(data.title, { body: data.body }));
 });
 
-// Notification click handler
 self.addEventListener("notificationclick", (event) => {
   const notification = event.notification;
   notification.close();
@@ -286,26 +269,27 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil(
     (async () => {
       // Check if a client with the given id exists, this was the client that initiated the comunication
-      let client = await clients.get(notification.data.clientId);
+      let client = await clients.get(notification.data?.clientId);
       if (!client) {
         const clientList = await clients.matchAll({ type: "window", includeUncontrolled: true });
         if (clientList.length > 0) {
-          client = clientList.find((client) => client.url.includes(notification.data.url));
+          client = clientList.find((client) => client.url.includes(notification.data?.url));
           if (!client) client = clientList.find((client) => client.url.includes("/publicar-evento"));
           if (!client) client = clientList[0];
         }
       }
       if (client) {
         await client.focus();
-        if (!client.url.includes(notification.data.url)) {
+        if (notification.data?.url && !client.url.includes(notification.data.url)) {
           return client.navigate(notification.data.url);
         } else {
           return;
         }
       }
-
-      return clients.openWindow(notification.data.url);
-    })()
+      if (notification.data?.url) {
+        return clients.openWindow(notification.data.url);
+      }
+    })(),
   );
 });
 
@@ -319,124 +303,39 @@ function readAsDataURL(file) {
     reader.readAsDataURL(file);
   });
 }
-
 /**
- * Shows a service worker notification with consistent styling
+ * Show a notification with consistent styling
  * @param {string} title - Notification title
  * @param {Object} options - Notification options
  * @returns {Promise<void>}
  */
-async function showServiceWorkerNotification(title, options = {}) {
-  return self.registration.showNotification(title, {
+function notify(title, options = {}, type = "default") {
+  const base = {
     icon: "/assets/icons/icon-192x192.png",
     vibrate: [200, 100, 200],
-    ...options,
-  });
+  };
+
+  const presets = {
+    success: { tag: "trasla-success", requireInteraction: true },
+    error: { tag: "trasla-error", vibrate: [200, 100, 200, 100, 200] },
+  };
+
+  return self.registration.showNotification(title, { ...base, ...(presets[type] || {}), ...options });
 }
 
-/**
- * Shows a success notification via service worker
- * @param {string} message - Success message
- * @param {Object} data - Data to attach to notification
- * @returns {Promise<void>}
- */
-async function showSuccessServiceWorkerNotification(message, data = {}) {
-  return showServiceWorkerNotification("¡Éxito! 🎉", {
-    body: message,
-    tag: "trasla-success",
-    requireInteraction: true,
-    data,
-  });
-}
-
-/**
- * Shows an error notification via service worker
- * @param {string} message - Error message
- * @param {Object} data - Data to attach to notification
- * @returns {Promise<void>}
- */
-async function showErrorServiceWorkerNotification(message, data = {}) {
-  return showServiceWorkerNotification("Error", {
-    body: message,
-    vibrate: [200, 100, 200, 100, 200],
-    tag: "trasla-error",
-    data,
-  });
-}
-
-/**
- * Extracts success response from fetch result
- * @param {Response} response - The fetch response
- * @returns {Promise<Object>} - The response data
- */
-async function extractSuccessResponse(response) {
-  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-  const jsonResponse = await response.json();
-  if (!jsonResponse.success) throw new Error(`${jsonResponse.message}\n${JSON.stringify(jsonResponse.metadata)}`);
-  return jsonResponse.data;
-}
-
-async function staleWhileRevalidate(event, cacheName, { fallbackUrl } = {}) {
-  const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(event.request);
-
-  const revalidate = (async () => {
-    try {
-      const response = await fetch(event.request);
-      if (isCacheableResponse(response, event.request)) {
-        await cache.put(event.request, response.clone());
-      }
-      return response;
-    } catch (error) {
-      if (cachedResponse) return cachedResponse;
-      throw error;
-    }
-  })();
-
-  if (cachedResponse) {
-    event.waitUntil(
-      revalidate.catch(() => {
-        /* no-op */
-      })
-    );
-    return cachedResponse;
+async function parseJSONResponse(response) {
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText}`);
   }
 
-  try {
-    return await revalidate;
-  } catch (error) {
-    if (!fallbackUrl) throw error;
-    const fallbackResponse = await caches.match(fallbackUrl);
-    if (fallbackResponse) return fallbackResponse;
-    throw error;
-  }
-}
+  const json = await response.json();
+  log("Parsed JSON response:", json);
 
-async function networkFirst(request, cacheName) {
-  const cache = await caches.open(cacheName);
-  try {
-    const response = await fetch(request);
-    if (isCacheableResponse(response, request)) {
-      cache.put(request, response.clone());
-    }
-    return response;
-  } catch (error) {
-    const cachedResponse = await cache.match(request);
-    if (cachedResponse) return cachedResponse;
-    throw error;
+  if (!json.success) {
+    throw new Error(`${json.message}\n${JSON.stringify(json.metadata)}`);
   }
-}
 
-async function cacheFirst(request, cacheName) {
-  const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(request);
-  if (cachedResponse) return cachedResponse;
-
-  const response = await fetch(request);
-  if (isCacheableResponse(response, request)) {
-    cache.put(request, response.clone());
-  }
-  return response;
+  return json.data;
 }
 
 function isCacheableResponse(response, request) {
@@ -445,10 +344,43 @@ function isCacheableResponse(response, request) {
   if (response.type === "opaque") {
     try {
       const url = new URL(request.url);
-      return DRIVE_IMAGE_HOSTNAMES.has(url.hostname);
+      return CONFIG.HOSTS.DRIVE.has(url.hostname);
     } catch {
       return false;
     }
   }
   return response.ok;
+}
+
+async function handleRequest(request, strategy, cacheName, fallbackUrl) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+
+  try {
+    if (strategy === "cache-first" && cached) return cached;
+
+    const network = await fetch(request);
+
+    if (isCacheableResponse(network, request)) {
+      cache.put(request, network.clone());
+    }
+
+    if (strategy === "network-first") return network;
+
+    if (strategy === "stale-while-revalidate") {
+      if (cached) return cached;
+      return network;
+    }
+
+    return network;
+  } catch (err) {
+    if (cached) return cached;
+
+    if (fallbackUrl) {
+      const fallback = await caches.match(fallbackUrl);
+      if (fallback) return fallback;
+    }
+
+    throw err;
+  }
 }
