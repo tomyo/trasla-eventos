@@ -1,5 +1,5 @@
 const SHEET_ID_FUTURE_EVENTS = "18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog";
-const SHEET_GID_FUTURE_EVENTS = "398090175";
+const SHEET_GID_FUTURE_EVENTS = "1297613367";
 const SHEET_TIMEZONE_OFFSET = -3;
 /**
  * Get formatted events from a Google Sheet using its ID and GID.
