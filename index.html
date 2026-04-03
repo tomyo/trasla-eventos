@@ -138,6 +138,13 @@
         return /instagram/i.test(ua) || /fban|fbav/i.test(ua) || /wv/i.test(ua);
       }
 
+      function getPlatform() {
+        const ua = navigator.userAgent;
+        if (/android/i.test(ua)) return "android";
+        if (/iphone|ipad|ipod/i.test(ua)) return "ios";
+        return "unknown";
+      }
+
       function getSourceFromReferrer(referrer) {
         if (!referrer) return "direct";
         if (referrer.includes("instagram.com")) return "instagram";
@@ -148,18 +155,25 @@
         return "unknown";
       }
 
+      function setIfMissing(params, key, value) {
+        if (!params.has(key)) params.set(key, value);
+      }
+
       // 2. Redirection Logic
       function redirectToExternalBrowser() {
         const url = new URL(location.href);
-        const ua = navigator.userAgent;
-        const isAndroid = /android/i.test(ua);
-        const isIOS = /iphone|ipad|ipod/i.test(ua);
 
-        url.searchParams.set("utm_referrer", document.referrer || "none");
-        url.searchParams.set("utm_source", getSourceFromReferrer(document.referrer));
-        url.searchParams.set("utm_medium", isAndroid ? "android" : isIOS ? "ios" : "unknown");
-        url.searchParams.set("utm_campaign", "external_browser");
-        url.searchParams.set("utm_content", "escape_in_app_browser");
+        const source = getSourceFromReferrer(document.referrer);
+        const platform = getPlatform();
+
+        setIfMissing(url.searchParams, "utm_source", source);
+        setIfMissing(url.searchParams, "utm_medium", "social");
+        setIfMissing(url.searchParams, "utm_campaign", "escape_inapp");
+        setIfMissing(url.searchParams, "utm_content", "auto_redirect");
+        setIfMissing(url.searchParams, "utm_term", platform);
+
+        const isAndroid = platform === "android";
+        const isIOS = platform === "ios";
 
         if (isAndroid) {
           // Generic Intent URI, so hopefuly pwa will open if installed, or default browser otherwise.

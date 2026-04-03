@@ -2,7 +2,7 @@
   "name": "TRASLA EVENTOS",
   "short_name": "EVENTOS",
   "id": "https://eventos.trasla.com.ar/",
-  "start_url": "/?utm_medium=pwa&utm_source=launcher",
+  "start_url": "/?ctx=app_launch&platform=pwa",
   "display": "standalone",
   "description": "La agenda cultural de Traslasierra.",
   "lang": "es-AR",
@@ -31,7 +31,11 @@
       "purpose": "any maskable"
     }
   ],
-  "url_handlers": [{ "origin": "https://eventos.trasla.com.ar" }],
+  "url_handlers": [
+    {
+      "origin": "https://eventos.trasla.com.ar"
+    }
+  ],
   "share_target": {
     "action": "/share-target",
     "method": "POST",
@@ -43,7 +47,9 @@
       "files": [
         {
           "name": "files",
-          "accept": ["image/*"]
+          "accept": [
+            "image/*"
+          ]
         }
       ]
     }

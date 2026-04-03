@@ -101,7 +101,7 @@ customElements.define(
     isDatasetValid() {
       // Check for required data attributes
       const missingAttributes = this.constructor.requiredDatasetAttributes.filter(
-        (attr) => !this.getAttribute(`data-${attr}`)
+        (attr) => !this.getAttribute(`data-${attr}`),
       );
 
       if (missingAttributes.length > 0) {
@@ -190,7 +190,7 @@ customElements.define(
         }:\n\n`;
         htmlString += /*html*/ `
           <a part="button" target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(
-            this.dataset.phone
+            this.dataset.phone,
           )}&text=${encodeURI(helloMsg)}">
             <img src="/assets/icons/whatsapp.svg" height="21" alt="WhatsApp"/>
           </a>
@@ -202,7 +202,7 @@ customElements.define(
         htmlString += /*html*/ `
           <a part="button" target="_blank" title="Instagram" href="https://instagram.com/${this.dataset.instagram.replace(
             "@",
-            ""
+            "",
           )}">
             <img src="/assets/icons/instagram.svg" height="21" alt="Instagram"/>
           </a>
@@ -214,7 +214,7 @@ customElements.define(
         let href = this.dataset.location;
         if (!isValidUrl(href))
           href = `https://www.google.com/maps/search/?api=1&query=${encodeURI(
-            this.dataset.location + `, ${this.dataset.locality}, Córdoba, Argentina`
+            this.dataset.location + `, ${this.dataset.locality}, Córdoba, Argentina`,
           )},`;
 
         htmlString += /*html*/ `
@@ -279,7 +279,9 @@ customElements.define(
 
       // Add Share button
       htmlString += /*html*/ `
-        <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido" data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}" title="Compartir este evento">
+        <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido"
+                   data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}" 
+                   title="Compartir este evento" data-utm-content="event-${this.dataset.slug.split("-").pop()}">
           <a href="${location.origin}/${this.dataset.slug}">
             <img src="/assets/icons/share.svg" height="21" alt="Compartir evento"/>
           </a>
@@ -288,7 +290,7 @@ customElements.define(
 
       return htmlString;
     }
-  }
+  },
 );
 
 /**

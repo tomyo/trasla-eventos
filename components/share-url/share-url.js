@@ -54,7 +54,9 @@ customElements.define(
 
     addUtmParams(url) {
       const urlObj = new URL(url);
-      urlObj.searchParams.set("utm_medium", "share_button");
+      setIfMissing(urlObj.searchParams, "utm_source", "user");
+      setIfMissing(urlObj.searchParams, "utm_medium", "share");
+      if (this.dataset.utmContent) setIfMissing(urlObj.searchParams, "utm_content", this.dataset.utmContent);
       return urlObj.toString();
     }
 
@@ -66,5 +68,9 @@ customElements.define(
         element.innerHTML = originalContent;
       }, 2000);
     };
-  }
+  },
 );
+
+function setIfMissing(params, key, value) {
+  if (!params.has(key)) params.set(key, value);
+}
