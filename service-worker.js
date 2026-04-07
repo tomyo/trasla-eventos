@@ -80,9 +80,15 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   // SHARE TARGET
-  if (request.method === "POST" && url.pathname === CONFIG.SHARE_TARGET && url.origin === self.location.origin) {
+  // Handle both with and without trailing slash, just in case.
+  const isShareTarget = request.method === "POST" &&
+    (url.pathname === CONFIG.SHARE_TARGET || url.pathname === CONFIG.SHARE_TARGET + "/") &&
+    url.origin === self.location.origin;
+
+  if (isShareTarget) {
     log("Handling share target:", request);
-    return event.respondWith(handleShareTarget(request));
+    event.respondWith(handleShareTarget(request));
+    return;
   }
 
   if (request.method !== "GET") return;
