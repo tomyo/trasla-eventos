@@ -29,6 +29,15 @@ export const localitiesData = [
     googleMaps: "https://www.google.com/maps/place/Dique+La+Vi%C3%B1a,+C%C3%B3rdoba/",
   },
   {
+    locality: "Villa La Viña",
+    schemaType: "City",
+    province: "Córdoba",
+    lat: -31.8711,
+    lon: -65.0331,
+    wikipedia: "https://es.wikipedia.org/wiki/Villa_La_Vi%C3%B1a",
+    googleMaps: "https://maps.app.goo.gl/X8AUiSUhwpQ1S4zL7",
+  },
+  {
     locality: "El Pueblito",
     schemaType: "City",
     province: "Córdoba",
@@ -182,7 +191,7 @@ export const localitiesData = [
     googleMaps: "https://www.google.com/maps/place/San+Huberto,+C%C3%B3rdoba/",
   },
   {
-    locality: "San Javier",
+    locality: "San Javier y Yacanto",
     schemaType: "City",
     province: "Córdoba",
     lat: -32.0388,
@@ -227,7 +236,7 @@ export const localitiesData = [
     googleMaps: "https://www.google.com/maps/place/Villa+Cura+Brochero,+C%C3%B3rdoba/",
   },
   {
-    locality: "Villa de Merlo",
+    locality: "Merlo",
     schemaType: "City",
     province: "San Luis",
     lat: -32.3428,
@@ -252,15 +261,6 @@ export const localitiesData = [
     lon: -65.2,
     wikipedia: "https://es.wikipedia.org/wiki/Villa_Dolores",
     googleMaps: "https://www.google.com/maps/place/Villa+Dolores,+C%C3%B3rdoba/",
-  },
-  {
-    locality: "Yacanto",
-    schemaType: "City",
-    province: "Córdoba",
-    lat: -32.05,
-    lon: -65.05,
-    wikipedia: "https://es.wikipedia.org/wiki/San_Javier_y_Yacanto",
-    googleMaps: "https://www.google.com/maps/place/Yacanto,+C%C3%B3rdoba/",
   },
   {
     locality: "Carpintería",
@@ -393,9 +393,7 @@ export function isDateToday(dateOrString) {
     date = new Date(year, month - 1, day);
   }
 
-  return (
-    date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear()
-  );
+  return date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
 }
 
 export function isDateTomorrow(date) {

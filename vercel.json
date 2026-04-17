@@ -40,6 +40,21 @@
       "permanent": true
     },
     {
+      "source": "/lugar/villa-de-merlo/",
+      "destination": "/lugar/merlo/",
+      "permanent": true
+    },
+    {
+      "source": "/lugar/san-javier/",
+      "destination": "/lugar/san-javier-y-yacanto/",
+      "permanent": true
+    },
+    {
+      "source": "/lugar/yacanto/",
+      "destination": "/lugar/san-javier-y-yacanto/",
+      "permanent": true
+    },
+    {
       "source": "/:query(.+%20.*)",
       "destination": "/?q=:query",
       "permanent": false

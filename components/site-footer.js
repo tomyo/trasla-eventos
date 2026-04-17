@@ -64,19 +64,20 @@ class SiteFooter extends HTMLElement {
             <a title="Ver eventos en Los Pozos" href="/lugar/los-pozos/">Los Pozos</a><span> ·</span>
             <a title="Ver eventos en Luyaba" href="/lugar/luyaba/">Luyaba</a><span> ·</span>
             <a title="Ver eventos en Mina Clavero" href="/lugar/mina-clavero/">Mina Clavero</a><span> ·</span>
+            <a title="Ver eventos en Merlo" href="/lugar/merlo/">Merlo</a><span> ·</span>
             <a title="Ver eventos en Nono" href="/lugar/nono/">Nono</a><span> ·</span>
             <a title="Ver eventos en Panaholma" href="/lugar/panaholma/">Panaholma</a><span> ·</span>
             <a title="Ver eventos en Quebracho Ladeado" href="/lugar/quebracho-ladeado/">Quebracho Ladeado</a><span> ·</span>
             <a title="Ver eventos en San Huberto" href="/lugar/san-huberto/">San Huberto</a><span> ·</span>
-            <a title="Ver eventos en San Javier" href="/lugar/san-javier/">San Javier</a><span> ·</span>
+            <a title="Ver eventos en San Javier y Yacanto" href="/lugar/san-javier-y-yacanto/">San Javier y Yacanto</a><span> ·</span>
             <a title="Ver eventos en San Lorenzo" href="/lugar/san-lorenzo/">San Lorenzo</a><span> ·</span>
             <a title="Ver eventos en San Pedro" href="/lugar/san-pedro/">San Pedro</a><span> ·</span>
             <a title="Ver eventos en Travesia" href="/lugar/travesia/">Travesia</a><span> ·</span>
             <a title="Ver eventos en Villa Cura Brochero" href="/lugar/villa-cura-brochero/">Villa Cura Brochero</a><span> ·</span>
             <a title="Ver eventos en Villa de Las Rosas" href="/lugar/villa-de-las-rosas/">Villa de Las Rosas</a><span> ·</span>
-            <a title="Ver eventos en Villa de Merlo" href="/lugar/villa-de-merlo/">Villa de Merlo</a><span> ·</span>
             <a title="Ver eventos en Villa Dolores" href="/lugar/villa-dolores/">Villa Dolores</a><span> ·</span>
-            <a title="Ver eventos en Yacanto" href="/lugar/yacanto/">Yacanto</a>
+            <a title="Ver eventos en Villa La Viña" href="/lugar/villa-la-vina/">Villa la Viña</a><span> ·</span>
+            <a title="Ver eventos Virtuales" href="/lugar/virtual/">VIRTUAL</a>
           </nav>
         </fieldset>
         <a href="/que-es-trasla-eventos.html" title="¿Qué es Trasla Eventos?">¿Qué es Trasla Eventos?</a>
