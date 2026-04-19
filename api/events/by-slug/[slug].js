@@ -21,7 +21,7 @@ export default async function handler(req) {
     idPrefix = idMatch[1];
   } else {
     // slug v1: title-locality-datetime fuzzy-search
-    const eventsLegacy = await getGoogleSheetEvents(sheetIdLegacy, sheetGidLegacy);
+    const eventsLegacy = sheetIdLegacy && sheetGidLegacy ? await getGoogleSheetEvents(sheetIdLegacy, sheetGidLegacy) : events;
     const searchResults = fuzzySearch(eventsLegacy, urlSlug);
     eventLegacyData = searchResults[0]?.item;
     console.log("Found legacy event", eventLegacyData.id, "with eventId:", eventLegacyData.eventId);

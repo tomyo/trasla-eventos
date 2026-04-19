@@ -40,7 +40,7 @@ async function getSheetData(id, gid = 0) {
     await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&gid=${gid}`)
   ).text();
 
-  ///Need to extract the JSON part between "google.visualization.Query.setResponse({"version":"0.6","reqId":"0","status":"ok","sig":"1053501725","table":{cols: [...], rows: [...]}});"
+  // Need to extract the JSON part between "google.visualization.Query.setResponse({"version":"0.6","reqId":"0","status":"ok","sig":"1053501725","table":{cols: [...], rows: [...]}});"
   const jsonString = queryTextResponse.match(/(?<="table":).*(?=}\);)/g)[0];
   const json = JSON.parse(jsonString);
   const table = [];
