@@ -24,14 +24,22 @@ export default async function handler(req) {
     const eventsLegacy = sheetIdLegacy && sheetGidLegacy ? await getGoogleSheetEvents(sheetIdLegacy, sheetGidLegacy) : events;
     const searchResults = fuzzySearch(eventsLegacy, urlSlug);
     eventLegacyData = searchResults[0]?.item;
-    console.log("Found legacy event", eventLegacyData.id, "with eventId:", eventLegacyData.eventId);
-    if (eventLegacyData.eventId) idPrefix = eventLegacyData.eventId; // Will match anyway
+    if (eventLegacyData) {
+      console.log("Found legacy event", eventLegacyData.id, "with eventId:", eventLegacyData.eventId);
+      if (eventLegacyData.eventId) idPrefix = eventLegacyData.eventId; // Whole id will match as prefix aswell
+    }
   }
   const eventData = idPrefix ? events.find((event) => event.id.startsWith(idPrefix)) : eventLegacyData;
 
   if (!eventData) {
     console.warn("No event found for slug", urlSlug, "with idPrefix", idPrefix);
-    return new Response(null, { status: 404 });
+    const debugMsg = `Evento no encontrado en ${{ urlSlug }}`;
+    const msg = `${debugMsg}
+    Pruebe recargar la página o notifíquenos al <a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=+5493544632482&text=${encodeURI(debugMsg)}">
+      3544-632482
+    </a>, gracias!
+    `;
+    return new Response(msg, { status: 404 });
   }
   if (urlSlug !== eventData.slug) {
     const canonicalUrl = `${url.origin}/${eventData.slug}`;
