@@ -2,14 +2,14 @@ const DEBUG = false;
 const log = (...args) => DEBUG && console.log(...args);
 
 const CONFIG = {
-  VERSION: "2024-10-08",
+  VERSION: "2026-04-28",
   SHARE_TARGET: "/share-target",
 
   CACHE: {
-    APP: "static-2024-10-08",
-    RUNTIME: "runtime-2024-10-08",
-    SHEETS: "sheets-2024-10-08",
-    DRIVE: "drive-images-2024-10-08",
+    APP: "static-2026-04-28",
+    RUNTIME: "runtime-2026-04-28",
+    SHEETS: "sheets-2026-04-28",
+    DRIVE: "drive-images-2026-04-28",
     SHARE_TARGET: "/share-target",
   },
 
@@ -22,6 +22,7 @@ const CONFIG = {
 const CORE_ASSETS = [
   "/",
   "/index.html",
+  "/que-es-trasla-eventos.html",
   "/manifest.json",
   "/base.css",
   "/legacy.css",
@@ -29,18 +30,44 @@ const CORE_ASSETS = [
   "/assets/icons/apple-touch-icon.png",
   "/assets/icons/icon-192x192.png",
   "/assets/icons/icon-512x512.png",
+  "/assets/icons/trasla-eventos.svg",
+  "/assets/icons/loica.svg",
+  "/assets/icons/calendar.svg",
+  "/assets/icons/instagram.svg",
+  "/assets/icons/maps.svg",
+  "/assets/icons/share.svg",
+  "/assets/icons/whatsapp.svg",
+  "/assets/icons/upload.svg",
+  "/assets/icons/form.svg",
+  "/assets/icons/email.svg",
+  "/assets/images/mountain.svg",
+  "/assets/images/pattern.png",
+  "/assets/images/trasla-eventos.svg",
+  "/assets/fonts/DM-Sans.woff2",
+  "/assets/fonts/Poster-Cut-Neue-Regular.woff2",
+  "/assets/fonts/SometypeMono-VariableFont_wght.ttf",
   "/components/event-entry.js",
   "/components/event-entry.css",
+  "/components/event-entries.js",
   "/components/events-filter.js",
   "/components/site-header.js",
   "/components/site-footer.js",
   "/components/install-button/install-button.js",
   "/components/horizontal-carousel/horizontal-carousel.js",
+  "/components/horizontal-carousel/horizontal-carousel.css",
   "/components/share-url/share-url.js",
   "/components/today-date-picker.js",
   "/lib/get-events.js",
   "/lib/utils.js",
   "/lib/fuzzy-search-events.js",
+  "/lib/user.js",
+  "/publicar-evento/",
+  "/publicar-evento/index.html",
+  "/publicar-evento/instagram.html",
+  "/publicar-evento/publicar-evento.css",
+  "/publicar-evento/utils.js",
+  "/utils/notifications.js",
+  "/utils/images.js",
 ];
 
 const ALLOWED_CACHES = new Set(Object.values(CONFIG.CACHE));
@@ -400,7 +427,9 @@ function isCacheableResponse(response, request) {
 
 async function handleRequest(request, strategy, cacheName, fallbackUrl) {
   const cache = await caches.open(cacheName);
-  const cached = await cache.match(request);
+
+  // Search in the specific cache first, then in all caches (this finds precached CORE_ASSETS)
+  const cached = (await cache.match(request)) || (await caches.match(request));
 
   try {
     if (strategy === "cache-first" && cached) return cached;
@@ -420,10 +449,11 @@ async function handleRequest(request, strategy, cacheName, fallbackUrl) {
 
     return network;
   } catch (err) {
+    // If network fails, return ANY cached version we found
     if (cached) return cached;
 
     if (fallbackUrl) {
-      const fallback = await cache.match(fallbackUrl);
+      const fallback = (await cache.match(fallbackUrl)) || (await caches.match(fallbackUrl));
       if (fallback) return fallback;
     }
 
