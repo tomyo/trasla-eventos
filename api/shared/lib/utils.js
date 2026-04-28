@@ -312,6 +312,7 @@ export function renderEventEntry(eventData) {
           data-tickets="${eventData.tickets}"
           data-form="${eventData.form}"
           data-link="${eventData.link}"
+          ${eventData.shareRideDestination ? `data-share-ride-destination="${escapeHtml(eventData.shareRideDestination)}"` : ""}
         ></event-entry>`;
 }
 

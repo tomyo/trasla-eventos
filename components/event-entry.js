@@ -100,9 +100,7 @@ customElements.define(
 
     isDatasetValid() {
       // Check for required data attributes
-      const missingAttributes = this.constructor.requiredDatasetAttributes.filter(
-        (attr) => !this.getAttribute(`data-${attr}`),
-      );
+      const missingAttributes = this.constructor.requiredDatasetAttributes.filter((attr) => !this.getAttribute(`data-${attr}`));
 
       if (missingAttributes.length > 0) {
         console.warn(`Missing required data attributes: ${missingAttributes.map((attr) => `data-${attr}`).join(", ")}`);
@@ -277,6 +275,16 @@ customElements.define(
         </a>
       `;
 
+      if (this.dataset.shareRideDestination) {
+        // Add share-ride service button
+        htmlString += /* html */ `
+          <a target="_blank" part="button"  title="Buscar u ofrecer viaje compartido"
+              href="${formatShareTripUrl(this.dataset)}">
+            <img src="/assets/icons/car.svg" height="19" alt="">
+          </a>
+        `;
+      }
+
       // Add Share button
       htmlString += /*html*/ `
         <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido"
@@ -313,4 +321,9 @@ function formatEventDate(date, { onlyTime = false, skipZeroTime = true } = {}) {
   }
 
   return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
+}
+
+function formatShareTripUrl(eventData) {
+  const date = formatLocalDate(new Date(eventData.startsAt));
+  return `https://www.dedo.top/?destination=${eventData.shareRideDestination}&date=${date}`;
 }
