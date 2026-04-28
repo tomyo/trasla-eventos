@@ -81,7 +81,8 @@ self.addEventListener("fetch", (event) => {
 
   // SHARE TARGET
   // Handle both with and without trailing slash, just in case.
-  const isShareTarget = request.method === "POST" &&
+  const isShareTarget =
+    request.method === "POST" &&
     (url.pathname === CONFIG.SHARE_TARGET || url.pathname === CONFIG.SHARE_TARGET + "/") &&
     url.origin === self.location.origin;
 
@@ -93,17 +94,24 @@ self.addEventListener("fetch", (event) => {
 
   if (request.method !== "GET") return;
 
-  // ROUTING
+  // Navigation -> network-first
+  if (request.mode === "navigate") {
+    return event.respondWith(handleRequest(request, "network-first", CONFIG.CACHE.RUNTIME));
+  }
+
+  //  External Sheets (data) -> network-first
   if (CONFIG.HOSTS.SHEETS.has(url.hostname)) {
     return event.respondWith(handleRequest(request, "network-first", CONFIG.CACHE.SHEETS));
   }
 
+  // External Drive (images) -> cache-first
   if (CONFIG.HOSTS.DRIVE.has(url.hostname)) {
     return event.respondWith(handleRequest(request, "cache-first", CONFIG.CACHE.DRIVE));
   }
 
+  // Same-origin assets (JS, CSS, etc.) -> stale-while-revalidate
   if (url.origin === self.location.origin) {
-    return event.respondWith(handleRequest(request, "stale-while-revalidate", CONFIG.CACHE.RUNTIME, "/index.html"));
+    return event.respondWith(handleRequest(request, "stale-while-revalidate", CONFIG.CACHE.RUNTIME));
   }
 });
 
@@ -115,8 +123,37 @@ async function handleShareTarget(request) {
   const formData = await request.formData();
   log("[handleShareTarget] received formData: ", [...formData.entries()]);
 
-  const cache = await caches.open(CONFIG.CACHE.SHARE_TARGET);
   let url = "";
+  const normalizedEntries = [];
+
+  // Normalize entries and extract URL first (no side effects yet)
+  for (let [key, value] of formData.entries()) {
+    // Expected keys: title, description, url, files (see manifest.json share_target.params)
+    if ((key === "description" || key === "text") && typeof value === "string" && URL.canParse(value)) {
+      key = "url"; // Fix url arriving in `description` instead of `url`.
+    }
+
+    if (key === "url" && value) {
+      url = value;
+    }
+
+    normalizedEntries.push([key, value]);
+  }
+
+  // If shared URL belongs to this site → bypass share handler and redirect to it.
+  if (url) {
+    try {
+      const parsed = new URL(url, self.location.origin);
+
+      if (parsed.origin === self.location.origin) {
+        return Response.redirect(parsed.href, 303);
+      }
+    } catch {
+      // Ignore invalid URL
+    }
+  }
+
+  const cache = await caches.open(CONFIG.CACHE.SHARE_TARGET);
 
   // Clear previous cache entries
   const keys = await cache.keys();
@@ -125,31 +162,34 @@ async function handleShareTarget(request) {
   // Cache all formData
   let filesCount = 0; // To make a unique cache key for each file
   const filesList = []; // To store file IDs for later use
-  for (let [key, value] of formData.entries()) {
-    // Expected keys: title, description, url, files (see manifest.json share_target.params)
+
+  for (let [key, value] of normalizedEntries) {
+    if (!value) continue;
+
     if (value instanceof FileList || value instanceof File) {
       key = `file-${filesCount}`;
       filesList.push(key); // Store the file ID for later use
       filesCount += 1;
-    } else if ((key == "description" || key == "text") && URL.canParse(value)) {
-      // Using "text" as fallback for buggy browsers that don't respect manifest config.
-      key = "url"; // Fix url arriving in `description` instead of `url`.
     }
-    if (key == "url" && !!value) url = value;
 
-    if (!value) continue;
+    await cache.put(new Request(`/${key}`), new Response(value instanceof File ? value : String(value)));
 
-    await cache.put(`/${key}`, new Response(value));
-    await cache.put(
-      `/files-list`, // Store the list of file IDs in the cache so we can ensure to use the user's desired order.
-      new Response(JSON.stringify(filesList), { headers: { "Content-Type": "application/json" } }),
-    );
-    log("caching", key, value);
+    log("caching", key);
   }
 
-  if (url.toLowerCase().includes("instagram")) {
+  // Store files order once
+  await cache.put(
+    new Request(`/files-list`),
+    new Response(JSON.stringify(filesList), {
+      headers: { "Content-Type": "application/json" },
+    }),
+  );
+
+  // Routing logic after processing
+  if (url && url.toLowerCase().includes("instagram")) {
     return Response.redirect(`/publicar-evento/instagram.html`, 303);
   }
+
   // Redirect to publish event page with form data in cache
   return Response.redirect(`/publicar-evento/`, 303);
 }
@@ -383,7 +423,7 @@ async function handleRequest(request, strategy, cacheName, fallbackUrl) {
     if (cached) return cached;
 
     if (fallbackUrl) {
-      const fallback = await caches.match(fallbackUrl);
+      const fallback = await cache.match(fallbackUrl);
       if (fallback) return fallback;
     }
 
