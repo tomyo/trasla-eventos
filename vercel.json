@@ -66,7 +66,43 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=604800, s-maxage=604800, stale-while-revalidate=604800"
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=3600, stale-while-revalidate=7200"
+        }
+      ]
+    },
+    {
+      "source": "/lugar/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=1800, stale-while-revalidate=3600"
+        }
+      ]
+    },
+    {
+      "source": "/eventos-(de-)?(hoy|esta-semana|este-mes)/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=300, stale-while-revalidate=900"
+        }
+      ]
+    },
+    {
+      "source": "/:slug([a-z0-9-]+-[a-f0-9]{8})",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=3600, stale-while-revalidate=86400"
         }
       ]
     },
@@ -75,7 +111,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, s-maxage=31536000, immutable"
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     }
