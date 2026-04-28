@@ -1,7 +1,7 @@
 import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
 import {
-  escapeHtml,
   slugify,
+  renderEventEntry,
   getEventSortOrder,
   makeCssToHideAbsentLocalitiesInFooter,
   eventsToSchemaOrgItemList,
@@ -101,30 +101,7 @@ export default async function handler(req) {
     $<closeTag>`,
   );
 
-  const eventEntries = filteredEvents
-    .map(
-      (eventData) => /*html*/ `
-        <event-entry
-          class="card"
-          data-title="${escapeHtml(eventData.title)}"
-          data-description="${escapeHtml(eventData.description)}"
-          data-starts-at="${eventData.startsAt}"
-          data-ends-at="${eventData.endsAt}"
-          data-locality="${eventData.locality}"
-          data-instagram="${eventData.instagram}"
-          data-location="${escapeHtml(eventData.location)}"
-          data-phone="${eventData.phone}"
-          data-images="${eventData.images}"
-          data-activity="${eventData.activity}"
-          data-spotify="${eventData.spotify}"
-          data-youtube="${eventData.youtube}"
-          data-slug="${eventData.slug}"
-          data-tickets="${eventData.tickets}"
-          data-form="${eventData.form}"
-          data-link="${eventData.link}"
-        ></event-entry>`,
-    )
-    .join("");
+  const eventEntries = filteredEvents.map((eventData) => renderEventEntry(eventData)).join("");
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,

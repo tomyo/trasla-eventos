@@ -1,6 +1,6 @@
 import { getGoogleSheetEvents } from "../../shared/lib/get-events.js";
 import { fuzzySearch } from "../../shared/lib/fuzzy-search-events.js";
-import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem } from "../../shared/lib/utils.js";
+import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem, renderEventEntry } from "../../shared/lib/utils.js";
 
 const OG_IMAGE_WIDTH = 1200;
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
@@ -80,38 +80,12 @@ export default async function handler(req) {
     const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
     html = html.replace(contentMetaRegex, contentMeta);
 
-    let eventEntry = /*html*/ `
-      <event-entry
-        class="card"
-        open=""
-        data-title="${escapeHtml(eventData.title)}"
-        data-description="${escapeHtml(eventData.description)}"
-        data-starts-at="${eventData.startsAt}"
-        data-ends-at="${eventData.endsAt}"
-        data-locality="${eventData.locality}"
-        data-instagram="${eventData.instagram}"
-        data-location="${escapeHtml(eventData.location)}"
-        data-phone="${eventData.phone}"
-        data-images="${eventData.images}"
-        data-activity="${eventData.activity}"
-        data-spotify="${eventData.spotify}"
-        data-youtube="${eventData.youtube}"
-        data-slug="${eventData.slug}"
-        data-tickets="${eventData.tickets}"
-        data-form="${eventData.form}"
-        data-link="${eventData.link}"
-      ></event-entry>
-    `;
+    const eventEntry = renderEventEntry(eventData);
     html = html.replace(
       /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-      // "$<openTag>" + eventEntry + "$<closeTag>"
       () => `<event-entries>${eventEntry}</event-entries>`,
     );
-    html = html.replace(
-      /(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is,
-      // "$<openTag>" + eventEntry + "$<closeTag>"
-      () => ``,
-    );
+    html = html.replace(/(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is, () => ``);
     html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
   }
 
