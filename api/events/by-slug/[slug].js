@@ -88,6 +88,15 @@ export default async function handler(req) {
     );
     html = html.replace(/(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is, () => ``);
     html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
+    html = html.replace(
+      /(?<openTag><seo-block>)[\s\S]*?(?<closeTag><\/seo-block>)/is,
+      () => `<seo-block>
+        <h2>${eventData.title}</h2>
+        <h3>En ${eventData.locality}</h3>
+        <h3>El ${eventData.startsAt.toLocaleDateString("es-AR")}</h3>
+        <p>${eventData.description}</p>
+      </seo-block>`,
+    );
   }
 
   // Set cache headers based on event date

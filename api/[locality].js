@@ -95,7 +95,7 @@ export default async function handler(req) {
 
   // Reaplace seo-block with the locality name
   html = html.replace(
-    /(?<openTag><seo-block>).*?(?<closeTag><\/seo-block>)/is,
+    /(?<openTag><seo-block>)[\s\S]*?(?<closeTag><\/seo-block>)/is,
     `$<openTag>
       <h2>¿Qué hacer en ${locality}?</h2>
       <p>Información actualizada de todos los eventos de ${locality} de hoy, de la semana y de este mes.</p>
@@ -105,7 +105,7 @@ export default async function handler(req) {
   const eventEntries = filteredEvents.map((eventData) => renderEventEntry(eventData)).join("");
 
   html = html.replace(
-    /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
+    /(?<openTag><event-entries[^>]*>)[\s\S]*?(?<closeTag><\/event-entries>)/is,
     `$<openTag>${eventEntries}$<closeTag>`,
   );
 

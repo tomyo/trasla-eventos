@@ -93,7 +93,7 @@ export default async function handler(req) {
 
   // Reaplace seo-block with the locality name
   html = html.replace(
-    /(?<openTag><seo-block>).*?(?<closeTag><\/seo-block>)/gs,
+    /(?<openTag><seo-block>)[\s\S]*?(?<closeTag><\/seo-block>)/gs,
     `$<openTag>
       <h2>¿Qué hacer en Traslasierra ${timeText}?</h2>
       <p>Información actualizada de todos los eventos, talleres, festivales y actividades de Traslasierra de ${timeText}.</p>
