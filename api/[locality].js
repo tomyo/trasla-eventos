@@ -1,4 +1,3 @@
-import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
 import {
   slugify,
   renderEventEntry,
@@ -8,16 +7,18 @@ import {
   localityToSchemaOrgItem,
 } from "./shared/lib/utils.js";
 
-const day = 1000 * 60 * 60 * 24;
+const day = 60 * 60 * 24;
 
 export default async function handler(req) {
   const url = new URL(req.url);
+  const { origin } = url;
   const localitySlug = url.pathname.replace(/\/lugar\/(.*)\//, "$1");
   const locality = localitySlug
     .split("-")
     .map((s) => s[0].toUpperCase() + s.slice(1))
     .join(" ");
-  const events = await getGoogleSheetEvents();
+  const eventsResponse = await fetch(`${origin}/api/v1/events`);
+  const events = await eventsResponse.json();
   const filteredEvents = events
     .filter((event) => slugify(event.locality) === localitySlug)
     .sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
@@ -111,7 +112,7 @@ export default async function handler(req) {
   return new Response(html, {
     headers: {
       "Content-Type": "text/html",
-      "Cache-Control": `public, max-age=${day / 2}, s-maxage=${day * 2}, stale-while-revalidate=${day / 2}, stale-if-error=${day}`,
+      "Cache-Control": `public, max-age=${day / 2}, s-maxage=${day}, stale-while-revalidate=${day}, stale-if-error=${day * 2}`,
     },
   });
 }

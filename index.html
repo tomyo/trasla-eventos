@@ -219,7 +219,6 @@
 
   <link rel="modulepreload" href="/lib/user.js" />
   <link rel="modulepreload" href="/lib/utils.js" />
-  <link rel="modulepreload" href="/lib/get-events.js" />
   <link rel="modulepreload" href="/components/share-url/share-url.js" />
   <link rel="modulepreload" href="/components/install-button/install-button.js" />
   <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
@@ -732,7 +731,6 @@
   </style>
 
   <script type="module">
-    import { getGoogleSheetEvents } from "/lib/get-events.js";
     import {
       escapeHtml,
       slugify,
@@ -769,7 +767,8 @@
     }
 
     async function fetchAndRenderEvents() {
-      const upcomingEvents = (await getGoogleSheetEvents()).sort((a, b) => {
+      const eventsResponse = await fetch("/api/v1/events");
+      const upcomingEvents = (await eventsResponse.json()).sort((a, b) => {
         return getEventSortOrder(a) - getEventSortOrder(b);
       });
       let eventsToRender = upcomingEvents;

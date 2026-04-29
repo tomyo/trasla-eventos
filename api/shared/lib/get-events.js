@@ -1,16 +1,4 @@
-const SHEET_ID_FUTURE_EVENTS = "18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog";
-const SHEET_GID_FUTURE_EVENTS = "1297613367";
 const SHEET_TIMEZONE_OFFSET = -3;
-/**
- * Get formatted events from a Google Sheet using its ID and GID.
- *
- * @param {string} id - The ID of the Google Sheet.
- * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
- * @returns {Promise<Object[]>} A promise that resolves to an array of eventData objects.
- */
-async function getGoogleSheetEvents(id = SHEET_ID_FUTURE_EVENTS, gid = SHEET_GID_FUTURE_EVENTS) {
-  return await getSheetData(id, gid);
-}
 
 /**
  * Creates a Date object based on the date/time components
@@ -35,6 +23,23 @@ function createSheetDate(year, month, day, hour = 0, minute = 0, second = 0, tim
   return utcDate;
 }
 
+/**
+ * Get raw table data as list of entries from a Google Sheet using its ID and GID.
+ * The first row is assumed to be the header and the rest of the rows are the entries.
+ * An entry is an object with the keys being the headers and the values being the values in the row.
+ *
+ * Date format support:
+ * - Cel values starting with 'Date(' are parsed as dates in the sheet's timezone.
+ *   e.g. Date(2025,11,12,19,0,0)
+ * - If a date has no time component, it is assumed to be at 00:00:00.
+ * - If values are "true" or "false" (case insensitive) they are converted to booleans.
+ * - Otherwise, values are treated as strings.
+ *
+ *
+ * @param {string} id - The ID of the Google Sheet.
+ * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
+ * @returns {Promise<Object[]>} A promise that resolves to an array of entries.
+ */
 async function getSheetData(id, gid = 0) {
   const queryTextResponse = await (
     await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&gid=${gid}`)
@@ -127,4 +132,4 @@ function table_to_objects(gsheet_array) {
   return final_object;
 }
 
-export { getGoogleSheetEvents };
+export { getSheetData };

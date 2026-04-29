@@ -1,11 +1,12 @@
-import { getGoogleSheetEvents } from "./shared/lib/get-events.js";
 import { slugify, getEventSortOrder } from "./shared/lib/utils.js";
 
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
 let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
 export default async function handler(req) {
   const url = new URL(req.url);
-  const events = await getGoogleSheetEvents(sheetId, sheetGid);
+  const { origin } = url;
+  const eventsResponse = await fetch(`${origin}/api/v1/events?includePast=true`);
+  const events = await eventsResponse.json();
   events.sort((a, b) => {
     return getEventSortOrder(b) - getEventSortOrder(a); // descending order
   });

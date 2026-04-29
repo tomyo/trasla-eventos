@@ -1,4 +1,3 @@
-import { getGoogleSheetEvents } from "../../shared/lib/get-events.js";
 import {
   isDateToday,
   renderEventEntry,
@@ -10,12 +9,14 @@ import {
 
 let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
 let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
-const day = 1000 * 60 * 60 * 24;
+const day = 60 * 60 * 24;
 
 export default async function handler(req) {
   const url = new URL(req.url);
+  const { origin } = url;
   const when = url.searchParams.get("when");
-  const events = await getGoogleSheetEvents(sheetId, sheetGid);
+  const eventsResponse = await fetch(`${origin}/api/v1/events`);
+  const events = await eventsResponse.json();
   let filter = (event) => true;
   let title;
   let description;
@@ -32,13 +33,13 @@ export default async function handler(req) {
     title = "Eventos de esta semana";
     timeText = "esta semana";
     description = "Información actualizada de todos los eventos de esta semana en Traslasierra.";
-    sMaxage = day * 2;
+    sMaxage = day;
   } else if (when === "este-mes") {
     filter = (event) => isDateWithinMonth(new Date(event.startsAt));
     title = "Eventos de este mes";
     timeText = "este mes";
     description = "Información actualizada de todos los eventos de este mes en Traslasierra.";
-    sMaxage = day * 5;
+    sMaxage = day * 2;
   } else {
     throw new Error("Invalid when parameter: " + when);
   }
@@ -115,7 +116,7 @@ export default async function handler(req) {
   return new Response(html, {
     headers: {
       "Content-Type": "text/html",
-      "Cache-Control": `public, max-age=${day}, s-maxage=${sMaxage}, stale-while-revalidate=${day}, stale-if-error=${day}`,
+      "Cache-Control": `public, max-age=${sMaxage}, s-maxage=${sMaxage}, stale-while-revalidate=${sMaxage * 2}, stale-if-error=${sMaxage * 4}`,
     },
   });
 }

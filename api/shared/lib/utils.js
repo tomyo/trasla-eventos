@@ -747,11 +747,11 @@ export function eventToSchemaEventItem(event, origin = "https://eventos.trasla.c
     location: {
       "@type": "Place",
       ...(event.place && { name: event.place }),
-      address: event.address || `${event.place}, ${event.locality}, Córdoba, Argentina`,
+      address: event.address || `${event.place}, ${event.locality}, ${event.province || "Córdoba"}, Argentina`,
       url: event.location || "",
     },
     image: getGoogleDriveImagesPreview(event.images, OG_IMAGE_WIDTH),
-    organizer: getEventOrganizer(event),
+    // organizer: getEventOrganizer(event), // TODO: have this data properly
     performer: getEventPerformer(event),
     offers: getEventOffers(event),
   };

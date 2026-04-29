@@ -57,7 +57,6 @@ const CORE_ASSETS = [
   "/components/horizontal-carousel/horizontal-carousel.css",
   "/components/share-url/share-url.js",
   "/components/today-date-picker.js",
-  "/lib/get-events.js",
   "/lib/utils.js",
   "/lib/fuzzy-search-events.js",
   "/lib/user.js",
