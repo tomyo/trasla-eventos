@@ -1,3 +1,5 @@
+const SHEET_ID_FUTURE_EVENTS = "18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog";
+const SHEET_GID_FUTURE_EVENTS = "1297613367";
 const SHEET_TIMEZONE_OFFSET = -3;
 
 /**
@@ -23,6 +25,10 @@ function createSheetDate(year, month, day, hour = 0, minute = 0, second = 0, tim
   return utcDate;
 }
 
+export async function getUpcomingEventsPublicSheetData() {
+  return getSheetData(SHEET_ID_FUTURE_EVENTS, SHEET_GID_FUTURE_EVENTS);
+}
+
 /**
  * Get raw table data as list of entries from a Google Sheet using its ID and GID.
  * The first row is assumed to be the header and the rest of the rows are the entries.
@@ -40,7 +46,7 @@ function createSheetDate(year, month, day, hour = 0, minute = 0, second = 0, tim
  * @param {number} gid - The grid ID of the specific sheet within the Google Sheet.
  * @returns {Promise<Object[]>} A promise that resolves to an array of entries.
  */
-async function getSheetData(id, gid = 0) {
+export async function getSheetData(id, gid = 0) {
   const queryTextResponse = await (
     await fetch(`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&gid=${gid}`)
   ).text();
@@ -131,5 +137,3 @@ function table_to_objects(gsheet_array) {
   // return the final array of json
   return final_object;
 }
-
-export { getSheetData };

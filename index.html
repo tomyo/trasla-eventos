@@ -767,11 +767,28 @@
     }
 
     async function fetchAndRenderEvents() {
-      const eventsResponse = await fetch("/api/v1/events");
-      const upcomingEvents = (await eventsResponse.json()).sort((a, b) => {
+      let eventsToRender = [];
+      try {
+        const eventsResponse = await fetch("/api/v1/events");
+        if (!eventsResponse.ok) throw new Error("API status: " + eventsResponse.status);
+        eventsToRender = await eventsResponse.json();
+      } catch (err) {
+        console.warn("API failed, falling back to direct Google Sheets fetch:", err);
+        try {
+          const { getUpcomingEventsPublicSheetData } = await import(
+            "/lib/get-events.js"
+          );
+          eventsToRender = await getUpcomingEventsPublicSheetData();
+        } catch (fallbackErr) {
+          console.error("Critical error: API and Fallback both failed", fallbackErr);
+          eventsElement.innerHTML = /*html*/ `<p>No pudimos cargar los eventos. Por favor avísenos si el problema persiste.</p>`;
+          return;
+        }
+      }
+
+      const upcomingEvents = eventsToRender.sort((a, b) => {
         return getEventSortOrder(a) - getEventSortOrder(b);
       });
-      let eventsToRender = upcomingEvents;
 
       // Fuzzy search
       const url = new URL(location);
