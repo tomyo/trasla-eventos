@@ -20,7 +20,7 @@ export default async function handler(req) {
     return new Response(JSON.stringify(events), {
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": forceFresh ? "no-store" : `public, s-maxage=${10 * MINUTE}, stale-while-revalidate=${45 * MINUTE}`,
+        "Cache-Control": forceFresh ? "no-store" : `public, s-maxage=${5 * MINUTE}, stale-while-revalidate=${45 * MINUTE}`,
       },
     });
   } catch (error) {
