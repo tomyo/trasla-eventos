@@ -10,6 +10,9 @@ local-server:
 legacy.css:
 	node scripts/build-legacy-css.js
 
+.PHONY: build-static
+build-static:
+	node scripts/build-static.js
 
 ### Update external/shared Web Components from the web-components repo ###
 

@@ -6,7 +6,7 @@ import path from "path";
 
 // Directory where components are stored
 const COMPONENTS_DIR = "/components/";
-const OMIT_DIRS = ["node_modules", "components", "admin"];
+const OMIT_DIRS = ["node_modules", "components", "admin", "dist"];
 
 async function getComponentScripts(html) {
   const scriptRegex = /<script\b[^>]*src=["']([^"']*\.js)["'][^>]*>/gi;
