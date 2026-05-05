@@ -1,6 +1,6 @@
 import { getSheetData } from "../../shared/lib/get-events.js";
 import { fuzzySearch } from "../../shared/lib/fuzzy-search-events.js";
-import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem, renderEventEntry } from "../../shared/lib/utils.js";
+import { renderEventPage } from "../../shared/lib/render.js";
 
 const OG_IMAGE_WIDTH = 1200;
 let sheetIdLegacy = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID_LEGACY : undefined;
@@ -56,55 +56,7 @@ export default async function handler(req) {
 
   let html = await (await fetch(`${url.origin}/index.html`)).text();
 
-  if (eventData) {
-    const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, OG_IMAGE_WIDTH);
-    const contentMeta = /*html*/ `
-      <title>${escapeHtml(eventData.title)}</title>
-      <link
-        rel="canonical"
-        property="og:url"
-        href="${url.origin}/${eventData.slug}"
-      />
-      <meta property="og:title" content="${escapeHtml(eventData.title)}" />
-      <meta
-        name="description"
-        property="og:description"
-        content="${escapeHtml(eventData.description)}"
-      />
-      <meta property="og:image" content="${previewImageUrl}" />
-      <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
-      <meta property="og:type" content="event" />
-      <meta property="og:url" content="${url.origin}/${eventData.slug}" />
-      <meta property="og:site_name" content="TRASLA EVENTOS" />
-      <meta property="og:locale" content="es-AR" />
-      <script type="application/ld+json">
-        ${JSON.stringify({
-          "@context": "https://schema.org",
-          ...eventToSchemaEventItem(eventData, url.origin),
-        })}
-      </script>
-    `;
-
-    const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
-    html = html.replace(contentMetaRegex, contentMeta);
-
-    const eventEntry = renderEventEntry(eventData);
-    html = html.replace(
-      /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-      () => `<event-entries>${eventEntry}</event-entries>`,
-    );
-    html = html.replace(/(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is, () => ``);
-    html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
-    html = html.replace(
-      /(?<openTag><seo-block>)[\s\S]*?(?<closeTag><\/seo-block>)/is,
-      () => `<seo-block>
-        <h2>${eventData.title}</h2>
-        <h3>En ${eventData.locality}</h3>
-        <h3>El ${new Date(eventData.startsAt).toLocaleDateString("es-AR")}</h3>
-        <p>${eventData.description}</p>
-      </seo-block>`,
-    );
-  }
+  html = renderEventPage(eventData, html, url.origin);
 
   // Set cache headers based on event date
   // max-age: time in seconds the browser can cache the response
