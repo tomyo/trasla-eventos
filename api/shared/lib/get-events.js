@@ -1,5 +1,7 @@
-const SHEET_ID_FUTURE_EVENTS = "18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog";
-const SHEET_GID_FUTURE_EVENTS = "1297613367";
+const SHEET_ID_PUBLIC_EVENTS = "18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog";
+const SHEET_GID_PUBLIC_EVENTS_UPCOMING = "1297613367";
+const SHEET_GID_PUBLIC_EVENTS_ALL = "1783307311";
+
 const SHEET_TIMEZONE_OFFSET = -3;
 
 /**
@@ -26,7 +28,39 @@ function createSheetDate(year, month, day, hour = 0, minute = 0, second = 0, tim
 }
 
 export async function getUpcomingEventsPublicSheetData() {
-  return getSheetData(SHEET_ID_FUTURE_EVENTS, SHEET_GID_FUTURE_EVENTS);
+  let result;
+  try {
+    result = await getSheetData(SHEET_ID_PUBLIC_EVENTS, SHEET_GID_PUBLIC_EVENTS_UPCOMING);
+  } catch (err) {
+    console.warn("Direct Google Sheets fetch failed, falling back to API:", err);
+    try {
+      const eventsResponse = await fetch("/api/v1/events");
+      if (!eventsResponse.ok) throw new Error("API status: " + eventsResponse.status);
+      result = await eventsResponse.json();
+    } catch (fallbackErr) {
+      console.error("Critical error: Direct fetch and API fallback both failed", fallbackErr);
+      return [];
+    }
+  }
+  return result;
+}
+
+export async function getAllEventsPublicSheetData() {
+  let result;
+  try {
+    result = await getSheetData(SHEET_ID_PUBLIC_EVENTS, SHEET_GID_PUBLIC_EVENTS_ALL);
+  } catch (err) {
+    console.warn("Direct Google Sheets fetch failed, falling back to API:", err);
+    try {
+      const eventsResponse = await fetch("/api/v1/events?includePast=true");
+      if (!eventsResponse.ok) throw new Error("API status: " + eventsResponse.status);
+      result = await eventsResponse.json();
+    } catch (fallbackErr) {
+      console.error("Critical error: Direct fetch and API fallback both failed", fallbackErr);
+      return [];
+    }
+  }
+  return result;
 }
 
 /**

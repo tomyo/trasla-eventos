@@ -6,17 +6,15 @@ import {
   getEventSortOrder,
   eventsToSchemaOrgItemList,
 } from "../../shared/lib/utils.js";
+import { getUpcomingEventsPublicSheetData } from "../../lib/get-events.js";
 
-let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
-let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
 const day = 60 * 60 * 24;
 
 export default async function handler(req) {
   const url = new URL(req.url);
   const { origin } = url;
   const when = url.searchParams.get("when");
-  const eventsResponse = await fetch(`${origin}/api/v1/events`);
-  const events = await eventsResponse.json();
+  const events = await getUpcomingEventsPublicSheetData();
   let filter = (event) => true;
   let title;
   let description;

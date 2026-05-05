@@ -219,6 +219,7 @@
 
   <link rel="modulepreload" href="/lib/user.js" />
   <link rel="modulepreload" href="/lib/utils.js" />
+  <link rel="modulepreload" href="/lib/get-events.js" />
   <link rel="modulepreload" href="/components/share-url/share-url.js" />
   <link rel="modulepreload" href="/components/install-button/install-button.js" />
   <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
@@ -742,6 +743,8 @@
       makeCssToHideAbsentLocalitiesInFooter,
     } from "/lib/utils.js";
 
+    import { getUpcomingEventsPublicSheetData } from "/lib/get-events.js";
+
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const eventsElement = document.querySelector("event-entries");
@@ -767,23 +770,10 @@
     }
 
     async function fetchAndRenderEvents() {
-      let eventsToRender = [];
-      try {
-        const eventsResponse = await fetch("/api/v1/events");
-        if (!eventsResponse.ok) throw new Error("API status: " + eventsResponse.status);
-        eventsToRender = await eventsResponse.json();
-      } catch (err) {
-        console.warn("API failed, falling back to direct Google Sheets fetch:", err);
-        try {
-          const { getUpcomingEventsPublicSheetData } = await import(
-            "/lib/get-events.js"
-          );
-          eventsToRender = await getUpcomingEventsPublicSheetData();
-        } catch (fallbackErr) {
-          console.error("Critical error: API and Fallback both failed", fallbackErr);
-          eventsElement.innerHTML = /*html*/ `<p>No pudimos cargar los eventos. Por favor avísenos si el problema persiste.</p>`;
-          return;
-        }
+      let eventsToRender = await getUpcomingEventsPublicSheetData();
+      if (!eventsToRender?.length) {
+        eventsElement.innerHTML = /*html*/ `<p>Error al cargar los eventos. Intente más tarde o comuníquese con nosotros al <a href="https://api.whatsapp.com/send?phone=+5493544632482&text=Error%20al%20cargar%20los%20eventos">+5493544632482</a>.</p>`;
+        return;
       }
 
       const upcomingEvents = eventsToRender.sort((a, b) => {

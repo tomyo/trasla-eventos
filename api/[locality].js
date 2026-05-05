@@ -1,3 +1,4 @@
+import { getUpcomingEventsPublicSheetData } from "./shared/lib/get-events.js";
 import {
   slugify,
   renderEventEntry,
@@ -17,8 +18,7 @@ export default async function handler(req) {
     .split("-")
     .map((s) => s[0].toUpperCase() + s.slice(1))
     .join(" ");
-  const eventsResponse = await fetch(`${origin}/api/v1/events`);
-  const events = await eventsResponse.json();
+  const events = await getUpcomingEventsPublicSheetData();
   const filteredEvents = events
     .filter((event) => slugify(event.locality) === localitySlug)
     .sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
