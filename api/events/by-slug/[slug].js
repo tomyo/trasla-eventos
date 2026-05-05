@@ -5,42 +5,49 @@ import { escapeHtml, getGoogleDriveImagesPreview, eventToSchemaEventItem, render
 const OG_IMAGE_WIDTH = 1200;
 let sheetIdLegacy = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID_LEGACY : undefined;
 let sheetGidLegacy = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID_LEGACY : undefined;
+let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
+let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
 
 export default async function handler(req) {
   const url = new URL(req.url);
-  const { origin } = url;
   const urlSlug = url.pathname.split("/").pop();
-  const eventsResponse = await fetch(`${origin}/api/v1/events?includePast=true`);
-  const events = await eventsResponse.json();
 
-  const idMatch = urlSlug.match(/([a-f0-9]{8})$/);
-  let idPrefix;
+  let eventData;
   let eventLegacyData;
-  if (idMatch) {
-    // slug v2: title-idPrefix
-    idPrefix = idMatch[1];
-  } else {
+  let eventIdPrefix;
+  const idMatch = urlSlug.match(/([a-f0-9]{8})$/);
+  if (!idMatch) {
     // slug v1: title-locality-datetime fuzzy-search
     // Currently used for event-inputs (draft events that users get redirected to right after submitting)
-    const eventsLegacy = sheetIdLegacy && sheetGidLegacy ? await getSheetData(sheetIdLegacy, sheetGidLegacy) : events;
+    const eventsLegacy = sheetIdLegacy && sheetGidLegacy ? await getSheetData(sheetIdLegacy, sheetGidLegacy) : [];
     const searchResults = fuzzySearch(eventsLegacy, urlSlug);
     eventLegacyData = searchResults[0]?.item;
-    if (eventLegacyData) {
+    if (eventLegacyData?.eventId) {
       console.log("Found legacy event", eventLegacyData.id, "with eventId:", eventLegacyData.eventId);
-      if (eventLegacyData.eventId) idPrefix = eventLegacyData.eventId; // Whole id will match as prefix aswell
+      // Whole id will match as prefix aswell
+      eventIdPrefix = eventLegacyData.eventId;
     }
+  } else {
+    // slug v2: title-eventIdPrefix
+    eventIdPrefix = idMatch[1];
   }
-  const eventData = idPrefix ? events.find((event) => event.id.startsWith(idPrefix)) : eventLegacyData;
+
+  if (eventIdPrefix) {
+    const events = await getSheetData(sheetId, sheetGid);
+    eventData = events.find((event) => event.id.startsWith(eventIdPrefix));
+  } else {
+    eventData = eventLegacyData;
+  }
 
   if (!eventData) {
-    console.warn("No event found for slug", urlSlug, "with idPrefix", idPrefix);
+    console.warn("No event found for slug", urlSlug, "with eventIdPrefix", eventIdPrefix);
     const debugMsg = `Evento no encontrado en ${{ urlSlug }}`;
-    const msg = `${debugMsg}
-    Pruebe recargar la página o notifíquenos al <a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=+5493544632482&text=${encodeURI(debugMsg)}">
+    const msg = `${debugMsg}<br><br>
+    Pruebe recargar la página o notifíquenos al <br><a target="_blank" title="WhatsApp" href="https://api.whatsapp.com/send?phone=+5493544632482&text=${encodeURI(debugMsg)}">
       3544-632482
     </a>, gracias!
     `;
-    return new Response(msg, { status: 404 });
+    return new Response(msg, { status: 404, type: "text/html" });
   }
   if (urlSlug !== eventData.slug) {
     const canonicalUrl = `${url.origin}/${eventData.slug}`;
@@ -111,8 +118,9 @@ export default async function handler(req) {
     const eventDate = new Date(eventData.date);
     const now = new Date();
     if (eventDate > now) {
-      // For future events: cache for 1 day in browser, 5 days in CDN
-      cacheControl = `public, max-age=${day}, s-maxage=${day * 5}, stale-while-revalidate=${day}, stale-if-error=${day}`;
+      let maxAge = day;
+      if (eventLegacyData == eventData) maxAge = 5;
+      cacheControl = `public, max-age=${maxAge}, s-maxage=${maxAge * 2}, stale-while-revalidate=${maxAge * 3}, stale-if-error=${maxAge * 7}`;
     }
   }
 
