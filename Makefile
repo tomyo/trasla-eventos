@@ -8,7 +8,7 @@ local-server:
 
 .PHONY: legacy.css
 legacy.css:
-	npm run build:css
+	node scripts/build-legacy-css.js
 
 
 ### Update external/shared Web Components from the web-components repo ###
