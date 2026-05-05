@@ -6,7 +6,7 @@ import {
   getEventSortOrder,
   eventsToSchemaOrgItemList,
 } from "../../shared/lib/utils.js";
-import { getUpcomingEventsPublicSheetData } from "../../lib/get-events.js";
+import { getUpcomingEventsPublicSheetData } from "../../shared/lib/get-events.js";
 
 const day = 60 * 60 * 24;
 
