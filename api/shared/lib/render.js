@@ -260,7 +260,7 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
     }
 
     <style>
-      /* hide locality selector */
+      /* hide form locality selector */
       events-filter form select-locality {
         display: none;
       }
@@ -466,9 +466,7 @@ export function renderIndexPage(events, templateHtml, origin) {
   // 1. Sort events
   const upcomingEvents = events.sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
 
-  // 2. Take initial batch (e.g., first 20 events)
-  const initialEvents = upcomingEvents.slice(0, 20);
-  const eventEntriesHtml = initialEvents.map((eventData) => renderEventEntry(eventData)).join("");
+  const eventEntriesHtml = upcomingEvents.map((eventData) => renderEventEntry(eventData)).join("");
 
   let html = templateHtml;
 
