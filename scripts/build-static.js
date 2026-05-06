@@ -78,13 +78,13 @@ async function build() {
   console.log(`✅ ${upcomingEvents.length} events received.\n`);
 
   // 3. Render main index page
-  console.log("Rendering main index page...");
+  console.log("Rendering index.html...");
   try {
     const indexHtml = renderIndexPage(upcomingEvents, templateHtml, ORIGIN);
     await fs.writeFile(path.join(distDir, "index.html"), indexHtml, "utf-8");
-    console.log("✅ index.html pre-rendered.");
+    console.log("✅ index.html rendered.");
   } catch (e) {
-    console.error("Error rendering index page:", e);
+    console.error("Error rendering index.html:", e);
   }
 
   // 4. Render locality pages
@@ -102,6 +102,7 @@ async function build() {
       console.error(`Error rendering locality ${locality}:`, e);
     }
   }
+  console.log("✅ Locality pages rendered.");
 
   // 5. Render time pages
   console.log("Rendering time pages...");
@@ -115,8 +116,9 @@ async function build() {
       console.error(`Error rendering time page ${when}:`, e);
     }
   }
+  console.log("✅ Time pages rendered.");
 
-  // 5. Render event pages
+  // 6. Render event pages
   console.log("Fetching all events data...");
   const events = await getAllEventsPublicSheetData();
   console.log(`✅ ${events.length} events received.\n`);
@@ -131,6 +133,7 @@ async function build() {
       console.error(`Error rendering event page ${event.slug}:`, e);
     }
   }
+  console.log("✅ Event pages rendered.");
 
   // 7. Generate sitemap
   console.log("Generating sitemap.xml...");
@@ -142,7 +145,7 @@ async function build() {
     console.error("Error generating sitemap.xml:", e);
   }
 
-  console.log("Static build completed successfully.");
+  console.log("✅ Static build completed successfully.");
 }
 
 build().catch((err) => {
