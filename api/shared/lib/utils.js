@@ -817,11 +817,15 @@ function getEventOrganizer(event) {
   };
 }
 
-export function makeCssToHideAbsentLocalitiesInFooter(events) {
-  // Hide localities that don't have events
-  const selectors = events
-    .map((event) => slugify(event.locality))
-    .map((slug) => `:not([href*="${slug}"])`)
+/**
+ * Creates a CSS rule to hide localities links in footer that don't have upcoming events.
+ * @param {Array<String>} localities - An array of locality names.
+ * @returns {String} CSS rule to hide localities links in footer that don't have upcoming events.
+ */
+export function makeCssToHideAbsentLocalitiesInFooter(localities) {
+  const selectors = localities
+    .map((locality) => slugify(locality))
+    .map((localitySlug) => `:not([href*="${localitySlug}"])`)
     .join("");
 
   return /*css*/ `

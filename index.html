@@ -737,15 +737,9 @@
 
   <script type="module">
     import {
-      escapeHtml,
-      slugify,
-      isDateToday,
-      formatLocalDate,
       getEventSortOrder,
-      renderEventEntry,
       makeCssToHideAbsentLocalitiesInFooter,
     } from "/lib/utils.js";
-
     import { getUpcomingEventsPublicSheetData } from "/lib/get-events.js";
 
     const now = new Date();
@@ -780,6 +774,7 @@
 
       renderEvents(eventsToRender);
       eventsFilter.updateUI();
+      hideAbsentLocalitiesFromFooter();
     }
 
     /**
@@ -797,39 +792,43 @@
     }
 
     async function renderEvents(events) {
+      const { renderEventEntry } = await import("/lib/render.js");
       eventsElement.innerHTML = "";
 
-      // Store localities to hide absents from footer
       for (const event of events) {
         eventsElement.insertAdjacentHTML("beforeend", renderEventEntry(event));
       }
-
-      hideAbsentLocalitiesFromFooter(events);
     }
 
-    function hideAbsentLocalitiesFromFooter(events) {
-      const css = makeCssToHideAbsentLocalitiesInFooter(events);
+    function hideAbsentLocalitiesFromFooter() {
+      const eventElements = document.querySelectorAll("event-entry");
+      const localities = [...new Set(Array.from(eventElements).map((event) => event.dataset.locality))];
+      const css = makeCssToHideAbsentLocalitiesInFooter(localities);
       if (document.getElementById("hide-absent-localities")) return;
       const style = document.createElement("style");
       style.id = "hide-absent-localities";
       style.textContent = css;
-
+      console.info("Hiding missing localities from footer.");
       document.head.appendChild(style);
     }
 
     // Get events
+    const areEventsRendered = !!document.querySelector("event-entry");
 
-    if (!document.querySelector("event-entry")) {
+    if (areEventsRendered && location.pathname == "/") {
+      hideAbsentLocalitiesFromFooter();
+    } else {
       // Normal flow when requesting /index.html
       if (location.pathname.includes("/lugar/")) {
         const locality = document.querySelector('[part="location"]').textContent;
         eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
-      } else {
+      } else if (location.pathname === "/") {
         console.info("Fetching fresh events data to render on page...");
         fetchAndRenderEvents();
       }
     }
-    if (location.pathname.match(/[a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?/)) {
+
+    if (location.pathname.match(/\/e\/.+/)?.length) {
       // Scroll into event's section if we're on a event page
       const focusElement = () => document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
       if (document.readyState === "complete") {

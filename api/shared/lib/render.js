@@ -80,9 +80,6 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
       events-filter form span:has(~ select-locality) {
         display: none;
       }
-
-      /* Hide each locality link in footer when locality doesn't have events to show */
-      ${makeCssToHideAbsentLocalitiesInFooter(events)}
     </style>
   `;
 
