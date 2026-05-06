@@ -1,16 +1,20 @@
 export const OG_IMAGE_WIDTH = 1200;
 export const BASE_URL = "https://eventos.trasla.com.ar";
 
+export function getEventPath(slug) {
+  return `/e/${slug}`;
+}
+
 export function getEventUrl(slug, origin = BASE_URL) {
-  return `${origin}/${slug}`;
+  return `${origin}${getEventPath(slug)}`;
 }
 
 export function getLocalityUrl(locality, origin = BASE_URL) {
-  return `${origin}/lugar/${slugify(locality)}`;
+  return `${origin}/lugar/${slugify(locality)}/`;
 }
 
 export function getTimePageUrl(when, origin = BASE_URL) {
-  return `${origin}/eventos-${when}`;
+  return `${origin}/eventos-${when}/`;
 }
 
 export const localitiesData = [

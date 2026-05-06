@@ -3,14 +3,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderLocalityPage, renderTimePage, renderEventPage, renderIndexPage } from "../lib/render.js";
 import { getUpcomingEventsPublicSheetData, getAllEventsPublicSheetData } from "../lib/get-events.js";
-import { localitiesData, slugify, BASE_URL } from "../lib/utils.js";
+import { localitiesData, slugify, BASE_URL, getEventPath } from "../lib/utils.js";
 import { generateSitemapXml } from "../lib/sitemap.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.join(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
-const eventsDir = path.join(distDir, "");
+const eventsDir = path.join(distDir, getEventPath(""));
 
 // Default origin for the canonical URLs and OG tags during build
 const ORIGIN = process.env.URL || BASE_URL;
@@ -131,9 +131,8 @@ async function build() {
   for (const event of events) {
     try {
       const html = renderEventPage(event, templateHtml, ORIGIN);
-      const outDir = path.join(eventsDir, event.slug);
-      await fs.mkdir(outDir, { recursive: true });
-      await fs.writeFile(path.join(outDir, "index.html"), html, "utf-8");
+      await fs.mkdir(eventsDir, { recursive: true });
+      await fs.writeFile(path.join(eventsDir, `${event.slug}.html`), html, "utf-8");
     } catch (e) {
       console.error(`Error rendering event page ${event.slug}:`, e);
     }

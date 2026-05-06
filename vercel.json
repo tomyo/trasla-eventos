@@ -28,11 +28,7 @@
       "destination": "/api/events/by-time/[when].js"
     },
     {
-      "source": "/:slug([a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?)",
-      "destination": "/api/events/by-slug/[slug].js"
-    },
-    {
-      "source": "/:slug([a-z0-9-]+-[a-f0-9]{8})",
+      "source": "/e/:slug",
       "destination": "/api/events/by-slug/[slug].js"
     }
   ],
@@ -58,8 +54,18 @@
       "permanent": true
     },
     {
-      "source": "/eventos-de-:when(hoy|esta-semana|este-mes)/",
+      "source": "/eventos(-de-)?:when(hoy|esta-semana|este-mes)",
       "destination": "/eventos-:when/",
+      "permanent": true
+    },
+    {
+      "source": "/:slug([a-z0-9-]+-[a-f0-9]{8})",
+      "destination": "/e/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/:slug([a-zA-Z0-9-]+-[a-zA-Z0-9-]+-.+-.+-.+-?.*h?)",
+      "destination": "/e/:slug",
       "permanent": true
     },
     {
@@ -106,7 +112,7 @@
       ]
     },
     {
-      "source": "/:slug([a-z0-9-]+-[a-f0-9]{8})",
+      "source": "/e/:slug",
       "headers": [
         {
           "key": "Cache-Control",
