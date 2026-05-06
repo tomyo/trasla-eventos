@@ -1,4 +1,7 @@
 {
+  "version": 2,
+  "cleanUrls": true,
+  "outputDirectory": "./dist",
   "functions": {
     "api/events/**/*.js": {
       "maxDuration": 30

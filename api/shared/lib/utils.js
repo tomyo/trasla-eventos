@@ -1,4 +1,17 @@
 export const OG_IMAGE_WIDTH = 1200;
+export const BASE_URL = "https://eventos.trasla.com.ar";
+
+export function getEventUrl(slug, origin = BASE_URL) {
+  return `${origin}/${slug}`;
+}
+
+export function getLocalityUrl(locality, origin = BASE_URL) {
+  return `${origin}/lugar/${slugify(locality)}`;
+}
+
+export function getTimePageUrl(when, origin = BASE_URL) {
+  return `${origin}/eventos-${when}`;
+}
 
 export const localitiesData = [
   {
@@ -505,7 +518,7 @@ export function isValidUrl(string) {
  */
 export function createGoogleCalendarUrl(eventElement) {
   const eventData = eventElement.dataset;
-  const hook = `https://eventos.trasla.com.ar/${eventData.slug}\n\n`;
+  const hook = `${getEventUrl(eventData.slug)}\n\n`;
   let eventTitle = eventData.title;
   if (!eventTitle) {
     eventTitle = `Actividad en ${eventData.locality}`;
@@ -666,7 +679,7 @@ export function getGoogleDriveImagesPreviews(imageUrls, width = OG_IMAGE_WIDTH) 
  * @param {String} origin
  * @returns {Object} Schema.org City object
  */
-export function localityToSchemaOrgItem(locality, origin = "https://eventos.trasla.com.ar") {
+export function localityToSchemaOrgItem(locality, origin = BASE_URL) {
   const data = localitiesData.find((l) => l.locality === locality);
   const province = data?.province || "Córdoba";
   const provinceSlug = slugify(province);
@@ -687,14 +700,14 @@ export function localityToSchemaOrgItem(locality, origin = "https://eventos.tras
       latitude: data?.lat,
       longitude: data?.lon,
     },
-    url: `${origin}/lugar/${slugify(locality)}/`,
+    url: getLocalityUrl(locality, origin),
     containedInPlace: {
       "@type": "TouristDestination",
-      "@id": "https://eventos.trasla.com.ar/#traslasierra",
+      "@id": `${origin}/#traslasierra`,
     },
     subjectOf: {
       "@type": "WebSite",
-      "@id": "https://eventos.trasla.com.ar/#website",
+      "@id": `${origin}/#website`,
     },
     sameAs: [data?.wikidata, data?.wikipedia, data?.googleMaps].filter(Boolean),
   };
@@ -706,7 +719,7 @@ export function localityToSchemaOrgItem(locality, origin = "https://eventos.tras
  * @param {Array} events - An array of event objects to be converted.
  * @returns {Object} A Schema.org ItemList object representing the events.
  */
-export function eventsToSchemaOrgItemList(events, origin = "https://eventos.trasla.com.ar") {
+export function eventsToSchemaOrgItemList(events, origin = BASE_URL) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -725,10 +738,10 @@ export function eventsToSchemaOrgItemList(events, origin = "https://eventos.tras
  * More info at https://developers.google.com/search/docs/appearance/structured-data/event
  *
  * @param {Object} event - The event object to be converted.
- * @param {string} [origin="https://eventos.trasla.com.ar"] - The base URL for the event.
+ * @param {string} [origin=BASE_URL] - The base URL for the event.
  * @returns {Object} A Schema.org ItemList object representing the event.
  */
-export function eventToSchemaEventItem(event, origin = "https://eventos.trasla.com.ar") {
+export function eventToSchemaEventItem(event, origin = BASE_URL) {
   let eventAttendanceMode = "https://schema.org/OfflineEventAttendanceMode";
   if (event.locality?.toLowerCase() === "virtual") {
     eventAttendanceMode = "https://schema.org/OnlineEventAttendanceMode";
@@ -736,8 +749,8 @@ export function eventToSchemaEventItem(event, origin = "https://eventos.trasla.c
 
   const schema = {
     "@type": "Event",
-    "@id": `${origin}/${event.slug}`,
-    url: `${origin}/${event.slug}`,
+    "@id": getEventUrl(event.slug, origin),
+    url: getEventUrl(event.slug, origin),
     name: escapeHtml(event.title),
     description: escapeHtml(event.description || "Más detalles en el sitio web del evento"),
     startDate: event.startsAt,
@@ -800,7 +813,7 @@ function getEventOrganizer(event) {
     "@type": "Organization",
     name: "Trasla Eventos",
     telephone: event.phone || "",
-    url: "https://eventos.trasla.com.ar/",
+    url: BASE_URL,
   };
 }
 

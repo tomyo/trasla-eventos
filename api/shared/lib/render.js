@@ -11,7 +11,11 @@ import {
   escapeHtml,
   getGoogleDriveImagesPreview,
   eventToSchemaEventItem,
-  OG_IMAGE_WIDTH
+  OG_IMAGE_WIDTH,
+  BASE_URL,
+  getEventUrl,
+  getLocalityUrl,
+  getTimePageUrl,
 } from "./utils.js";
 
 /**
@@ -23,14 +27,12 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
     .filter((event) => slugify(event.locality) === localitySlug)
     .sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
 
-  const urlPath = `/lugar/${localitySlug}/`;
-
   const contentMeta = /*html*/ `
     <title>Próximos eventos en ${locality} | TRASLA EVENTOS</title>
     <link
       rel="canonical"
       property="og:url"
-      href="${origin}${urlPath}"
+      href="${getLocalityUrl(locality, origin)}"
     />
     <meta property="og:title" content="Próximos eventos en ${locality}" />
     <meta
@@ -41,17 +43,17 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
 
     <meta
       property="og:image"
-      content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.avif"
+      content="${BASE_URL}/assets/images/og-image-1200w-900h.avif"
     />
     <meta property="og:image:type" content="image/avif" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="900" />
-    <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.jpg" />
+    <meta property="og:image" content="${BASE_URL}/assets/images/og-image-1200w-900h.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="900" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="${origin}${urlPath}" />
+    <meta property="og:url" content="${getLocalityUrl(locality, origin)}" />
 
     <meta property="og:site_name" content="TRASLA EVENTOS" />
     <meta property="og:locale" content="es-AR" />
@@ -141,7 +143,7 @@ export function renderTimePage(when, events, templateHtml, origin) {
     throw new Error("Invalid when parameter: " + when);
   }
 
-  const canonicalUrl = `${origin}/eventos-${when}/`;
+  const canonicalUrl = getTimePageUrl(when, origin);
 
   const filteredEvents = events.filter(filter).sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
 
@@ -163,12 +165,12 @@ export function renderTimePage(when, events, templateHtml, origin) {
 
       <meta
         property="og:image"
-        content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.avif"
+        content="${BASE_URL}/assets/images/og-image-1200w-900h.avif"
       />
       <meta property="og:image:type" content="image/avif" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
-      <meta property="og:image" content="https://eventos.trasla.com.ar/assets/images/og-image-1200w-900h.jpg" />
+      <meta property="og:image" content="${BASE_URL}/assets/images/og-image-1200w-900h.jpg" />
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
@@ -226,7 +228,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
       <link
         rel="canonical"
         property="og:url"
-        href="${origin}/${eventData.slug}"
+        href="${getEventUrl(eventData.slug, origin)}"
       />
       <meta property="og:title" content="${escapeHtml(eventData.title)}" />
       <meta
@@ -237,7 +239,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
       <meta property="og:image" content="${previewImageUrl}" />
       <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
       <meta property="og:type" content="event" />
-      <meta property="og:url" content="${origin}/${eventData.slug}" />
+      <meta property="og:url" content="${getEventUrl(eventData.slug, origin)}" />
       <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
       <script type="application/ld+json">
@@ -268,6 +270,40 @@ export function renderEventPage(eventData, templateHtml, origin) {
       </seo-block>`,
     );
   }
+
+  return html;
+}
+
+/**
+ * Render the Index Page HTML (Main Home Page)
+ */
+export function renderIndexPage(events, templateHtml, origin) {
+  // 1. Sort events
+  const upcomingEvents = events.sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
+
+  // 2. Take initial batch (e.g., first 20 events)
+  const initialEvents = upcomingEvents.slice(0, 20);
+  const eventEntriesHtml = initialEvents.map((eventData) => renderEventEntry(eventData)).join("");
+
+  let html = templateHtml;
+
+  // 3. Pre-render events in the HTML
+  html = html.replace(
+    /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
+    `$<openTag>${eventEntriesHtml}$<closeTag>`,
+  );
+
+  // 4. Pre-render JSON-LD
+  const schemaEvents = eventsToSchemaOrgItemList(upcomingEvents, origin);
+
+  // Inject a new script tag for the events schema inside the metadata block
+  html = html.replace(
+    /<!-- END CONTENT_METADATA_BLOCK -->/,
+    `<script type="application/ld+json">
+      ${JSON.stringify(schemaEvents)}
+    </script>\n
+    <!-- END CONTENT_METADATA_BLOCK -->`,
+  );
 
   return html;
 }

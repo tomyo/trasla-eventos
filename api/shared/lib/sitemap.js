@@ -1,4 +1,4 @@
-import { slugify, getEventSortOrder } from "./utils.js";
+import { getEventSortOrder, getEventUrl, getLocalityUrl, getTimePageUrl } from "./utils.js";
 
 export function generateSitemapXml(events, origin) {
   events.sort((a, b) => {
@@ -38,7 +38,7 @@ export function generateSitemapXml(events, origin) {
     }
     eventsXml += `
             <url>
-              <loc>${origin}/${event.slug}</loc>
+              <loc>${getEventUrl(event.slug, origin)}</loc>
               <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
               <changefreq>${isPastEvent ? "never" : "daily"}</changefreq>
               <priority>${isPastEvent ? "0.4" : "0.8"}</priority>
@@ -49,7 +49,7 @@ export function generateSitemapXml(events, origin) {
       localitiesInEvents.push(event.locality);
       localitiesPagesXml += `
             <url>
-              <loc>${origin}/lugar/${slugify(event.locality)}</loc>
+              <loc>${getLocalityUrl(event.locality, origin)}</loc>
               <lastmod>${lastModNow}</lastmod>
               <changefreq>daily</changefreq>
               <priority>0.9</priority>
@@ -61,7 +61,7 @@ export function generateSitemapXml(events, origin) {
   for (const when of ["hoy", "esta-semana", "este-mes"]) {
     timeBasedPagesXml += `
             <url>
-              <loc>${origin}/eventos-${when}</loc>
+              <loc>${getTimePageUrl(when, origin)}</loc>
               <lastmod>${newestEventUpdatedAt?.toISOString() || lastModNow}</lastmod>
               <changefreq>${when === "hoy" ? "hourly" : "daily"}</changefreq>
               <priority>0.9</priority>

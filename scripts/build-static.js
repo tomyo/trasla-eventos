@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { renderLocalityPage, renderTimePage, renderEventPage } from "../lib/render.js";
+import { renderLocalityPage, renderTimePage, renderEventPage, renderIndexPage } from "../lib/render.js";
 import { getUpcomingEventsPublicSheetData, getAllEventsPublicSheetData } from "../lib/get-events.js";
-import { localitiesData, slugify } from "../lib/utils.js";
+import { localitiesData, slugify, BASE_URL } from "../lib/utils.js";
 import { generateSitemapXml } from "../lib/sitemap.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,7 +13,7 @@ const distDir = path.join(rootDir, "dist");
 const eventsDir = path.join(distDir, "e");
 
 // Default origin for the canonical URLs and OG tags during build
-const ORIGIN = process.env.URL || "https://eventos.trasla.com.ar";
+const ORIGIN = process.env.URL || BASE_URL;
 
 async function copyDir(src, dest) {
   await fs.mkdir(dest, { recursive: true });
@@ -77,7 +77,17 @@ async function build() {
   const upcomingEvents = await getUpcomingEventsPublicSheetData();
   console.log(`✅ ${upcomingEvents.length} events received.\n`);
 
-  // 3. Render locality pages
+  // 3. Render main index page
+  console.log("Rendering main index page...");
+  try {
+    const indexHtml = renderIndexPage(upcomingEvents, templateHtml, ORIGIN);
+    await fs.writeFile(path.join(distDir, "index.html"), indexHtml, "utf-8");
+    console.log("✅ index.html pre-rendered.");
+  } catch (e) {
+    console.error("Error rendering index page:", e);
+  }
+
+  // 4. Render locality pages
   console.log("Rendering locality pages...");
   for (const localityData of localitiesData) {
     const locality = localityData.locality;
@@ -93,7 +103,7 @@ async function build() {
     }
   }
 
-  // 4. Render time pages
+  // 5. Render time pages
   console.log("Rendering time pages...");
   for (const when of ["hoy", "esta-semana", "este-mes"]) {
     try {
@@ -122,7 +132,7 @@ async function build() {
     }
   }
 
-  // 6. Generate sitemap
+  // 7. Generate sitemap
   console.log("Generating sitemap.xml...");
   try {
     const xml = generateSitemapXml(events, ORIGIN);

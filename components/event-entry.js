@@ -7,6 +7,7 @@ import {
   formatLocalDate,
   getGoogleDriveImagesPreviews,
   createGoogleCalendarUrl,
+  getEventUrl,
 } from "/lib/utils.js";
 import "/components/horizontal-carousel/horizontal-carousel.js";
 
@@ -182,7 +183,7 @@ customElements.define(
 
       // Add WhatsApp button
       if (this.dataset.phone) {
-        const shareUrl = `${location.origin}/${this.dataset.slug}`;
+        const shareUrl = getEventUrl(this.dataset.slug, location.origin);
         let helloMsg = `${shareUrl}\n\nHola! 😃\nTe escribo por el ${this.dataset.activity?.toLowerCase()} ${
           this.dataset.title
         }:\n\n`;
@@ -288,9 +289,9 @@ customElements.define(
       // Add Share button
       htmlString += /*html*/ `
         <share-url part="button" data-action="share" data-fallback-action="clipboard" data-text-success="Compartido"
-                   data-text-success-fallback="Link copiado" data-url="${location.origin}/${this.dataset.slug}" data-title="${this.dataset.title}" 
+                   data-text-success-fallback="Link copiado" data-url="${getEventUrl(this.dataset.slug, location.origin)}" data-title="${this.dataset.title}" 
                    title="Compartir este evento" data-utm-content="event-${this.dataset.slug.split("-").pop()}">
-          <a href="${location.origin}/${this.dataset.slug}">
+          <a href="${getEventUrl(this.dataset.slug, location.origin)}">
             <img src="/assets/icons/share.svg" height="21" alt="Compartir evento"/>
           </a>
         </share-url>
