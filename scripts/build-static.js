@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { renderLocalityPage, renderTimePage, renderEventPage } from "../lib/render.js";
 import { getUpcomingEventsPublicSheetData, getAllEventsPublicSheetData } from "../lib/get-events.js";
 import { localitiesData, slugify } from "../lib/utils.js";
+import { generateSitemapXml } from "../lib/sitemap.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -119,6 +120,16 @@ async function build() {
     } catch (e) {
       console.error(`Error rendering event page ${event.slug}:`, e);
     }
+  }
+
+  // 6. Generate sitemap
+  console.log("Generating sitemap.xml...");
+  try {
+    const xml = generateSitemapXml(events, ORIGIN);
+    await fs.writeFile(path.join(distDir, "sitemap.xml"), xml, "utf-8");
+    console.log("✅ sitemap.xml generated.");
+  } catch (e) {
+    console.error("Error generating sitemap.xml:", e);
   }
 
   console.log("Static build completed successfully.");
