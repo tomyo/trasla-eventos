@@ -24,7 +24,7 @@
       "destination": "/api/[locality].js"
     },
     {
-      "source": "/eventos-(de-)?:when(hoy|esta-semana|este-mes)/",
+      "source": "/eventos-:when(hoy|esta-semana|este-mes)/",
       "destination": "/api/events/by-time/[when].js"
     },
     {
@@ -55,6 +55,11 @@
     {
       "source": "/lugar/yacanto/",
       "destination": "/lugar/san-javier-y-yacanto/",
+      "permanent": true
+    },
+    {
+      "source": "/eventos-de-:when(hoy|esta-semana|este-mes)/",
+      "destination": "/eventos-:when/",
       "permanent": true
     },
     {
