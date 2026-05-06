@@ -311,40 +311,53 @@ export function getEventSortOrder(event) {
  * @returns {String} sanitized and formated description ready to be inserted in html
  */
 export function formatDescription(description) {
-  // Replace URLs in the content with proper anchor tags
   if (!description) return "";
 
   let result = unescapeHtml(description);
 
+  // 1. Collect and hide things that shouldn't be formatted (links, handles, etc.)
+  const placeholders = [];
+  const hide = (content) => {
+    const id = `\x01P${placeholders.length}\x01`;
+    placeholders.push(content);
+    return id;
+  };
+
   const urlRegex = /(\b(?:(?:(?:https?|ftp):\/\/)|www\.)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
-
   result = result.replace(urlRegex, (match) => {
-    match = match.trim().toLowerCase();
-    // Check if the URL already has a missing protocol prefix
-    if (!match.startsWith("http")) match = `https://${match}`;
-
-    let url = new URL(match);
-    // Remove the query parameters from the visual text
-    url.search = "";
-    return `<a href="${match}" target="_blank">${url.hostname + url.pathname}</a>`;
+    let cleanMatch = match.trim().toLowerCase();
+    if (!cleanMatch.startsWith("http")) cleanMatch = `https://${cleanMatch}`;
+    try {
+      let url = new URL(cleanMatch);
+      url.search = "";
+      return hide(`<a href="${cleanMatch}" target="_blank">${url.hostname + url.pathname}</a>`);
+    } catch (e) {
+      return match;
+    }
   });
 
-  // Replace new lines with <br> tags
-  result = result.replace(/\n/g, "<br>");
-
-  // Replace phone numbers with WhatsApp links
   const phoneRegex = /\+?(\d[\s\-\d]{10,20})\b/g;
   result = result.replace(phoneRegex, (match) => {
-    return `<a href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(match)}" target="_blank">${match}</a>`;
+    return hide(`<a href="https://api.whatsapp.com/send?phone=${formatPhoneNumber(match)}" target="_blank">${match}</a>`);
   });
 
-  // Replace Instagram handles with links
   const instagramRegex = /@([a-zA-Z0-9_.]{1,30})/g;
   result = result.replace(instagramRegex, (match) => {
-    return `<a href="https://instagram.com/${match.slice(1)}" target="_blank">${match}</a>`;
+    return hide(`<a href="https://instagram.com/${match.slice(1)}" target="_blank">${match}</a>`);
   });
 
-  return applyWhatsAppFormatting(result);
+  // 2. Apply formatting to the remaining text
+  result = applyWhatsAppFormatting(result);
+
+  // 3. Handle line breaks
+  result = result.replace(/\n/g, "<br>");
+
+  // 4. Restore placeholders
+  placeholders.forEach((content, i) => {
+    result = result.replace(`\x01P${i}\x01`, content);
+  });
+
+  return result;
 }
 
 /**
@@ -502,7 +515,7 @@ export function addHoursOffsetToDate(date, offsetInHours = 2) {
 
 export function formatPhoneNumber(phoneNumber) {
   if (!phoneNumber) return "";
-  phoneNumber = phoneNumber.replace(/[^\d+]/g, "");
+  phoneNumber = String(phoneNumber).replace(/[^\d+]/g, "");
   return phoneNumber?.startsWith("+") ? phoneNumber : `+54${phoneNumber}`;
 }
 
