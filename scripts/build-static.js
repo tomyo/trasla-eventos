@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.join(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
-const eventsDir = path.join(distDir, "e");
+const eventsDir = path.join(distDir, "");
 
 // Default origin for the canonical URLs and OG tags during build
 const ORIGIN = process.env.URL || BASE_URL;
@@ -44,8 +44,10 @@ const OMIT_NAMES_STARTING_WITH = ["."];
 
 async function build() {
   console.log("Starting static build...");
-  await fs.rm(distDir, { recursive: true, force: true });
+  // Ensure distDir exists and empty it if it does
   await fs.mkdir(distDir, { recursive: true });
+  const distEntries = await fs.readdir(distDir);
+  await Promise.all(distEntries.map((entry) => fs.rm(path.join(distDir, entry), { recursive: true, force: true })));
 
   // 1. Copy static assets
   console.log("Copying static files and directories...");
@@ -75,7 +77,8 @@ async function build() {
   // 2. Fetch events
   console.log("Fetching upcoming events data...");
   const upcomingEvents = await getUpcomingEventsPublicSheetData();
-  console.log(`✅ ${upcomingEvents.length} events received.\n`);
+  if (upcomingEvents?.length) console.log(`✅ ${upcomingEvents.length} events received.\n`);
+  else throw new Error(`${upcomingEvents.length} events received :(.\n`);
 
   // 3. Render main index page
   console.log("Rendering index.html...");
@@ -119,9 +122,11 @@ async function build() {
   console.log("✅ Time pages rendered.");
 
   // 6. Render event pages
-  console.log("Fetching all events data...");
+  console.log("Fetching all events data to render events pages...");
   const events = await getAllEventsPublicSheetData();
-  console.log(`✅ ${events.length} events received.\n`);
+  if (events?.length) console.log(`✅ ${events.length} events received.\n`);
+  else throw new Error(`${events.length} events received :(.\n`);
+
   console.log("Rendering event pages...");
   for (const event of events) {
     try {
