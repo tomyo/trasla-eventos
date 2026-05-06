@@ -305,30 +305,6 @@ export function getEventSortOrder(event) {
   return Number(items.map((t) => t.toString().padStart(2, "0")).join(""));
 }
 
-export function renderEventEntry(eventData) {
-  return /*html*/ `
-        <event-entry
-          class="card"
-          data-title="${escapeHtml(eventData.title)}"
-          data-description="${escapeHtml(eventData.description)}"
-          data-starts-at="${eventData.startsAt}"
-          data-ends-at="${eventData.endsAt}"
-          data-locality="${eventData.locality}"
-          data-instagram="${eventData.instagram}"
-          data-location="${escapeHtml(eventData.location)}"
-          data-phone="${eventData.phone}"
-          data-images="${eventData.images}"
-          data-activity="${eventData.activity}"
-          data-spotify="${eventData.spotify}"
-          data-youtube="${eventData.youtube}"
-          data-slug="${eventData.slug}"
-          data-tickets="${eventData.tickets}"
-          data-form="${eventData.form}"
-          data-link="${eventData.link}"
-          ${eventData.shareRideDestination ? `data-share-ride-destination="${escapeHtml(eventData.shareRideDestination)}"` : ""}
-        ></event-entry>`;
-}
-
 /**
  *
  * @param {String} description - text to format, html scaped.
@@ -482,6 +458,34 @@ export function formatLocalDate(date) {
 export function parseDate(dateString) {
   const date = new Date(dateString);
   return isNaN(date.getTime()) ? null : date;
+}
+
+/**
+ *
+ * @param {Date} date
+ * @returns {String}
+ */
+export function formatEventDate(date, { onlyTime = false, skipZeroTime = true } = {}) {
+  if (!date) return "";
+  const dayNames = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
+
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const hour = date.getHours().toString().padStart(2, "0");
+  const minute = date.getMinutes().toString().padStart(2, "0");
+  if (onlyTime) {
+    if (skipZeroTime && hour == "00" && minute === "00") {
+      return "";
+    }
+    return `${hour}:${minute}h`;
+  }
+
+  return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
+}
+
+export function formatShareTripUrl(eventData) {
+  const date = formatLocalDate(new Date(eventData.startsAt));
+  return `https://www.dedo.top/?destination=${eventData.shareRideDestination}&date=${date}`;
 }
 
 /**
