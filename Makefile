@@ -1,10 +1,18 @@
 .PHONY: dev
 dev:
+	make -j 2 watch local-server
+
+.PHONY: dev-no-watch
+dev-no-watch:
 	make -j 2 legacy.css local-server
+
+.PHONY: watch
+watch:
+	node scripts/watch.js
 
 .PHONY: local-server
 local-server:
-	python -m http.server
+	cd dist && python -m http.server 
 
 .PHONY: legacy.css
 legacy.css:
