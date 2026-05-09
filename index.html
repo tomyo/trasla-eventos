@@ -813,14 +813,17 @@
     // Get events
     const areEventsRendered = !!document.querySelector("event-entry");
 
-    if (areEventsRendered && location.pathname == "/") {
-      hideAbsentLocalitiesFromFooter();
+    if (areEventsRendered) {
+      // TODO: find a better way to handle visible localities links in footer.
+      // For now, only hide absent localities when on the main page, where we have all upcoming events available
+      if (location.pathname == "/") hideAbsentLocalitiesFromFooter();
+
     } else {
-      // Normal flow when requesting /index.html
       if (location.pathname.includes("/lugar/")) {
         const locality = document.querySelector('[part="location"]').textContent;
         eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
       } else if (location.pathname === "/") {
+        // We try fresh data on / as fallback
         console.info("Fetching fresh events data to render on page...");
         fetchAndRenderEvents();
       }
