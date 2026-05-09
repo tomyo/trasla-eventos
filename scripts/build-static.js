@@ -42,12 +42,51 @@ async function copyDir(src, dest) {
 const DIRS_TO_OMIT_IN_COPY = ["node_modules", "tests", "scripts", "dist", "api", "gas", "worktrees"];
 const OMIT_NAMES_STARTING_WITH = ["."];
 
-async function build() {
-  console.log("Starting static build...");
+const isFastMode = process.argv.includes("--fast");
+
+async function exportApiData() {
+  const DATA_DIR = path.join(distDir, "data");
+  const CACHE_UPCOMING_PATH = path.join(DATA_DIR, "events.json");
+  const CACHE_ALL_PATH = path.join(DATA_DIR, "events-all.json");
+  
+  await fs.mkdir(DATA_DIR, { recursive: true });
+
+  const hasCache = await fs.access(CACHE_UPCOMING_PATH).then(() => true).catch(() => false) 
+                && await fs.access(CACHE_ALL_PATH).then(() => true).catch(() => false);
+
+  let upcomingEvents, events;
+
+  if (isFastMode && hasCache) {
+    console.log("⚡ Fast mode: Loading events from cache...");
+    upcomingEvents = JSON.parse(await fs.readFile(CACHE_UPCOMING_PATH, "utf-8"));
+    events = JSON.parse(await fs.readFile(CACHE_ALL_PATH, "utf-8"));
+  } else {
+    console.log("Fetching events data for static API export...");
+    upcomingEvents = await getUpcomingEventsPublicSheetData();
+    events = await getAllEventsPublicSheetData();
+    await fs.writeFile(CACHE_UPCOMING_PATH, JSON.stringify(upcomingEvents), "utf-8");
+    await fs.writeFile(CACHE_ALL_PATH, JSON.stringify(events), "utf-8");
+    console.log("✅ Static API endpoints generated in /data.");
+  }
+
+  if (!upcomingEvents?.length || !events?.length) {
+    throw new Error(`Failed to load events. Upcoming: ${upcomingEvents?.length}, All: ${events?.length}`);
+  }
+
+  console.log(`✅ ${upcomingEvents.length} upcoming events ready.`);
+  console.log(`✅ ${events.length} total events ready.\n`);
+
+  return { upcomingEvents, events };
+}
+
+async function build({ upcomingEvents, events }) {
+  console.log(isFastMode ? "Starting fast static build..." : "Starting static build...");
   // Ensure distDir exists and empty it if it does
   await fs.mkdir(distDir, { recursive: true });
-  const distEntries = await fs.readdir(distDir);
-  await Promise.all(distEntries.map((entry) => fs.rm(path.join(distDir, entry), { recursive: true, force: true })));
+  if (!isFastMode) {
+    const distEntries = await fs.readdir(distDir);
+    await Promise.all(distEntries.map((entry) => fs.rm(path.join(distDir, entry), { recursive: true, force: true })));
+  }
 
   // 1. Copy static assets
   console.log("Copying static files and directories...");
@@ -73,12 +112,6 @@ async function build() {
   }
 
   const templateHtml = await fs.readFile(path.join(rootDir, "index.html"), "utf-8");
-
-  // 2. Fetch events
-  console.log("Fetching upcoming events data...");
-  const upcomingEvents = await getUpcomingEventsPublicSheetData();
-  if (upcomingEvents?.length) console.log(`✅ ${upcomingEvents.length} events received.\n`);
-  else throw new Error(`${upcomingEvents.length} events received :(.\n`);
 
   // 3. Render main index page
   console.log("Rendering index.html...");
@@ -122,11 +155,6 @@ async function build() {
   console.log("✅ Time pages rendered.");
 
   // 6. Render event pages
-  console.log("Fetching all events data to render events pages...");
-  const events = await getAllEventsPublicSheetData();
-  if (events?.length) console.log(`✅ ${events.length} events received.\n`);
-  else throw new Error(`${events.length} events received :(.\n`);
-
   console.log("Rendering event pages...");
   for (const event of events) {
     try {
@@ -152,7 +180,14 @@ async function build() {
   console.log("✅ Static build completed successfully.");
 }
 
-build().catch((err) => {
-  console.error("Build failed:", err);
-  process.exit(1);
-});
+async function main() {
+  try {
+    const data = await exportApiData();
+    await build(data);
+  } catch (err) {
+    console.error("Build failed:", err);
+    process.exit(1);
+  }
+}
+
+main();
