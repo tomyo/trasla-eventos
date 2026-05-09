@@ -43,7 +43,7 @@ customElements.define(
       this.defaultSlot.addEventListener("slotchange", this);
       // Observe attribute changes on eventEntry elements to update visibility of date groups
       this.dateGroupsVisibilityObserver = new MutationObserver((mutations) =>
-        this.updateDateGroupsVisibility(mutations.map((mutation) => mutation.target.slot).filter(Boolean))
+        this.updateDateGroupsVisibility(mutations.map((mutation) => mutation.target.slot).filter(Boolean)),
       );
     }
 
@@ -100,14 +100,12 @@ customElements.define(
       dates.forEach((date) => {
         const timeEntry = this.root.querySelector(`time[date="${date}"]`);
         const visibleEventInGroup = this.querySelector(`[slot="${date}"]:not([hidden]):not([excluded])`);
-        this.root.querySelectorAll(`[date="${date}"]`).forEach((timeEntry) => {
-          timeEntry.toggleAttribute("hidden", !visibleEventInGroup);
-        });
+        timeEntry.hidden = !visibleEventInGroup;
       });
     }
 
     disconnectedCallback() {
       this.dateGroupsVisibilityObserver?.disconnect();
     }
-  }
+  },
 );
