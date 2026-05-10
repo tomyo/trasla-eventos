@@ -14,7 +14,7 @@ class SiteFooter extends HTMLElement {
           <div class="pattern-row"></div>
         </div>
         <a href="/" class="logo-title" title="Ir a la página principal">
-          <svg-mask style="--src: url('/assets/images/trasla-eventos.svg')" alt="Trasla Eventos"> </svg-mask>
+          <svg-mask style="--src: url('/assets/icons/trasla-eventos.svg')" alt="Trasla Eventos"> </svg-mask>
         </a>
         <install-button style="color: var(--color-green);">
           <button>
