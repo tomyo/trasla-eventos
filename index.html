@@ -736,7 +736,6 @@
   <script type="module">
     import {
       getEventSortOrder,
-      makeCssToHideAbsentLocalitiesInFooter,
     } from "/lib/utils.js";
     import { getUpcomingEventsPublicSheetData } from "/lib/get-events.js";
 
@@ -772,7 +771,6 @@
 
       renderEvents(eventsToRender);
       eventsFilter.updateUI();
-      hideAbsentLocalitiesFromFooter();
     }
 
     /**
@@ -798,26 +796,11 @@
       }
     }
 
-    function hideAbsentLocalitiesFromFooter() {
-      const eventElements = document.querySelectorAll("event-entry");
-      const localities = [...new Set(Array.from(eventElements).map((event) => event.dataset.locality))];
-      const css = makeCssToHideAbsentLocalitiesInFooter(localities);
-      if (document.getElementById("hide-absent-localities")) return;
-      const style = document.createElement("style");
-      style.id = "hide-absent-localities";
-      style.textContent = css;
-      console.info("Hiding missing localities from footer.");
-      document.head.appendChild(style);
-    }
-
     // Get events
     const areEventsRendered = !!document.querySelector("event-entry");
 
     if (areEventsRendered) {
-      // TODO: find a better way to handle visible localities links in footer.
-      // For now, only hide absent localities when on the main page, where we have all upcoming events available
-      if (location.pathname == "/") hideAbsentLocalitiesFromFooter();
-
+      // Events are already rendered by SSR, no extra client work needed
     } else {
       if (location.pathname.includes("/lugar/")) {
         const locality = document.querySelector('[part="location"]').textContent;

@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderLocalityPage, renderTimePage, renderEventPage, renderIndexPage } from "../lib/render.js";
 import { getUpcomingEventsPublicSheetData, getAllEventsPublicSheetData } from "../lib/get-events.js";
-import { localitiesData, slugify, BASE_URL, getEventPath } from "../lib/utils.js";
+import { localitiesData, slugify, BASE_URL, getEventPath, makeCssToHideAbsentLocalitiesInFooter } from "../lib/utils.js";
 import { generateSitemapXml } from "../lib/sitemap.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -118,7 +118,12 @@ async function build({ upcomingEvents, events }) {
     }
   }
 
-  const templateHtml = await fs.readFile(path.join(rootDir, "index.html"), "utf-8");
+  let templateHtml = await fs.readFile(path.join(rootDir, "index.html"), "utf-8");
+
+  // 2. Inject CSS to hide absent localities in footer
+  const activeLocalities = [...new Set(upcomingEvents.map(event => event.locality))];
+  const hideLocalitiesCss = makeCssToHideAbsentLocalitiesInFooter(activeLocalities);
+  templateHtml = templateHtml.replace('</head>', `  <style id="hide-absent-localities">\n${hideLocalitiesCss}\n  </style>\n</head>`);
 
   // 3. Render main index page
   console.log("Rendering index.html...");
