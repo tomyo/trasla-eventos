@@ -120,10 +120,21 @@ async function build({ upcomingEvents, events }) {
 
   let templateHtml = await fs.readFile(path.join(rootDir, "index.html"), "utf-8");
 
-  // 2. Inject CSS to hide absent localities in footer
-  const activeLocalities = [...new Set(upcomingEvents.map(event => event.locality))];
+  // 2. Append CSS to hide absent localities in footer into dist/base.css
+  const activeLocalities = [...new Set(upcomingEvents.map((event) => event.locality))];
   const hideLocalitiesCss = makeCssToHideAbsentLocalitiesInFooter(activeLocalities);
-  templateHtml = templateHtml.replace('</head>', `  <style id="hide-absent-localities">\n${hideLocalitiesCss}\n  </style>\n</head>`);
+
+  const baseCssPath = path.join(distDir, "base.css");
+  try {
+    const baseCssContent = await fs.readFile(baseCssPath, "utf-8");
+    await fs.writeFile(
+      baseCssPath,
+      baseCssContent + "\n\n/* Injected during build to hide absent localities from footer */\n" + hideLocalitiesCss + "\n",
+      "utf-8",
+    );
+  } catch (e) {
+    console.warn("Could not append hide-absent-localities to base.css:", e);
+  }
 
   // 3. Render main index page
   console.log("Rendering index.html...");
@@ -185,7 +196,7 @@ async function build({ upcomingEvents, events }) {
     const { sitemapIndex, mainXml, upcomingEventsXml, pastEventsXml } = generateSitemaps(upcomingEvents, events, ORIGIN);
     const sitemapsDir = path.join(distDir, "sitemaps");
     await fs.mkdir(sitemapsDir, { recursive: true });
-    
+
     await fs.writeFile(path.join(distDir, "sitemap.xml"), sitemapIndex, "utf-8");
     await fs.writeFile(path.join(sitemapsDir, "main.xml"), mainXml, "utf-8");
     await fs.writeFile(path.join(sitemapsDir, "upcoming-events.xml"), upcomingEventsXml, "utf-8");
