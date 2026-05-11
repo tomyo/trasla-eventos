@@ -20,7 +20,7 @@ export function generateSitemapXml(events, origin) {
     <loc>${origin}/que-es-trasla-eventos.html</loc>
     <lastmod>2026-01-06T15:13:57.717Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.5</priority>
   </url>`;
 
   const localitiesInEvents = [];
@@ -39,7 +39,7 @@ export function generateSitemapXml(events, origin) {
               <loc>${getEventUrl(event.slug, origin)}</loc>
               <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
               <changefreq>daily</changefreq>
-              <priority>0.8</priority>
+              <priority>0.7</priority>
             </url>
           `;
     if (!localitiesInEvents.includes(event.locality)) {
