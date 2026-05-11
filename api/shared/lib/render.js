@@ -410,11 +410,9 @@ export function renderEventPage(eventData, templateHtml, origin) {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
     const isPastEvent = new Date(eventData.startsAt) < todayMidnight;
-    const robotsMeta = isPastEvent ? '\n      <meta name="robots" content="noindex, follow" />' : "";
     const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, OG_IMAGE_WIDTH);
     const contentMeta = /*html*/ `
       <title>${escapeHtml(eventData.title)}</title>
-      ${robotsMeta}
       <link
         rel="canonical"
         property="og:url"
@@ -444,9 +442,11 @@ export function renderEventPage(eventData, templateHtml, origin) {
     html = html.replace(contentMetaRegex, contentMeta);
 
     const eventEntry = renderEventEntry(eventData);
+    const pastEventMessage = isPastEvent ? "\n<p>Evento finalizado</p>" : "";
+
     html = html.replace(
       /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-      (_, openTag, closeTag) => `${openTag}${eventEntry}${closeTag}`,
+      (_, openTag, closeTag) => `${openTag}${eventEntry}${closeTag}${pastEventMessage}`,
     );
     html = html.replace(/(?<openTag><form[^>]*>).*?(?<closeTag><\/form>)/is, () => ``);
     html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, "");
