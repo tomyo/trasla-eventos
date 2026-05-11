@@ -81,7 +81,7 @@
       ]
     },
     {
-      "source": "/sitemap.xml",
+      "source": "/(sitemap|sitemaps/.*)\\.xml",
       "headers": [
         {
           "key": "Cache-Control",

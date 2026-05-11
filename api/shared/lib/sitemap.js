@@ -1,20 +1,21 @@
 import { getEventSortOrder, getEventUrl, getLocalityUrl, getTimePageUrl, isDateToday, isDateWithinWeek, isDateWithinMonth } from "./utils.js";
 
-export function generateSitemapXml(events, origin) {
-  events.sort((a, b) => {
-    return getEventSortOrder(b) - getEventSortOrder(a); // descending order
-  });
+function getSitemapWrapper(content) {
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${content}\n</urlset>`;
+}
 
-  let xml = `<?xml version="1.0" encoding="UTF-8"?>
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
-
+export function generateSitemaps(upcomingEvents, allEvents, origin) {
   const lastModNow = new Date().toISOString();
-  
-  // Calculate max updatedAt globally and per locality
+
+  // Differentiate past and upcoming events
+  const upcomingSlugs = new Set(upcomingEvents.map(e => e.slug));
+  const pastEvents = allEvents.filter(e => !upcomingSlugs.has(e.slug));
+
+  // --- main.xml ---
   let maxGlobalUpdatedAt = null;
   const maxLocalityUpdatedAt = new Map();
-  
-  events.forEach((event) => {
+
+  upcomingEvents.forEach((event) => {
     const updatedAt = new Date(event.updatedAt || event.startsAt || lastModNow);
     if (!maxGlobalUpdatedAt || updatedAt > maxGlobalUpdatedAt) {
       maxGlobalUpdatedAt = updatedAt;
@@ -26,7 +27,7 @@ export function generateSitemapXml(events, origin) {
     }
   });
 
-  const mainPage = `<url>
+  let mainContent = `<url>
     <loc>${origin}</loc>
     <lastmod>${(maxGlobalUpdatedAt || new Date(lastModNow)).toISOString()}</lastmod>
     <changefreq>hourly</changefreq>
@@ -39,30 +40,14 @@ export function generateSitemapXml(events, origin) {
     <priority>0.5</priority>
   </url>`;
 
-  let localitiesPagesXml = "";
-  let timeBasedPagesXml = "";
-  let eventsXml = "";
-
-  events.forEach((event) => {
-    eventsXml += `
-            <url>
-              <loc>${getEventUrl(event.slug, origin)}</loc>
-              <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
-              <changefreq>daily</changefreq>
-              <priority>0.7</priority>
-            </url>
-          `;
-  });
-
   for (const [locality, maxUpdated] of maxLocalityUpdatedAt.entries()) {
-    localitiesPagesXml += `
-            <url>
-              <loc>${getLocalityUrl(locality, origin)}</loc>
-              <lastmod>${maxUpdated.toISOString()}</lastmod>
-              <changefreq>daily</changefreq>
-              <priority>0.9</priority>
-            </url>
-          `;
+    mainContent += `
+      <url>
+        <loc>${getLocalityUrl(locality, origin)}</loc>
+        <lastmod>${maxUpdated.toISOString()}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+      </url>`;
   }
 
   const getTimeFilter = (when) => {
@@ -74,7 +59,7 @@ export function generateSitemapXml(events, origin) {
 
   for (const when of ["hoy", "esta-semana", "este-mes"]) {
     const filter = getTimeFilter(when);
-    const filteredEvents = events.filter(filter);
+    const filteredEvents = upcomingEvents.filter(filter);
     
     let maxWhenUpdated = null;
     filteredEvents.forEach((event) => {
@@ -84,16 +69,64 @@ export function generateSitemapXml(events, origin) {
       }
     });
 
-    timeBasedPagesXml += `
-            <url>
-              <loc>${getTimePageUrl(when, origin)}</loc>
-              <lastmod>${maxWhenUpdated ? maxWhenUpdated.toISOString() : (maxGlobalUpdatedAt || new Date(lastModNow)).toISOString()}</lastmod>
-              <changefreq>${when === "hoy" ? "hourly" : "daily"}</changefreq>
-              <priority>0.9</priority>
-            </url>
-          `;
+    mainContent += `
+      <url>
+        <loc>${getTimePageUrl(when, origin)}</loc>
+        <lastmod>${maxWhenUpdated ? maxWhenUpdated.toISOString() : (maxGlobalUpdatedAt || new Date(lastModNow)).toISOString()}</lastmod>
+        <changefreq>${when === "hoy" ? "hourly" : "daily"}</changefreq>
+        <priority>0.9</priority>
+      </url>`;
   }
 
-  xml += mainPage + timeBasedPagesXml + localitiesPagesXml + eventsXml + "</urlset>";
-  return xml;
+  const mainXml = getSitemapWrapper(mainContent);
+
+  // --- upcoming-events.xml ---
+  let upcomingContent = "";
+  upcomingEvents.sort((a, b) => getEventSortOrder(b) - getEventSortOrder(a)).forEach((event) => {
+    upcomingContent += `
+      <url>
+        <loc>${getEventUrl(event.slug, origin)}</loc>
+        <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+      </url>`;
+  });
+  const upcomingEventsXml = getSitemapWrapper(upcomingContent);
+
+  // --- past-events.xml ---
+  let pastContent = "";
+  pastEvents.sort((a, b) => getEventSortOrder(b) - getEventSortOrder(a)).forEach((event) => {
+    pastContent += `
+      <url>
+        <loc>${getEventUrl(event.slug, origin)}</loc>
+        <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+      </url>`;
+  });
+  const pastEventsXml = getSitemapWrapper(pastContent);
+
+  // --- sitemap.xml (index) ---
+  const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${origin}/sitemaps/main.xml</loc>
+    <lastmod>${lastModNow}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${origin}/sitemaps/upcoming-events.xml</loc>
+    <lastmod>${lastModNow}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${origin}/sitemaps/past-events.xml</loc>
+    <lastmod>${lastModNow}</lastmod>
+  </sitemap>
+</sitemapindex>`;
+
+  return {
+    sitemapIndex,
+    mainXml,
+    upcomingEventsXml,
+    pastEventsXml
+  };
 }

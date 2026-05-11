@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { renderLocalityPage, renderTimePage, renderEventPage, renderIndexPage } from "../lib/render.js";
 import { getUpcomingEventsPublicSheetData, getAllEventsPublicSheetData } from "../lib/get-events.js";
 import { localitiesData, slugify, BASE_URL, getEventPath, makeCssToHideAbsentLocalitiesInFooter } from "../lib/utils.js";
-import { generateSitemapXml } from "../lib/sitemap.js";
+import { generateSitemaps } from "../lib/sitemap.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -179,14 +179,20 @@ async function build({ upcomingEvents, events }) {
   }
   console.log("✅ Event pages rendered.");
 
-  // 7. Generate sitemap
-  console.log("Generating sitemap.xml...");
+  // 7. Generate sitemaps
+  console.log("Generating sitemaps...");
   try {
-    const xml = generateSitemapXml(upcomingEvents, ORIGIN);
-    await fs.writeFile(path.join(distDir, "sitemap.xml"), xml, "utf-8");
-    console.log("✅ sitemap.xml generated, including only upcoming events.");
+    const { sitemapIndex, mainXml, upcomingEventsXml, pastEventsXml } = generateSitemaps(upcomingEvents, events, ORIGIN);
+    const sitemapsDir = path.join(distDir, "sitemaps");
+    await fs.mkdir(sitemapsDir, { recursive: true });
+    
+    await fs.writeFile(path.join(distDir, "sitemap.xml"), sitemapIndex, "utf-8");
+    await fs.writeFile(path.join(sitemapsDir, "main.xml"), mainXml, "utf-8");
+    await fs.writeFile(path.join(sitemapsDir, "upcoming-events.xml"), upcomingEventsXml, "utf-8");
+    await fs.writeFile(path.join(sitemapsDir, "past-events.xml"), pastEventsXml, "utf-8");
+    console.log("✅ Sitemaps generated (index, main, upcoming, past).");
   } catch (e) {
-    console.error("Error generating sitemap.xml:", e);
+    console.error("Error generating sitemaps:", e);
   }
 
   console.log("✅ Static build completed successfully.");
