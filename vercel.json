@@ -16,10 +16,6 @@
       "destination": "/admin/"
     },
     {
-      "source": "/sitemap.xml",
-      "destination": "/api/sitemap.js"
-    },
-    {
       "source": "/lugar/:locality/",
       "destination": "/api/[locality].js"
     },
@@ -81,15 +77,6 @@
         {
           "key": "Cache-Control",
           "value": "no-cache"
-        }
-      ]
-    },
-    {
-      "source": "/sitemap.xml",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, s-maxage=3600, stale-while-revalidate=7200"
         }
       ]
     },
