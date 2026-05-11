@@ -28,10 +28,8 @@ export function generateSitemapXml(events, origin) {
   let timeBasedPagesXml = "";
   let eventsXml = "";
   let newestEventUpdatedAt;
-  const now = new Date();
 
   events.forEach((event) => {
-    const isPastEvent = new Date(event.startsAt) <= now;
     const updatedAt = new Date(event.updatedAt);
     if (updatedAt > newestEventUpdatedAt || !newestEventUpdatedAt) {
       newestEventUpdatedAt = updatedAt;
@@ -40,8 +38,8 @@ export function generateSitemapXml(events, origin) {
             <url>
               <loc>${getEventUrl(event.slug, origin)}</loc>
               <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
-              <changefreq>${isPastEvent ? "never" : "daily"}</changefreq>
-              <priority>${isPastEvent ? "0.4" : "0.8"}</priority>
+              <changefreq>daily</changefreq>
+              <priority>0.8</priority>
             </url>
           `;
     if (!localitiesInEvents.includes(event.locality)) {

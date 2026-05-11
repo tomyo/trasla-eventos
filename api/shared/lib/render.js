@@ -407,9 +407,14 @@ export function renderEventPage(eventData, templateHtml, origin) {
   let html = templateHtml;
 
   if (eventData) {
+    const todayMidnight = new Date();
+    todayMidnight.setHours(0, 0, 0, 0);
+    const isPastEvent = new Date(eventData.startsAt) < todayMidnight;
+    const robotsMeta = isPastEvent ? '\n      <meta name="robots" content="noindex, follow" />' : "";
     const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, OG_IMAGE_WIDTH);
     const contentMeta = /*html*/ `
       <title>${escapeHtml(eventData.title)}</title>
+      ${robotsMeta}
       <link
         rel="canonical"
         property="og:url"

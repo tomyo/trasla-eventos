@@ -48,11 +48,18 @@ async function exportApiData() {
   const DATA_DIR = path.join(distDir, "data");
   const CACHE_UPCOMING_PATH = path.join(DATA_DIR, "events.json");
   const CACHE_ALL_PATH = path.join(DATA_DIR, "events-all.json");
-  
+
   await fs.mkdir(DATA_DIR, { recursive: true });
 
-  const hasCache = await fs.access(CACHE_UPCOMING_PATH).then(() => true).catch(() => false) 
-                && await fs.access(CACHE_ALL_PATH).then(() => true).catch(() => false);
+  const hasCache =
+    (await fs
+      .access(CACHE_UPCOMING_PATH)
+      .then(() => true)
+      .catch(() => false)) &&
+    (await fs
+      .access(CACHE_ALL_PATH)
+      .then(() => true)
+      .catch(() => false));
 
   let upcomingEvents, events;
 
@@ -170,9 +177,9 @@ async function build({ upcomingEvents, events }) {
   // 7. Generate sitemap
   console.log("Generating sitemap.xml...");
   try {
-    const xml = generateSitemapXml(events, ORIGIN);
+    const xml = generateSitemapXml(upcomingEvents, ORIGIN);
     await fs.writeFile(path.join(distDir, "sitemap.xml"), xml, "utf-8");
-    console.log("✅ sitemap.xml generated.");
+    console.log("✅ sitemap.xml generated, including only upcoming events.");
   } catch (e) {
     console.error("Error generating sitemap.xml:", e);
   }
