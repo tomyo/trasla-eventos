@@ -25,7 +25,7 @@ import {
   formatLocalDate,
 } from "./utils.js";
 
-export function renderEventEntryInnerHtml(eventData, origin = BASE_URL) {
+export function renderEventEntryInnerHtml(eventData, origin = BASE_URL, isFirstEvent = false) {
   const startDate = parseDate(eventData.startsAt);
   const eventTime = formatEventDate(startDate, { onlyTime: true, skipZeroTime: true });
   const previewImages = eventData.images.includes("google.com")
@@ -162,7 +162,7 @@ export function renderEventEntryInnerHtml(eventData, origin = BASE_URL) {
   return /*html*/ `
     <h3 part="title">${escapeHtml(eventData.title)}</h3>
     <horizontal-carousel>
-      ${previewImages.map((url) => `<img src="${escapeHtml(url)}" loading="lazy" alt="${escapeHtml(eventData.title)}">`).join("\n")}
+      ${previewImages.map((url, i) => `<img src="${escapeHtml(url)}" ${isFirstEvent && i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} alt="${escapeHtml(eventData.title)}">`).join("\n")}
     </horizontal-carousel>
     
 
@@ -191,7 +191,7 @@ export function renderEventEntryInnerHtml(eventData, origin = BASE_URL) {
   `;
 }
 
-export function renderEventEntry(eventData, origin = BASE_URL) {
+export function renderEventEntry(eventData, origin = BASE_URL, isFirstEvent = false) {
   return /*html*/ `
     <event-entry
       class="card"
@@ -202,7 +202,7 @@ export function renderEventEntry(eventData, origin = BASE_URL) {
       data-slug="${escapeHtml(eventData.slug)}"
       date="${formatLocalDate(new Date(eventData.startsAt))}"
     >
-      ${renderEventEntryInnerHtml(eventData, origin)}
+      ${renderEventEntryInnerHtml(eventData, origin, isFirstEvent)}
     </event-entry>`;
 }
 
@@ -290,7 +290,7 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
     ${closeTag}`,
   );
 
-  const eventEntries = filteredEvents.map((eventData) => renderEventEntry(eventData)).join("");
+  const eventEntries = filteredEvents.map((eventData, i) => renderEventEntry(eventData, origin, i === 0)).join("");
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>)[\s\S]*?(?<closeTag><\/event-entries>)/is,
@@ -384,7 +384,7 @@ export function renderTimePage(when, events, templateHtml, origin) {
     ${closeTag}`,
   );
 
-  const eventEntries = filteredEvents.map((eventData) => renderEventEntry(eventData)).join("");
+  const eventEntries = filteredEvents.map((eventData, i) => renderEventEntry(eventData, origin, i === 0)).join("");
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/gs,
@@ -441,7 +441,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
     const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
     html = html.replace(contentMetaRegex, contentMeta);
 
-    const eventEntry = renderEventEntry(eventData);
+    const eventEntry = renderEventEntry(eventData, origin, true);
     const pastEventMessage = isPastEvent ? "\n<p>Evento finalizado</p>" : "";
 
     html = html.replace(
@@ -471,7 +471,7 @@ export function renderIndexPage(events, templateHtml, origin) {
   // 1. Sort events
   const upcomingEvents = events.sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
 
-  const eventEntriesHtml = upcomingEvents.map((eventData) => renderEventEntry(eventData)).join("");
+  const eventEntriesHtml = upcomingEvents.map((eventData, i) => renderEventEntry(eventData, origin, i === 0)).join("");
 
   let html = templateHtml;
 
