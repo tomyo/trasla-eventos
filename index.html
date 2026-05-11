@@ -216,6 +216,10 @@
       }
     }, 2000);
   </script>
+  <!-- START DNS prefetch and preconnect -->
+  <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
+  <link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+  <!-- END DNS prefetch and preconnect -->
 
   <link rel="modulepreload" href="/lib/user.js" />
   <link rel="modulepreload" href="/lib/utils.js" />
@@ -312,7 +316,9 @@
       width="1920"
       height="1200" />
     <source srcset="/assets/images/portada-720w-1280h.avif 1x" type="image/avif" width="720" height="1280" />
-    <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x" alt="" width="720" height="1280" />
+    <img id="fixed-background" srcset="/assets/images/portada-720w-1280h.jpg 1x"
+      src="/assets/images/portada-720w-1280h.jpg"
+      alt="" width="720" height="1280" sizes="100vw" fetchpriority="high" decoding="async" />
   </picture>
   <site-header></site-header>
   <hero-section>
