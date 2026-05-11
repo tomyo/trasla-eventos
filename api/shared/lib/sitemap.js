@@ -1,4 +1,4 @@
-import { getEventSortOrder, getEventUrl, getLocalityUrl, getTimePageUrl } from "./utils.js";
+import { getEventSortOrder, getEventUrl, getLocalityUrl, getTimePageUrl, isDateToday, isDateWithinWeek, isDateWithinMonth } from "./utils.js";
 
 export function generateSitemapXml(events, origin) {
   events.sort((a, b) => {
@@ -9,10 +9,26 @@ export function generateSitemapXml(events, origin) {
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
   const lastModNow = new Date().toISOString();
+  
+  // Calculate max updatedAt globally and per locality
+  let maxGlobalUpdatedAt = null;
+  const maxLocalityUpdatedAt = new Map();
+  
+  events.forEach((event) => {
+    const updatedAt = new Date(event.updatedAt || event.startsAt || lastModNow);
+    if (!maxGlobalUpdatedAt || updatedAt > maxGlobalUpdatedAt) {
+      maxGlobalUpdatedAt = updatedAt;
+    }
+    
+    const localityMax = maxLocalityUpdatedAt.get(event.locality);
+    if (!localityMax || updatedAt > localityMax) {
+      maxLocalityUpdatedAt.set(event.locality, updatedAt);
+    }
+  });
 
   const mainPage = `<url>
     <loc>${origin}</loc>
-    <lastmod>${lastModNow}</lastmod>
+    <lastmod>${(maxGlobalUpdatedAt || new Date(lastModNow)).toISOString()}</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -23,17 +39,11 @@ export function generateSitemapXml(events, origin) {
     <priority>0.5</priority>
   </url>`;
 
-  const localitiesInEvents = [];
   let localitiesPagesXml = "";
   let timeBasedPagesXml = "";
   let eventsXml = "";
-  let newestEventUpdatedAt;
 
   events.forEach((event) => {
-    const updatedAt = new Date(event.updatedAt);
-    if (updatedAt > newestEventUpdatedAt || !newestEventUpdatedAt) {
-      newestEventUpdatedAt = updatedAt;
-    }
     eventsXml += `
             <url>
               <loc>${getEventUrl(event.slug, origin)}</loc>
@@ -42,25 +52,42 @@ export function generateSitemapXml(events, origin) {
               <priority>0.7</priority>
             </url>
           `;
-    if (!localitiesInEvents.includes(event.locality)) {
-      // Add locality page to sitemap if it doesn't exist
-      localitiesInEvents.push(event.locality);
-      localitiesPagesXml += `
+  });
+
+  for (const [locality, maxUpdated] of maxLocalityUpdatedAt.entries()) {
+    localitiesPagesXml += `
             <url>
-              <loc>${getLocalityUrl(event.locality, origin)}</loc>
-              <lastmod>${lastModNow}</lastmod>
+              <loc>${getLocalityUrl(locality, origin)}</loc>
+              <lastmod>${maxUpdated.toISOString()}</lastmod>
               <changefreq>daily</changefreq>
               <priority>0.9</priority>
             </url>
           `;
-    }
-  });
+  }
+
+  const getTimeFilter = (when) => {
+    if (when === "hoy") return (e) => isDateToday(new Date(e.startsAt));
+    if (when === "esta-semana") return (e) => isDateWithinWeek(new Date(e.startsAt));
+    if (when === "este-mes") return (e) => isDateWithinMonth(new Date(e.startsAt));
+    return () => true;
+  };
 
   for (const when of ["hoy", "esta-semana", "este-mes"]) {
+    const filter = getTimeFilter(when);
+    const filteredEvents = events.filter(filter);
+    
+    let maxWhenUpdated = null;
+    filteredEvents.forEach((event) => {
+      const updatedAt = new Date(event.updatedAt || event.startsAt || lastModNow);
+      if (!maxWhenUpdated || updatedAt > maxWhenUpdated) {
+        maxWhenUpdated = updatedAt;
+      }
+    });
+
     timeBasedPagesXml += `
             <url>
               <loc>${getTimePageUrl(when, origin)}</loc>
-              <lastmod>${newestEventUpdatedAt?.toISOString() || lastModNow}</lastmod>
+              <lastmod>${maxWhenUpdated ? maxWhenUpdated.toISOString() : (maxGlobalUpdatedAt || new Date(lastModNow)).toISOString()}</lastmod>
               <changefreq>${when === "hoy" ? "hourly" : "daily"}</changefreq>
               <priority>0.9</priority>
             </url>
