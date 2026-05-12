@@ -74,7 +74,7 @@ customElements.define(
             <time date="${date}" part="date-label">
               ${formatDateForTimeEntry(date)}
             </time>
-            <slot date="${date}" name="${date}" part="date-group"></slot>
+            <slot date="${date}" name="${date}"></slot>
           `;
         this.root.appendChild(template.content.cloneNode(true));
       }

@@ -190,13 +190,6 @@ section#eventos event-entries[part="loading"], section#eventos event-entries::pa
   text-align: center;
 }
 
-section#eventos event-entries[part="date-group"], section#eventos event-entries::part(date-group) {
-  flex-flow: wrap;
-  justify-content: center;
-  gap: 2rem;
-  display: flex;
-}
-
 section#eventos event-entries[part="date-label"], section#eventos event-entries::part(date-label) {
   font-family: var(--font-family-heading);
   text-align: center;
