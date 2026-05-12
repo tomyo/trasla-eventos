@@ -214,12 +214,14 @@
 
   <script type="module">
     // Create a anonymous user id after 2 seconds to avoid interfering with the first visit install hint
-    setTimeout(async () => {
-      const { getUserId, createUserId } = await import("/lib/user.js");
-      if (!getUserId()) {
-        createUserId();
-      }
-    }, 2000);
+    window.addEventListener("load", () => {
+      setTimeout(async () => {
+        const { getUserId, createUserId } = await import("/lib/user.js");
+        if (!getUserId()) {
+          createUserId();
+        }
+      }, 2000);
+    });
   </script>
   <!-- START DNS prefetch and preconnect -->
   <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
@@ -227,9 +229,6 @@
   <!-- END DNS prefetch and preconnect -->
 
   <link rel="modulepreload" href="/lib/user.js" />
-  <link rel="modulepreload" href="/lib/utils.js" />
-  <link rel="modulepreload" href="/lib/get-events.js" />
-  <link rel="modulepreload" href="/lib/render.js" />
   <link rel="modulepreload" href="/components/share-url/share-url.js" />
   <link rel="modulepreload" href="/components/install-button/install-button.js" />
   <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
@@ -295,13 +294,16 @@
       });
     });
 
-    // 💤 Load when browser is idle (fallback)
-    (window.requestIdleCallback || function (cb) {
-      setTimeout(cb, 3000);
-    })(loadAnalytics);
+    // Wait for the window load event so we don't block it with dynamically injected scripts
+    window.addEventListener("load", () => {
+      // 💤 Load when browser is idle (fallback)
+      (window.requestIdleCallback || function (cb) {
+        setTimeout(cb, 3000);
+      })(loadAnalytics);
 
-    // ⏱ Hard fallback (in case idle never fires)
-    setTimeout(loadAnalytics, 5000);
+      // ⏱ Hard fallback (in case idle never fires)
+      setTimeout(loadAnalytics, 5000);
+    });
   </script>
   <!-- END Analytics -->
 </head>
@@ -736,16 +738,13 @@
   </style>
 
   <script type="module">
-    import {
-      getEventSortOrder,
-    } from "/lib/utils.js";
-    import { getUpcomingEventsPublicSheetData } from "/lib/get-events.js";
-
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const eventsElement = document.querySelector("event-entries");
 
     async function fetchAndRenderEvents() {
+      const { getUpcomingEventsPublicSheetData } = await import("/lib/get-events.js");
+      const { getEventSortOrder } = await import("/lib/utils.js");
       let eventsToRender = await getUpcomingEventsPublicSheetData();
       if (!eventsToRender?.length) {
         eventsElement.innerHTML = /*html*/ `<p>Error al cargar los eventos. Intente más tarde o comuníquese con nosotros al <a href="https://api.whatsapp.com/send?phone=+5493544632482&text=Error%20al%20cargar%20los%20eventos">+5493544632482</a>.</p>`;
