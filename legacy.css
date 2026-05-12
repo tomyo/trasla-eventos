@@ -269,6 +269,7 @@ details summary > * {
   --lightningcss-dark: ;
   color-scheme: light only;
   accent-color: var(--color-green);
+  interpolate-size: allow-keywords;
 }
 
 @font-face {
@@ -705,6 +706,10 @@ header details[open] .line:nth-of-type(3) {
   transform: translateY(-225%)rotate(45deg);
 }
 
+event-entry:not([hidden]) {
+  padding-block-end: 0;
+}
+
 event-entry:not([hidden])[excluded] {
   display: none;
 }
@@ -769,10 +774,39 @@ event-entry:not([hidden]) [part="buttons"] {
   display: flex;
 }
 
+event-entry:not([hidden]) details {
+  flex-direction: column-reverse;
+  display: flex;
+}
+
+event-entry:not([hidden]) details::details-content {
+  opacity: 0;
+  height: 0;
+  transition: height .25s ease, opacity .25s ease, content-visibility .25s allow-discrete;
+  display: block;
+  overflow: clip;
+}
+
+event-entry:not([hidden]) details[open]::details-content {
+  opacity: 1;
+  height: auto;
+}
+
+event-entry:not([hidden]) details[open] .more, event-entry:not([hidden]) details:not([open]) .less {
+  display: none;
+}
+
+event-entry:not([hidden]) details[open] summary::marker {
+  content: "▴ ";
+}
+
+event-entry:not([hidden]) details summary::marker {
+  content: "▾ ";
+}
+
 event-entry:not([hidden]) details summary {
-  display: var(--summary-display, revert);
   cursor: pointer;
-  position: relative;
+  padding: 1rem;
 }
 
 event-entry:not([hidden]) details summary::-webkit-details-marker {

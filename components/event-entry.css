@@ -1,4 +1,6 @@
 event-entry:not([hidden]) {
+  padding-block-end: 0;
+
   &[excluded] {
     display: none;
   }
@@ -67,10 +69,44 @@ event-entry:not([hidden]) {
   }
 
   & details {
+    display: flex;
+    flex-direction: column-reverse;
+
+    &::details-content {
+      height: 0;
+      overflow: clip;
+      opacity: 0;
+      display: block;
+
+      transition:
+        height 250ms ease,
+        opacity 250ms ease,
+        content-visibility 250ms allow-discrete;
+    }
+
+    &[open]::details-content {
+      height: auto;
+      opacity: 1;
+    }
+
+    &[open] .more {
+      display: none;
+    }
+    &:not([open]) .less {
+      display: none;
+    }
+
+    &[open] summary::marker {
+      content: "▴ ";
+    }
+
+    & summary::marker {
+      content: "▾ ";
+    }
+
     & summary {
-      display: var(--summary-display, revert);
       cursor: pointer;
-      position: relative;
+      padding: 1rem;
 
       &::-webkit-details-marker {
         display: none;

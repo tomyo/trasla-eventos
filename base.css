@@ -47,6 +47,8 @@ details summary > * {
   --prose-max-width: 60ch;
   color-scheme: light only;
   accent-color: var(--color-green);
+
+  interpolate-size: allow-keywords;
 }
 
 @font-face {

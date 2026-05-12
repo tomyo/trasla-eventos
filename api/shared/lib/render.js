@@ -174,20 +174,21 @@ export function renderEventEntryInnerHtml(eventData, origin = BASE_URL, isFirstE
       ${renderBadges()}
     </div>
 
-    ${
-      eventData.description
-        ? /*html*/ `<details>
-      <summary>
-        Ver más
-      </summary>
-      <p slot="description" part="description">${formatDescription(escapeHtml(eventData.description))}</p>
-    </details>`
-        : ""
-    }
-
     <div part="buttons">
       ${renderButtons()}
     </div>
+
+    ${
+      eventData.description
+        ? /*html*/ `
+      <details>
+        <p slot="description" part="description">${formatDescription(escapeHtml(eventData.description))}</p>
+        <summary>
+          Ver <span class="more">más</span><span class="less">menos</span>
+        </summary>
+      </details>`
+        : ""
+    }
   `;
 }
 
