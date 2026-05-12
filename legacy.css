@@ -530,6 +530,8 @@ hero-section [slot="logo"] {
   color: var(--color-logo, var(--color-red));
   view-transition-name: logo;
   display: inline-block;
+  position: sticky;
+  top: 1.5rem;
 }
 
 hero-section [part="title"] strong {
