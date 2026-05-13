@@ -55,8 +55,10 @@ customElements.define(
         this.appendEventEntryToDateSlot(eventEntry);
         // Track hidden/excluded attribute changes to update time entries visibility
         this.dateGroupsVisibilityObserver.observe(eventEntry, { attributeFilter: ["hidden", "excluded"] });
-        this.updateDateGroupsVisibility(this.dates);
       }
+
+      // Update visibility once after all elements are assigned
+      this.updateDateGroupsVisibility(this.dates);
     }
 
     /**
