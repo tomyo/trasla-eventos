@@ -766,9 +766,10 @@
       const linkToHighlight = document.querySelector(`footer [href="${location.pathname}"]`);
       if (linkToHighlight) linkToHighlight.style.fontWeight = "bolder";
 
-      if (!!document.querySelector("event-entry")) {
+      if (!document.querySelector("event-entry")) {
         const locality = document.querySelector('[part="location"]').textContent;
-        eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
+        const eventsElement = document.querySelector("event-entries");
+        if (eventsElement) eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
       }
     }
 
