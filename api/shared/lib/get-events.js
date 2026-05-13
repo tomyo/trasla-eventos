@@ -28,7 +28,10 @@ function createSheetDate(year, month, day, hour = 0, minute = 0, second = 0, tim
 }
 
 export async function getUpcomingEventsPublicSheetData() {
+  /** @type {Object[]} */
   let result;
+  console.info("Fetching upcoming events...");
+
   try {
     result = await getSheetData(SHEET_ID_PUBLIC_EVENTS, SHEET_GID_PUBLIC_EVENTS_UPCOMING);
   } catch (err) {

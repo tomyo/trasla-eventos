@@ -207,6 +207,10 @@ export function renderEventEntry(eventData, origin = BASE_URL, isFirstEvent = fa
     </event-entry>`;
 }
 
+export function renderEventEntries(events, origin = BASE_URL) {
+  return events.map((eventData, i) => renderEventEntry(eventData, origin, i === 0)).join("");
+}
+
 /**
  * Render the Locality Page HTML
  */
@@ -291,7 +295,7 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
     ${closeTag}`,
   );
 
-  const eventEntries = filteredEvents.map((eventData, i) => renderEventEntry(eventData, origin, i === 0)).join("");
+  const eventEntries = renderEventEntries(filteredEvents, origin);
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>)[\s\S]*?(?<closeTag><\/event-entries>)/is,
@@ -385,7 +389,7 @@ export function renderTimePage(when, events, templateHtml, origin) {
     ${closeTag}`,
   );
 
-  const eventEntries = filteredEvents.map((eventData, i) => renderEventEntry(eventData, origin, i === 0)).join("");
+  const eventEntries = renderEventEntries(filteredEvents, origin);
 
   html = html.replace(
     /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/gs,
@@ -472,7 +476,7 @@ export function renderIndexPage(events, templateHtml, origin) {
   // 1. Sort events
   const upcomingEvents = events.sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
 
-  const eventEntriesHtml = upcomingEvents.map((eventData, i) => renderEventEntry(eventData, origin, i === 0)).join("");
+  const eventEntriesHtml = renderEventEntries(upcomingEvents, origin);
 
   let html = templateHtml;
 
