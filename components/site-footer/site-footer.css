@@ -1,0 +1,55 @@
+site-footer footer {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  font-family: var(--font-family-mono);
+  background-color: var(--color-green);
+  color: var(--color-light);
+  text-align: center;
+  text-transform: uppercase;
+
+  > * {
+    z-index: 1;
+    text-decoration: none;
+    min-width: 15rem;
+    justify-content: center;
+  }
+
+  svg-mask {
+    --color: var(--color-light);
+  }
+
+  fieldset {
+    border-left-style: solid;
+    border-width: 1px;
+    border-color: var(--background-color);
+    outline: none;
+    max-width: 800px;
+    padding: 1rem;
+    line-height: 1rem;
+    margin-block: 1rem;
+
+    a {
+      text-decoration: none;
+    }
+
+    legend {
+      margin-inline: auto;
+      padding-inline: 0.5rem;
+    }
+  }
+
+  .contact-links {
+    display: flex;
+    --icon-width: 22px;
+    gap: 2rem;
+
+    svg-mask {
+      width: var(--icon-width);
+      height: var(--icon-width);
+    }
+  }
+}

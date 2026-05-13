@@ -120,6 +120,25 @@ async function build({ upcomingEvents, events }) {
 
   let templateHtml = await fs.readFile(path.join(rootDir, "index.html"), "utf-8");
 
+  const siteHeaderHtml = await fs.readFile(path.join(rootDir, "components/site-header/site-header.html"), "utf-8");
+  const siteFooterHtml = await fs.readFile(path.join(rootDir, "components/site-footer/site-footer.html"), "utf-8");
+
+  const siteHeaderCss = await fs.readFile(path.join(rootDir, "components/site-header/site-header.css"), "utf-8");
+  const siteFooterCss = await fs.readFile(path.join(rootDir, "components/site-footer/site-footer.css"), "utf-8");
+
+  // Inject their CSS inline into the head
+  templateHtml = templateHtml.replace(
+    /<\/head>/i,
+    /*html*/ `
+    <style id="site-header-style">${siteHeaderCss}</style>
+    <style id="site-footer-style">${siteFooterCss}</style>
+    </head>`,
+  );
+
+  // Inject Header and Footer into the template HTML directly
+  templateHtml = templateHtml.replace(/<site-header>.*?<\/site-header>/is, `<site-header>\n${siteHeaderHtml}\n</site-header>`);
+  templateHtml = templateHtml.replace(/<site-footer>.*?<\/site-footer>/is, `<site-footer>\n${siteFooterHtml}\n</site-footer>`);
+
   // 2. Append CSS to hide absent localities in footer into dist/base.css
   const activeLocalities = [...new Set(upcomingEvents.map((event) => event.locality))];
   const hideLocalitiesCss = makeCssToHideAbsentLocalitiesInFooter(activeLocalities);
