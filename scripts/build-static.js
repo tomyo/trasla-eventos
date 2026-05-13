@@ -169,7 +169,6 @@ async function build({ upcomingEvents, events }) {
   console.log("Rendering locality pages...");
   for (const localityData of localitiesData) {
     const locality = localityData.locality;
-    if (locality === "Virtual") continue;
 
     try {
       const html = renderLocalityPage(locality, upcomingEvents, templateHtml, ORIGIN);
