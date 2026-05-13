@@ -147,24 +147,9 @@ Teléfono, instagram, link a la página tickets, etc.
       </div>
     </section>
   </main>
-  <site-footer></site-footer>
   <script type="module" src="/components/site-footer/site-footer.js"></script>
-  <script type="module">
-    // START: Service Worker
-    /**
-     * @type {ServiceWorkerRegistration}
-     */
-    let swRegistration;
+  <site-footer></site-footer>
 
-    if ("serviceWorker" in navigator) {
-      try {
-        swRegistration = await navigator.serviceWorker.register("/service-worker.js");
-        console.log("Service Worker registered:", swRegistration);
-      } catch (error) {
-        console.error("Service Worker registration failed:", error);
-      }
-    }
-  </script>
   <style>
     form textarea {
       padding: 1ch;
@@ -578,6 +563,17 @@ Teléfono, instagram, link a la página tickets, etc.
     }
 
     hydrateWithCachedData();
+  </script>
+
+  <script type="module">
+    if ("serviceWorker" in navigator) {
+      try {
+        const swRegistration = await navigator.serviceWorker.register("/service-worker.js");
+        console.log("Service Worker registered:", swRegistration);
+      } catch (error) {
+        console.error("Service Worker registration failed:", error);
+      }
+    }
   </script>
 
   <!-- START LEGACY BROWSERS CSS SUPPORT -->

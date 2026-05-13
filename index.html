@@ -699,12 +699,16 @@
     }
   </style>
 
+  <!-- START CSR fallback for events on / -->
+
   <script type="module">
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const eventsElement = document.querySelector("event-entries");
 
     async function fetchAndRenderEvents() {
+      console.info("Fetching fresh events data to render on page...");
+
       const { getUpcomingEventsPublicSheetData } = await import("/lib/get-events.js");
       const { getEventSortOrder } = await import("/lib/utils.js");
       let eventsToRender = await getUpcomingEventsPublicSheetData();
@@ -732,22 +736,8 @@
         eventsToRender = searchResults.map((result) => result.item);
       }
 
-      renderEvents(eventsToRender);
+      await renderEvents(eventsToRender);
       eventsFilter.updateUI();
-    }
-
-    /**
-     * @param {Date} date
-     * @returns {string}
-     */
-    function formatDateTitle(date) {
-      return date
-        .toLocaleDateString("es-AR", {
-          weekday: "long",
-          day: "2-digit",
-          month: "2-digit",
-        })
-        .toUpperCase();
     }
 
     async function renderEvents(events) {
@@ -762,21 +752,28 @@
     // Get events
     const areEventsRendered = !!document.querySelector("event-entry");
 
-    if (areEventsRendered) {
-      // Events are already rendered by SSR, no extra client work needed
-    } else {
-      if (location.pathname.includes("/lugar/")) {
+    if (!areEventsRendered && location.pathname == "/") {
+      // We try fresh data on / as fallback
+      fetchAndRenderEvents();
+    }
+  </script>
+  <!-- END CSR fallback for events on / -->
+
+  <!-- UX tweaks-->
+  <script type="module">
+    // Highlight visited locality on footer
+    if (location.pathname.includes("/lugar/")) {
+      const linkToHighlight = document.querySelector(`footer [href="${location.pathname}"]`);
+      if (linkToHighlight) linkToHighlight.style.fontWeight = "bolder";
+
+      if (!!document.querySelector("event-entry")) {
         const locality = document.querySelector('[part="location"]').textContent;
         eventsElement.innerHTML = /*html*/ `<p slot="loading">En este momento no hay próximos eventos en ${locality}</p>`; /* Clear loading message */
-      } else if (location.pathname === "/") {
-        // We try fresh data on / as fallback
-        console.info("Fetching fresh events data to render on page...");
-        fetchAndRenderEvents();
       }
     }
 
+    // Scroll into event's section if we're on a single event page
     if (location.pathname.match(/\/e\/.+/)?.length) {
-      // Scroll into event's section if we're on a event page
       const focusElement = () => document.querySelector("section#eventos").scrollIntoView({ behavior: "smooth" });
       if (document.readyState === "complete") {
         focusElement();
@@ -784,34 +781,20 @@
         window.addEventListener("load", focusElement);
       }
     }
-
-    // UX improvements when seeing a locality page (/lugar/locality-slug)
-    if (location.pathname.includes("/lugar/")) {
-      // Highlight visiting locality on footer
-      const linkToHighlight = document.querySelector(`footer [href="${location.pathname}"]`);
-      if (linkToHighlight) linkToHighlight.style.fontWeight = "bolder";
-    }
   </script>
+
+  <!-- START SERVICE WORKER REGISTRATION -->
   <script type="module">
-    // RUN
-
-    // START: Service Worker
-    /**
-     * @type {ServiceWorkerRegistration}
-     */
-    let swRegistration;
-
     if ("serviceWorker" in navigator) {
       try {
-        swRegistration = await navigator.serviceWorker.register("/service-worker.js");
+        const swRegistration = await navigator.serviceWorker.register("/service-worker.js");
         console.log("Service Worker registered:", swRegistration);
       } catch (error) {
-        console.log("Service Worker registration failed:", error);
+        console.error("Service Worker registration failed:", error);
       }
     }
-
-    // END: Service Worker
   </script>
+  <!-- END SERVICE WORKER REGISTRATION -->
 
   <!-- START LEGACY BROWSERS CSS SUPPORT -->
   <noscript>
