@@ -1,5 +1,4 @@
 import "/components/share-url/share-url.js";
-import { renderEventEntryInnerHtml } from "/lib/render.js";
 import "/components/horizontal-carousel/horizontal-carousel.js";
 
 // Global style injection
@@ -52,9 +51,10 @@ customElements.define(
       renderFromDataObserver.unobserve(this);
     }
 
-    renderFromData() {
+    async renderFromData() {
       // CSR for when data was passed through data-* attributes
-      this.innerHTML = renderEventEntryInnerHtml(this.dataset, location.origin);
+      const { renderEventEntryContent } = await import("/components/event-entry/render.js");
+      this.innerHTML = renderEventEntryContent(this.dataset, location.origin);
     }
 
     hasRequiredDatasetAttributesForClientSideRender() {

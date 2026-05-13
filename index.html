@@ -230,16 +230,16 @@
 
   <link rel="modulepreload" href="/lib/user.js" />
   <link rel="modulepreload" href="/lib/utils.js" /> <!-- used by components/today-date-picker.js -->
-  <link rel="modulepreload" href="/lib/render.js" /> <!-- used by components/event-entry.js -->
+  <link rel="modulepreload" href="/components/event-entry/render.js" /> <!-- used by components/event-entry/event-entry.js -->
   <link rel="modulepreload" href="/components/share-url/share-url.js" />
   <link rel="modulepreload" href="/components/install-button/install-button.js" />
   <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
   <link rel="preload" href="/components/horizontal-carousel/horizontal-carousel.css" as="style" />
-  <link rel="preload" href="/components/event-entry.css" as="style" />
+  <link rel="preload" href="/components/event-entry/event-entry.css" as="style" />
   <link rel="preload" href="/assets/icons/trasla-eventos.svg" as="image" type="image/svg+xml" fetchpriority="high" />
 
-  <script type="module" src="/components/event-entry.js"></script>
-  <script type="module" src="/components/event-entries.js"></script>
+  <script type="module" src="/components/event-entry/event-entry.js"></script>
+  <script type="module" src="/components/event-entries/event-entries.js"></script>
   <script type="module" src="/components/events-filter.js"></script>
   <script type="module" src="/components/site-header/site-header.js"></script>
   <script type="module" src="/components/install-button/install-button.js"></script>
@@ -709,7 +709,7 @@
 
       const { getUpcomingEventsPublicSheetData } = await import("/lib/get-events.js");
       const { getEventSortOrder } = await import("/lib/utils.js");
-      const { renderEventEntries } = await import("/lib/render.js");
+      const { renderEventEntries } = await import("/components/event-entries/render.js");
 
       let events = await getUpcomingEventsPublicSheetData();
       if (!events?.length) {
