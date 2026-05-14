@@ -1,28 +1,71 @@
 let instancesCount = 0;
 
+// Global Event Delegation for clicks on carousel dots
+document.addEventListener("click", (event) => {
+  const dot = event.target.closest("carousel-dots a");
+  if (!dot) return;
+
+  event.preventDefault();
+  const targetId = dot.getAttribute("href");
+  if (targetId) {
+    document.querySelector(targetId)?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest", // Don't scroll vertically
+      inline: "center", // Center horizontally in carousel
+    });
+  }
+});
+
+// Lazy initialization via IntersectionObserver
+const carouselObserver = new IntersectionObserver(
+  (entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        entry.target.showControls();
+        carouselObserver.unobserve(entry.target);
+      }
+    }
+  },
+  { rootMargin: "300px" },
+);
+
+// Global style injection for fallback
+let stylesInjected = false;
+function injectStyles() {
+  if (stylesInjected) return;
+  stylesInjected = true;
+  if (!document.getElementById("horizontal-carousel-style")) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.id = "horizontal-carousel-style";
+    link.href = new URL("./horizontal-carousel.css", import.meta.url).href;
+    document.head.appendChild(link);
+  }
+}
+
 customElements.define(
   "horizontal-carousel",
   class extends HTMLElement {
     constructor() {
-      super(); //.attachShadow({ mode: "open" });
+      super();
       this.dataset.instance = ++instancesCount;
-      if (!document.getElementById("horizontal-carousel-style")) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.id = "horizontal-carousel-style";
-        link.href = new URL("./horizontal-carousel.css", import.meta.url).href;
-        document.head.appendChild(link);
-      }
+      injectStyles();
     }
 
     connectedCallback() {
-      if (this.children.length > 1) this.showControls();
+      if (this.children.length > 1) {
+        carouselObserver.observe(this);
+      }
+    }
+
+    disconnectedCallback() {
+      carouselObserver.unobserve(this);
     }
 
     showControls() {
       this.toggleAttribute("show-controls", true);
       for (const [index, item] of Object.entries([...this.children])) {
-        if (!item.id) item.id = `carousel-${this.dataset.instance}-item-${index + 1}`;
+        if (!item.id) item.id = `carousel-${this.dataset.instance}-item-${Number(index) + 1}`;
         item.setAttribute("part", "carousel-image");
       }
 
@@ -31,24 +74,13 @@ customElements.define(
       // Add carousel dots fallback for browsers without scroll marker support
       if (!CSS.supports("scroll-marker-group", "after")) {
         const carousel = document.createElement("carousel-dots");
-        carousel.innerHTML = /*html*/ `
+        carousel.innerHTML = `
           ${Array.from(this.children)
-            .map((el) => `<a href="#${el.id}">●</a>`)
+            .map((el) => /*html*/ `<a href="#${el.id}">●</a>`)
             .join(" ")}
         `;
         this.insertAdjacentElement("afterend", carousel);
-        carousel.addEventListener("click", this);
       }
     }
-
-    handleEvent(event) {
-      if (event.type !== "click" || !event.target.href) return;
-      event.preventDefault();
-      document.querySelector(event.target.getAttribute("href"))?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest", // Don't scroll vertically
-        inline: "center", // Center horizontally in carousel
-      });
-    }
-  }
+  },
 );

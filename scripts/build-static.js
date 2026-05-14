@@ -125,6 +125,8 @@ async function build({ upcomingEvents, events }) {
 
   const siteHeaderCss = await fs.readFile(path.join(rootDir, "components/site-header/site-header.css"), "utf-8");
   const siteFooterCss = await fs.readFile(path.join(rootDir, "components/site-footer/site-footer.css"), "utf-8");
+  const eventEntryCss = await fs.readFile(path.join(rootDir, "components/event-entry/event-entry.css"), "utf-8");
+  const horizontalCarouselCss = await fs.readFile(path.join(rootDir, "components/horizontal-carousel/horizontal-carousel.css"), "utf-8");
 
   // Inject their CSS inline into the head
   templateHtml = templateHtml.replace(
@@ -132,6 +134,8 @@ async function build({ upcomingEvents, events }) {
     /*html*/ `
     <style id="site-header-style">${siteHeaderCss}</style>
     <style id="site-footer-style">${siteFooterCss}</style>
+    <style id="event-entry-style">${eventEntryCss}</style>
+    <style id="horizontal-carousel-style">${horizontalCarouselCss}</style>
     </head>`,
   );
 

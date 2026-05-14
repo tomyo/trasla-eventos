@@ -1,11 +1,18 @@
+// Global Event Delegation for clicks on share-url
+document.addEventListener("click", async (event) => {
+  const shareBtn = event.target.closest("share-url");
+  if (!shareBtn) return;
+  
+  if (navigator[shareBtn.dataset.action] || navigator[shareBtn.dataset.fallbackAction]) {
+    event.preventDefault();
+    await shareBtn.shareEvent();
+  }
+});
+
 customElements.define(
   "share-url",
   class extends HTMLElement {
-    connectedCallback() {
-      if (navigator[this.dataset.action] || navigator[this.dataset.fallbackAction]) {
-        this.addEventListener("click", this);
-      }
-    }
+    // The connectedCallback listener is gone to save hundreds of memory allocations
 
     canShare(shareData = {}) {
       try {
@@ -18,13 +25,6 @@ customElements.define(
       } catch (error) {
         console.warn("Share API check failed:", error);
         return false;
-      }
-    }
-
-    async handleEvent(event) {
-      if (event.type === "click") {
-        event.preventDefault();
-        await this.shareEvent();
       }
     }
 
