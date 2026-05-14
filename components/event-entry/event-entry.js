@@ -1,5 +1,5 @@
-import "/components/share-url/share-url.js";
-import "/components/horizontal-carousel/horizontal-carousel.js";
+import "../share-url/share-url.js";
+import "../horizontal-carousel/horizontal-carousel.js";
 
 // Global style injection
 let stylesInjected = false;
@@ -53,7 +53,7 @@ customElements.define(
 
     async renderFromData() {
       // CSR for when data was passed through data-* attributes
-      const { renderEventEntryContent } = await import("/components/event-entry/render.js");
+      const { renderEventEntryContent } = await import("./render.js");
       this.innerHTML = renderEventEntryContent(this.dataset, location.origin);
     }
 

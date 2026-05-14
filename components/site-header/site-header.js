@@ -25,7 +25,7 @@ customElements.define(
     async connectedCallback() {
       if (!this.hasChildNodes()) {
         try {
-          const res = await fetch("/components/site-header/site-header.html");
+          const res = await fetch(new URL("./site-header.html", import.meta.url));
           if (res.ok) {
             this.innerHTML = await res.text();
           }

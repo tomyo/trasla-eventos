@@ -23,7 +23,7 @@ class SiteFooter extends HTMLElement {
   async connectedCallback() {
     if (!this.hasChildNodes()) {
       try {
-        const res = await fetch("/components/site-footer/site-footer.html");
+        const res = await fetch(new URL("./site-footer.html", import.meta.url));
         if (res.ok) {
           this.innerHTML = await res.text();
         }

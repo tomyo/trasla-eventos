@@ -23,7 +23,7 @@ async function subscribeUser() {
   user.put({ pushSubscription: JSON.stringify(pushSubscription) });
 
   // Send the subscription to server
-  await fetch("/api/web-push-subscribe", {
+  await fetch(new URL("../../api/web-push-subscribe", import.meta.url), {
     method: "POST",
     body: JSON.stringify(pushSubscription),
     headers: {
