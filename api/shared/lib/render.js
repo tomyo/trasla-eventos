@@ -244,10 +244,7 @@ export function renderTimePage(when, events, templateHtml, origin) {
   );
 
   html = html.replace(/(?<openTag><events-filter[^>]*)>/g, (_, openTag) => `${openTag} data-hide="when">`);
-  html = html.replace(
-    /(?<openTag><span[^>]*where.*title.*>).*?(?<closeTag><\/span>)/,
-    () => `<h1 style="text-align: center;">${title}<br>en</h1>`,
-  );
+  html = html.replace(/(?<openTag><span[^>]*where.*title.*>).*?(?<closeTag><\/span>)/, () => `${title}<br>en`);
 
   return html;
 }
