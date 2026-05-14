@@ -2,11 +2,10 @@ import { getSheetData } from "../../shared/lib/get-events.js";
 import { fuzzySearch } from "../../shared/lib/fuzzy-search-events.js";
 import { renderEventPage } from "../../shared/lib/render.js";
 
-const OG_IMAGE_WIDTH = 1200;
-let sheetIdLegacy = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID_LEGACY : undefined;
-let sheetGidLegacy = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID_LEGACY : undefined;
-let sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
-let sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
+const sheetIdLegacy = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID_LEGACY : undefined;
+const sheetGidLegacy = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID_LEGACY : undefined;
+const sheetId = typeof process !== "undefined" ? process.env?.GOOGLE_SHEET_ID : undefined;
+const sheetGid = typeof process !== "undefined" ? process.env?.ALL_EVENTS_GOOGLE_SHEET_GID : undefined;
 
 export default async function handler(req) {
   const url = new URL(req.url);

@@ -3,8 +3,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderLocalityPage, renderTimePage, renderEventPage, renderIndexPage } from "../lib/render.js";
 import { getUpcomingEventsPublicSheetData, getAllEventsPublicSheetData } from "../lib/get-events.js";
-import { localitiesData, slugify, BASE_URL, getEventPath, makeCssToHideAbsentLocalitiesInFooter } from "../lib/utils.js";
+import { localitiesData, slugify, getEventPath, makeCssToHideAbsentLocalitiesInFooter } from "../lib/utils.js";
 import { generateSitemaps } from "../lib/sitemap.js";
+import { BASE_URL } from "../lib/config.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -126,7 +127,10 @@ async function build({ upcomingEvents, events }) {
   const siteHeaderCss = await fs.readFile(path.join(rootDir, "components/site-header/site-header.css"), "utf-8");
   const siteFooterCss = await fs.readFile(path.join(rootDir, "components/site-footer/site-footer.css"), "utf-8");
   const eventEntryCss = await fs.readFile(path.join(rootDir, "components/event-entry/event-entry.css"), "utf-8");
-  const horizontalCarouselCss = await fs.readFile(path.join(rootDir, "components/horizontal-carousel/horizontal-carousel.css"), "utf-8");
+  const horizontalCarouselCss = await fs.readFile(
+    path.join(rootDir, "components/horizontal-carousel/horizontal-carousel.css"),
+    "utf-8",
+  );
 
   // Inject their CSS inline into the head
   templateHtml = templateHtml.replace(

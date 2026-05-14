@@ -42,7 +42,7 @@ customElements.define(
 
     connectedCallback() {
       // Only observe if it's empty (CSR needed) AND it has the required data attributes
-      if (!this.hasChildNodes() && this.hasRequiredDatasetAttributesForClientSideRender()) {
+      if (!this.childElementCount && this.hasRequiredDatasetAttributesForClientSideRender()) {
         renderFromDataObserver.observe(this);
       }
     }
@@ -54,7 +54,7 @@ customElements.define(
     async renderFromData() {
       // CSR for when data was passed through data-* attributes
       const { renderEventEntryContent } = await import("./render.js");
-      this.innerHTML = renderEventEntryContent(this.dataset, location.origin);
+      this.innerHTML = renderEventEntryContent(this.dataset, { origin: location.origin });
     }
 
     hasRequiredDatasetAttributesForClientSideRender() {

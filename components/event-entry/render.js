@@ -1,6 +1,5 @@
 import {
   escapeHtml,
-  BASE_URL,
   getEventUrl,
   parseDate,
   formatEventDate,
@@ -12,8 +11,9 @@ import {
   formatDescription,
   formatLocalDate,
 } from "../../lib/utils.js";
+import { BASE_URL } from "../../lib/config.js";
 
-export function renderEventEntryContent(eventData, origin = BASE_URL, isFirstEvent = false) {
+export function renderEventEntryContent(eventData, { origin = BASE_URL, firstImageEager = false } = {}) {
   const startDate = parseDate(eventData.startsAt);
   const eventTime = formatEventDate(startDate, { onlyTime: true, skipZeroTime: true });
   const previewImages = eventData.images.includes("google.com")
@@ -150,7 +150,7 @@ export function renderEventEntryContent(eventData, origin = BASE_URL, isFirstEve
   return /*html*/ `
     <h3 part="title">${escapeHtml(eventData.title)}</h3>
     <horizontal-carousel>
-      ${previewImages.map((url, i) => `<img src="${escapeHtml(url)}" ${isFirstEvent && i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} alt="${escapeHtml(eventData.title)}">`).join("\n")}
+      ${previewImages.map((url, i) => `<img src="${escapeHtml(url)}" ${firstImageEager && i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} alt="${escapeHtml(eventData.title)}">`).join("\n")}
     </horizontal-carousel>
     
 
@@ -180,18 +180,33 @@ export function renderEventEntryContent(eventData, origin = BASE_URL, isFirstEve
   `;
 }
 
-export function renderEventEntry(eventData, origin = BASE_URL, isFirstEvent = false) {
+export function renderEventEntry(eventData, { origin = BASE_URL, firstImageEager = false, mode = "full" } = {}) {
+  // "shell" mode omits the inner HTML to save payload size.
+  // The client-side IntersectionObserver will call renderFromData() when it becomes visible!
+  const isShell = mode === "shell";
+  const contentHtml = isShell ? "" : renderEventEntryContent(eventData, { origin, firstImageEager });
+
+  const requiredAttributes = ["title", "startsAt", "locality", "activity", "slug", "images"];
+
+  let dataAttributes = "";
+  if (isShell) {
+    // In Shell mode, add all eventData entries as data attributes to allow hydration
+    dataAttributes = Object.entries(eventData)
+      .map(([key, value]) => `data-${key.replace(/([A-Z])/g, "-$1").toLowerCase()}="${escapeHtml(String(value || ""))}"`)
+      .join(" ");
+  } else {
+    // In Full mode, use only the required attributes to keep the initial payload as small as possible
+    dataAttributes = requiredAttributes
+      .map((attr) => `data-${attr.replace(/([A-Z])/g, "-$1").toLowerCase()}="${escapeHtml(eventData[attr] || "")}"`)
+      .join(" ");
+  }
+
   return /*html*/ `
     <event-entry
       class="card"
-      data-title="${escapeHtml(eventData.title)}"
-      data-starts-at="${escapeHtml(eventData.startsAt)}"
-      data-locality="${escapeHtml(eventData.locality)}"
-      data-activity="${escapeHtml(eventData.activity)}"
-      data-slug="${escapeHtml(eventData.slug)}"
+      ${dataAttributes}
       date="${formatLocalDate(new Date(eventData.startsAt))}"
     >
-      ${renderEventEntryContent(eventData, origin, isFirstEvent)}
+      ${contentHtml}
     </event-entry>`;
 }
-

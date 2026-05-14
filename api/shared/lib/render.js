@@ -11,12 +11,52 @@ import {
   escapeHtml,
   getGoogleDriveImagesPreview,
   eventToSchemaEventItem,
-  OG_IMAGE_WIDTH,
-  BASE_URL,
   getLocalityUrl,
   getTimePageUrl,
-  getEventUrl
+  getEventUrl,
 } from "./utils.js";
+import { config } from "./config.js";
+
+/**
+ * Render the Index Page HTML (Main Home Page)
+ */
+export function renderIndexPage(events, templateHtml, origin) {
+  // 1. Sort events
+  const upcomingEvents = events.sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
+
+  const eventEntriesHtml = renderEventEntries(upcomingEvents, origin);
+
+  let html = templateHtml;
+
+  // 3. Pre-render events in the HTML
+  html = html.replace(
+    /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
+    (_, openTag, closeTag) => `${openTag}${eventEntriesHtml}${closeTag}`,
+  );
+
+  // Set events-filter page-size
+  html = html.replace(/<events-filter([^>]*)>/is, (_match, attributes) => {
+    const pageSizeAttr = `page-size="${config.rendering.events.initialVisibleItems}"`;
+    if (/page-size="[^"]*"/.test(attributes)) {
+      return `<events-filter${attributes.replace(/page-size="[^"]*"/, pageSizeAttr)}>`;
+    }
+    return `<events-filter${attributes.trimEnd()} ${pageSizeAttr}>`;
+  });
+
+  // 4. Pre-render JSON-LD for all upcoming events
+  const schemaEvents = eventsToSchemaOrgItemList(upcomingEvents, origin);
+
+  // Inject a new script tag for the events schema inside the metadata block
+  html = html.replace(
+    /<!-- END CONTENT_METADATA_BLOCK -->/,
+    `<script type="application/ld+json">
+      ${JSON.stringify(schemaEvents)}
+    </script>\n
+    <!-- END CONTENT_METADATA_BLOCK -->`,
+  );
+
+  return html;
+}
 
 /**
  * Render the Locality Page HTML
@@ -43,12 +83,12 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
 
     <meta
       property="og:image"
-      content="${BASE_URL}/assets/images/og-image-1200w-900h.avif"
+      content="${config.baseUrl}/assets/images/og-image-1200w-900h.avif"
     />
     <meta property="og:image:type" content="image/avif" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="900" />
-    <meta property="og:image" content="${BASE_URL}/assets/images/og-image-1200w-900h.jpg" />
+    <meta property="og:image" content="${config.baseUrl}/assets/images/og-image-1200w-900h.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="900" />
@@ -162,12 +202,12 @@ export function renderTimePage(when, events, templateHtml, origin) {
 
       <meta
         property="og:image"
-        content="${BASE_URL}/assets/images/og-image-1200w-900h.avif"
+        content="${config.baseUrl}/assets/images/og-image-1200w-900h.avif"
       />
       <meta property="og:image:type" content="image/avif" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
-      <meta property="og:image" content="${BASE_URL}/assets/images/og-image-1200w-900h.jpg" />
+      <meta property="og:image" content="${config.baseUrl}/assets/images/og-image-1200w-900h.jpg" />
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
@@ -222,7 +262,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
     const isPastEvent = new Date(eventData.startsAt) < todayMidnight;
-    const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, OG_IMAGE_WIDTH);
+    const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, config.ogImageWidth);
     const contentMeta = /*html*/ `
       <title>${escapeHtml(eventData.title)}</title>
       <link
@@ -237,7 +277,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
         content="${escapeHtml(eventData.description)}"
       />
       <meta property="og:image" content="${previewImageUrl}" />
-      <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" />
+      <meta property="og:image:width" content="${config.ogImageWidth}" />
       <meta property="og:type" content="event" />
       <meta property="og:url" content="${getEventUrl(eventData.slug, origin)}" />
       <meta property="og:site_name" content="TRASLA EVENTOS" />
@@ -253,7 +293,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
     const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
     html = html.replace(contentMetaRegex, contentMeta);
 
-    const eventEntry = renderEventEntry(eventData, origin, true);
+    const eventEntry = renderEventEntry(eventData, { origin, firstImageEager: true });
     const pastEventMessage = isPastEvent ? "\n<p>Evento finalizado</p>" : "";
 
     html = html.replace(
@@ -272,38 +312,6 @@ export function renderEventPage(eventData, templateHtml, origin) {
       ${closeTag}`,
     );
   }
-
-  return html;
-}
-
-/**
- * Render the Index Page HTML (Main Home Page)
- */
-export function renderIndexPage(events, templateHtml, origin) {
-  // 1. Sort events
-  const upcomingEvents = events.sort((a, b) => getEventSortOrder(a) - getEventSortOrder(b));
-
-  const eventEntriesHtml = renderEventEntries(upcomingEvents, origin);
-
-  let html = templateHtml;
-
-  // 3. Pre-render events in the HTML
-  html = html.replace(
-    /(?<openTag><event-entries[^>]*>).*?(?<closeTag><\/event-entries>)/is,
-    (_, openTag, closeTag) => `${openTag}${eventEntriesHtml}${closeTag}`,
-  );
-
-  // 4. Pre-render JSON-LD
-  const schemaEvents = eventsToSchemaOrgItemList(upcomingEvents, origin);
-
-  // Inject a new script tag for the events schema inside the metadata block
-  html = html.replace(
-    /<!-- END CONTENT_METADATA_BLOCK -->/,
-    `<script type="application/ld+json">
-      ${JSON.stringify(schemaEvents)}
-    </script>\n
-    <!-- END CONTENT_METADATA_BLOCK -->`,
-  );
 
   return html;
 }

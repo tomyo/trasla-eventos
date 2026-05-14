@@ -1,5 +1,4 @@
-export const OG_IMAGE_WIDTH = 1200;
-export const BASE_URL = "https://eventos.trasla.com.ar";
+import { OG_IMAGE_WIDTH, BASE_URL } from "./config.js";
 
 export function getEventPath(slug) {
   return `/e/${slug}`;
