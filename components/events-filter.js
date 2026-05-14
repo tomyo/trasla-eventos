@@ -1,10 +1,20 @@
+export const MIN_EVENTS_PER_PAGE = 10;
+
 customElements.define(
   "events-filter",
   class extends HTMLElement {
     connectedCallback() {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(this.init.bind(this));
+      } else {
+        setTimeout(this.init.bind(this), 1);
+      }
+    }
+
+    init() {
       this.events = this.querySelector("event-entries");
       this.form = this.querySelector("form");
-      this.paginateAt = 10; // Minimum number of events to display at once
+      this.paginateAt = MIN_EVENTS_PER_PAGE;
       this._noop = !this.form || !this.events;
 
       if (this._noop) return;
@@ -22,6 +32,8 @@ customElements.define(
       if (this.dataset.hide === "where") {
         this.form.querySelectorAll("[part~=where]").forEach((el) => el.remove());
       }
+
+      this._allEvents = Array.from(this.events.querySelectorAll("event-entry"));
 
       this.updateUI();
     }
@@ -45,10 +57,10 @@ customElements.define(
     updateLocalitiesOptions({ showCount = false } = {}) {
       const availableLocalities = new Map();
       const formData = new FormData(this.form);
-      this.events.querySelectorAll("event-entry").forEach((event) => {
+
+      this._allEvents.forEach((event) => {
         if (shouldExcludeEvent(event, formData, { keysToOmit: ["locality"] })) return;
-        let locality = event.dataset.locality;
-        let localityCount = availableLocalities.has(locality) ? availableLocalities.get(locality) : 0;
+        let localityCount = availableLocalities.has(event.dataset.locality) ? availableLocalities.get(event.dataset.locality) : 0;
         availableLocalities.set(event.dataset.locality, localityCount + 1);
       });
 
@@ -104,7 +116,7 @@ customElements.define(
       let includedCount = 0;
       const formData = new FormData(this.form);
       // Events DOM order expected by date
-      this.events.querySelectorAll("event-entry").forEach((event) => {
+      this._allEvents.forEach((event) => {
         if (shouldExcludeEvent(event, formData)) {
           event.toggleAttribute("excluded", true);
           includedCount++;
@@ -124,7 +136,7 @@ customElements.define(
       let allShown = true;
       // Events DOM order expected by date
       const formData = new FormData(this.form);
-      this.events.querySelectorAll("event-entry").forEach((event) => {
+      this._allEvents.forEach((event) => {
         if (event.hasAttribute("excluded")) return;
 
         // Show up to this.paginateAt count of events
@@ -148,7 +160,7 @@ customElements.define(
 
       this.allShown = allShown;
     }
-  }
+  },
 );
 
 /**
