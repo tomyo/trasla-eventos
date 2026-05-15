@@ -367,3 +367,218 @@ seo-block,
   white-space: nowrap !important;
   border: 0 !important;
 }
+
+/* Index.html specific styles moved during consolidation */
+
+form:has(today-date-picker[today]) #hideOnToday {
+  display: none;
+}
+
+today-date-picker {
+  position: relative;
+
+  & > * {
+    width: 100%;
+  }
+
+  &:not(:focus-within)[today] {
+    &::before {
+      content: "Hoy";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      background-color: var(--background-color-darker);
+      z-index: 1;
+      pointer-events: none;
+      /* Allow clicks through */
+    }
+
+    &:hover::before {
+      content: none;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 0.5rem;
+      width: 0;
+      height: 0;
+      border-left: 0.25rem solid transparent;
+      border-right: 0.25rem solid transparent;
+      border-top: 0.25rem solid gray;
+      margin-top: -0.1rem;
+      z-index: 1;
+    }
+  }
+}
+
+#viewMore {
+  display: grid;
+  gap: 1.5rem;
+
+  & > *:not(.seo-only) {
+    display: flex;
+    flex-flow: row nowrap;
+    min-width: 15rem;
+    width: 100%;
+    background-color: var(--color-green) !important;
+    align-items: center;
+    color: var(--color-light);
+    gap: 1rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    margin-inline: auto;
+  }
+}
+
+events-filter:not(:has(event-entry)) #viewMoreEvents {
+  display: none;
+}
+
+section#eventos {
+  & events-filter {
+    display: flex;
+    flex-flow: column;
+    gap: 3rem;
+    text-wrap: balance;
+    align-items: center;
+
+    & form {
+      --input-height: 2.3rem;
+      display: var(--form-display, flex);
+      flex-flow: column nowrap;
+      align-items: stretch;
+      text-align: center;
+      gap: 0.66rem;
+      width: 13rem;
+
+      & .form-filters-as-heading {
+        margin: 0;
+        display: inherit;
+        flex-flow: inherit;
+        align-items: inherit;
+        gap: inherit;
+        font-weight: 1.2rem;
+        letter-spacing: initial;
+
+        & :not(span) {
+          font-weight: normal;
+          font-size: initial;
+        }
+      }
+
+      & button,
+      & select,
+      & input {
+        padding: 0.5rem;
+        text-align: inherit;
+        height: var(--input-height);
+        min-height: max-content;
+        font: inherit;
+      }
+    }
+
+    select-locality {
+      position: relative;
+      --down-arrow-content: "";
+      --options-to-show: 1;
+
+      @media (hover: hover) {
+        --options-to-show: 4;
+        --down-arrow-content: none;
+      }
+
+      @supports (-moz-appearance: none) {
+        --options-to-show: 4;
+        /* Firefox on mobile shows a scrollable <select> */
+        --down-arrow-content: none;
+      }
+
+      select {
+        padding: 0;
+        height: calc(var(--input-height) * var(--options-to-show));
+
+        option {
+          height: var(--input-height);
+          align-content: center;
+        }
+
+        &:not(:has(option:checked)) option:first-child {
+          background-color: var(--background-color-selected);
+        }
+      }
+
+      &::after {
+        content: var(--down-arrow-content);
+        position: absolute;
+        top: 50%;
+        right: 0.5rem;
+        width: 0;
+        height: 0;
+        border-left: 0.25rem solid transparent;
+        border-right: 0.25rem solid transparent;
+        border-top: 0.25rem solid gray;
+        margin-top: -0.1rem;
+      }
+
+      & > select {
+        /* Cross browser styling */
+        appearance: none;
+        border-radius: 0;
+        text-align: center !important;
+        width: 100%;
+        color: currentColor;
+      }
+    }
+
+    & > *:not(event-entries) {
+      text-transform: uppercase;
+    }
+  }
+
+  &:not(:has(events-filter)) {
+    /* Only one event is shown */
+    --form-display: none;
+    --summary-display: none;
+  }
+
+  & event-entries {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 2rem;
+    align-items: center;
+
+    &[part="loading"],
+    &::part(loading) {
+      text-align: center;
+    }
+
+    &[part="date-label"],
+    &::part(date-label) {
+      font-family: var(--font-family-heading);
+      text-align: center;
+      position: sticky;
+      top: 1.3rem;
+      width: 17ch;
+      color: var(--color-light);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.3rem;
+      z-index: 1;
+    }
+
+    &[part="date-label"]::before,
+    &::part(date-label)::before {
+      content: "";
+      inset: 0;
+      width: 100%;
+      position: absolute;
+      z-index: -1;
+      background-color: var(--color-green);
+      border-radius: calc(var(--border-radius) / 2);
+    }
+  }
+}
+

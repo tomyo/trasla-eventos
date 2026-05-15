@@ -132,7 +132,18 @@ async function build({ upcomingEvents, events }) {
     "utf-8",
   );
 
+  const activeLocalities = [...new Set(upcomingEvents.map((event) => event.locality))];
+  const hideLocalitiesCss = makeCssToHideAbsentLocalitiesInFooter(activeLocalities);
+
+  let baseCss = await fs.readFile(path.join(rootDir, "base.css"), "utf-8");
+  baseCss += "\n\n/* Hiding absent localities from footer */\n" + hideLocalitiesCss + "\n";
+
   // Inject their CSS inline into the head
+  templateHtml = templateHtml.replace(
+    /<link[^>]+rel="stylesheet"[^>]+href="\/base.css"[^>]*\/>/i,
+    `<style id="base-style">\n${baseCss}\n</style>`,
+  );
+
   templateHtml = templateHtml.replace(
     /<\/head>/i,
     /*html*/ `
@@ -147,23 +158,7 @@ async function build({ upcomingEvents, events }) {
   templateHtml = templateHtml.replace(/<site-header>.*?<\/site-header>/is, `<site-header>\n${siteHeaderHtml}\n</site-header>`);
   templateHtml = templateHtml.replace(/<site-footer>.*?<\/site-footer>/is, `<site-footer>\n${siteFooterHtml}\n</site-footer>`);
 
-  // 2. Append CSS to hide absent localities in footer into dist/base.css
-  const activeLocalities = [...new Set(upcomingEvents.map((event) => event.locality))];
-  const hideLocalitiesCss = makeCssToHideAbsentLocalitiesInFooter(activeLocalities);
-
-  const baseCssPath = path.join(distDir, "base.css");
-  try {
-    const baseCssContent = await fs.readFile(baseCssPath, "utf-8");
-    await fs.writeFile(
-      baseCssPath,
-      baseCssContent + "\n\n/* Injected during build to hide absent localities from footer */\n" + hideLocalitiesCss + "\n",
-      "utf-8",
-    );
-  } catch (e) {
-    console.warn("Could not append hide-absent-localities to base.css:", e);
-  }
-
-  // 3. Render main index page
+  // 2. Render main index page
   console.log("Rendering index.html...");
   try {
     const indexHtml = renderIndexPage(upcomingEvents, templateHtml, ORIGIN);

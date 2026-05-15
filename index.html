@@ -11,12 +11,6 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192x192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/icons/icon-512x512.png" />
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
-  <link rel="preload" href="/assets/fonts/Poster-Cut-Neue-Regular.woff2" as="font" type="font/woff2"
-    crossorigin="anonymous" />
-  <link rel="preload" href="/assets/fonts/DM-Sans.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
-  <link rel="preload" href="/assets/fonts/SometypeMono-VariableFont_wght.woff2" as="font" type="font/woff2"
-    crossorigin="anonymous" />
-  <link rel="stylesheet" href="/base.css" />
 
   <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -133,6 +127,40 @@
   </script>
   <!-- END CONTENT_METADATA_BLOCK -->
 
+  <link rel="preload" href="/assets/fonts/Poster-Cut-Neue-Regular.woff2" as="font" type="font/woff2"
+    crossorigin="anonymous" />
+  <link rel="preload" href="/assets/fonts/DM-Sans.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+  <link rel="preload" href="/assets/fonts/SometypeMono-VariableFont_wght.woff2" as="font" type="font/woff2"
+    crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="/base.css" />
+
+
+  <!-- START DNS prefetch and preconnect -->
+  <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
+  <link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
+  <!-- END DNS prefetch and preconnect -->
+
+  <link rel="modulepreload" href="/lib/user.js" />
+  <!-- used by components/today-date-picker.js -->
+  <link rel="modulepreload" href="/lib/utils.js" />
+  <!-- used by components/event-entry/event-entry.js -->
+  <link rel="modulepreload" href="/components/event-entry/render.js" />
+  <link rel="modulepreload" href="/components/share-url/share-url.js" />
+  <link rel="modulepreload" href="/components/install-button/install-button.js" />
+  <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
+  <link rel="preload" href="/components/horizontal-carousel/horizontal-carousel.css" as="style" />
+  <link rel="preload" href="/components/event-entry/event-entry.css" as="style" />
+
+  <script type="module" src="/components/event-entry/event-entry.js"></script>
+  <script type="module" src="/components/event-entries/event-entries.js"></script>
+  <script type="module" src="/components/events-filter.js"></script>
+  <script type="module" src="/components/site-header/site-header.js"></script>
+  <script type="module" src="/components/install-button/install-button.js"></script>
+  <script src="/components/today-date-picker.js" type="module" defer></script>
+
+  <link rel="manifest" href="/manifest.json" />
+
   <script>
     (function getOutOfInAppBrowser() {
       // 1. In-App Browser Detection
@@ -209,42 +237,6 @@
       }
     })();
   </script>
-
-  <script type="module">
-    // Create a anonymous user id after 2 seconds to avoid interfering with the first visit install hint
-    window.addEventListener("load", () => {
-      setTimeout(async () => {
-        const { getUserId, createUserId } = await import("/lib/user.js");
-        if (!getUserId()) {
-          createUserId();
-        }
-      }, 2000);
-    });
-  </script>
-  <!-- START DNS prefetch and preconnect -->
-  <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
-  <link rel="dns-prefetch" href="https://lh3.googleusercontent.com">
-  <!-- END DNS prefetch and preconnect -->
-
-  <link rel="modulepreload" href="/lib/user.js" />
-  <!-- used by components/today-date-picker.js -->
-  <link rel="modulepreload" href="/lib/utils.js" />
-  <!-- used by components/event-entry/event-entry.js -->
-  <link rel="modulepreload" href="/components/event-entry/render.js" />
-  <link rel="modulepreload" href="/components/share-url/share-url.js" />
-  <link rel="modulepreload" href="/components/install-button/install-button.js" />
-  <link rel="modulepreload" href="/components/horizontal-carousel/horizontal-carousel.js" />
-  <link rel="preload" href="/components/horizontal-carousel/horizontal-carousel.css" as="style" />
-  <link rel="preload" href="/components/event-entry/event-entry.css" as="style" />
-
-  <script type="module" src="/components/event-entry/event-entry.js"></script>
-  <script type="module" src="/components/event-entries/event-entries.js"></script>
-  <script type="module" src="/components/events-filter.js"></script>
-  <script type="module" src="/components/site-header/site-header.js"></script>
-  <script type="module" src="/components/install-button/install-button.js"></script>
-  <script src="/components/today-date-picker.js" type="module" defer></script>
-
-  <link rel="manifest" href="/manifest.json" />
 
   <!-- START Analytics -->
   <script>
@@ -539,166 +531,11 @@
       </events-filter>
     </section>
     <section id="about">
-      <style>
-        #about {
-          display: flex;
-          flex-flow: column nowrap;
-          align-items: center;
-          text-align: center;
-        }
-      </style>
       <img src="/assets/images/mountain.svg" height="100" alt="" loading="lazy" />
     </section>
   </main>
   <script type="module" src="/components/site-footer/site-footer.js"></script>
   <site-footer></site-footer>
-
-  <style>
-    section#eventos {
-      & events-filter {
-        display: flex;
-        flex-flow: column;
-        gap: 3rem;
-        text-wrap: balance;
-        align-items: center;
-
-        & form {
-          --input-height: 2.3rem;
-          display: var(--form-display, flex);
-          flex-flow: column nowrap;
-          align-items: stretch;
-          text-align: center;
-          gap: 0.66rem;
-          width: 13rem;
-
-          & .form-filters-as-heading {
-            margin: 0;
-            display: inherit;
-            flex-flow: inherit;
-            align-items: inherit;
-            gap: inherit;
-            font-weight: 1.2rem;
-            letter-spacing: initial;
-
-            & :not(span) {
-              font-weight: normal;
-              font-size: initial;
-            }
-          }
-
-          & button,
-          & select,
-          & input {
-            padding: 0.5rem;
-            text-align: inherit;
-            height: var(--input-height);
-            min-height: max-content;
-            font: inherit;
-          }
-        }
-
-        select-locality {
-          position: relative;
-          --down-arrow-content: "";
-          --options-to-show: 1;
-
-          @media (hover: hover) {
-            --options-to-show: 4;
-            --down-arrow-content: none;
-          }
-
-          @supports (-moz-appearance: none) {
-            --options-to-show: 4;
-            /* Firefox on mobile shows a scrollable <select> */
-            --down-arrow-content: none;
-          }
-
-          select {
-            padding: 0;
-            height: calc(var(--input-height) * var(--options-to-show));
-
-            option {
-              height: var(--input-height);
-              align-content: center;
-            }
-
-            &:not(:has(option:checked)) option:first-child {
-              background-color: var(--background-color-selected);
-            }
-          }
-
-          &::after {
-            content: var(--down-arrow-content);
-            position: absolute;
-            top: 50%;
-            right: 0.5rem;
-            width: 0;
-            height: 0;
-            border-left: 0.25rem solid transparent;
-            border-right: 0.25rem solid transparent;
-            border-top: 0.25rem solid gray;
-            margin-top: -0.1rem;
-          }
-
-          &>select {
-            /* Cross browser styling */
-            appearance: none;
-            border-radius: 0;
-            text-align: center !important;
-            width: 100%;
-            color: currentColor;
-          }
-        }
-
-        &>*:not(event-entries) {
-          text-transform: uppercase;
-        }
-      }
-
-      &:not(:has(events-filter)) {
-        /* Only one event is shown */
-        --form-display: none;
-        --summary-display: none;
-      }
-
-      & event-entries {
-        display: flex;
-        flex-flow: column nowrap;
-        gap: 2rem;
-        align-items: center;
-
-        &[part="loading"],
-        &::part(loading) {
-          text-align: center;
-        }
-
-        &[part="date-label"],
-        &::part(date-label) {
-          font-family: var(--font-family-heading);
-          text-align: center;
-          position: sticky;
-          top: 1.3rem;
-          width: 17ch;
-          color: var(--color-light);
-          font-size: 1rem;
-          font-weight: 500;
-          padding: 0.3rem;
-          z-index: 1;
-        }
-
-        &[part="date-label"]::before,
-        &::part(date-label)::before {
-          content: "";
-          inset: 0;
-          width: 100%;
-          position: absolute;
-          z-index: -1;
-          background-color: var(--color-green);
-          border-radius: calc(var(--border-radius) / 2);
-        }
-      }
-    }
-  </style>
 
   <!-- START CSR fallback for events on / -->
   <script type="module">
@@ -780,5 +617,17 @@
     }
   </script>
   <!-- END LEGACY BROWSERS CSS SUPPORT -->
+
+  <script type="module">
+    // Create a anonymous user id after 2 seconds to avoid interfering with the first visit install hint
+    window.addEventListener("load", () => {
+      setTimeout(async () => {
+        const { getUserId, createUserId } = await import("/lib/user.js");
+        if (!getUserId()) {
+          createUserId();
+        }
+      }, 2000);
+    });
+  </script>
 </body>
 </html>
