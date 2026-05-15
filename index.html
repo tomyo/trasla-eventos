@@ -127,7 +127,8 @@
   </script>
   <!-- END CONTENT_METADATA_BLOCK -->
 
-  <link rel="preload" href="/assets/images/portada-720w-1280h.webp" as="image" type="image/webp" media="(orientation: portrait)" fetchpriority="high" />
+  <link rel="preload" href="/assets/images/portada-720w-1280h.webp" as="image" type="image/webp"
+    media="(orientation: portrait)" fetchpriority="high" />
   <link rel="preload" href="/assets/fonts/Poster-Cut-Neue-Regular.woff2" as="font" type="font/woff2"
     crossorigin="anonymous" />
   <link rel="preload" href="/assets/fonts/DM-Sans.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
@@ -280,16 +281,16 @@
       });
     }
 
-    // 🖱 Load on first user interaction
-    ["click", "scroll", "keydown", "touchstart"].forEach((event) => {
-      window.addEventListener(event, loadAnalytics, {
-        once: true,
-        passive: true,
-      });
-    });
-
     // Wait for the window load event so we don't block it with dynamically injected scripts
     window.addEventListener("load", () => {
+      // 🖱 Only start listening for interactions AFTER the page is fully loaded
+      ["click", "scroll", "keydown", "touchstart"].forEach((event) => {
+        window.addEventListener(event, loadAnalytics, {
+          once: true,
+          passive: true,
+        });
+      });
+
       // 💤 Load when browser is idle (fallback)
       (window.requestIdleCallback || function (cb) {
         setTimeout(cb, 3000);
