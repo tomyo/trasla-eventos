@@ -1,0 +1,24 @@
+# Trasla Eventos
+
+> La agenda abierta de eventos de Traslasierra.
+
+TRASLA EVENTOS es una agenda abierta de eventos que funciona como infraestructura digital pública para organizar y visibilizar la actividad social, cultural, educativa y comunitaria del Valle de Traslasierra (Córdoba, Argentina) y alrededores.
+
+## Enlaces Principales
+
+- [Página Principal](https://eventos.trasla.com.ar/): Próximos eventos en toda la región.
+- [¿Qué es Trasla Eventos?](https://eventos.trasla.com.ar/que-es-trasla-eventos.html): Conoce más sobre la plataforma y cómo funciona.
+- [Cargar Evento](https://eventos.trasla.com.ar/publicar-evento/): Formulario para publicar tu evento de forma gratuita.
+- [Base de Datos Abierta](https://docs.google.com/spreadsheets/d/18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog/): Acceso a la hoja de cálculo pública de los eventos.
+
+## Eventos por Fecha
+
+- [Eventos de Hoy](https://eventos.trasla.com.ar/eventos-hoy/): Lo que está pasando hoy.
+- [Eventos de Esta Semana](https://eventos.trasla.com.ar/eventos-esta-semana/): Eventos programados para la semana en curso.
+- [Eventos de Este Mes](https://eventos.trasla.com.ar/eventos-este-mes/): Agenda completa del mes.
+
+## Sobre Trasla Eventos
+
+La información sobre eventos suele estar fragmentada entre áreas, redes sociales y plataformas privadas. Trasla Eventos resuelve esto ofreciendo una **agenda común y confiable** que mejora la circulación de público y facilita la planificación tanto para residentes como para turistas que visitan Traslasierra.
+
+La visualización de los eventos se define únicamente por criterios objetivos como fecha, localidad y tipo de actividad.
