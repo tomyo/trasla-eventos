@@ -27,9 +27,11 @@ details summary > * {
 }
 
 :root {
+  --font-family-fallback-sans-serif:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-family-mono: "Sometype Mono";
-  --font-family-sans-serif: "DM Sans";
-  --font-family-branding: "Poster Cut Neue";
+  --font-family-sans-serif: "DM Sans", var(--font-family-fallback-sans-serif);
+  --font-family-branding: "Poster Cut Neue", var(--font-family-fallback-sans-serif);
 
   --font-family-body: var(--font-family-sans-serif);
   --font-family-heading: var(--font-family-mono);
@@ -581,4 +583,3 @@ section#eventos {
     }
   }
 }
-
