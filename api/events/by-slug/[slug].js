@@ -49,7 +49,7 @@ export default async function handler(req) {
     return new Response(msg, { status: 404, type: "text/html" });
   }
   if (urlSlug !== eventData.slug) {
-    const canonicalUrl = `${url.origin}/${eventData.slug}`;
+    const canonicalUrl = `${url.origin}/e/${eventData.slug}`;
     return new Response(null, { status: 301, headers: { Location: canonicalUrl } });
   }
 
