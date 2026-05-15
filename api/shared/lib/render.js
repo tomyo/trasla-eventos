@@ -46,13 +46,13 @@ export function renderIndexPage(events, templateHtml, origin) {
   // 4. Pre-render JSON-LD for all upcoming events
   const schemaEvents = eventsToSchemaOrgItemList(upcomingEvents, origin);
 
-  // Inject a new script tag for the events schema inside the metadata block
+  // Inject the events schema exactly before the closing body tag
   html = html.replace(
-    /<!-- END CONTENT_METADATA_BLOCK -->/,
+    /<\/body>/i,
     `<script type="application/ld+json">
       ${JSON.stringify(schemaEvents)}
-    </script>\n
-    <!-- END CONTENT_METADATA_BLOCK -->`,
+    </script>
+    </body>`
   );
 
   return html;
@@ -98,19 +98,6 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
     <meta property="og:site_name" content="TRASLA EVENTOS" />
     <meta property="og:locale" content="es-AR" />
 
-    <script type="application/ld+json">
-      ${JSON.stringify(localityToSchemaOrgItem(locality, origin))}
-    </script>
-    ${
-      filteredEvents.length
-        ? /*html*/ `
-          <script type="application/ld+json">
-            ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, origin))}
-          </script>
-        `
-        : ""
-    }
-
     <style>
       /* hide form locality selector */
       events-filter form select-locality {
@@ -147,6 +134,18 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
   html = html.replace(
     /(?<openTag><event-entries[^>]*>)[\s\S]*?(?<closeTag><\/event-entries>)/is,
     (_, openTag, closeTag) => `${openTag}${eventEntries}${closeTag}`,
+  );
+
+  // Inject the events schema exactly before the closing body tag
+  const localitySchema = JSON.stringify(localityToSchemaOrgItem(locality, origin));
+  const eventsSchema = filteredEvents.length ? `\n<script type="application/ld+json">\n${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, origin))}\n</script>` : "";
+  
+  html = html.replace(
+    /<\/body>/i,
+    `<script type="application/ld+json">
+      ${localitySchema}
+    </script>${eventsSchema}
+    </body>`
   );
 
   return html;
@@ -216,14 +215,19 @@ export function renderTimePage(when, events, templateHtml, origin) {
 
       <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
-
-      <script type="application/ld+json">
-        ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, origin))}
-      </script>
     `;
 
   const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
   html = html.replace(contentMetaRegex, contentMeta);
+
+  // Inject the events schema exactly before the closing body tag
+  html = html.replace(
+    /<\/body>/i,
+    `<script type="application/ld+json">
+      ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, origin))}
+    </script>
+    </body>`
+  );
 
   html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, ""); // Hide actions i.e load event button
 
@@ -279,16 +283,24 @@ export function renderEventPage(eventData, templateHtml, origin) {
       <meta property="og:url" content="${getEventUrl(eventData.slug, origin)}" />
       <meta property="og:site_name" content="TRASLA EVENTOS" />
       <meta property="og:locale" content="es-AR" />
-      <script type="application/ld+json">
-        ${JSON.stringify({
-          "@context": "https://schema.org",
-          ...eventToSchemaEventItem(eventData, origin),
-        })}
-      </script>
     `;
 
     const contentMetaRegex = /<!-- START CONTENT_METADATA_BLOCK -->[\s\S]*?<!-- END CONTENT_METADATA_BLOCK -->/;
     html = html.replace(contentMetaRegex, contentMeta);
+
+    // Inject the events schema exactly before the closing body tag
+    const eventSchema = JSON.stringify({
+      "@context": "https://schema.org",
+      ...eventToSchemaEventItem(eventData, origin),
+    });
+
+    html = html.replace(
+      /<\/body>/i,
+      `<script type="application/ld+json">
+        ${eventSchema}
+      </script>
+      </body>`
+    );
 
     const eventEntry = renderEventEntry(eventData, { origin, firstImageEager: true });
     const pastEventMessage = isPastEvent ? "\n<p>Evento finalizado</p>" : "";
