@@ -29,8 +29,14 @@ class InstallButton extends HTMLElement {
       // Subsequent visits: prevent default and show our custom button
       e.preventDefault();
       this.deferredPrompt = e;
+      this.dataset.installable = "true";
     } else if (e.type === "click") {
       if (this.contains(e.target.closest("dialog"))) return; // Ignore clicks inside the dialog
+
+      const link = e.target.closest("a");
+      if (link && this.contains(link)) {
+        e.preventDefault();
+      }
 
       this.install();
     }
@@ -38,17 +44,24 @@ class InstallButton extends HTMLElement {
 
   hideContentAfterInstall() {
     this.toggleAttribute("hidden", true);
-
-    if (this.dataset.afterInstallHideSelector) {
-      document.querySelector(this.dataset.afterInstallHideSelector)?.toggleAttribute("hidden", true);
-    }
+    this.dispatchEvent(new CustomEvent("install-success", { bubbles: true, composed: true }));
   }
 
   showInstallInstructions() {
     // Show a dialog indicating manual installation instructions
-    const dialog = document.querySelector(this.dataset.installInstructionsDialogSelector || "#installInstructions");
-    if (dialog) dialog.showModal();
-    else console.warn("No dialog found for install instructions");
+    const dialog =
+      this.querySelector("dialog") ||
+      document.querySelector(this.dataset.installInstructionsDialogSelector || "#installInstructions");
+    if (dialog) {
+      dialog.showModal();
+    } else {
+      const link = this.querySelector("a");
+      if (link && link.href) {
+        window.location.href = link.href;
+      } else {
+        console.warn("No dialog found for install instructions");
+      }
+    }
   }
 
   async install() {

@@ -292,8 +292,12 @@ svg-mask {
   view-transition-name: fixed-background;
 }
 
-install-button > * {
-  width: 100%;
+install-button {
+  background-color: var(--background-color-darker);
+
+  & > * {
+    width: 100%;
+  }
 }
 
 #installInstructions {

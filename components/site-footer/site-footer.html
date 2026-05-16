@@ -12,28 +12,33 @@
     <svg-mask style="--src: url('/assets/icons/trasla-eventos.svg')" alt="Trasla Eventos"> </svg-mask>
   </a>
   <install-button style="color: var(--color-green);">
-    <button>
+    <a class="button" href="/instalar-app.html">
       <svg-mask
         style="--src: url('/assets/icons/loica.svg'); --color: var(--color-green); width: 20px; height: 18px"></svg-mask>
       Instalar
-    </button>
+    </a>
     <dialog closedby="any" id="installInstructions">
       <h2>¿Cómo instalar?</h2>
+      
+      <h3>En Android</h3>
       <ul>
-        <li>En Android: Clickeá en el menú de opciones (tres puntos)</li>
-        <li>En iOS (Safari): Clickeá en el ícono de compartir</li>
-        <li>
-          En escritorio (Chrome/Edge): Clickeá en el ícono de instalar en la
-          barra de direcciones
-        </li>
+        <li>Abrí Chrome.</li>
+        <li>Clickeá en el menú (tres puntos).</li>
+        <li>Elegí <strong>"Instalar aplicación"</strong> o <strong>"Agregar a la pantalla principal"</strong>.</li>
       </ul>
 
-      <img
-        src="/assets/images/instalar-pwa-instructions.png"
-        alt="Instrucciones para instalar PWA"
-        width="200"
-        style="aspect-ratio: 326/672; width: 90%;"
-        loading="lazy" />
+      <h3>En iOS (iPhone/iPad)</h3>
+      <ul>
+        <li>Abrí Safari.</li>
+        <li>Clickeá en el ícono de compartir.</li>
+        <li>Elegí <strong>"Agregar a inicio"</strong>.</li>
+      </ul>
+
+      <h3>En computadora</h3>
+      <ul>
+        <li>Clickeá en el ícono de instalar en la barra de direcciones de Chrome o Edge.</li>
+      </ul>
+
       <button onclick="this.closest('dialog').close()">Cerrar</button>
     </dialog>
   </install-button>
