@@ -7,7 +7,7 @@ TRASLA EVENTOS es una agenda abierta de eventos que funciona como infraestructur
 ## Enlaces Principales
 
 - [Página Principal](https://eventos.trasla.com.ar/): Próximos eventos en toda la región.
-- [¿Qué es Trasla Eventos?](https://eventos.trasla.com.ar/que-es-trasla-eventos.html): Conoce más sobre la plataforma y cómo funciona.
+- [¿Qué es Trasla Eventos?](https://eventos.trasla.com.ar/que-es-trasla-eventos): Conoce más sobre la plataforma y cómo funciona.
 - [Cargar Evento](https://eventos.trasla.com.ar/publicar-evento/): Formulario para publicar tu evento de forma gratuita.
 - [Base de Datos Abierta](https://docs.google.com/spreadsheets/d/18lo82wtHkR4qUEvEl5XeWIKbCSNxN_bgJwmDHRUXSog/): Acceso a la hoja de cálculo pública de los eventos.
 

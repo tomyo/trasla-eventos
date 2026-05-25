@@ -1,4 +1,12 @@
-import { getEventSortOrder, getEventUrl, getLocalityUrl, getTimePageUrl, isDateToday, isDateWithinWeek, isDateWithinMonth } from "./utils.js";
+import {
+  getEventSortOrder,
+  getEventUrl,
+  getLocalityUrl,
+  getTimePageUrl,
+  isDateToday,
+  isDateWithinWeek,
+  isDateWithinMonth,
+} from "./utils.js";
 
 function getSitemapWrapper(content) {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${content}\n</urlset>`;
@@ -8,8 +16,8 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
   const lastModNow = new Date().toISOString();
 
   // Differentiate past and upcoming events
-  const upcomingSlugs = new Set(upcomingEvents.map(e => e.slug));
-  const pastEvents = allEvents.filter(e => !upcomingSlugs.has(e.slug));
+  const upcomingSlugs = new Set(upcomingEvents.map((e) => e.slug));
+  const pastEvents = allEvents.filter((e) => !upcomingSlugs.has(e.slug));
 
   // --- main.xml ---
   let maxGlobalUpdatedAt = null;
@@ -20,7 +28,7 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
     if (!maxGlobalUpdatedAt || updatedAt > maxGlobalUpdatedAt) {
       maxGlobalUpdatedAt = updatedAt;
     }
-    
+
     const localityMax = maxLocalityUpdatedAt.get(event.locality);
     if (!localityMax || updatedAt > localityMax) {
       maxLocalityUpdatedAt.set(event.locality, updatedAt);
@@ -34,7 +42,7 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>${origin}/que-es-trasla-eventos.html</loc>
+    <loc>${origin}/que-es-trasla-eventos</loc>
     <lastmod>2026-01-06T15:13:57.717Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -60,7 +68,7 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
   for (const when of ["hoy", "esta-semana", "este-mes"]) {
     const filter = getTimeFilter(when);
     const filteredEvents = upcomingEvents.filter(filter);
-    
+
     let maxWhenUpdated = null;
     filteredEvents.forEach((event) => {
       const updatedAt = new Date(event.updatedAt || event.startsAt || lastModNow);
@@ -82,28 +90,32 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
 
   // --- upcoming-events.xml ---
   let upcomingContent = "";
-  upcomingEvents.sort((a, b) => getEventSortOrder(b) - getEventSortOrder(a)).forEach((event) => {
-    upcomingContent += `
+  upcomingEvents
+    .sort((a, b) => getEventSortOrder(b) - getEventSortOrder(a))
+    .forEach((event) => {
+      upcomingContent += `
       <url>
         <loc>${getEventUrl(event.slug, origin)}</loc>
         <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.7</priority>
       </url>`;
-  });
+    });
   const upcomingEventsXml = getSitemapWrapper(upcomingContent);
 
   // --- past-events.xml ---
   let pastContent = "";
-  pastEvents.sort((a, b) => getEventSortOrder(b) - getEventSortOrder(a)).forEach((event) => {
-    pastContent += `
+  pastEvents
+    .sort((a, b) => getEventSortOrder(b) - getEventSortOrder(a))
+    .forEach((event) => {
+      pastContent += `
       <url>
         <loc>${getEventUrl(event.slug, origin)}</loc>
         <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
       </url>`;
-  });
+    });
   const pastEventsXml = getSitemapWrapper(pastContent);
 
   // --- sitemap.xml (index) ---
@@ -127,6 +139,6 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
     sitemapIndex,
     mainXml,
     upcomingEventsXml,
-    pastEventsXml
+    pastEventsXml,
   };
 }
