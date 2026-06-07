@@ -276,9 +276,11 @@
           (window.clarity.q = window.clarity.q || []).push(arguments);
         };
 
-      loadScript("https://www.clarity.ms/tag/uget192eef", {
-        async: true,
-      });
+      setTimeout(() => {
+        loadScript("https://www.clarity.ms/tag/uget192eef", {
+          async: true,
+        });
+      }, 3000);
     }
 
     // Wait for the window load event so we don't block it with dynamically injected scripts
@@ -593,7 +595,7 @@
 
   <!-- START SERVICE WORKER REGISTRATION -->
   <script type="module">
-    if ("serviceWorker" in navigator) {
+    if ("serviceWorker" in navigator && !/googlebot/i.test(navigator.userAgent)) {
       try {
         const swRegistration = await navigator.serviceWorker.register("/service-worker.js");
         console.log("Service Worker registered:", swRegistration);

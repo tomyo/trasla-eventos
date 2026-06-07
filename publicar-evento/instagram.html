@@ -36,9 +36,11 @@
             (window.clarity.q = window.clarity.q || []).push(arguments);
           };
 
-        loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
-          async: true,
-        });
+        setTimeout(() => {
+          loadScript("https://www.clarity.ms/tag/" + "uget192eef", {
+            async: true,
+          });
+        }, 3000);
       })();
     }
   </script>
