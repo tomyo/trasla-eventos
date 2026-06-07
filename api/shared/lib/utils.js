@@ -634,15 +634,9 @@ export function unescapeHtml(escapedText) {
   return unescaped;
 }
 
-/**
- * 
- * @param {String} imageId 
- * @param {Number} width in pixels
- * @returns {String} Image url from a google drive to use in <img>
- 
- */
 function createGoogleDriveImageUrl(imageId, width = OG_IMAGE_WIDTH) {
-  return `https://drive.google.com/thumbnail?sz=w${width}&id=${imageId}`;
+  // Este formato apunta directamente al CDN de Google (Fife) y NO está bloqueado por robots.txt
+  return `https://lh3.googleusercontent.com/d/${imageId}=w${width}`;
 }
 
 /**
