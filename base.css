@@ -117,6 +117,11 @@ main {
       padding-bottom: 6rem;
     }
 
+    &#about {
+      display: flex;
+      justify-content: center;
+    }
+
     & > p {
       max-width: 60ch;
     }

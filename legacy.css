@@ -155,6 +155,11 @@ main section:last-child {
   padding-bottom: 6rem;
 }
 
+main section#about {
+  justify-content: center;
+  display: flex;
+}
+
 main section > p {
   max-width: 60ch;
 }
