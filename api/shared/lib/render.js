@@ -15,7 +15,7 @@ import {
   getTimePageUrl,
   getEventUrl,
 } from "./utils.js";
-import { config } from "./config.js";
+import { appConfig } from "./config.js";
 
 /**
  * Render the Index Page HTML (Main Home Page)
@@ -36,7 +36,7 @@ export function renderIndexPage(events, templateHtml, origin) {
 
   // Set events-filter page-size
   html = html.replace(/<events-filter([^>]*)>/is, (_match, attributes) => {
-    const pageSizeAttr = `page-size="${config.rendering.events.initialVisibleItems}"`;
+    const pageSizeAttr = `page-size="${appConfig.rendering.events.initialVisibleItems}"`;
     if (/page-size="[^"]*"/.test(attributes)) {
       return `<events-filter${attributes.replace(/page-size="[^"]*"/, pageSizeAttr)}>`;
     }
@@ -83,12 +83,12 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
 
     <meta
       property="og:image"
-      content="${config.baseUrl}/assets/images/og-image-1200w-900h.avif"
+      content="${appConfig.baseUrl}/assets/images/og-image-1200w-900h.avif"
     />
     <meta property="og:image:type" content="image/avif" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="900" />
-    <meta property="og:image" content="${config.baseUrl}/assets/images/og-image-1200w-900h.jpg" />
+    <meta property="og:image" content="${appConfig.baseUrl}/assets/images/og-image-1200w-900h.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="900" />
@@ -201,12 +201,12 @@ export function renderTimePage(when, events, templateHtml, origin) {
 
       <meta
         property="og:image"
-        content="${config.baseUrl}/assets/images/og-image-1200w-900h.avif"
+        content="${appConfig.baseUrl}/assets/images/og-image-1200w-900h.avif"
       />
       <meta property="og:image:type" content="image/avif" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
-      <meta property="og:image" content="${config.baseUrl}/assets/images/og-image-1200w-900h.jpg" />
+      <meta property="og:image" content="${appConfig.baseUrl}/assets/images/og-image-1200w-900h.jpg" />
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="900" />
@@ -263,7 +263,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
     const isPastEvent = new Date(eventData.startsAt) < todayMidnight;
-    const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, config.ogImageWidth);
+    const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, appConfig.ogImageWidth);
     const contentMeta = /*html*/ `
       <title>${escapeHtml(eventData.title)}</title>
       <link
@@ -278,7 +278,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
         content="${escapeHtml(eventData.description)}"
       />
       <meta property="og:image" content="${previewImageUrl}" />
-      <meta property="og:image:width" content="${config.ogImageWidth}" />
+      <meta property="og:image:width" content="${appConfig.ogImageWidth}" />
       <meta property="og:type" content="event" />
       <meta property="og:url" content="${getEventUrl(eventData.slug, origin)}" />
       <meta property="og:site_name" content="TRASLA EVENTOS" />

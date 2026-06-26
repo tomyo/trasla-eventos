@@ -1,9 +1,9 @@
 import { renderEventEntry } from "../event-entry/render.js";
-import { config } from "../../lib/config.js";
+import { appConfig } from "../../lib/config.js";
 
-export function renderEventEntries(events, origin = config.baseUrl) {
+export function renderEventEntries(events, origin = appConfig.baseUrl) {
   let shownCount = 0;
-  let paginateAt = config.rendering.events.initialVisibleItems;
+  let paginateAt = appConfig.rendering.events.initialVisibleItems;
 
   // Create a date representing today at 23:59:59 in local time
   const todayEnd = new Date();

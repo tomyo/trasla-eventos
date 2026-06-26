@@ -1,7 +1,7 @@
 export const OG_IMAGE_WIDTH = 1200;
 export const BASE_URL = "https://eventos.trasla.com.ar";
 
-export const config = {
+export const appConfig = {
   ogImageWidth: OG_IMAGE_WIDTH, // px
   baseUrl: BASE_URL,
   rendering: {
@@ -18,7 +18,7 @@ export function exportAppRuntimeConfig({ keys = ["rendering"] }) {
   return /*html*/ `
   <!--${RUNTIME_APP_CONFIG_ID}:start-->
   <script id="${RUNTIME_APP_CONFIG_ID}" type="application/json">
-    ${JSON.stringify(Object.fromEntries(Object.entries(config).filter(([k, _]) => keys.includes(k))))}
+    ${JSON.stringify(Object.fromEntries(Object.entries(appConfig).filter(([k, _]) => keys.includes(k))))}
   </script>
   <!--${RUNTIME_APP_CONFIG_ID}:end-->
   `;
