@@ -29,7 +29,7 @@ customElements.define(
       this.formEl = this.querySelector("form");
       this._noop = !this.formEl || !this.querySelector("event-entries");
 
-      if (this._noop) return;
+      if (this._noop) return this.finishInitialRender();
 
       if (!this.formEl["startDate"].value) {
         this._setStartDateToToday();
@@ -46,6 +46,25 @@ customElements.define(
       }
 
       this.updateUI();
+      // SSR event entries are already present. CSR callers invoke this after populating them.
+      if (this.querySelector("event-entry")) this.finishInitialRender();
+    }
+
+    /**
+     * Signals that event filtering and event-entry slotting have settled for the initial page render.
+     * Calling it more than once is safe, including the CSR fallback path.
+     */
+    finishInitialRender() {
+      if (this._initialRenderScheduled || this.dataset.ready === "") return;
+      this._initialRenderScheduled = true;
+
+      // Slot changes and the date-label MutationObserver run asynchronously after updateUI().
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          this.dataset.ready = "";
+          this.dispatchEvent(new CustomEvent("events-filter-ready", { bubbles: true }));
+        }),
+      );
     }
 
     set allShown(value) {

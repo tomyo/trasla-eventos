@@ -165,7 +165,9 @@
 
   <script>
     (function getOutOfInAppBrowser() {
-      // 1. In-App Browser Detection
+      const escapeAttemptStorageKey = "trasla-eventos:in-app-escape-attempted";
+      let escapeStarted = false;
+
       function isInAppBrowser() {
         const ua = navigator.userAgent || navigator.vendor || window.opera;
         return /instagram/i.test(ua) || /fban|fbav/i.test(ua) || /wv/i.test(ua);
@@ -192,50 +194,50 @@
         if (!params.has(key)) params.set(key, value);
       }
 
-      // 2. Redirection Logic
+      function hasAttemptedEscape() {
+        try {
+          if (sessionStorage.getItem(escapeAttemptStorageKey) === "true") return true;
+        } catch {
+          // Fall through to the session cookie used by storage-restricted WebViews.
+        }
+        return document.cookie.split("; ").includes(`${escapeAttemptStorageKey}=true`);
+      }
+
+      function recordEscapeAttempt() {
+        try {
+          sessionStorage.setItem(escapeAttemptStorageKey, "true");
+        } catch {
+          // Session cookies provide a fallback for privacy-restricted in-app browsers.
+        }
+        document.cookie = `${escapeAttemptStorageKey}=true; Path=/; SameSite=Lax`;
+      }
+
       function redirectToExternalBrowser() {
+        if (escapeStarted) return;
+        escapeStarted = true;
+        recordEscapeAttempt();
+
         const url = new URL(location.href);
-
-        const source = getSourceFromReferrer(document.referrer);
         const platform = getPlatform();
-
-        setIfMissing(url.searchParams, "utm_source", source);
+        setIfMissing(url.searchParams, "utm_source", getSourceFromReferrer(document.referrer));
         setIfMissing(url.searchParams, "utm_medium", "social");
         setIfMissing(url.searchParams, "utm_campaign", "escape_inapp");
         setIfMissing(url.searchParams, "utm_content", "auto_redirect");
         setIfMissing(url.searchParams, "utm_term", platform);
 
-        const isAndroid = platform === "android";
-        const isIOS = platform === "ios";
-
-        if (isAndroid) {
-          // Generic Intent URI, so hopefuly pwa will open if installed, or default browser otherwise.
+        if (platform === "android") {
           const intentUri = `intent://${url.toString().replace(/^https?:\/\//, "")}#Intent;scheme=https;end`;
           window.location.href = intentUri;
-
-          // const chromeIntentUri = `intent://${url
-          //   .toString()
-          //   .replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
-          // window.location.href = chromeIntentUri;
-        } else if (isIOS) {
-          // Try to open in Chrome (if installed)
+        } else if (platform === "ios") {
           const chromeUrl = `googlechrome://x-callback-url/open/?url=${encodeURIComponent(url.toString())}`;
           window.location.href = chromeUrl;
         }
-
-        // Fallback when we are still stuck in the in-app browser after 2 seconds
-        setTimeout(() => {
-          if (document.visibilityState === "visible") {
-            window.open(url, "_blank", "noopener,noreferrer");
-          }
-        }, 2000);
       }
 
-      // 3. Execution
-      if (isInAppBrowser()) {
-        // Delay to make sure WebView has fully initialized before attempting redirect.
-        // 100ms is a safe value for most WebViews.
-        setTimeout(redirectToExternalBrowser, 100);
+      if (isInAppBrowser() && !hasAttemptedEscape()) {
+        // Wait for filtering and date grouping to finish before Instagram presents its
+        // external-browser prompt. If the user chooses "Go back", this document stays usable.
+        document.addEventListener("events-filter-ready", redirectToExternalBrowser, { once: true });
       }
     })();
   </script>
@@ -563,6 +565,9 @@
         // Apply filters if any
         if (eventsFilter && eventsFilter.updateUI) eventsFilter.updateUI();
       }
+
+      // Do not offer an in-app escape until this asynchronous fallback has settled.
+      eventsFilter?.finishInitialRender?.();
     });
 
   </script>
