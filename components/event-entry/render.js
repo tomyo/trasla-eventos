@@ -11,11 +11,15 @@ import {
   formatDescription,
   formatLocalDate,
 } from "../../lib/utils.js";
-import { BASE_URL } from "../../lib/config.js";
+import { BASE_URL, EVENT_TIME_ZONE } from "../../lib/config.js";
 
 export function renderEventEntryContent(eventData, { origin = BASE_URL, firstImageEager = false } = {}) {
   const startDate = parseDate(eventData.startsAt);
-  const eventTime = formatEventDate(startDate, { onlyTime: true, skipZeroTime: true });
+  const eventTime = formatEventDate(startDate, {
+    onlyTime: true,
+    skipZeroTime: true,
+    timeZone: EVENT_TIME_ZONE,
+  });
   const previewImages = eventData.images.includes("google.com")
     ? getGoogleDriveImagesPreviews(eventData.images, 600)
     : eventData.images.split(",").map((url) => url.trim());
@@ -205,7 +209,7 @@ export function renderEventEntry(eventData, { origin = BASE_URL, firstImageEager
     <event-entry
       class="card"
       ${dataAttributes}
-      date="${formatLocalDate(new Date(eventData.startsAt))}"
+      date="${formatLocalDate(new Date(eventData.startsAt), EVENT_TIME_ZONE)}"
     >
       ${contentHtml}
     </event-entry>`;

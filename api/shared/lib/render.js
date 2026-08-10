@@ -14,6 +14,7 @@ import {
   getLocalityUrl,
   getTimePageUrl,
   getEventUrl,
+  formatLocalDate,
 } from "./utils.js";
 import { appConfig } from "./config.js";
 
@@ -260,9 +261,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
   let html = templateHtml;
 
   if (eventData) {
-    const todayMidnight = new Date();
-    todayMidnight.setHours(0, 0, 0, 0);
-    const isPastEvent = new Date(eventData.startsAt) < todayMidnight;
+    const isPastEvent = formatLocalDate(new Date(eventData.startsAt)) < formatLocalDate(new Date());
     const previewImageUrl = getGoogleDriveImagesPreview(eventData.images, appConfig.ogImageWidth);
     const contentMeta = /*html*/ `
       <title>${escapeHtml(eventData.title)}</title>
@@ -316,7 +315,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
       (_, openTag, closeTag) => `${openTag}
         <h2>${eventData.title}</h2>
         <h3>En ${eventData.locality}</h3>
-        <h3>El ${new Date(eventData.startsAt).toLocaleDateString("es-AR")}</h3>
+        <h3>El ${new Date(eventData.startsAt).toLocaleDateString("es-AR", { timeZone: appConfig.eventTimeZone })}</h3>
         <p>${eventData.description}</p>
       ${closeTag}`,
     );

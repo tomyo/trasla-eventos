@@ -1,4 +1,4 @@
-import { OG_IMAGE_WIDTH, BASE_URL } from "./config.js";
+import { OG_IMAGE_WIDTH, BASE_URL, EVENT_TIME_ZONE } from "./config.js";
 
 export function getEventPath(slug) {
   return `/e/${slug}`;
@@ -385,56 +385,46 @@ function applyWhatsAppFormatting(waText) {
 }
 
 /**
+ * Converts an instant (or an existing YYYY-MM-DD value) into the event's calendar date.
  *
- * @param {Date} dateOrString - A Date object or a date string in yyyy-mm-dd format.
- * @returns {boolean} True if the date is today.
+ * @param {Date|string} dateOrString
+ * @param {string} [timeZone=EVENT_TIME_ZONE]
+ * @returns {string}
  */
-export function isDateToday(dateOrString) {
+function getEventDateKey(dateOrString, timeZone = EVENT_TIME_ZONE) {
+  if (typeof dateOrString === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dateOrString)) return dateOrString;
+  return formatLocalDate(new Date(dateOrString), timeZone);
+}
+
+function getCalendarDayNumber(dateKey) {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return Date.UTC(year, month - 1, day) / (24 * 60 * 60 * 1000);
+}
+
+/**
+ * @param {Date|string} dateOrString - An instant or an event calendar date.
+ * @param {Date} [referenceDate=new Date()]
+ * @param {string} [timeZone=EVENT_TIME_ZONE]
+ * @returns {boolean} True if the date is today in the event timezone.
+ */
+export function isDateToday(dateOrString, referenceDate = new Date(), timeZone = EVENT_TIME_ZONE) {
   if (!dateOrString) return false;
-  const now = new Date();
-  let date = new Date(dateOrString);
-
-  if (typeof dateOrString === "string") {
-    const [year, month, day] = dateOrString.split("-");
-    date = new Date(year, month - 1, day);
-  }
-
-  return date.getDate() === now.getDate() && date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+  return getEventDateKey(dateOrString, timeZone) === getEventDateKey(referenceDate, timeZone);
 }
 
-export function isDateTomorrow(date) {
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  return (
-    date.getDate() === tomorrow.getDate() &&
-    date.getMonth() === tomorrow.getMonth() &&
-    date.getFullYear() === tomorrow.getFullYear()
-  );
+export function isDateTomorrow(date, referenceDate = new Date(), timeZone = EVENT_TIME_ZONE) {
+  return getCalendarDayNumber(getEventDateKey(date, timeZone)) - getCalendarDayNumber(getEventDateKey(referenceDate, timeZone)) === 1;
 }
 
-export function isDateWithinWeek(dateToCheck, referenceDate = new Date()) {
-  dateToCheck = new Date(dateToCheck);
-  referenceDate = new Date(referenceDate);
-
-  dateToCheck.setHours(0, 0, 0, 0);
-  referenceDate.setHours(0, 0, 0, 0);
-
-  const diffTime = dateToCheck.getTime() - referenceDate.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+export function isDateWithinWeek(dateToCheck, referenceDate = new Date(), timeZone = EVENT_TIME_ZONE) {
+  const diffDays =
+    getCalendarDayNumber(getEventDateKey(dateToCheck, timeZone)) - getCalendarDayNumber(getEventDateKey(referenceDate, timeZone));
   return diffDays >= 0 && diffDays <= 6;
 }
 
-export function isDateWithinMonth(dateToCheck, referenceDate = new Date()) {
-  dateToCheck = new Date(dateToCheck);
-  referenceDate = new Date(referenceDate);
-
-  dateToCheck.setHours(0, 0, 0, 0);
-  referenceDate.setHours(0, 0, 0, 0);
-
-  const diffTime = dateToCheck.getTime() - referenceDate.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+export function isDateWithinMonth(dateToCheck, referenceDate = new Date(), timeZone = EVENT_TIME_ZONE) {
+  const diffDays =
+    getCalendarDayNumber(getEventDateKey(dateToCheck, timeZone)) - getCalendarDayNumber(getEventDateKey(referenceDate, timeZone));
   return diffDays >= 0 && diffDays <= 30;
 }
 
@@ -459,10 +449,38 @@ export function formatDate(date) {
   return `${day}/${month}/${year} - ${hour}:${minute}h`;
 }
 
-export function formatLocalDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+/**
+ * Gets calendar and clock fields for an instant in the event timezone.
+ *
+ * @param {Date} date
+ * @param {string} [timeZone=EVENT_TIME_ZONE]
+ * @returns {{ year: string, month: string, day: string, hour: string, minute: string }}
+ */
+function getDateTimeParts(date, timeZone = EVENT_TIME_ZONE) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+
+  return Object.fromEntries(
+    parts.filter(({ type }) => type !== "literal").map(({ type, value }) => [type, value]),
+  );
+}
+
+/**
+ * Formats an instant as a YYYY-MM-DD calendar date in the event timezone.
+ *
+ * @param {Date} date
+ * @param {string} [timeZone=EVENT_TIME_ZONE]
+ * @returns {string}
+ */
+export function formatLocalDate(date, timeZone = EVENT_TIME_ZONE) {
+  const { year, month, day } = getDateTimeParts(date, timeZone);
   return `${year}-${month}-${day}`;
 }
 
@@ -481,22 +499,21 @@ export function parseDate(dateString) {
  * @param {Date} date
  * @returns {String}
  */
-export function formatEventDate(date, { onlyTime = false, skipZeroTime = true } = {}) {
+export function formatEventDate(
+  date,
+  { onlyTime = false, skipZeroTime = true, timeZone = EVENT_TIME_ZONE } = {},
+) {
   if (!date) return "";
-  const dayNames = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
-
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const hour = date.getHours().toString().padStart(2, "0");
-  const minute = date.getMinutes().toString().padStart(2, "0");
+  const { day, month, hour, minute } = getDateTimeParts(date, timeZone);
   if (onlyTime) {
-    if (skipZeroTime && hour == "00" && minute === "00") {
+    if (skipZeroTime && hour === "00" && minute === "00") {
       return "";
     }
     return `${hour}:${minute}h`;
   }
 
-  return `${dayNames[date.getDay()]} ${day}/${month} - ${hour}:${minute}h`;
+  const weekday = new Intl.DateTimeFormat("es-AR", { weekday: "long", timeZone }).format(date).toUpperCase();
+  return `${weekday} ${day}/${month} - ${hour}:${minute}h`;
 }
 
 export function formatShareTripUrl(eventData) {

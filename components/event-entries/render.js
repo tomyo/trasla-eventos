@@ -1,13 +1,12 @@
 import { renderEventEntry } from "../event-entry/render.js";
 import { appConfig } from "../../lib/config.js";
+import { formatLocalDate } from "../../lib/utils.js";
 
 export function renderEventEntries(events, origin = appConfig.baseUrl) {
   let shownCount = 0;
   let paginateAt = appConfig.rendering.events.initialVisibleItems;
 
-  // Create a date representing today at 23:59:59 in local time
-  const todayEnd = new Date();
-  todayEnd.setHours(23, 59, 59, 999);
+  const today = formatLocalDate(new Date());
 
   return events
     .map((eventData, i) => {
@@ -16,7 +15,7 @@ export function renderEventEntries(events, origin = appConfig.baseUrl) {
       if (shownCount < paginateAt) {
         shownCount++;
         isHidden = false;
-      } else if (new Date(eventData.startsAt) <= todayEnd) {
+      } else if (formatLocalDate(new Date(eventData.startsAt)) <= today) {
         shownCount++;
         paginateAt++;
         isHidden = false;

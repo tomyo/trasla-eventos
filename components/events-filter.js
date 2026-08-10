@@ -1,3 +1,5 @@
+import { formatLocalDate } from "/lib/utils.js";
+
 const PAGE_SIZE_ATTRIBUTE = "page-size";
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -67,18 +69,11 @@ customElements.define(
      * @param {Date} [date] - The date to set the input to. If empty, defaults to today.
      */
     _setStartDateToToday(date = new Date()) {
-      date.setUTCDate(date.getDate());
-      this.formEl["startDate"].value = date.toISOString().split("T")[0];
+      this.formEl["startDate"].value = formatLocalDate(date);
     }
 
     setEndDate(date) {
-      let value = ""; // No end date by default
-      if (!!date) {
-        date.setDate(date.getUTCDate());
-        date.setHours(23, 59, 59);
-        value = date.toISOString().split("T")[0];
-      }
-      this.formEl["endDate"].value = value;
+      this.formEl["endDate"].value = date ? formatLocalDate(date) : "";
     }
 
     showMore(moreToShow = 10) {
@@ -158,7 +153,7 @@ customElements.define(
         }
 
         // Also ensure we show all events happening in selected `startDate` form input
-        if (new Date(event.dataset.startsAt) <= new Date(`${formData.get("startDate")}T23:59:59`)) {
+        if (event.getAttribute("date") <= formData.get("startDate")) {
           shownCount++;
           this.paginateAt++;
           event.hidden = false;
@@ -194,19 +189,13 @@ function _shouldExcludeEvent(event, filters, { keysToOmit = [] } = {}) {
   for (const [key, value] of filters) {
     if (keysToOmit.includes(key) || !value || key === "locality") continue;
     // Filter out events starting before given date
-    if (key == "startDate") {
-      const minDate = new Date(value + "T00:00:00");
-      if (new Date(event.dataset.startsAt) < minDate) {
-        return true;
-      }
+    if (key == "startDate" && event.getAttribute("date") < value) {
+      return true;
     }
 
     // Filter out events starting after given date
-    if (key == "endDate") {
-      const maxDate = new Date(value + "T23:59:59");
-      if (maxDate < new Date(event.dataset.startsAt)) {
-        return true;
-      }
+    if (key == "endDate" && event.getAttribute("date") > value) {
+      return true;
     }
     // Filter by search term
     if (key == "search") {

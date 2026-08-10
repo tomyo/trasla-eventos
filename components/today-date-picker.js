@@ -1,4 +1,4 @@
-import { isDateToday } from "/lib/utils.js";
+import { formatLocalDate, isDateToday } from "/lib/utils.js";
 
 customElements.define(
   "today-date-picker",
@@ -27,14 +27,10 @@ customElements.define(
     }
 
     /**
-     * Set the input value to today's date in the user's timezone.
+     * Set the input value to today's date in the event timezone.
      */
     setDateAsToday() {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, "0"); // months are zero-indexed
-      const day = String(today.getDate()).padStart(2, "0");
-      this.input.value = `${year}-${month}-${day}`;
+      this.input.value = formatLocalDate(new Date());
     }
   }
 );

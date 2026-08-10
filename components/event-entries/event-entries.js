@@ -3,12 +3,14 @@
  * @returns {string}
  */
 function formatDateForTimeEntry(dateString) {
-  return new Date(dateString)
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day))
     .toLocaleDateString("es-AR", {
       weekday: "long",
       day: "2-digit",
       month: "2-digit",
-      timeZone: "UTC", // Interpret as UTC to avoid timezone missmatch
+      // dateString is an already-normalized event calendar date, not an instant.
+      timeZone: "UTC",
     })
     .toUpperCase();
 }

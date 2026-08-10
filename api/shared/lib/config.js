@@ -1,9 +1,11 @@
 export const OG_IMAGE_WIDTH = 1200;
 export const BASE_URL = "https://eventos.trasla.com.ar";
+export const EVENT_TIME_ZONE = "America/Argentina/Cordoba";
 
 export const appConfig = {
   ogImageWidth: OG_IMAGE_WIDTH, // px
   baseUrl: BASE_URL,
+  eventTimeZone: EVENT_TIME_ZONE,
   rendering: {
     events: {
       initialVisibleItems: 10,
