@@ -165,7 +165,6 @@
 
   <script>
     (function getOutOfInAppBrowser() {
-      const escapeAttemptStorageKey = "trasla-eventos:in-app-escape-attempted";
       let escapeStarted = false;
 
       function isInAppBrowser() {
@@ -194,28 +193,9 @@
         if (!params.has(key)) params.set(key, value);
       }
 
-      function hasAttemptedEscape() {
-        try {
-          if (sessionStorage.getItem(escapeAttemptStorageKey) === "true") return true;
-        } catch {
-          // Fall through to the session cookie used by storage-restricted WebViews.
-        }
-        return document.cookie.split("; ").includes(`${escapeAttemptStorageKey}=true`);
-      }
-
-      function recordEscapeAttempt() {
-        try {
-          sessionStorage.setItem(escapeAttemptStorageKey, "true");
-        } catch {
-          // Session cookies provide a fallback for privacy-restricted in-app browsers.
-        }
-        document.cookie = `${escapeAttemptStorageKey}=true; Path=/; SameSite=Lax`;
-      }
-
       function redirectToExternalBrowser() {
         if (escapeStarted) return;
         escapeStarted = true;
-        recordEscapeAttempt();
 
         const url = new URL(location.href);
         const platform = getPlatform();
@@ -234,10 +214,22 @@
         }
       }
 
-      if (isInAppBrowser() && !hasAttemptedEscape()) {
-        // Wait for filtering and date grouping to finish before Instagram presents its
-        // external-browser prompt. If the user chooses "Go back", this document stays usable.
-        document.addEventListener("events-filter-ready", redirectToExternalBrowser, { once: true });
+      if (isInAppBrowser()) {
+        const filter = document.querySelector("events-filter");
+        if (filter && filter.dataset.ready === "") {
+          redirectToExternalBrowser();
+        } else {
+          // Wait for filtering/grouping to settle or max 500ms fallback before launching external intent
+          const timer = setTimeout(redirectToExternalBrowser, 500);
+          document.addEventListener(
+            "events-filter-ready",
+            () => {
+              clearTimeout(timer);
+              redirectToExternalBrowser();
+            },
+            { once: true },
+          );
+        }
       }
     })();
   </script>
