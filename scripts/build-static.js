@@ -87,14 +87,18 @@ async function exportApiData() {
   return { upcomingEvents, events };
 }
 
-async function build({ upcomingEvents, events }) {
-  console.log(isFastMode ? "Starting fast static build..." : "Starting static build...");
-  // Ensure distDir exists and empty it if it does
+async function cleanDist() {
   await fs.mkdir(distDir, { recursive: true });
   if (!isFastMode) {
     const distEntries = await fs.readdir(distDir);
     await Promise.all(distEntries.map((entry) => fs.rm(path.join(distDir, entry), { recursive: true, force: true })));
   }
+}
+
+async function build({ upcomingEvents, events }) {
+  console.log(isFastMode ? "Starting fast static build..." : "Starting static build...");
+  // Ensure distDir exists
+  await fs.mkdir(distDir, { recursive: true });
 
   // 1. Copy static assets
   console.log("Copying static files and directories...");
@@ -232,6 +236,7 @@ async function build({ upcomingEvents, events }) {
 
 async function main() {
   try {
+    await cleanDist();
     const data = await exportApiData();
     await build(data);
   } catch (err) {
