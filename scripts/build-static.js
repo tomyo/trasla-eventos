@@ -218,15 +218,15 @@ async function build({ upcomingEvents, events }) {
   // 7. Generate sitemaps
   console.log("Generating sitemaps...");
   try {
-    const { sitemapIndex, mainXml, upcomingEventsXml, pastEventsXml } = generateSitemaps(upcomingEvents, events, ORIGIN);
+    const { sitemapIndex, mainXml, upcomingEventsXml } = generateSitemaps(upcomingEvents, events, ORIGIN);
     const sitemapsDir = path.join(distDir, "sitemaps");
     await fs.mkdir(sitemapsDir, { recursive: true });
 
     await fs.writeFile(path.join(distDir, "sitemap.xml"), sitemapIndex, "utf-8");
     await fs.writeFile(path.join(sitemapsDir, "main.xml"), mainXml, "utf-8");
     await fs.writeFile(path.join(sitemapsDir, "upcoming-events.xml"), upcomingEventsXml, "utf-8");
-    await fs.writeFile(path.join(sitemapsDir, "past-events.xml"), pastEventsXml, "utf-8");
-    console.log("✅ Sitemaps generated (index, main, upcoming, past).");
+    // TODO: make past events available to crawlers when this part is fully static-generated.
+    console.log("✅ Sitemaps generated (index, main, upcoming).");
   } catch (e) {
     console.error("Error generating sitemaps:", e);
   }

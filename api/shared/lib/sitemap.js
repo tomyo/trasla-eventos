@@ -15,10 +15,6 @@ function getSitemapWrapper(content) {
 export function generateSitemaps(upcomingEvents, allEvents, origin) {
   const lastModNow = new Date().toISOString();
 
-  // Differentiate past and upcoming events
-  const upcomingSlugs = new Set(upcomingEvents.map((e) => e.slug));
-  const pastEvents = allEvents.filter((e) => !upcomingSlugs.has(e.slug));
-
   // --- main.xml ---
   let maxGlobalUpdatedAt = null;
   const maxLocalityUpdatedAt = new Map();
@@ -103,42 +99,22 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
     });
   const upcomingEventsXml = getSitemapWrapper(upcomingContent);
 
-  // --- past-events.xml ---
-  let pastContent = "";
-  pastEvents
-    .sort((a, b) => getEventSortOrder(b) - getEventSortOrder(a))
-    .forEach((event) => {
-      pastContent += `
-      <url>
-        <loc>${getEventUrl(event.slug, origin)}</loc>
-        <lastmod>${event.updatedAt || event.startsAt || lastModNow}</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.3</priority>
-      </url>`;
-    });
-  const pastEventsXml = getSitemapWrapper(pastContent);
-
   // --- sitemap.xml (index) ---
   const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
+  <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap>
     <loc>${origin}/sitemaps/main.xml</loc>
     <lastmod>${lastModNow}</lastmod>
-  </sitemap>
-  <sitemap>
+    </sitemap>
+    <sitemap>
     <loc>${origin}/sitemaps/upcoming-events.xml</loc>
     <lastmod>${lastModNow}</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>${origin}/sitemaps/past-events.xml</loc>
-    <lastmod>${lastModNow}</lastmod>
-  </sitemap>
-</sitemapindex>`;
+    </sitemap>
+  </sitemapindex>`;
 
   return {
     sitemapIndex,
     mainXml,
     upcomingEventsXml,
-    pastEventsXml,
   };
 }
