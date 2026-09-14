@@ -2,14 +2,14 @@ const DEBUG = false;
 const log = (...args) => DEBUG && console.log(...args);
 
 const CONFIG = {
-  VERSION: "2026-04-28",
+  VERSION: "2026-09-15",
   SHARE_TARGET: "/share-target",
 
   CACHE: {
-    APP: "static-2026-04-28",
-    RUNTIME: "runtime-2026-04-28",
-    SHEETS: "sheets-2026-04-28",
-    DRIVE: "drive-images-2026-04-28",
+    APP: "static-2026-09-15",
+    RUNTIME: "runtime-2026-09-15",
+    SHEETS: "sheets-2026-09-15",
+    DRIVE: "drive-images-2026-09-15",
     SHARE_TARGET: "/share-target",
   },
 
@@ -156,8 +156,13 @@ async function handleShareTarget(request) {
   // Normalize entries and extract URL first (no side effects yet)
   for (let [key, value] of formData.entries()) {
     // Expected keys: title, description, url, files (see manifest.json share_target.params)
-    if ((key === "description" || key === "text") && typeof value === "string" && URL.canParse(value)) {
-      key = "url"; // Fix url arriving in `description` instead of `url`.
+    if ((key === "description" || key === "text") && typeof value === "string") {
+      try {
+        const isUrl = URL.canParse ? URL.canParse(value) : Boolean(new URL(value));
+        if (isUrl) key = "url";
+      } catch {
+        // Not a valid URL string
+      }
     }
 
     if (key === "url" && value) {
@@ -187,21 +192,31 @@ async function handleShareTarget(request) {
   await Promise.all(keys.map((key) => cache.delete(key)));
 
   // Cache all formData
-  let filesCount = 0; // To make a unique cache key for each file
-  const filesList = []; // To store file IDs for later use
+  let filesCount = 0;
+  const filesList = [];
 
   for (let [key, value] of normalizedEntries) {
     if (!value) continue;
 
-    if (value instanceof FileList || value instanceof File) {
-      key = `file-${filesCount}`;
-      filesList.push(key); // Store the file ID for later use
+    // File detection: FormData entries are string | File (File extends Blob).
+    // `instanceof FileList` never occurs via entries() — removed. Use Blob
+    // check + duck-type fallback for cross-realm Blobs.
+    const isFile = value instanceof Blob || (value != null && typeof value === "object" && typeof value.arrayBuffer === "function" && typeof value.type === "string");
+    if (isFile) {
+      const fileKey = `file-${filesCount}`;
+      filesList.push(fileKey);
       filesCount += 1;
+      const headers = new Headers();
+      headers.set("Content-Type", value.type || "application/octet-stream");
+      await cache.put(new Request(`/${fileKey}`), new Response(value, { headers }));
+      log("caching file", fileKey, value.type);
+      continue;
     }
 
-    await cache.put(new Request(`/${key}`), new Response(value instanceof File ? value : String(value)));
-
-    log("caching", key);
+    const headers = new Headers();
+    headers.set("Content-Type", "text/plain;charset=utf-8");
+    await cache.put(new Request(`/${key}`), new Response(String(value), { headers }));
+    log("caching field", key);
   }
 
   // Store files order once
