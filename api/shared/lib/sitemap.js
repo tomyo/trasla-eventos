@@ -17,6 +17,9 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
 
   // --- main.xml ---
   let maxGlobalUpdatedAt = null;
+  // Deduplicate by canonical locality URL (slug) to avoid duplicate entries from
+  // casing/spacing variants like "Villa de Las Rosas" vs "Villa de las Rosas"
+  // or "Arroyo de Los Patos" vs "Arroyo de los Patos".
   const maxLocalityUpdatedAt = new Map();
 
   upcomingEvents.forEach((event) => {
@@ -25,9 +28,13 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
       maxGlobalUpdatedAt = updatedAt;
     }
 
-    const localityMax = maxLocalityUpdatedAt.get(event.locality);
+    if (!event.locality) return;
+    const url = getLocalityUrl(event.locality, origin);
+    // Skip empty/invalid locality that slugifies to empty
+    if (!url || url.endsWith("/lugar//")) return;
+    const localityMax = maxLocalityUpdatedAt.get(url);
     if (!localityMax || updatedAt > localityMax) {
-      maxLocalityUpdatedAt.set(event.locality, updatedAt);
+      maxLocalityUpdatedAt.set(url, updatedAt);
     }
   });
 
@@ -44,10 +51,10 @@ export function generateSitemaps(upcomingEvents, allEvents, origin) {
     <priority>0.5</priority>
   </url>`;
 
-  for (const [locality, maxUpdated] of maxLocalityUpdatedAt.entries()) {
+  for (const [url, maxUpdated] of maxLocalityUpdatedAt.entries()) {
     mainContent += `
       <url>
-        <loc>${getLocalityUrl(locality, origin)}</loc>
+        <loc>${url}</loc>
         <lastmod>${maxUpdated.toISOString()}</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
