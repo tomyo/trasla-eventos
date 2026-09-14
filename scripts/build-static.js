@@ -176,9 +176,10 @@ async function build({ upcomingEvents, events }) {
   console.log("Rendering locality pages...");
   for (const localityData of localitiesData) {
     const locality = localityData.locality;
+    const province = localityData.province;
 
     try {
-      const html = renderLocalityPage(locality, upcomingEvents, templateHtml, ORIGIN);
+      const html = renderLocalityPage(locality, province, upcomingEvents, templateHtml, ORIGIN);
       const outDir = path.join(distDir, "lugar", slugify(locality));
       await fs.mkdir(outDir, { recursive: true });
       await fs.writeFile(path.join(outDir, "index.html"), html, "utf-8");

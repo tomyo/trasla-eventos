@@ -53,7 +53,7 @@ export function renderIndexPage(events, templateHtml, origin) {
     `<script type="application/ld+json">
       ${JSON.stringify(schemaEvents)}
     </script>
-    </body>`
+    </body>`,
   );
 
   return html;
@@ -62,7 +62,7 @@ export function renderIndexPage(events, templateHtml, origin) {
 /**
  * Render the Locality Page HTML
  */
-export function renderLocalityPage(locality, events, templateHtml, origin) {
+export function renderLocalityPage(locality, province, events, templateHtml, origin) {
   const localitySlug = slugify(locality);
   const filteredEvents = events
     .filter((event) => slugify(event.locality) === localitySlug)
@@ -79,7 +79,7 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
     <meta
       name="description"
       property="og:description"
-      content="¿Qué hacer en ${locality}? Información actualizada de todos los eventos en ${locality} de hoy y de la semana."
+      content="¿Qué hacer en ${locality}? Información actualizada de los próximos eventos en ${locality}, ${province}."
     />
 
     <meta
@@ -139,14 +139,16 @@ export function renderLocalityPage(locality, events, templateHtml, origin) {
 
   // Inject the events schema exactly before the closing body tag
   const localitySchema = JSON.stringify(localityToSchemaOrgItem(locality, origin));
-  const eventsSchema = filteredEvents.length ? `\n<script type="application/ld+json">\n${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, origin))}\n</script>` : "";
-  
+  const eventsSchema = filteredEvents.length
+    ? `\n<script type="application/ld+json">\n${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, origin))}\n</script>`
+    : "";
+
   html = html.replace(
     /<\/body>/i,
     `<script type="application/ld+json">
       ${localitySchema}
     </script>${eventsSchema}
-    </body>`
+    </body>`,
   );
 
   return html;
@@ -227,7 +229,7 @@ export function renderTimePage(when, events, templateHtml, origin) {
     `<script type="application/ld+json">
       ${JSON.stringify(eventsToSchemaOrgItemList(filteredEvents, origin))}
     </script>
-    </body>`
+    </body>`,
   );
 
   html = html.replace(/<div\s*slot="actions">[\s\S]*?<\/div>/i, ""); // Hide actions i.e load event button
@@ -298,7 +300,7 @@ export function renderEventPage(eventData, templateHtml, origin) {
       `<script type="application/ld+json">
         ${eventSchema}
       </script>
-      </body>`
+      </body>`,
     );
 
     const eventEntry = renderEventEntry(eventData, { origin, firstImageEager: true });
